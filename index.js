@@ -12,6 +12,7 @@ const pool = new Pool({
 const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
+const client = new Redis(process.env.REDIS_URL);
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -35,11 +36,9 @@ express()
     }
   })
   .post("/webhook", function(req, res) {
-    const client = new Redis(process.env.REDIS_URL);
-  
     const text = req.body.events[0].message.text
     const userId = req.body.events[0].source.userId
-      
+
     res.send("HTTP POST request sent to the webhook URL!")
     // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
     if (req.body.events[0].type === "message") {
@@ -54,6 +53,18 @@ express()
               }
             ]
           })
+      }else if(text === "登録"){
+        try {
+          const client = await pool.connect(); 
+          let queryString = `INSERT INTO public.'Member' ('MiraikuID','LINEID','BirthDay','Name','Allergy') VALUES(
+          '', '`+userId+`', '11111111', ' ヨダミナミ', 'true')`
+          const result = await client.query(queryString);
+
+          const results = { 'results': (result) ? result.rows : null};
+          client.release();
+        } catch (err) {
+          console.error(err);
+        }
       }else if(text === "d"){
         dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
