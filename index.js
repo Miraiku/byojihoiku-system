@@ -34,8 +34,6 @@ express()
       res.send("Error " + err);
     }
   })
-
-express()
   .post("/webhook", function(req, res) {
     const client = new Redis(process.env.REDIS_URL);
   
@@ -142,8 +140,6 @@ express()
       request.end()
     }
   })
-
-express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 showTimes = () => {
