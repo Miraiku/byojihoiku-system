@@ -54,17 +54,6 @@ express()
             ]
           })
       }else if(text === "登録"){
-        try {
-          const client = await pool.connect(); 
-          let queryString = `INSERT INTO public.'Member' ('MiraikuID','LINEID','BirthDay','Name','Allergy') VALUES(
-          '', '`+userId+`', '11111111', ' ヨダミナミ', 'true')`
-          const result = await client.query(queryString);
-
-          const results = { 'results': (result) ? result.rows : null};
-          client.release();
-        } catch (err) {
-          console.error(err);
-        }
       }else if(text === "d"){
         dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
