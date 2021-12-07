@@ -56,7 +56,7 @@ express()
       }else if(text === "登録"){
         try {
           const client = await pool.connect(); 
-          let queryString = `INSERT INTO public.Member (MiraikuID,LINEID,BirthDay,Name,Allergy) VALUES(
+          let queryString = `INSERT INTO public."Member" ("MiraikuID","LINEID","BirthDay","Name","Allergy") VALUES(
           '', '`+userId+`', '11111111', ' ヨダミナミ', 'true')`;
           const result = await client.query(queryString);
 
