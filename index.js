@@ -10,6 +10,8 @@ const pool = new Pool({
   }
 });
 const Redis = require("ioredis");
+const https = require("https");
+const TOKEN = process.env.LINE_ACCESS_TOKEN
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -32,8 +34,9 @@ express()
       res.send("Error " + err);
     }
   })
+
+express()
   .post("/webhook", function(req, res) {
-    res.send("HTTP POST request sent to the webhook URL!")
     const client = new Redis(process.env.REDIS_URL);
   
     const text = req.body.events[0].message.text
@@ -139,6 +142,8 @@ express()
       request.end()
     }
   })
+
+express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 showTimes = () => {
