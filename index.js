@@ -63,12 +63,11 @@ express()
             const result = await client.query(queryString);
 
             const results = { 'results': (result) ? result.rows : null};
-            console.log(results);
+            //console.log(results);
             client.release();
           } catch (err) {
             console.error(err);
           }
-        }else if(text === "d"){
           dataString = JSON.stringify({
               replyToken: req.body.events[0].replyToken,
               messages: [
