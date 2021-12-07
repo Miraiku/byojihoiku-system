@@ -1,6 +1,6 @@
 {
   "name": "byojihoiku-system",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "byojihoiku-system",
   "engines": {
     "node": "14.x"
