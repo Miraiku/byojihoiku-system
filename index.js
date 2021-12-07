@@ -9,6 +9,7 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+const Redis = require("ioredis");
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -32,7 +33,7 @@ express()
     }
   })
   .post("/webhook", function(req, res) {
-    const Redis = require("ioredis");
+    res.send("HTTP POST request sent to the webhook URL!")
     const client = new Redis(process.env.REDIS_URL);
   
     const text = req.body.events[0].message.text
