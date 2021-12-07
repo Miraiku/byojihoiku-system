@@ -35,7 +35,7 @@ express()
       res.send("Error " + err);
     }
   })
-  .post("/webhook", function(req, res) {
+  .post("/webhook", async (req, res) => {
     const text = req.body.events[0].message.text
     const userId = req.body.events[0].source.userId
 
