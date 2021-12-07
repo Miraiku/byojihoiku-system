@@ -57,10 +57,11 @@ express()
         try {
           const client = await pool.connect(); 
           let queryString = `INSERT INTO public.'Member' ('MiraikuID','LINEID','BirthDay','Name','Allergy') VALUES(
-          '', '`+userId+`', '11111111', ' ヨダミナミ', 'true')`
+          '', '`+userId+`', '11111111', ' ヨダミナミ', 'true')`;
           const result = await client.query(queryString);
 
           const results = { 'results': (result) ? result.rows : null};
+          console.log(results);
           client.release();
         } catch (err) {
           console.error(err);
