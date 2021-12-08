@@ -383,6 +383,8 @@ function isZenkakuKana(s) {
 }
 
 function isBirthdayNum(s){
+  date = new Date(s).substr( 0, 4 ), str.substr( 4, 2 ), str.substr( 6, 2 ));   
+  console.log('birthday:'+ date); 
   if(s.match(/^[0-9]+$/) && s.length==8){
     return true
   }else{
