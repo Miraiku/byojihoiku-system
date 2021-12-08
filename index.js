@@ -402,7 +402,7 @@ function isZenkakuKana(s) {
 }
 
 function isBirthdayNum(s){
-  if(s.match(/^[0-9]+$/) && Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+  if(s.match(/^[0-9]+$/) && s.length == 8 && Number(s.substr( 0, 4 )) > 1900 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
     return true
   }else{
     return false
@@ -410,7 +410,7 @@ function isBirthdayNum(s){
 }
 
 function BirthDayToJp(s){
-  if(s.match(/^[0-9]+$/) && s.length == 8 &&Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+  if(isBirthdayNum(s)){
     return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
   }else{
     return s
