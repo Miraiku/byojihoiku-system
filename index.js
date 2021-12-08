@@ -136,7 +136,7 @@ express()
           })
         }else if(register_status!=null){
           //ACTION
-          switch (register_status) {
+          switch (Number(register_status)) {
             //Name
             case 1:
               if(register_reply_status==10){
