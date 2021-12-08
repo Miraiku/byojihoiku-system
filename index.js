@@ -109,6 +109,21 @@ express()
             }
             ]
           })
+        }else if(register_status!=null && text==='中止'){
+          await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+            if (err) throw err;
+            console.log('REDIS DELETED: ' + userId)
+          });
+
+          dataString = JSON.stringify({
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+              {
+                "type": "text",
+                "text": "手続きを中止しました。"
+            }
+            ]
+          })
         }else if(register_status!=null){
           //ACTION
           switch (Number(register_status)) {
@@ -327,7 +342,7 @@ express()
             messages: [
               {
                 "type": "text",
-                "text": "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\nと入力してください。"
+                "text": "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n\n▶会員登録は「登録」と返信してください。"
               }
             ]
           })
