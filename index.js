@@ -72,7 +72,6 @@ express()
                 ]
               })
         }else if(text === "登録"){
-          if(redis_client.)
           //SET Status 1
           await redis_client.hset(userId,'register_status',1, (err, reply) => {
             if (err) throw err;
