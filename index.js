@@ -12,7 +12,8 @@ const pool = new Pool({
 const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const client = new Redis(process.env.REDIS_URL);
+const redis_client = new Redis(process.env.REDIS_URL);
+const member_table = ['LINEID','Name','BirthDay','Allergy']
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -25,11 +26,11 @@ express()
   .get('/times', (req, res) => res.send(showTimes()))
   .get('/db', async (req, res) => {
     try {
-      const client = await pool.connect();
+      const psgl_client = await pool.connect();
       const result = await client.query('SELECT * FROM test_table');
       const results = { 'results': (result) ? result.rows : null};
       res.render('pages/db', results );
-      client.release();
+      psgl_client.release();
     } catch (err) {
       console.error(err);
       res.send("Error " + err);
@@ -43,8 +44,24 @@ express()
       let dataString
 
       res.send("HTTP POST request sent to the webhook URL!")
+      
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
+
+
+        //GET CURRENT STATUS
+        let register_status
+        let register_reply_status
+        await redis_client.hget(userId,'register_status', (err, reply) => {
+          if (err) throw err;
+          register_status = reply;
+          console.log(reply);
+        });
+        await redis_client.hget(userId,'register_reply_status', (err, reply) => {
+          if (err) throw err;
+          register_reply_status = reply;
+          console.log(reply);
+        });
         if(text === "予約"){
           dataString = JSON.stringify({
               replyToken: req.body.events[0].replyToken,
@@ -56,40 +73,47 @@ express()
               ]
             })
         }else if(text === "登録"){
+          /*
           try {
-            const client = await pool.connect(); 
+            const psgl_client = await pool.connect(); 
             let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
             '`+userId+`', '11111111', 'ヨダミナミ', 'true')`;
-            const result = await client.query(queryString);
+            const result = await psgl_client.query(queryString);
 
             const results = { 'results': (result) ? result.rows : null};
             //console.log(results);
-            client.release();
+            psgl_client.release();
           } catch (err) {
             console.error(err);
-          }
-          dataString = JSON.stringify({
-              replyToken: req.body.events[0].replyToken,
-              messages: [
-                {
-                  "type": "text",
-                  "text": userId
-                },{
-                  "type": "text",
-                  "text": req.body.events[0].replyToken
-                }
-              ]
-            })
-    
-          client.set(userId, text, (err, reply) => {
+          }*/
+          //REDIS CONTROL
+          //Is Already Registerd?
+          await redis_client.hget(userId, 'register_status',(err, reply) => {
             if (err) throw err;
-            console.log(reply);
-    
-            client.get(userId, (err, reply) => {
+            console.log('register_status started' + reply);
+            if(reply===0){
+              //SET Status 1
+              await redis_client.hset(userId,'register_status',1, (err, reply) => {
                 if (err) throw err;
-                console.log(reply);
-            });
+                console.log('register_status 1 :'+ reply);
+              });
+              //SET Reply Status 10
+              await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
+                if (err) throw err;
+                console.log('register_status 10' + reply);
+              });
+            }
           });
+
+          dataString = JSON.stringify({
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+              {
+                "type": "text",
+                "text": "お子様のお名前を全角カナで返信してください。例）西沢未来の場合「ニシザワミライ」"
+              }
+            ]
+          })
         }else if(text === 'カレンダー'){
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
@@ -165,4 +189,28 @@ showTimes = () => {
     result += i + ' ';
   }
   return result;
+}
+
+function isZenkakuKana(s) {
+  return !!s.match(/^[ァ-ヶー　]*$/);  // 「　」は全角スペース
+}
+
+function isBirthdayNum(s){
+  if(s.match(/^[0-9]+$/) && s.length==8){
+    return true
+  }else{
+    return false
+  }
+}
+
+function hasAllergyValidation(s){
+  if(s === 'はい' || s === 'いいえ'){
+    return true
+  }else{
+    return false
+  }
+}
+
+function insertMember(s) {
+
 }
