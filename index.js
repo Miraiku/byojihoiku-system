@@ -131,17 +131,18 @@ express()
             case 1:
               if(register_reply_status==10){
                 if(isZenkakuKana(text)){
+                  let name = text.trim()
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
                       {
                         "type": "text",
-                        "text": "お子様のお名前は「"+text.trim()+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
+                        "text": "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                       }
                     ]
                   })//close json
                   //SET Name Value
-                  await redis_client.hset(userId,'Name',text.trim(), (err, reply) => {
+                  await redis_client.hset(userId,'Name',name, (err, reply) => {
                     if (err) throw err;
                     console.log('SET Name Value:'+reply);
                   });
