@@ -104,7 +104,6 @@ express()
                     "index": 25,
                     "productId": "5ac1bfd5040ab15980c9b435",
                     "emojiId": "012"
-                  }
                 ]
             }
             ]
@@ -130,8 +129,8 @@ express()
             //Name
             case 1:
               if(register_reply_status==10){
-                if(isZenkakuKana(text)){
-                  let name = text.replace(/\s+/g, "")
+                let name = text.replace(/\s+/g, "")
+                if(isZenkakuKana(name)){
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
