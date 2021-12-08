@@ -161,7 +161,7 @@ express()
                   messages: [
                     {
                       "type": "text",
-                      "text": "お子様の誕生日は「"+text+"」ですね。次に、お子様のアレルギーの有無を返信してください。例）有りの場合「あり」、無しの場合「なし」"
+                      "text": "お子様の誕生日は「"+BirthDayToJp(text)+"」ですね。次に、お子様のアレルギーの有無を返信してください。例）有りの場合「あり」、無しの場合「なし」"
                     }
                   ]
                 })//close json
@@ -221,7 +221,7 @@ express()
                     if(k=='Name'){
                       all_info += "お名前："+v+"\n"
                     }else if(k=='BirthDay'){
-                      all_info += "お誕生日："+v+"\n"
+                      all_info += "お誕生日："+BirthDayToJp(v)+"\n"
                     }else if(k=='Allergy'){
                       all_info += "アレルギー："+v+"\n"
                     }
@@ -390,6 +390,14 @@ function isBirthdayNum(s){
     return true
   }else{
     return false
+  }
+}
+
+function BirthDayToJp(s){
+  if(s.match(/^[0-9]+$/) && Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+    return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr( 6, 2 ))
+  }else{
+    return s
   }
 }
 
