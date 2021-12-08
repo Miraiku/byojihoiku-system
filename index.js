@@ -72,27 +72,6 @@ express()
                 ]
               })
         }else if(text === "登録"){
-          /*
-          try {
-            const psgl_client = await pool.connect(); 
-            let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-            '`+userId+`', '11111111', 'ヨダミナミ', 'true')`;
-            const result = await psgl_client.query(queryString);
-
-            const results = { 'results': (result) ? result.rows : null};
-            //console.log(results);
-            psgl_client.release();
-          } catch (err) {
-            console.error(err);
-          }*/
-          //REDIS CONTROL
-          //Is Already Registerd?
-          /*let alreay_registerd
-          await redis_client.hget(userId, 'register_status',(err, reply) => {
-            if (err) throw err;
-            console.log('Is Already Registerd? : ' + reply);
-            alreay_registerd = reply
-          });*/
           //SET Status 1
           await redis_client.hset(userId,'register_status',1, (err, reply) => {
             if (err) throw err;
@@ -232,11 +211,11 @@ express()
                   console.log('SET Reply Status 40:' + reply);
                 });
                 //Get all information
-                let all_info
                 await redis_client.hgetall(userId, (err, reply) => {
                   if (err) throw err;
                   regsiter_informations = reply
                 });
+                let all_info
                 Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                     console.log({k, v});
                     if(k=='Name'){
@@ -271,25 +250,68 @@ express()
               };//CASE3
             case 4:
               if(yesOrNo(text)){
-                
-              }
-              let regsiter_informations
-              await redis_client.hgetall(userId, (err, reply) => {
-                if (err) throw err;
-                regsiter_informations = reply
-              });
-              Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
-                  console.log({k, v});
-              });
-              dataString = JSON.stringify({
-                replyToken: req.body.events[0].replyToken,
-                messages: [
-                  {
-                    "type": "text",
-                    "text": "以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。登録を中止する場合は「いいえ」を返信してください。"
+                if(text==='はい'){
+                  try {
+                    //Get all information
+                    let info
+                    await redis_client.hgetall(userId, (err, reply) => {
+                      if (err) throw err;
+                      info = reply
+                    });
+                    const psgl_client = await pool.connect(); 
+                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
+                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+info['Allergy']+`')`;
+                    const result = await psgl_client.query(queryString);
+
+                    const results = { 'results': (result) ? result.rows : null};
+                    console.log(results);
+                    
+                    await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+                      if (err) throw err;
+                      console.log('REDIS DELETED: ' + userId)
+                    });
+                    psgl_client.release();
+                    redis_client.disconnect();
+                  } catch (err) {
+                    console.error(err);
                   }
-                ]
-              })
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "会員登録を完了しました。"
+                      }
+                    ]
+                  })
+                }else if(text=='いいえ'){
+                  await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+                    if (err) throw err;
+                    console.log('REDIS DELETED: ' + userId)
+                  });
+                  redis_client.disconnect();
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "会員登録を中止しました。"
+                      }
+                    ]
+                  })
+                }
+              }else{
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
+                    }
+                  ]
+                })//close json
+                break;
+              };
             break;//CASE4
             default:
               console.log('Nothing to do in switch ') 
@@ -370,6 +392,15 @@ function isBirthdayNum(s){
 
 function hasAllergyValidation(s){
   if(s === 'あり' || s === 'なし'){
+    return true
+  }else{
+    return false
+  }
+}
+
+
+function yesOrNo(s){
+  if(s === 'はい' || s === 'いいえ'){
     return true
   }else{
     return false
