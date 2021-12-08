@@ -27,7 +27,7 @@ express()
   .get('/db', async (req, res) => {
     try {
       const psgl_client = await pool.connect();
-      const result = await client.query('SELECT * FROM test_table');
+      const result = await psgl_client.query('SELECT * FROM test_table');
       const results = { 'results': (result) ? result.rows : null};
       res.render('pages/db', results );
       psgl_client.release();
@@ -36,7 +36,7 @@ express()
       res.send("Error " + err);
     }
   })
-  .post("/webhook", async (req, res) => {
+  .post('/webhook', async (req, res) => {
     try {
       
       const text = req.body.events[0].message.text
@@ -88,22 +88,23 @@ express()
           }*/
           //REDIS CONTROL
           //Is Already Registerd?
+          let alreay_registerd
           await redis_client.hget(userId, 'register_status',(err, reply) => {
             if (err) throw err;
             console.log('register_status started' + reply);
-            if(reply===0){
-              //SET Status 1
-              await redis_client.hset(userId,'register_status',1, (err, reply) => {
-                if (err) throw err;
-                console.log('register_status 1 :'+ reply);
-              });
-              //SET Reply Status 10
-              await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
-                if (err) throw err;
-                console.log('register_status 10' + reply);
-              });
-            }
           });
+          if(alreay_registerd==0){
+            //SET Status 1
+            await redis_client.hset(userId,'register_status',1, (err, reply) => {
+              if (err) throw err;
+              console.log('register_status 1 :'+ reply);
+            });
+            //SET Reply Status 10
+            await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
+              if (err) throw err;
+              console.log('register_status 10' + reply);
+            });
+          }
 
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
