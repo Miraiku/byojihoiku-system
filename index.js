@@ -131,7 +131,7 @@ express()
             case 1:
               if(register_reply_status==10){
                 if(isZenkakuKana(text)){
-                  let name = text.trim()
+                  let name = text.replace(/\s+/g, "")
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
@@ -411,7 +411,7 @@ function isBirthdayNum(s){
 
 function BirthDayToJp(s){
   if(s.match(/^[0-9]+$/) && s.length == 8 &&Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
-    return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr( 6, 2 ))
+    return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
   }else{
     return s
   }
