@@ -89,30 +89,22 @@ express()
           }*/
           //REDIS CONTROL
           //Is Already Registerd?
-          let alreay_registerd
+          /*let alreay_registerd
           await redis_client.hget(userId, 'register_status',(err, reply) => {
             if (err) throw err;
             console.log('Is Already Registerd? : ' + reply);
             alreay_registerd = reply
+          });*/
+          //SET Status 1
+          await redis_client.hset(userId,'register_status',1, (err, reply) => {
+            if (err) throw err;
+            console.log('register_status 1 :'+ reply);
           });
-          if(alreay_registerd===null){
-            //SET Status 1
-            await redis_client.hset(userId,'register_status',1, (err, reply) => {
-              if (err) throw err;
-              console.log('register_status 1 :'+ reply);
-            });
-            //SET Reply Status 10
-            await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
-              if (err) throw err;
-              console.log('register_reply_status 10 :' + reply);
-            });
-          }else{
-            //DEL previous garbage
-            await redis_client.hdel(userId, (err, reply) => {
-              if (err) throw err;
-              console.log('Refreshed data :' + 'userId' + reply);
-            });
-          }
+          //SET Reply Status 10
+          await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
+            if (err) throw err;
+            console.log('register_reply_status 10 :' + reply);
+          });
 
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
