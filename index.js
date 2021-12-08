@@ -72,6 +72,7 @@ express()
                 ]
               })
         }else if(text === "登録"){
+          if(redis_client.)
           //SET Status 1
           await redis_client.hset(userId,'register_status',1, (err, reply) => {
             if (err) throw err;
@@ -272,7 +273,7 @@ express()
                       console.log('REDIS DELETED: ' + userId)
                     });
                     psgl_client.release();
-                    redis_client.disconnect();
+                    redis_client.release();
                   } catch (err) {
                     console.error(err);
                   }
@@ -291,7 +292,7 @@ express()
                     if (err) throw err;
                     console.log('REDIS DELETED: ' + userId)
                   });
-                  redis_client.disconnect();
+                  redis_client.release();
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
