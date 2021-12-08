@@ -272,7 +272,7 @@ express()
                       console.log('REDIS DELETED: ' + userId)
                     });
                     psgl_client.release();
-                    redis_client.release();
+                    //redis_client.release();
                   } catch (err) {
                     console.error(err);
                   }
@@ -291,7 +291,7 @@ express()
                     if (err) throw err;
                     console.log('REDIS DELETED: ' + userId)
                   });
-                  redis_client.release();
+                  //redis_client.release();
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
