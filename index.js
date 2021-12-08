@@ -106,6 +106,12 @@ express()
               if (err) throw err;
               console.log('register_reply_status 10 :' + reply);
             });
+          }else{
+            //DEL previous garbage
+            await redis_client.hdel(userId, (err, reply) => {
+              if (err) throw err;
+              console.log('Refreshed data :' + 'userId' + reply);
+            });
           }
 
           dataString = JSON.stringify({
@@ -269,7 +275,7 @@ express()
             default:
               console.log('Nothing to do in switch ') 
             break;
-          }// end of switch
+          }// end of
         }else{
           //通常Message
           dataString = JSON.stringify({
