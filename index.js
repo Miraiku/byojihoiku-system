@@ -215,7 +215,7 @@ express()
                   if (err) throw err;
                   regsiter_informations = reply
                 });
-                let all_info
+                let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                     console.log({k, v});
                     if(k=='Name'){
@@ -232,7 +232,7 @@ express()
                   messages: [
                     {
                       "type": "text",
-                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n"+all_info
+                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                     }
                   ]
                 })//close json
