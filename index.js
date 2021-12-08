@@ -383,7 +383,7 @@ function isZenkakuKana(s) {
 }
 
 function isBirthdayNum(s){
-  console.log(Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 )) +'/'+ Number(s.substr( 6, 2 ))
+  console.log(s.substr( 0, 4 )+'/'+s.substr( 4, 2 ) +'/'+ s.substr( 6, 2 ))
   if(s.match(/^[0-9]+$/) && Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
     return true
   }else{
