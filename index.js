@@ -176,7 +176,8 @@ express()
                     ]
                   })//close json
                 }// close ZenkakuKana
-              };//CASE1
+              }
+            break;//CASE1
             //BirthDay
             case 2:
               if(isBirthdayNum(text)){
@@ -214,8 +215,8 @@ express()
                     }
                   ]
                 })//close json
-              }// close ZenkakuKana
-            ;
+              }
+              break;//CASE2
             //Allergy
             case 3:
               if(hasAllergyValidation(text)){
@@ -253,23 +254,22 @@ express()
                     }
                   ]
                 })//close json
-              }// close ZenkakuKana
-            ;
+              }
+            break;//CASE3
             case 4:
               let regsiter_informations
               await redis_client.hgetall(userId, (err, reply) => {
                 if (err) throw err;
-                console.log('REG all:'+reply);
                 regsiter_informations = reply
               });
               Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                   console.log({k, v});
               });
-            ;
+            break;//CASE4
             default:
               console.log('Nothing to do in switch ') 
-            ;
-          }  
+            break;
+          }// end of switch
         }else{
           //通常Message
           dataString = JSON.stringify({
