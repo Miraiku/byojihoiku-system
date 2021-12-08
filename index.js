@@ -261,7 +261,7 @@ express()
                     });
                     const psgl_client = await pool.connect(); 
                     let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+info['Allergy']+`')`;
+                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
                     const result = await psgl_client.query(queryString);
 
                     const results = { 'results': (result) ? result.rows : null};
@@ -406,6 +406,16 @@ function hasAllergyValidation(s){
     return true
   }else{
     return false
+  }
+}
+
+function convertAllergyBoolean(s){
+  if(s === 'あり'){
+    return 'true'
+  }else if(s === 'なし'){
+    return 'false'
+  }else{
+    return 'false'
   }
 }
 
