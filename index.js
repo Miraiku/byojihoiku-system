@@ -92,8 +92,9 @@ express()
           await redis_client.hget(userId, 'register_status',(err, reply) => {
             if (err) throw err;
             console.log('register_status started' + reply);
+            alreay_registerd = reply
           });
-          if(alreay_registerd==0){
+          if(alreay_registerd===null){
             //SET Status 1
             await redis_client.hset(userId,'register_status',1, (err, reply) => {
               if (err) throw err;
