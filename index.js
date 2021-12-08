@@ -136,12 +136,12 @@ express()
                     messages: [
                       {
                         "type": "text",
-                        "text": "お子様のお名前は「"+text+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
+                        "text": "お子様のお名前は「"+text.trim()+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                       }
                     ]
                   })//close json
                   //SET Name Value
-                  await redis_client.hset(userId,'Name',text, (err, reply) => {
+                  await redis_client.hset(userId,'Name',text.trim(), (err, reply) => {
                     if (err) throw err;
                     console.log('SET Name Value:'+reply);
                   });
