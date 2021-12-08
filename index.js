@@ -52,12 +52,12 @@ express()
         //GET CURRENT STATUS
         let register_status
         let register_reply_status
-        await redis_client.hget(userId,register_status, (err, reply) => {
+        await redis_client.hget(userId,'register_status', (err, reply) => {
           if (err) throw err;
           register_status = reply;
           console.log(reply);
         });
-        await redis_client.hget(userId,register_reply_status, (err, reply) => {
+        await redis_client.hget(userId,'register_reply_status', (err, reply) => {
           if (err) throw err;
           register_reply_status = reply;
           console.log(reply);
@@ -89,18 +89,18 @@ express()
           //REDIS CONTROL
           //Is Already Registerd?
           let alreay_registerd
-          await redis_client.hget(userId, register_status,(err, reply) => {
+          await redis_client.hget(userId, 'register_status',(err, reply) => {
             if (err) throw err;
             console.log('register_status started' + reply);
           });
           if(alreay_registerd==0){
             //SET Status 1
-            await redis_client.hset(userId,register_status,1, (err, reply) => {
+            await redis_client.hset(userId,'register_status',1, (err, reply) => {
               if (err) throw err;
               console.log('register_status 1 :'+ reply);
             });
             //SET Reply Status 10
-            await redis_client.hset(userId,register_reply_status,10, (err, reply) => {
+            await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
               if (err) throw err;
               console.log('register_status 10' + reply);
             });
@@ -111,7 +111,7 @@ express()
             messages: [
               {
                 "type": "text",
-                "text": "お子様のお名前を全角カナで返信してください。例）西沢未来の場合「ニシザワミライ」"
+                "text": "会員登録開始します。\n始めにお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               }
             ]
           })
