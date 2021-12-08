@@ -142,7 +142,7 @@ express()
                     messages: [
                       {
                         "type": "text",
-                        "text": "お子様のお名前は「"+text+"」ですね。次に、お子様の生年月日を数字で返信してください。例）2020年1月30日生まれの場合、20210130と入力してください。"
+                        "text": "お子様のお名前は「"+text+"」さんですね。次に、お子様の生年月日を数字で返信してください。例）2020年1月30日生まれの場合、20210130と入力してください。"
                       }
                     ]
                   })//close json
@@ -182,7 +182,7 @@ express()
                   messages: [
                     {
                       "type": "text",
-                      "text": "お子様の誕生日は「"+text+"」ですね。次に、お子様のアレルギーの有無を返信してください。例）有りの場合「はい」、無しの場合「いいえ」"
+                      "text": "お子様の誕生日は「"+text+"」ですね。次に、お子様のアレルギーの有無を返信してください。例）有りの場合「あり」、無しの場合「なし」"
                     }
                   ]
                 })//close json
@@ -216,15 +216,6 @@ express()
             //Allergy
             case 3:
               if(hasAllergyValidation(text)){
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "お子様のアレルギーは「"+text+"」ですね。"
-                    }
-                  ]
-                })//close json
                 //SET Name Value
                 await redis_client.hset(userId,'Allergy',text, (err, reply) => {
                   if (err) throw err;
@@ -240,19 +231,48 @@ express()
                   if (err) throw err;
                   console.log('SET Reply Status 40:' + reply);
                 });
+                //Get all information
+                let all_info
+                await redis_client.hgetall(userId, (err, reply) => {
+                  if (err) throw err;
+                  regsiter_informations = reply
+                });
+                Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
+                    console.log({k, v});
+                    if(k=='Name'){
+                      all_info += "お名前："+v+"\n"
+                    }else if(k=='BirthDay'){
+                      all_info += "お誕生日："+v+"\n"
+                    }else if(k=='Allergy'){
+                      all_info += "アレルギー："+v+"\n"
+                    }
+                });
+
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n"+all_info
+                    }
+                  ]
+                })//close json
               }else{
                 dataString = JSON.stringify({
                   replyToken: req.body.events[0].replyToken,
                   messages: [
                     {
                       "type": "text",
-                      "text": "申し訳ございません。再度、お子様のアレルギーの有無を返信してください。例）ありの場合「はい」、なしの場合「いいえ」"
+                      "text": "申し訳ございません。再度、お子様のアレルギーの有無を返信してください。例）ありの場合「あり」、なしの場合「なし」"
                     }
                   ]
                 })//close json
                 break;
               };//CASE3
             case 4:
+              if(yesOrNo(text)){
+                
+              }
               let regsiter_informations
               await redis_client.hgetall(userId, (err, reply) => {
                 if (err) throw err;
@@ -261,11 +281,20 @@ express()
               Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                   console.log({k, v});
               });
+              dataString = JSON.stringify({
+                replyToken: req.body.events[0].replyToken,
+                messages: [
+                  {
+                    "type": "text",
+                    "text": "以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。登録を中止する場合は「いいえ」を返信してください。"
+                  }
+                ]
+              })
             break;//CASE4
             default:
               console.log('Nothing to do in switch ') 
             break;
-          }// end of
+          }// end of switch
         }else{
           //通常Message
           dataString = JSON.stringify({
@@ -340,7 +369,7 @@ function isBirthdayNum(s){
 }
 
 function hasAllergyValidation(s){
-  if(s === 'はい' || s === 'いいえ'){
+  if(s === 'あり' || s === 'なし'){
     return true
   }else{
     return false
