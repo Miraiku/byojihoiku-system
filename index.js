@@ -394,7 +394,7 @@ function isBirthdayNum(s){
 }
 
 function BirthDayToJp(s){
-  if(s.match(/^[0-9]+$/) && Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+  if(s.match(/^[0-9]+$/) && s.length == 8 &&Number(s.substr( 0, 4 )) > 2000 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
     return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr( 6, 2 ))
   }else{
     return s
