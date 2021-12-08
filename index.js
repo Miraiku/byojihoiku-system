@@ -47,20 +47,18 @@ express()
       
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
-
-
         //GET CURRENT STATUS
         let register_status
         let register_reply_status
         await redis_client.hget(userId,'register_status', (err, reply) => {
           if (err) throw err;
           register_status = reply;
-          console.log('register_status : ' +reply);
+          console.log('CURRENT　register_status : ' +reply);
         });
         await redis_client.hget(userId,'register_reply_status', (err, reply) => {
           if (err) throw err;
           register_reply_status = reply;
-          console.log('register_reply_status : '+reply);
+          console.log('CURRENT　register_reply_status : '+reply);
         });
 
         if(text === "予約"){
@@ -98,12 +96,12 @@ express()
           //SET Status 1
           await redis_client.hset(userId,'register_status',1, (err, reply) => {
             if (err) throw err;
-            console.log('register_status 1 :'+ reply);
+            console.log('started register_status 1 :'+ reply);
           });
           //SET Reply Status 10
           await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
             if (err) throw err;
-            console.log('register_reply_status 10 :' + reply);
+            console.log('started register_reply_status 10 :' + reply);
           });
 
           dataString = JSON.stringify({
@@ -144,7 +142,7 @@ express()
                     messages: [
                       {
                         "type": "text",
-                        "text": "お子様のお名前は「"+text+"」ですね。次に、お子様の生年月日を数字で返信してください。例）2020年01月30日生まれの場合、20210130と入力してください。"
+                        "text": "お子様のお名前は「"+text+"」ですね。次に、お子様の生年月日を数字で返信してください。例）2020年1月30日生まれの場合、20210130と入力してください。"
                       }
                     ]
                   })//close json
@@ -209,7 +207,7 @@ express()
                   messages: [
                     {
                       "type": "text",
-                      "text": "申し訳ございません。お子様の生年月日を数字で返信してください。例）2020年01月30日生まれの場合、20210130と返信してください。"
+                      "text": "申し訳ございません。お子様の生年月日を数字で返信してください。例）2020年1月30日生まれの場合、20210130と返信してください。"
                     }
                   ]
                 })//close json
@@ -223,7 +221,7 @@ express()
                   messages: [
                     {
                       "type": "text",
-                      "text": "お子様の誕生日は「"+text+"」ですね。次に、お子様のアレルギーの有無を返信してください。例）有りの場合「はい」、無しの場合「いいえ」"
+                      "text": "お子様のアレルギーは「"+text+"」ですね。"
                     }
                   ]
                 })//close json
@@ -252,8 +250,8 @@ express()
                     }
                   ]
                 })//close json
-              }
-            break;//CASE3
+                break;
+              };//CASE3
             case 4:
               let regsiter_informations
               await redis_client.hgetall(userId, (err, reply) => {
