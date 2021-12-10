@@ -39,13 +39,21 @@ router
         });
 
         if(text === "予約"){
-            const psgl_client = await pool.connect(); 
-            let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
-            console.log(queryString);
-            const result = await psgl_client.query(queryString);
-            const results = { 'results': (result) ? result.rows : null};
-            console.log('LINEID:' + results);
-            psgl_client.release();
+            try {
+              const psgl_client = await pool.connect(); 
+              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
+              console.log(queryString);
+              const result = await psgl_client.query(queryString);
+              const results = { 'results': (result) ? result.rows : null};
+              console.log('LINEID select length:' + Object.keys(results).length);
+              for ([key, value] in Object.entries(testObj)) {
+                console.log(`${key}: ${value}`);
+              }
+              psgl_client.release();
+            }
+            catch (err) {
+              console.log(`PSGL ERR: ${err}`)
+            }
             //'お子様のお名前を返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
             //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
             dataString = JSON.stringify({
