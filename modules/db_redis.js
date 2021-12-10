@@ -3,15 +3,30 @@ const router = express.Router()
 const Redis = require("ioredis");
 const redis_client = new Redis(process.env.REDIS_URL);
 
-exports.sqlToPostgre = async function (queryString){
+exports.hsetStatus = async function (id,key,val){
   try {
-    const psgl_client = await pool.connect(); 
-    const results = await psgl_client.query(queryString);
-    psgl_client.release();
-    return results
+    //SET Status 2
+    await redis_client.hset(id,key,val, (err, reply) => {
+      if (err) throw err;
+      console.log('HSET Status :'+ id + ', key:' + key + 'val: '+ val);
+    });
   }
   catch (err) {
-    console.log(`PSGL ERR: ${err}`)
+    console.log(`REDIS ERR: ${err}`)
+    return null
+  }
+}
+
+exports.hgetStatus = async function (id,key){
+  try {
+    //SET Status 2
+    await redis_client.hset(id,key, (err, reply) => {
+      if (err) throw err;
+      console.log('HSET Status :'+ id + ', key:' + key);
+    });
+  }
+  catch (err) {
+    console.log(`REDIS ERR: ${err}`)
     return null
   }
 }
@@ -19,3 +34,4 @@ exports.sqlToPostgre = async function (queryString){
 exports.client = function (){
   return redis_client
 }
+
