@@ -18,15 +18,11 @@ router
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
         //GET CURRENT STATUS
-        let register_status
-        let register_reply_status
-        let reservation_status
-        let reservation_reply_status
-        await redis.hgetStatus(userId,'register_status')
-        await redis.hgetStatus(userId,'register_reply_status')
-        await redis.hgetStatus(userId,'reservation_status')
-        await redis.hgetStatus(userId,'reservation_reply_status')
-
+        let register_status = await redis.hgetStatus(userId,'register_status')
+        let register_reply_status = await redis.hgetStatus(userId,'register_reply_status')
+        let reservation_status = await redis.hgetStatus(userId,'reservation_status')
+        let reservation_reply_status = await redis.hgetStatus(userId,'reservation_reply_status')
+        
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
@@ -60,7 +56,7 @@ router
             messages: [
               {
                 "type": "text",
-                "text": "会員登録開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                "text": "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               }
             ]
           })
