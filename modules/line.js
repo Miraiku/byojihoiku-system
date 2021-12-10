@@ -4,7 +4,7 @@ const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const redis_client = new Redis(process.env.REDIS_URL);
-const pool = require('./db_posgre')
+const psgl = require('./db_posgre')
 
 router
   .post('/', async (req, res) => {
@@ -16,7 +16,7 @@ router
 
       res.send("HTTP POST request sent to the webhook URL!")
       let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
-      console.log('module posgre:' + sqlToPostgre(queryString))
+      console.log('module posgre:' + psgl.sqlToPostgre(queryString))
       
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
