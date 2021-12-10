@@ -51,45 +51,32 @@ router
         });
 
         if(text === "予約"){
-            let registeredMessage
-            try {
-              const psgl_client = await pool.connect(); 
-              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
-              const results = await psgl_client.query(queryString);
-              if(Object.keys(results.rows).length === 0){
-                registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
-              }else{
-                registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
-                //SET Status 1
-                await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
-                  if (err) throw err;
-                  console.log('started reservation_status 1 :'+ reply);
-                });
-                //SET Reply Status 10
-                await redis_client.hset(userId,'reservation_reply_status',10, (err, reply) => {
-                  if (err) throw err;
-                  console.log('started reservation_reply_status 10 :' + reply);
-                });
+          let registeredMessage
+          if(isRegisterd(userId)){
+            registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
+          }else{
+            registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
+            //SET Status 1
+            await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
+              if (err) throw err;
+              console.log('started reservation_status 1 :'+ reply);
+            });
+            //SET Reply Status 10
+            await redis_client.hset(userId,'reservation_reply_status',10, (err, reply) => {
+              if (err) throw err;
+              console.log('started reservation_reply_status 10 :' + reply);
+            });
+          }
+          dataString = JSON.stringify({
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+              {
+                "type": "text",
+                "text": registeredMessage
               }
-              dataString = JSON.stringify({
-                replyToken: req.body.events[0].replyToken,
-                messages: [
-                  {
-                    "type": "text",
-                    "text": registeredMessage
-                  }
-                ]
-              })
-              // && results.rows[0]['Name'] == text
-              console.log('LINEID select length:' + Object.keys(results.rows).length);
-              //console.table(results.rows);
-              //console.table(results.rows[0]['LINEID']);
-              psgl_client.release();
-            }
-            catch (err) {
-              console.log(`PSGL ERR: ${err}`)
-            }
-            //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
+            ]
+          })
+          //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
             
         }else if(text === "登録"){
           //SET Status 1
@@ -438,6 +425,23 @@ function yesOrNo(s){
     return true
   }else{
     return false
+  }
+}
+
+function isRegisterd(id){
+  try {
+    const psgl_client = await pool.connect(); 
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
+    const results = await psgl_client.query(queryString);
+    psgl_client.release();
+    if(Object.keys(results.rows).length === 0){
+      return false
+    }else{
+      return true
+    }
+  }
+  catch (err) {
+    console.log(`PSGL ERR: ${err}`)
   }
 }
 
