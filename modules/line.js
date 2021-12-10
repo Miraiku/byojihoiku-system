@@ -45,7 +45,9 @@ router
         });
         await redis_client.hgetall(userId, (err, reply) => {
           if (err) throw err;
-          console.log(reply);
+          Object.keys(reply).forEach(
+            key => console.log(key)
+         ); 
         });
 
         if(text === "予約"){
