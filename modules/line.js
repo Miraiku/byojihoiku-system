@@ -43,12 +43,6 @@ router
           reservation_reply_status = reply;
           console.log('CURRENT　reservation_reply_status: '+reply);
         });
-        await redis_client.hgetall(userId, (err, reply) => {
-          if (err) throw err;
-          Object.keys(reply).forEach(
-            key => console.log(key)
-         ); 
-        });
 
         if(text === "予約"){
           let registeredMessage
@@ -681,9 +675,14 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
 }
 
 async function resetAllStatus(id){
-  await redis_client.hdel(id, 'reservation_status', 'reservation_reply_status', 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+  await redis_client.hgetall(userId, (err, reply) => {
     if (err) throw err;
-    console.log('REDIS DELETED: ' + id)
+    Object.keys(reply).forEach(function (key) {
+      await redis_client.hdel(id, key,(err, reply) => {
+        if (err) throw err;
+        console.log('REDIS DELETED: ' + id)
+      });
+    });
   });
 }
 
