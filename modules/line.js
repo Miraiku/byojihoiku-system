@@ -41,7 +41,7 @@ router
         if(text === "予約"){
             try {
               const psgl_client = await pool.connect(); 
-              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
+              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '123';`;
               const results = await psgl_client.query(queryString);
               console.log('LINEID select length:' + Object.keys(results.rows).length);
               console.table(results.rows);
