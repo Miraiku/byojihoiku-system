@@ -393,6 +393,13 @@ router
         console.error(err);
     }
   })
+
+
+function isZenkakuKana(s) {
+  return !!s.match(/^[ァ-ヶー　]*$/);  // 「　」は全角スペース
+}
+
+
 function BirthDayToJp(s){
   if(isBirthdayNum(s)){
     return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
