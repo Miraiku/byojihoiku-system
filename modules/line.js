@@ -677,10 +677,12 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
 async function resetAllStatus(id){
   await redis_client.hgetall(id, (err, reply) => {
     if (err) throw err;
-    Object.keys(reply).forEach(async function (key) {
+    console.log('REDIS DELETED ID: ' + id)
+    Object.keys(reply).forEach(async function (key,val) {
       await redis_client.hdel(id, key,(err, reply) => {
         if (err) throw err;
-        console.log('REDIS DELETED: ' + id)
+        console.log('REDIS DELETED KEY: ' + key)
+        console.log('REDIS DELETED VALUE: ' + val)
       });
     });
   });
