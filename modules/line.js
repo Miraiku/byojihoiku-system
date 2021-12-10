@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router()
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const redis_client = new Redis(process.env.REDIS_URL);
+const database = require('./modules/database')
+const redis_client = database.RedisClient();
+const pool = database.PsglClient();
 const member_table = ['LINEID','Name','BirthDay','Allergy']
 
 router
