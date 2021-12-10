@@ -11,12 +11,15 @@ const Redis = require("ioredis");
 const https = require("https");
 const redis_client = new Redis(process.env.REDIS_URL);
 
-router
-  .use(function RedisClient (req, res, next) {
-    return redis_client
-  })
-  .use(function PsglClient (req, res, next) {
-    return pool
-  })
 
-module.exports = router
+module.exports = {
+  RedisClient: function () {
+    return redis_client
+  },
+}
+
+module.exports = {
+  PsglClient: function () {
+    return pool
+  },
+}
