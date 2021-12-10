@@ -32,15 +32,9 @@ router
           if(await isRegisterd(userId)){
             registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n例）2022年02月22日'
             //SET Status 1
-            await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
-              if (err) throw err;
-              console.log('started reservation_status 1 :'+ reply);
-            });
+            await redis.hsetStatus(userId,'reservation_status',1)
             //SET Reply Status 10
-            await redis_client.hset(userId,'reservation_reply_status',10, (err, reply) => {
-              if (err) throw err;
-              console.log('started reservation_reply_status 10 :' + reply);
-            });
+            await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
             registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
           }
@@ -57,15 +51,9 @@ router
             
         }else if(text === "登録"){
           //SET Status 1
-          await redis_client.hset(userId,'register_status',1, (err, reply) => {
-            if (err) throw err;
-            console.log('started register_status 1 :'+ reply);
-          });
+          await redis.hsetStatus(userId,'register_status',1)
           //SET Reply Status 10
-          await redis_client.hset(userId,'register_reply_status',10, (err, reply) => {
-            if (err) throw err;
-            console.log('started register_reply_status 10 :' + reply);
-          });
+          await redis.hsetStatus(userId,'register_reply_status',10)
 
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
@@ -94,7 +82,7 @@ router
             ]
           })
         }else if((register_status!=null || reservation_status!=null) && text==='中止'){
-          await resetAllStatus(userId)
+          await redis.resetAllStatus(userId)
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
             messages: [
@@ -122,20 +110,11 @@ router
                     ]
                   })//close json
                   //SET Name Value
-                  await redis_client.hset(userId,'Name',name, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET Name Value:'+reply);
-                  });
+                  await redis.hsetStatus(userId,'Name',name)
                   //SET Status 2
-                  await redis_client.hset(userId,'register_status',2, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET Status 2:'+reply);
-                  });
+                  await redis.hsetStatus(userId,'register_status',2)
                   //SET Reply Status 20
-                  await redis_client.hset(userId,'register_reply_status',20, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET Reply Status 20:' + reply);
-                  });
+                  await redis.hsetStatus(userId,'register_reply_status',20)
                 }else{
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
@@ -162,20 +141,11 @@ router
                   ]
                 })//close json
                 //SET Name Value
-                await redis_client.hset(userId,'BirthDay',text, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET BirthDay Value:'+reply);
-                });
+                await redis.hsetStatus(userId,'BirthDay',text)
                 //SET Status 3
-                await redis_client.hset(userId,'register_status',3, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Status 3:'+reply);
-                });
+                await redis.hsetStatus(userId,'register_status',3)
                 //SET Reply Status 30
-                await redis_client.hset(userId,'register_reply_status',30, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Reply Status 30:' + reply);
-                });
+                await redis.hsetStatus(userId,'register_reply_status',30,)
               }else{
                 dataString = JSON.stringify({
                   replyToken: req.body.events[0].replyToken,
@@ -192,25 +162,13 @@ router
             case 3:
               if(hasAllergyValidation(text)){
                 //SET Name Value
-                await redis_client.hset(userId,'Allergy',text, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Allergy Value:'+reply);
-                });
+                await redis.hsetStatus(userId,'Allergy',text)
                 //SET Status 4
-                await redis_client.hset(userId,'register_status',4, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Status 4:'+reply);
-                });
+                await redis.hsetStatus(userId,'register_status',4)
                 //SET Reply Status 40
-                await redis_client.hset(userId,'register_reply_status',40, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Reply Status 40:' + reply);
-                });
+                await redis.hsetStatus(userId,'register_reply_status',40)
                 //Get all information
-                await redis_client.hgetall(userId, (err, reply) => {
-                  if (err) throw err;
-                  regsiter_informations = reply
-                });
+                regsiter_informations = await redis.hgetAll(userId)
                 let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                     console.log({k, v});
@@ -250,17 +208,13 @@ router
                 if(text==='はい'){
                   try {
                     //Get all information
-                    let info
-                    await redis_client.hgetall(userId, (err, reply) => {
-                      if (err) throw err;
-                      info = reply
-                    });
+                    let info = redis.hgetAll(userId)
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
                   } catch (err) {
                     console.error(err);
                   }
-                  await resetAllStatus(userId)
+                  await redis.resetAllStatus(userId)
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
@@ -272,7 +226,7 @@ router
                   })
                   break;
                 }else if(text=='いいえ'){
-                  await resetAllStatus(userId)
+                  await redis.resetAllStatus(userId)
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
                     messages: [
@@ -349,12 +303,7 @@ router
             //BirthDay
             case 2:
               if(isValidDate(text)){
-                let name
-                await redis_client.hget(userId,'Name', (err, reply) => {
-                  if (err) throw err;
-                  name = reply
-                  console.log('GET Name Value:'+reply);
-                });
+                let name = await redis.hgetStatus(userId,'Name')
                 if(isRegisterdByNameAndBirthDay(name,text)){
                   dataString = JSON.stringify({
                     replyToken: req.body.events[0].replyToken,
@@ -366,20 +315,11 @@ router
                     ]
                   })//close json
                   //SET Name Value
-                  await redis_client.hset(userId,'BirthDay',text, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET BirthDay Value:'+reply);
-                  });
+                  await redis.hsetStatus(userId,'BirthDay')
                   //SET Status 3
-                  await redis_client.hset(userId,'register_status',3, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET Status 3:'+reply);
-                  });
+                  await redis.hsetStatus(userId,'register_status',3)
                   //SET Reply Status 30
-                  await redis_client.hset(userId,'register_reply_status',30, (err, reply) => {
-                    if (err) throw err;
-                    console.log('SET Reply Status 30:' + reply);
-                  });
+                  await redis.hsetStatus(userId,'register_reply_status',30)
                 }else{//isRegisterdByNameAndBirthDay()
 
                 }
@@ -399,25 +339,13 @@ router
             case 3:
               if(hasAllergyValidation(text)){
                 //SET Name Value
-                await redis_client.hset(userId,'Allergy',text, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Allergy Value:'+reply);
-                });
+                await redis.hsetStatus(userId,'Allergy',text)
                 //SET Status 4
-                await redis_client.hset(userId,'register_status',4, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Status 4:'+reply);
-                });
+                await redis.hsetStatus(userId,'register_status',4)
                 //SET Reply Status 40
-                await redis_client.hset(userId,'register_reply_status',40, (err, reply) => {
-                  if (err) throw err;
-                  console.log('SET Reply Status 40:' + reply);
-                });
+                await redis.hsetStatus(userId,'register_reply_status',40)
                 //Get all information
-                await redis_client.hgetall(userId, (err, reply) => {
-                  if (err) throw err;
-                  regsiter_informations = reply
-                });
+                regsiter_informations = await redis.hgetAll(userId)
                 let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
                     console.log({k, v});
@@ -457,22 +385,13 @@ router
                 if(text==='はい'){
                   try {
                     //Get all information
-                    let info
-                    await redis_client.hgetall(userId, (err, reply) => {
-                      if (err) throw err;
-                      info = reply
-                    });
+                    let info = await redis.hgetAll(id)
                     let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
                     '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;                   
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
                     
-                    await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
-                      if (err) throw err;
-                      console.log('REDIS DELETED: ' + userId)
-                    });
-                    psgl_client.release();
-                    //redis_client.release();
+                    await redis.resetAllStatus(userId)
                   } catch (err) {
                     console.error(err);
                   }
@@ -649,22 +568,6 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
     console.log(`PSGL ERR: ${err}`)
   }
 }
-
-async function resetAllStatus(id){
-  await redis_client.hgetall(id, (err, reply) => {
-    if (err) throw err;
-    console.log('REDIS DELETED ID: ' + id)
-    Object.keys(reply).forEach(async function (key,val) {
-      await redis_client.hdel(id, key,(err, reply) => {
-        if (err) throw err;
-        console.log('REDIS DELETED KEY: ' + key)
-        console.log('REDIS DELETED VALUE: ' + val)
-      });
-    });
-  });
-}
-
-
 
 
 module.exports = router

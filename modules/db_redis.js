@@ -22,7 +22,8 @@ exports.hgetStatus = async function (id,key){
     //SET Status 2
     await redis_client.hget(id,key, (err, reply) => {
       if (err) throw err;
-      console.log('HGET Status :'+ id + ', key:' + key);
+      console.log('HGET Status :'+ id + ', key:' + key + 'val: '+ val);
+      return reply
     });
   }
   catch (err) {
@@ -31,7 +32,31 @@ exports.hgetStatus = async function (id,key){
   }
 }
 
-exports.client = function (){
-  return redis_client
+exports.hgetAll = async function (id,key){
+  try {
+    //SET Status 2
+    await redis_client.hgetall(id, (err, reply) => {
+      if (err) throw err;
+      console.log('HGETALL Status :'+ reply);
+      return reply
+    });
+  }
+  catch (err) {
+    console.log(`REDIS ERR: ${err}`)
+    return null
+  }
 }
 
+exports.resetAllStatus = async function (id){
+  await redis_client.hgetall(id, (err, reply) => {
+    if (err) throw err;
+    console.log('REDIS DELETED ID: ' + id)
+    Object.keys(reply).forEach(async function (key,val) {
+      await redis_client.hdel(id, key,(err, reply) => {
+        if (err) throw err;
+        console.log('REDIS DELETED KEY: ' + key)
+        console.log('REDIS DELETED VALUE: ' + val)
+      });
+    });
+  });
+}
