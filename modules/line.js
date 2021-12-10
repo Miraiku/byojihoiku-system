@@ -52,7 +52,7 @@ router
 
         if(text === "予約"){
           let registeredMessage
-          if(isRegisterd(userId)){
+          if(await isRegisterd(userId)){
             console.log('main yes')
             registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
             //SET Status 1
