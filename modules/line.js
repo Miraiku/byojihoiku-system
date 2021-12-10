@@ -15,8 +15,6 @@ router
       let dataString
 
       res.send("HTTP POST request sent to the webhook URL!")
-      let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
-      console.log('module posgre:' + psgl.sqlToPostgre(queryString))
       
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
@@ -274,13 +272,8 @@ router
                       if (err) throw err;
                       info = reply
                     });
-                    const psgl_client = await pool.connect(); 
-                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
-                    const result = await psgl_client.query(queryString);
-
-                    const results = { 'results': (result) ? result.rows : null};
-                    console.log(results);
+                    const result = await psgl.sqlToPostgre(queryString)
+                    console.log(result);
                     
                     await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
                       if (err) throw err;
@@ -493,13 +486,10 @@ router
                       if (err) throw err;
                       info = reply
                     });
-                    const psgl_client = await pool.connect(); 
                     let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
-                    const result = await psgl_client.query(queryString);
-
-                    const results = { 'results': (result) ? result.rows : null};
-                    console.log(results);
+                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;                   
+                    const result = await psgl.sqlToPostgre(queryString)
+                    console.log(result);
                     
                     await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
                       if (err) throw err;
@@ -655,10 +645,8 @@ function yesOrNo(s){
 
 async function isRegisterd(id){
   try {
-    const psgl_client = await pool.connect(); 
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
-    const results = await psgl_client.query(queryString);
-    psgl_client.release();
+    const results = await psgl.sqlToPostgre(queryString)
     if(Object.keys(results.rows).length == 0){
       return false
     }else{
@@ -672,10 +660,9 @@ async function isRegisterd(id){
 
 async function isRegisterdByNameAndBirthDay(name,birthday){
   try {
-    const psgl_client = await pool.connect(); 
     let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+`;`
-    const results = await psgl_client.query(queryString);
-    psgl_client.release();
+    const results = await psgl.sqlToPostgre(queryString)
+    console.log(results);
     if(Object.keys(results.rows).length == 0){
       return false
     }else{
