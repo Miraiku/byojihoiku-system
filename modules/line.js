@@ -45,8 +45,8 @@ router
         });
         await redis_client.hgetall(userId, (err, reply) => {
           if (err) throw err;
-          reply.forEach(function(k, v) {
-            console.log('HGETALL: '+v);
+          reply.forEach(function(elem, index) {
+            console.log(index + ': ' + elem);
           });
         });
 
