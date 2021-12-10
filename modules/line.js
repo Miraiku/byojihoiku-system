@@ -116,7 +116,7 @@ router
             }
             ]
           })
-        }else if(register_status!=null && text==='中止'){reservation
+        }else if(register_status!=null && text==='中止'){
           await redis_client.hdel(userId, 'reservation_status', 'reservation_reply_status', 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
             if (err) throw err;
             console.log('REDIS DELETED: ' + userId)
