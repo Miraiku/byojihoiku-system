@@ -5,26 +5,27 @@ const redis_client = new Redis(process.env.REDIS_URL);
 
 exports.hsetStatus = async function (id,key,val){
   try {
-    //SET Status 2
     await redis_client.hset(id,key,val, (err, reply) => {
       if (err) throw err;
       console.log('HSET Status :'+ id + ', key:' + key + ', val: '+ val);
+      return true
     });
   }
   catch (err) {
     console.log(`REDIS ERR: ${err}`)
-    return null
+    return false
   }
 }
 
 exports.hgetStatus = async function (id,key){
   try {
-    //SET Status 2
+    let result
     await redis_client.hget(id,key, (err, reply) => {
       if (err) throw err;
       console.log('HGET Status :'+ id + ', key:' + key + ', val: '+ reply);
-      return reply
+      result = reply
     });
+    return result
   }
   catch (err) {
     console.log(`REDIS ERR: ${err}`)
@@ -34,12 +35,13 @@ exports.hgetStatus = async function (id,key){
 
 exports.hgetAll = async function (id,key){
   try {
-    //SET Status 2
+    let result
     await redis_client.hgetall(id, (err, reply) => {
       if (err) throw err;
       console.log('HGETALL Status :'+ reply);
-      return reply
+      result = reply
     });
+    return result
   }
   catch (err) {
     console.log(`REDIS ERR: ${err}`)
