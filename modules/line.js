@@ -13,7 +13,7 @@ const TOKEN = process.env.LINE_ACCESS_TOKEN
 const redis_client = new Redis(process.env.REDIS_URL);
 const member_table = ['LINEID','Name','BirthDay','Allergy']
 
-router()
+router
   .post('/', async (req, res) => {
     try {
       
@@ -364,6 +364,10 @@ router()
         console.error(err);
     }
   })
+
+
+
+  
 function BirthDayToJp(s){
   if(isBirthdayNum(s)){
     return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
