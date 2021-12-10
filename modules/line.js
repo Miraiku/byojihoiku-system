@@ -22,6 +22,7 @@ router
         let register_reply_status = await redis.hgetStatus(userId,'register_reply_status')
         let reservation_status = await redis.hgetStatus(userId,'reservation_status')
         let reservation_reply_status = await redis.hgetStatus(userId,'reservation_reply_status')
+        console.log(register_status)
         
         if(text === "予約"){
           let registeredMessage
