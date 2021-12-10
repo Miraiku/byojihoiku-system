@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router()
-const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const redis_client = new Redis(process.env.REDIS_URL);
 const psgl = require('./db_postgre')
+const redis = require('./redis')
 
 router
   .post('/', async (req, res) => {
@@ -23,22 +22,22 @@ router
         let register_reply_status
         let reservation_status
         let reservation_reply_status
-        await redis_client.hget(userId,'register_status', (err, reply) => {
+        await redis.client().hget(userId,'register_status', (err, reply) => {
           if (err) throw err;
           register_status = reply;
           console.log('CURRENT　register_status : ' +reply);
         });
-        await redis_client.hget(userId,'register_reply_status', (err, reply) => {
+        await redis.client().hget(userId,'register_reply_status', (err, reply) => {
           if (err) throw err;
           register_reply_status = reply;
           console.log('CURRENT　register_reply_status : '+reply);
         });
-        await redis_client.hget(userId,'reservation_status', (err, reply) => {
+        await redis.client().hget(userId,'reservation_status', (err, reply) => {
           if (err) throw err;
           reservation_status = reply;
           console.log('CURRENT　reservation_status : ' +reply);
         });
-        await redis_client.hget(userId,'reservation_reply_status', (err, reply) => {
+        await redis.client().hget(userId,'reservation_reply_status', (err, reply) => {
           if (err) throw err;
           reservation_reply_status = reply;
           console.log('CURRENT　reservation_reply_status: '+reply);
@@ -274,13 +273,6 @@ router
                     });
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
-                    
-                    await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
-                      if (err) throw err;
-                      console.log('REDIS DELETED: ' + userId)
-                    });
-                    psgl_client.release();
-                    //redis_client.release();
                   } catch (err) {
                     console.error(err);
                   }
