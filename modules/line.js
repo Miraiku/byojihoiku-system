@@ -4,7 +4,7 @@ const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const redis_client = new Redis(process.env.REDIS_URL);
-const psgl = require('./db_posgre')
+const psgl = require('./db_postgre')
 
 router
   .post('/', async (req, res) => {
