@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router()
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const database = require('./database')
-const redis_client = database.RedisClient();
-const pool = database.PsglClient();
-const member_table = ['LINEID','Name','BirthDay','Allergy']
+const redis_client = new Redis(process.env.REDIS_URL);
 
-router
+router()
   .post('/', async (req, res) => {
     try {
       
@@ -34,6 +39,14 @@ router
         });
 
         if(text === "予約"){
+            const psgl_client = await pool.connect(); 
+            let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = `+userId+`;`;
+            const result = await psgl_client.query(queryString);
+            const results = { 'results': (result) ? result.rows : null};
+            console.log('LINEID:' + results);
+            psgl_client.release();
+            //'お子様のお名前を返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
+            //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
             dataString = JSON.stringify({
                 replyToken: req.body.events[0].replyToken,
                 messages: [
@@ -358,10 +371,6 @@ router
         console.error(err);
     }
   })
-
-
-
-  
 function BirthDayToJp(s){
   if(isBirthdayNum(s)){
     return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
