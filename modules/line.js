@@ -434,7 +434,7 @@ async function isRegisterd(id){
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl_client.query(queryString);
     psgl_client.release();
-    if(Object.keys(results.rows).length === 0){
+    if(Object.keys(results.rows).length == 0){
       return false
     }else{
       return true
