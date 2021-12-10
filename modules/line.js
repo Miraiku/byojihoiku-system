@@ -56,7 +56,7 @@ router
               const psgl_client = await pool.connect(); 
               let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
               const results = await psgl_client.query(queryString);
-              if(Object.keys(results.rows).length > 0){
+              if(Object.keys(results.rows).length === 0){
                 registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
               }else{
                 registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
