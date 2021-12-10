@@ -42,11 +42,10 @@ router
             try {
               const psgl_client = await pool.connect(); 
               let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
-              console.log(queryString);
               const result = await psgl_client.query(queryString);
               const results = { 'results': (result) ? result.rows : null};
               console.log('LINEID select length:' + Object.keys(results).length);
-              for ([key, value] in Object.entries(testObj)) {
+              for ([key, value] in Object.entries(results)) {
                 console.log(`${key}: ${value}`);
               }
               psgl_client.release();
