@@ -45,6 +45,7 @@ router
               const result = await psgl_client.query(queryString);
               const results = { 'results': (result) ? result.rows : null};
               console.log('LINEID select length:' + Object.keys(results).length);
+              console.table(results);
               for ([key, value] in Object.entries(results)) {
                 console.log(`${key}: ${value}`);
               }
