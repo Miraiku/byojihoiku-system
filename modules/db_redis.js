@@ -22,7 +22,7 @@ exports.hgetStatus = async function (id,key){
     //SET Status 2
     await redis_client.hget(id,key, (err, reply) => {
       if (err) throw err;
-      console.log('HGET Status :'+ id + ', key:' + key + 'val: '+ val);
+      console.log('HGET Status :'+ id + ', key:' + key + 'val: '+ reply);
       return reply
     });
   }
