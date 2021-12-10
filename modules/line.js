@@ -27,6 +27,8 @@ router
         //GET CURRENT STATUS
         let register_status
         let register_reply_status
+        let reservation_status
+        let reservation_reply_status
         await redis_client.hget(userId,'register_status', (err, reply) => {
           if (err) throw err;
           register_status = reply;
@@ -37,31 +39,58 @@ router
           register_reply_status = reply;
           console.log('CURRENT　register_reply_status : '+reply);
         });
+        await redis_client.hget(userId,'reservation_status', (err, reply) => {
+          if (err) throw err;
+          reservation_status = reply;
+          console.log('CURRENT　reservation_status : ' +reply);
+        });
+        await redis_client.hget(userId,'reservation_reply_status', (err, reply) => {
+          if (err) throw err;
+          reservation_reply_status = reply;
+          console.log('CURRENT　reservation_reply_status: '+reply);
+        });
 
         if(text === "予約"){
+            let registeredMessage
             try {
               const psgl_client = await pool.connect(); 
-              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '123';`;
+              let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
               const results = await psgl_client.query(queryString);
+              if(Object.keys(results.rows).length > 0){
+                registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
+              }else{
+                registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
+                //SET Status 1
+                await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
+                  if (err) throw err;
+                  console.log('started reservation_status 1 :'+ reply);
+                });
+                //SET Reply Status 10
+                await redis_client.hset(userId,'reservation_reply_status',10, (err, reply) => {
+                  if (err) throw err;
+                  console.log('started reservation_reply_status 10 :' + reply);
+                });
+              }
+              dataString = JSON.stringify({
+                replyToken: req.body.events[0].replyToken,
+                messages: [
+                  {
+                    "type": "text",
+                    "text": registeredMessage
+                  }
+                ]
+              })
+              // && results.rows[0]['Name'] == text
               console.log('LINEID select length:' + Object.keys(results.rows).length);
-              console.table(results.rows);
-              console.table(results.rows[0]['LINEID']);
+              //console.table(results.rows);
+              //console.table(results.rows[0]['LINEID']);
               psgl_client.release();
             }
             catch (err) {
               console.log(`PSGL ERR: ${err}`)
             }
-            //'お子様のお名前を返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
             //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
-            dataString = JSON.stringify({
-                replyToken: req.body.events[0].replyToken,
-                messages: [
-                  {
-                    "type": "text",
-                    "text": "病児保育の予約ですね"
-                  }
-                ]
-              })
+            
         }else if(text === "登録"){
           //SET Status 1
           await redis_client.hset(userId,'register_status',1, (err, reply) => {
@@ -100,8 +129,8 @@ router
             }
             ]
           })
-        }else if(register_status!=null && text==='中止'){
-          await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+        }else if(register_status!=null && text==='中止'){reservation
+          await redis_client.hdel(userId, 'reservation_status', 'reservation_reply_status', 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
             if (err) throw err;
             console.log('REDIS DELETED: ' + userId)
           });
