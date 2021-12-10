@@ -12,7 +12,7 @@ const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const redis_client = new Redis(process.env.REDIS_URL);
 
-router()
+router
   .post('/', async (req, res) => {
     try {
       
