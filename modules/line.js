@@ -675,7 +675,7 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
 }
 
 async function resetAllStatus(id){
-  await redis_client.hgetall(userId, (err, reply) => {
+  await redis_client.hgetall(id, (err, reply) => {
     if (err) throw err;
     Object.keys(reply).forEach(async function (key) {
       await redis_client.hdel(id, key,(err, reply) => {
