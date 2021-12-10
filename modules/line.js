@@ -11,7 +11,8 @@ router
       
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
-      let dataString
+      let dataString = null
+      let replyMessage = null
 
       res.send("HTTP POST request sent to the webhook URL!")
       
@@ -35,32 +36,15 @@ router
           }else{
             registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
           }
-          dataString = JSON.stringify({
-            replyToken: req.body.events[0].replyToken,
-            messages: [
-              {
-                "type": "text",
-                "text": registeredMessage
-              }
-            ]
-          })
-          //'お子様の誕生日を返信してください。\n例）2020年1月30日生まれの場合、「20210130」'
-            
+          replyMessage = registeredMessage
+
         }else if(text === "登録"){
           //SET Status 1
           await redis.hsetStatus(userId,'register_status',1)
           //SET Reply Status 10
           await redis.hsetStatus(userId,'register_reply_status',10)
 
-          dataString = JSON.stringify({
-            replyToken: req.body.events[0].replyToken,
-            messages: [
-              {
-                "type": "text",
-                "text": "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
-              }
-            ]
-          })
+          replyMessage = "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
         }else if(text === 'カレンダー'){
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
@@ -80,15 +64,7 @@ router
           })
         }else if((register_status!=null || reservation_status!=null) && text==='中止'){
           await redis.resetAllStatus(userId)
-          dataString = JSON.stringify({
-            replyToken: req.body.events[0].replyToken,
-            messages: [
-              {
-                "type": "text",
-                "text": "手続きを中止しました。"
-            }
-            ]
-          })
+          replyMessage = "手続きを中止しました。"
         }else if(register_status!=null){
           //ACTION
           switch (Number(register_status)) {
@@ -97,15 +73,7 @@ router
               if(register_reply_status==10){
                 let name = text.replace(/\s+/g, "")
                 if(isZenkakuKana(name)){
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
-                      }
-                    ]
-                  })//close json
+                  replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                   //SET Name Value
                   await redis.hsetStatus(userId,'Name',name)
                   //SET Status 2
@@ -113,30 +81,14 @@ router
                   //SET Reply Status 20
                   await redis.hsetStatus(userId,'register_reply_status',20)
                 }else{
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
-                      }
-                    ]
-                  })//close json
+                  replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
                 }// close ZenkakuKana
               }
             break;//CASE1
             //BirthDay
             case 2:
               if(isValidDate(text)){
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
-                    }
-                  ]
-                })//close json
+                replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                 //SET Name Value
                 await redis.hsetStatus(userId,'BirthDay',text)
                 //SET Status 3
@@ -144,15 +96,7 @@ router
                 //SET Reply Status 30
                 await redis.hsetStatus(userId,'register_reply_status',30,)
               }else{
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
               }
               break;//CASE2
             //Allergy
@@ -178,73 +122,31 @@ router
                     }
                 });
 
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
-                    }
-                  ]
-                })//close json
+                replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage = "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
                 break;
               };//CASE3
             case 4:
               if(yesOrNo(text)){
                 if(text==='はい'){
                   try {
-                    //Get all information
-                    let info = redis.hgetAll(userId)
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
                   } catch (err) {
                     console.error(err);
                   }
                   await redis.resetAllStatus(userId)
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
-                      }
-                    ]
-                  })
+                  replyMessage = "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
                   break;
                 }else if(text=='いいえ'){
                   await redis.resetAllStatus(userId)
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "会員登録を中止しました。"
-                      }
-                    ]
-                  })
+                  replyMessage = "会員登録を中止しました。"
                 }
                 break;
               }else{
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage =  "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
                 break;
               };
             break;//CASE4
@@ -260,15 +162,7 @@ router
               if(reservation_reply_status==10){
                 let name = text.replace(/\s+/g, "")
                 if(isZenkakuKana(name)){
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
-                      }
-                    ]
-                  })//close json
+                  replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                   //SET Name Value
                   await redis_client.hset(userId,'Name',name, (err, reply) => {
                     if (err) throw err;
@@ -285,15 +179,7 @@ router
                     console.log('SET reservation　Reply Status 20:' + reply);
                   });
                 }else{
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
-                      }
-                    ]
-                  })//close json
+                  replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
                 }// close ZenkakuKana
               }
             break;//CASE1
@@ -302,15 +188,7 @@ router
               if(isValidDate(text)){
                 let name = await redis.hgetStatus(userId,'Name')
                 if(isRegisterdByNameAndBirthDay(name,text)){
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
-                      }
-                    ]
-                  })//close json
+                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                   //SET Name Value
                   await redis.hsetStatus(userId,'BirthDay')
                   //SET Status 3
@@ -321,15 +199,7 @@ router
 
                 }
               }else{//isValidDate()
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
               }
               break;//CASE2
             //Allergy
@@ -355,26 +225,10 @@ router
                     }
                 });
 
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
-                    }
-                  ]
-                })//close json
+                replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage = "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
                 break;
               };//CASE3
             case 4:
@@ -392,43 +246,15 @@ router
                   } catch (err) {
                     console.error(err);
                   }
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
-                      }
-                    ]
-                  })
+                  replyMessage = "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
                   break;
                 }else if(text=='いいえ'){
-                  await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
-                    if (err) throw err;
-                    console.log('REDIS DELETED: ' + userId)
-                  });
-                  //redis_client.release();
-                  dataString = JSON.stringify({
-                    replyToken: req.body.events[0].replyToken,
-                    messages: [
-                      {
-                        "type": "text",
-                        "text": "会員登録を中止しました。"
-                      }
-                    ]
-                  })
+                  await redis.resetAllStatus(userId)
+                  replyMessage = "会員登録を中止しました。"
                 }
                 break;
               }else{
-                dataString = JSON.stringify({
-                  replyToken: req.body.events[0].replyToken,
-                  messages: [
-                    {
-                      "type": "text",
-                      "text": "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
-                    }
-                  ]
-                })//close json
+                replyMessage = "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
                 break;
               };
             break;//CASE4
@@ -438,16 +264,7 @@ router
           }// end of switch
         }else{
           //通常Message
-          dataString = JSON.stringify({
-            replyToken: req.body.events[0].replyToken,
-            messages: [
-              {
-                "type": "text",
-                "text": "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n▶会員登録は「登録」\nと返信してください。"
-              }
-            ]
-          })
-    
+          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n▶会員登録は「登録」\nと返信してください。"
         }// end default message reply
 
     
@@ -457,6 +274,29 @@ router
           "Authorization": "Bearer " + TOKEN
         }
     
+        if(dataString == null && replyMessage != null){
+          dataString = JSON.stringify({
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+              {
+                "type": "text",
+                "text": replyMessage
+              }
+            ]
+          })
+        }else if(dataString == null && replyMessage == null){
+          replyMessage = '申し訳ございません。予期せぬエラーが発生しました。お手数ですが、はじめからやり直してください。'
+          dataString = JSON.stringify({
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+              {
+                "type": "text",
+                "text": replyMessage
+              }
+            ]
+          })
+        }
+
         // リクエストに渡すオプション
         const webhookOptions = {
           "hostname": "api.line.me",
