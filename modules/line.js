@@ -45,7 +45,7 @@ router
               const results = await psgl_client.query(queryString);
               console.log('LINEID select length:' + Object.keys(results.rows).length);
               console.table(results.rows);
-              console.table(results.rows[0][LINEID]);
+              console.table(results.rows[0]['LINEID']);
               psgl_client.release();
             }
             catch (err) {
