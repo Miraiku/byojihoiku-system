@@ -43,6 +43,12 @@ router
           reservation_reply_status = reply;
           console.log('CURRENT　reservation_reply_status: '+reply);
         });
+        await redis_client.hgetall(userId, (err, reply) => {
+          if (err) throw err;
+          reply.forEach(v => {
+            console.log('HGETALL: '+v);
+          });
+        });
 
         if(text === "予約"){
           let registeredMessage
