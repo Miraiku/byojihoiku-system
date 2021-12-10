@@ -20,9 +20,9 @@ exports.hsetStatus = async function (id,key,val){
 exports.hgetStatus = async function (id,key){
   try {
     //SET Status 2
-    await redis_client.hset(id,key, (err, reply) => {
+    await redis_client.hget(id,key, (err, reply) => {
       if (err) throw err;
-      console.log('HSET Status :'+ id + ', key:' + key);
+      console.log('HGET Status :'+ id + ', key:' + key);
     });
   }
   catch (err) {
