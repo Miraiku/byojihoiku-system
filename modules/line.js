@@ -53,8 +53,6 @@ router
         if(text === "予約"){
           let registeredMessage
           if(isRegisterd(userId)){
-            registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
-          }else{
             registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
             //SET Status 1
             await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
@@ -66,6 +64,8 @@ router
               if (err) throw err;
               console.log('started reservation_reply_status 10 :' + reply);
             });
+          }else{
+            registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
           }
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
