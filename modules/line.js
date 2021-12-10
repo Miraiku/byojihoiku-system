@@ -428,7 +428,7 @@ function yesOrNo(s){
   }
 }
 
-function isRegisterd(id){
+async function isRegisterd(id){
   try {
     const psgl_client = await pool.connect(); 
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
