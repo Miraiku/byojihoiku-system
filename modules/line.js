@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router()
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
 const Redis = require("ioredis");
 const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const redis_client = new Redis(process.env.REDIS_URL);
+const pool = require('./db_posgre')
 
 router
   .post('/', async (req, res) => {
@@ -21,6 +15,8 @@ router
       let dataString
 
       res.send("HTTP POST request sent to the webhook URL!")
+      let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+userId+`';`;
+      console.log('module posgre:' + sqlToPostgre(queryString))
       
       // ユーザーがボットにメッセージを送った場合、返信メッセージを送る
       if (req.body.events[0].type === "message") {
@@ -53,8 +49,7 @@ router
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
-            console.log('main yes')
-            registeredMessage = '病児保育の予約ですね。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来さんの場合、「ニシザワミライ」'
+            registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n例）2022年02月22日'
             //SET Status 1
             await redis_client.hset(userId,'reservation_status',1, (err, reply) => {
               if (err) throw err;
@@ -66,7 +61,6 @@ router
               console.log('started reservation_reply_status 10 :' + reply);
             });
           }else{
-            console.log('main no')
             registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
           }
           dataString = JSON.stringify({
@@ -97,7 +91,7 @@ router
             messages: [
               {
                 "type": "text",
-                "text": "会員登録開始します。\n始めにお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                "text": "会員登録開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               }
             ]
           })
@@ -118,12 +112,8 @@ router
             }
             ]
           })
-        }else if(register_status!=null && text==='中止'){
-          await redis_client.hdel(userId, 'reservation_status', 'reservation_reply_status', 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
-            if (err) throw err;
-            console.log('REDIS DELETED: ' + userId)
-          });
-
+        }else if((register_status!=null || reservation_status!=null) && text==='中止'){
+          await resetAllStatus(userId)
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
             messages: [
@@ -180,13 +170,13 @@ router
             break;//CASE1
             //BirthDay
             case 2:
-              if(isBirthdayNum(text)){
+              if(isValidDate(text)){
                 dataString = JSON.stringify({
                   replyToken: req.body.events[0].replyToken,
                   messages: [
                     {
                       "type": "text",
-                      "text": "お子様の誕生日は「"+BirthDayToJp(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                      "text": "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                     }
                   ]
                 })//close json
@@ -246,7 +236,226 @@ router
                     if(k=='Name'){
                       all_info += "お名前："+v+"\n"
                     }else if(k=='BirthDay'){
-                      all_info += "お誕生日："+BirthDayToJp(v)+"\n"
+                      all_info += "お誕生日："+DayToJP(v)+"\n"
+                    }else if(k=='Allergy'){
+                      all_info += "アレルギー："+v+"\n"
+                    }
+                });
+
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
+                    }
+                  ]
+                })//close json
+                break;
+              }else{
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
+                    }
+                  ]
+                })//close json
+                break;
+              };//CASE3
+            case 4:
+              if(yesOrNo(text)){
+                if(text==='はい'){
+                  try {
+                    //Get all information
+                    let info
+                    await redis_client.hgetall(userId, (err, reply) => {
+                      if (err) throw err;
+                      info = reply
+                    });
+                    const psgl_client = await pool.connect(); 
+                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
+                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
+                    const result = await psgl_client.query(queryString);
+
+                    const results = { 'results': (result) ? result.rows : null};
+                    console.log(results);
+                    
+                    await redis_client.hdel(userId, 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+                      if (err) throw err;
+                      console.log('REDIS DELETED: ' + userId)
+                    });
+                    psgl_client.release();
+                    //redis_client.release();
+                  } catch (err) {
+                    console.error(err);
+                  }
+                  await resetAllStatus(userId)
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
+                      }
+                    ]
+                  })
+                  break;
+                }else if(text=='いいえ'){
+                  await resetAllStatus(userId)
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "会員登録を中止しました。"
+                      }
+                    ]
+                  })
+                }
+                break;
+              }else{
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
+                    }
+                  ]
+                })//close json
+                break;
+              };
+            break;//CASE4
+            default:
+              console.log('Nothing to do in switch ') 
+            break;
+          }// end of switch
+        }else if(reservation_status!=null){
+          //ACTION
+          switch (Number(reservation_status)) {
+            //Name
+            case 1:
+              if(reservation_reply_status==10){
+                let name = text.replace(/\s+/g, "")
+                if(isZenkakuKana(name)){
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
+                      }
+                    ]
+                  })//close json
+                  //SET Name Value
+                  await redis_client.hset(userId,'Name',name, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET Name Value:'+reply);
+                  });
+                  //SET Status 2
+                  await redis_client.hset(userId,'reservation_status',2, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET reservation　Status 2:'+reply);
+                  });
+                  //SET Reply Status 20
+                  await redis_client.hset(userId,'reservation_reply_status',20, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET reservation　Reply Status 20:' + reply);
+                  });
+                }else{
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
+                      }
+                    ]
+                  })//close json
+                }// close ZenkakuKana
+              }
+            break;//CASE1
+            //BirthDay
+            case 2:
+              if(isValidDate(text)){
+                let name
+                await redis_client.hget(userId,'Name', (err, reply) => {
+                  if (err) throw err;
+                  name = reply
+                  console.log('GET Name Value:'+reply);
+                });
+                if(isRegisterdByNameAndBirthDay(name,text)){
+                  dataString = JSON.stringify({
+                    replyToken: req.body.events[0].replyToken,
+                    messages: [
+                      {
+                        "type": "text",
+                        "text": "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                      }
+                    ]
+                  })//close json
+                  //SET Name Value
+                  await redis_client.hset(userId,'BirthDay',text, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET BirthDay Value:'+reply);
+                  });
+                  //SET Status 3
+                  await redis_client.hset(userId,'register_status',3, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET Status 3:'+reply);
+                  });
+                  //SET Reply Status 30
+                  await redis_client.hset(userId,'register_reply_status',30, (err, reply) => {
+                    if (err) throw err;
+                    console.log('SET Reply Status 30:' + reply);
+                  });
+                }else{//isRegisterdByNameAndBirthDay()
+
+                }
+              }else{//isValidDate()
+                dataString = JSON.stringify({
+                  replyToken: req.body.events[0].replyToken,
+                  messages: [
+                    {
+                      "type": "text",
+                      "text": "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                    }
+                  ]
+                })//close json
+              }
+              break;//CASE2
+            //Allergy
+            case 3:
+              if(hasAllergyValidation(text)){
+                //SET Name Value
+                await redis_client.hset(userId,'Allergy',text, (err, reply) => {
+                  if (err) throw err;
+                  console.log('SET Allergy Value:'+reply);
+                });
+                //SET Status 4
+                await redis_client.hset(userId,'register_status',4, (err, reply) => {
+                  if (err) throw err;
+                  console.log('SET Status 4:'+reply);
+                });
+                //SET Reply Status 40
+                await redis_client.hset(userId,'register_reply_status',40, (err, reply) => {
+                  if (err) throw err;
+                  console.log('SET Reply Status 40:' + reply);
+                });
+                //Get all information
+                await redis_client.hgetall(userId, (err, reply) => {
+                  if (err) throw err;
+                  regsiter_informations = reply
+                });
+                let all_info = ''
+                Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
+                    console.log({k, v});
+                    if(k=='Name'){
+                      all_info += "お名前："+v+"\n"
+                    }else if(k=='BirthDay'){
+                      all_info += "お誕生日："+DayToJp(v)+"\n"
                     }else if(k=='Allergy'){
                       all_info += "アレルギー："+v+"\n"
                     }
@@ -401,9 +610,16 @@ function isZenkakuKana(s) {
   return !!s.match(/^[ァ-ヶー　]*$/);  // 「　」は全角スペース
 }
 
+function isValidDate(s){
+  if(s.match(/^[0-9]+$/) && s.length == 8 && Number(s.substr( 0, 4 )) > 1900 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+    return true
+  }else{
+    return false
+  }
+}
 
-function BirthDayToJp(s){
-  if(isBirthdayNum(s)){
+function DayToJP(s){
+  if(isValidDate(s)){
     return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
   }else{
     return s
@@ -444,10 +660,8 @@ async function isRegisterd(id){
     const results = await psgl_client.query(queryString);
     psgl_client.release();
     if(Object.keys(results.rows).length == 0){
-      console.log('no')
       return false
     }else{
-      console.log('yas')
       return true
     }
   }
@@ -455,5 +669,32 @@ async function isRegisterd(id){
     console.log(`PSGL ERR: ${err}`)
   }
 }
+
+async function isRegisterdByNameAndBirthDay(name,birthday){
+  try {
+    const psgl_client = await pool.connect(); 
+    let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+`;`
+    const results = await psgl_client.query(queryString);
+    psgl_client.release();
+    if(Object.keys(results.rows).length == 0){
+      return false
+    }else{
+      return true
+    }
+  }
+  catch (err) {
+    console.log(`PSGL ERR: ${err}`)
+  }
+}
+
+async function resetAllStatus(id){
+  await redis_client.hdel(id, 'reservation_status', 'reservation_reply_status', 'register_status', 'register_reply_status', 'Name', 'BirthDay','Allergy',(err, reply) => {
+    if (err) throw err;
+    console.log('REDIS DELETED: ' + id)
+  });
+}
+
+
+
 
 module.exports = router
