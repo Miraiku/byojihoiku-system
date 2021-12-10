@@ -433,10 +433,13 @@ async function isRegisterd(id){
     const psgl_client = await pool.connect(); 
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl_client.query(queryString);
+    console.log(Object.keys(results.rows).length);
     psgl_client.release();
     if(Object.keys(results.rows).length == 0){
+      console.log('no')
       return false
     }else{
+      console.log('yas')
       return true
     }
   }
