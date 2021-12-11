@@ -380,13 +380,10 @@ function getDay(s){
 
 function isWithin3days(s){
   if(isValidDate(s)){
-    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s))//月のみ0インデックス
-    let today = new Date()
-    let dayaftertomorrow = new Date(today)
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス
+    let today = new Date().setHours(0,0,0,0)
+    let dayaftertomorrow = new Date(today).setHours(0,0,0,0)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
-    console.log('reservationday'+reservationday)
-    console.log('today'+today)
-    console.log('dayaftertomorrow'+dayaftertomorrow)
     if(reservationday > dayaftertomorrow){
       return false
     }else if(reservationday < today){
