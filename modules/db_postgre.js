@@ -15,7 +15,7 @@ exports.sqlToPostgre = async function (queryString){
     const psgl_client = await pool.connect(); 
     const results = await psgl_client.query(queryString);
     psgl_client.release();
-    return results
+    return results.rows
   }
   catch (err) {
     console.log(`PSGL ERR: ${err}`)
@@ -25,7 +25,7 @@ exports.sqlToPostgre = async function (queryString){
 
 exports.getNurseryTable = async function (){
   let sql = `SELECT "ID", "NurseryName", "Capacity", "OpenDay", "OpenTime", "CloseTime" FROM public."Nursery";`
-  return await psgl.sqlToPostgre(sql).rows
+  return await psgl.sqlToPostgre(sql)
 }
 
 exports.getAvailableNursery = async function (date){
