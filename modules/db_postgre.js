@@ -8,6 +8,7 @@ const pool = new Pool({
   }
 });
 const https = require("https");
+const psgl = require('./db_postgre')
 
 exports.sqlToPostgre = async function (queryString){
   try {
@@ -24,11 +25,11 @@ exports.sqlToPostgre = async function (queryString){
 
 exports.getNurseryTable = async function (){
   let sql = `SELECT "ID", "NurseryName", "Capacity", "OpenDay", "OpenTime", "CloseTime" FROM public."Nursery";`
-  return sqlToPostgre(sql)
+  return await psgl.sqlToPostgre(sql)
 }
 
 exports.getAvailableNursery = async function (date){
   let sql = `SELECT COUNT ("NurseryID")
 	FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '2021-10-18%';`
-  sqlToPostgre(sql)
+  await psgl.sqlToPostgre(sql)
 }
