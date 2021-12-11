@@ -158,10 +158,10 @@ router
               if(reservation_reply_status==10){
                 if(isWithin3days(text)){
                   replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"
-                  console.log(psgl.getAvailableNurseryOnThatDay(text))
-                  redis.hsetStatus(userId,'reservation_date',text)
-                  redis.hsetStatus(userId,'reservation_status',2)
-                  redis.hsetStatus(userId,'reservation_reply_status',20)
+                  console.log(await sgl.getAvailableNurseryOnThatDay(text))
+                  //redis.hsetStatus(userId,'reservation_date',text)
+                  //redis.hsetStatus(userId,'reservation_status',2)
+                  //redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
                   replyMessage = "申し訳ございません。\n有効な利用希望日を返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }

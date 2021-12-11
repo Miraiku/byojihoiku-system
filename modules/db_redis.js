@@ -61,3 +61,10 @@ exports.resetAllStatus = async function (id){
     });
   });
 }
+
+exports.flushALL = async function(){
+  await redis_client.flushall((err, reply) => {
+    if (err) throw err;
+    console.log("REDIS flushall:" + reply)
+  });
+}

@@ -16,6 +16,7 @@
     "express": "^4.15.2",
     "https": "^1.0.0",
     "ioredis": "^4.28.2",
+    "node-cron": "^3.0.0",
     "pg": "^8.7.1"
   },
   "devDependencies": {
