@@ -169,7 +169,7 @@ router
                     if (err) throw err;
                   });
                 }else{
-                  replyMessage = "申し訳ございません。\n利用希望日を数字で返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "申し訳ございません。\n有効な利用希望日を返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
             break;//Number of kids
@@ -365,11 +365,11 @@ function isWithin3days(s){
       return false
     }else if(reservationday < today){
       return false
-    }else if(reservationday <= today && reservationday >= dayaftertomorrow){
+    }else if(reservationday >= today && reservationday <= dayaftertomorrow){
       return true
     }
   }else{
-    return true
+    return false
   }
 }
 
