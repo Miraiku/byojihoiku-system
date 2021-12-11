@@ -31,7 +31,7 @@ exports.getNurseryTable = async function (){
 
 exports.getAvailableNurseryOnThatDay = async function (date){
   let available = {}
-  Object.entries(await psgl.getNurseryTable()).forEach(([k, v]) => {
+  Object.entries(await psgl.getNurseryTable()).forEach(async ([k, v]) =>  {
       let sql = `SELECT COUNT ("`+v['ID']+`") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%';`
       let capacity = await psgl.sqlToPostgre(sql)
       if(Number(capacity) <= Number(v['Capacity'])){
