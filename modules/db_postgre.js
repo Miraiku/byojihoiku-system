@@ -21,3 +21,14 @@ exports.sqlToPostgre = async function (queryString){
     return null
   }
 }
+
+exports.getNurseryTable = async function (){
+  let sql = `SELECT "ID", "NurseryName", "Capacity", "OpenDay", "OpenTime", "CloseTime" FROM public."Nursery";`
+  return sqlToPostgre(sql)
+}
+
+exports.getAvailableNursery = async function (date){
+  let sql = `SELECT COUNT ("NurseryID")
+	FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '2021-10-18%';`
+  sqlToPostgre(sql)
+}

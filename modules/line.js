@@ -23,15 +23,12 @@ router
         let register_reply_status = await redis.hgetStatus(userId,'register_reply_status')
         let reservation_status = await redis.hgetStatus(userId,'reservation_status')
         let reservation_reply_status = await redis.hgetStatus(userId,'reservation_reply_status')
-        console.log(register_status)
-        
+
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
             registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n例）2022年02月22日'
-            //SET Status 1
             await redis.hsetStatus(userId,'reservation_status',1)
-            //SET Reply Status 10
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
             registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
@@ -62,6 +59,8 @@ router
             }
             ]
           })
+        }else if(text === 'a'){
+          console.log(psgl.getNurseryTable());
         }else if((register_status!=null || reservation_status!=null) && text==='中止'){
           await redis.resetAllStatus(userId)
           replyMessage = "手続きを中止しました。"
@@ -121,7 +120,6 @@ router
                       all_info += "アレルギー："+v+"\n"
                     }
                 });
-
                 replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
@@ -160,33 +158,25 @@ router
             //Name
             case 1:
               if(reservation_reply_status==10){
-                let name = text.replace(/\s+/g, "")
-                if(isZenkakuKana(name)){
-                  replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
-                  //SET Name Value
-                  await redis_client.hset(userId,'Name',name, (err, reply) => {
+                if(isValidDate(text)){
+                  psgl.
+                  replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を入力してください。\n"
+                  await redis_client.hset(userId,'resercvation_date',text, (err, reply) => {
                     if (err) throw err;
-                    console.log('SET Name Value:'+reply);
                   });
-                  //SET Status 2
                   await redis_client.hset(userId,'reservation_status',2, (err, reply) => {
                     if (err) throw err;
-                    console.log('SET reservation　Status 2:'+reply);
                   });
-                  //SET Reply Status 20
                   await redis_client.hset(userId,'reservation_reply_status',20, (err, reply) => {
                     if (err) throw err;
-                    console.log('SET reservation　Reply Status 20:' + reply);
                   });
                 }else{
-                  replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
-                }// close ZenkakuKana
+                  replyMessage = "申し訳ございません。\n利用希望日を数字で返信してください。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                }
               }
-            break;//CASE1
-            //BirthDay
+            break;//Number of kids
             case 2:
-              if(isValidDate(text)){
-                let name = await redis.hgetStatus(userId,'Name')
+              if(isValidNum(text)){
                 if(isRegisterdByNameAndBirthDay(name,text)){
                   replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                   //SET Name Value
@@ -199,7 +189,7 @@ router
 
                 }
               }else{//isValidDate()
-                replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\nご利用希望日は満員です。お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
               }
               break;//CASE2
             //Allergy
@@ -295,6 +285,7 @@ router
               }
             ]
           })
+          await redis.resetAllStatus(userId)
         }
 
         // リクエストに渡すオプション
@@ -337,6 +328,24 @@ function isValidDate(s){
     return true
   }else{
     return false
+  }
+}
+
+function hankaku2Zenkaku(s) {
+  return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
+}
+
+function isValidNum(s){
+  if(Number(s) == NaN){
+    if(Number(hankaku2Zenkaku(s)) == NaN){
+      return false
+    }else{
+      return true
+    }
+  }{
+    return true
   }
 }
 
