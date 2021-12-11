@@ -409,7 +409,7 @@ async function isRegisterd(id){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl.sqlToPostgre(queryString)
-    if(Object.keys(results.rows).length == 0){
+    if(Object.keys(results).length == 0){
       return false
     }else{
       return true
@@ -425,7 +425,7 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
     let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+`;`
     const results = await psgl.sqlToPostgre(queryString)
     console.log(results);
-    if(Object.keys(results.rows).length == 0){
+    if(Object.keys(results).length == 0){
       return false
     }else{
       return true
