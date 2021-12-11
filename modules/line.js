@@ -60,7 +60,9 @@ router
             ]
           })
         }else if(text === 'a'){
-          console.log(await psgl.getNurseryTable());
+          Object.entries(await psgl.getNurseryTable()).forEach(([k, v]) => { // ★
+            console.log({k, v});
+        });
         }else if((register_status!=null || reservation_status!=null) && text==='中止'){
           await redis.resetAllStatus(userId)
           replyMessage = "手続きを中止しました。"
