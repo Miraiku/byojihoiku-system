@@ -354,10 +354,33 @@ function DayToJP(s){
     return s
   }
 }
+function getYear(s){
+  if(isValidDate(s)){
+    return Number(s.substr( 0, 4 ))
+  }else{
+    return s
+  }
+}
+
+function getMonth(s){
+  if(isValidDate(s)){
+    return Number(s.substr( 4, 2 ))
+  }else{
+    return s
+  }
+}
+
+function getDay(s){
+  if(isValidDate(s)){
+    return Number(s.substr( 6, 2 ))
+  }else{
+    return s
+  }
+}
 
 function isWithin3days(s){
   if(isValidDate(s)){
-    let reservationday = new Date(s)
+    let reservationday = new Date(getYear(s), getMonth(s), getDay(s))
     let today = new Date()
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)

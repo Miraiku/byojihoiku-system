@@ -4,6 +4,7 @@ const path = require('path');
 const PORT = process.env.PORT || 5555;
 const https = require("https");
 const webhook = require('./modules/line')
+process.env.TZ = "Asia/Tokyo";
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
