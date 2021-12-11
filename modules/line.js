@@ -380,7 +380,7 @@ function getDay(s){
 
 function isWithin3days(s){
   if(isValidDate(s)){
-    let reservationday = new Date(getYear(s), getMonth(s), getDay(s))
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s))//月のみ0インデックス
     let today = new Date()
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
