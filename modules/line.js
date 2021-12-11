@@ -361,6 +361,9 @@ function isWithin3days(s){
     let today = new Date()
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
+    console.log('reservationday'+dayaftertomorrow)
+    console.log('today'+dayaftertomorrow)
+    console.log('dayaftertomorrow'+dayaftertomorrow)
     if(reservationday > dayaftertomorrow){
       return false
     }else if(reservationday < today){
