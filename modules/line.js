@@ -27,7 +27,7 @@ router
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
-            registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n例）2022年02月22日'
+            registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
@@ -59,10 +59,6 @@ router
             }
             ]
           })
-        }else if(text === 'a'){
-          Object.entries(await psgl.getNurseryTable()).forEach(([k, v]) => { // ★
-            console.log({k, v});
-        });
         }else if((register_status!=null || reservation_status!=null) && text==='中止'){
           await redis.resetAllStatus(userId)
           replyMessage = "手続きを中止しました。"
@@ -160,10 +156,10 @@ router
             //Name
             case 1:
               if(reservation_reply_status==10){
-                if(isValidDate(text)){
-                  psgl.
-                  replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を入力してください。\n"
-                  await redis_client.hset(userId,'resercvation_date',text, (err, reply) => {
+                if(isWithin3days(text)){
+                  replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"
+                  console.log(psgl.getAvailableNurseryOnThatDay(text))
+                  await redis_client.hset(userId,'reservation_date',text, (err, reply) => {
                     if (err) throw err;
                   });
                   await redis_client.hset(userId,'reservation_status',2, (err, reply) => {
@@ -173,7 +169,7 @@ router
                     if (err) throw err;
                   });
                 }else{
-                  replyMessage = "申し訳ございません。\n利用希望日を数字で返信してください。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "申し訳ございません。\n利用希望日を数字で返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
             break;//Number of kids
@@ -358,6 +354,29 @@ function DayToJP(s){
     return s
   }
 }
+
+function isWithin3days(s){
+  if(isValidDate(s)){
+    let reservationday = new Date(s)
+    let today = new Date()
+    let dayaftertomorrow = new Date(today)
+    dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
+    if(reservationday > dayaftertomorrow){
+      return false
+    }else if(reservationday < today){
+      return false
+    }else if(reservationday <= today && reservationday >= dayaftertomorrow){
+      return true
+    }
+  }else{
+    return true
+  }
+}
+
+function getToday(){
+  return new Date();
+}
+
 
 function hasAllergyValidation(s){
   if(s === 'あり' || s === 'なし'){

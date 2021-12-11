@@ -16,6 +16,7 @@ exports.sqlToPostgre = async function (queryString){
     const results = await psgl_client.query(queryString);
     psgl_client.release();
     return results.rows
+    //{k: index, v:{sql result}}
   }
   catch (err) {
     console.log(`PSGL ERR: ${err}`)
@@ -28,8 +29,14 @@ exports.getNurseryTable = async function (){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getAvailableNursery = async function (date){
-  let sql = `SELECT COUNT ("NurseryID")
-	FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '2021-10-18%';`
-  await psgl.sqlToPostgre(sql)
+exports.getAvailableNurseryOnThatDay = async function (date){
+  let available = {}
+  Object.entries(await psgl.getNurseryTable()).forEach(([k, v]) => {
+      let sql = `SELECT COUNT ("`+v['ID']+`") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%';`
+      let capacity = await psgl.sqlToPostgre(sql)
+      if(Number(capacity) <= Number(v['Capacity'])){
+        available += {id: v['ID'], capacity: c}
+      }
+  }) 
+  return available
 }
