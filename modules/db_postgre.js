@@ -25,7 +25,7 @@ exports.sqlToPostgre = async function (queryString){
 
 exports.getNurseryTable = async function (){
   let sql = `SELECT "ID", "NurseryName", "Capacity", "OpenDay", "OpenTime", "CloseTime" FROM public."Nursery";`
-  return await psgl.sqlToPostgre(sql)
+  return await psgl.sqlToPostgre(sql).rows
 }
 
 exports.getAvailableNursery = async function (date){
