@@ -4,7 +4,8 @@ const https = require("https");
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const psgl = require('./db_postgre')
 const redis = require('./db_redis')
-let holiday = new Holidays(JP)
+const Holidays = require('date-holidays')
+const holiday = new Holidays(JP)
 const today = Date.now()
 const dayaftertomorrow = today.setDate(today.getDate() + 2);
 
