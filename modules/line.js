@@ -380,6 +380,7 @@ function timenumberToDayJP(s){
   //秒数から○年○月○日と表記
   console.log("timenumberToDayJP "+s)
   let day = new Date(s)
+  console.log("timenumberToDayJP "+day.getFullYear()+(day.getMonth() + 1)+day.getDate())
   return DayToJP(day.getFullYear()+(day.getMonth() + 1)+day.getDate())
 }
 
