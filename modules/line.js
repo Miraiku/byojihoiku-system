@@ -162,6 +162,7 @@ router
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
+                  //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
                   let d = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   Object.entries(d).forEach(async ([k, v]) =>  {
                     console.log('nursery :'+ k + ', ' +v)

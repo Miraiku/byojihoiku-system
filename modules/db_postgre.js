@@ -36,8 +36,8 @@ exports.getAvailableNurseryOnThatDay = async function (date){
     let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+v['ID']+`';`
     let c = await psgl.sqlToPostgre(sql)
     let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
-    console.log('aaaaa ' +Number(c[0]['count']) +', '+Number(v['Capacity'])+', ' +current_capacity )
     if(current_capacity > 0){
+      available = {id: 'a', capacity: 'mikan'}
       available = {id: v['ID'], capacity: current_capacity}
     }
   }) 
