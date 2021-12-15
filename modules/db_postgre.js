@@ -37,6 +37,9 @@ exports.getAvailableNurseryOnThatDay = async function (date){
       let c = await psgl.sqlToPostgre(sql)
       Object.entries(c).forEach(async ([k, v]) =>  {
         console.log('aaaaa ' +k +', '+v)
+        Object.entries(v).forEach(async ([k, v]) =>  {
+          console.log('cccccc ' +k +', '+v)
+        })
       })
       if(Number(c) <= Number(v['Capacity'])){
         available += {id: v['ID'], capacity: c}
