@@ -12,7 +12,6 @@ exports.hsetStatus = async function (id,key,val){
       if (err) throw err;
       console.log('HSET updated time : id:' + id + ', time: '+ now);
     });
-    redis_modules.flushALLNoUpdate20mins()
     await redis_client.hset(id,key,val, (err, reply) => {
       if (err) throw err;
       console.log('HSET Status :'+ id + ', key:' + key + ', val: '+ val);
@@ -81,19 +80,15 @@ exports.flushALLNoUpdate20mins = async function(){
     let result
     await redis_client.hgetall('update_time', (err, reply) => {
       if (err) throw err;
-      console.log('HDETALL No Update within 20mins :'+ reply);
       result = reply
     });
     Object.entries(result).forEach(([k, v]) => {
       let now = Date.now()
       let diff_time = now - v;
       console.log("DIFF TIMEL " +diff_time)
-      let pass_seconds = Math.floor(diff_time / 1000);
-      console.log(pass_seconds + "秒が経過");
-      // 644428213秒が経過
-
-      var pass_minutes = Math.floor(diff_time / (60 * 1000));
-      if(now < v){
+      console.log('HDETALL No Update within 20mins :'+ k + ', '+ v);
+      let pass_minutes = Math.floor(diff_time / (60 * 1000));
+      if(pass_minutes > 20){
         redis_modules.resetAllStatus(k)
       }
     });
