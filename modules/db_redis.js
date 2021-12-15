@@ -7,13 +7,16 @@ const redis_modules = require('./db_redis')
 
 exports.hsetStatus = async function (id,key,val){
   try {
+    await redis_client.hset('update_time',id,Date.now(), (err, reply) => {
+      if (err) throw err;
+      console.log('HSET updated time : id:' + key + ', time: '+ val);
+    });
     await redis_client.hset(id,key,val, (err, reply) => {
       if (err) throw err;
       console.log('HSET Status :'+ id + ', key:' + key + ', val: '+ val);
       return true
     });
-  }
-  catch (err) {
+  }catch (err) {
     console.log(`REDIS ERR: ${err}`)
     return false
   }
