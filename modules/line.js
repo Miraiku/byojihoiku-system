@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router()
 const https = require("https");
-const TOKEN = process.env.LINE_ACCESS_TOKEN
 const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays')
+const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
-const today = Date.now()
+const today = new Date.now()
 const dayaftertomorrow = today.setDate(today.getDate() + 2);
 
 router
