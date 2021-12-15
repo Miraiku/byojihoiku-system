@@ -1,10 +1,16 @@
 const express = require('express');
 const router = express.Router()
 const Redis = require("ioredis");
+const { default: redis } = require('ioredis/built/redis');
 const redis_client = new Redis(process.env.REDIS_URL);
+const redis_modules = require('./db_redis')
 
 exports.hsetStatus = async function (id,key,val){
   try {
+    await redis_client.hset('update_time',id,new Date().now(), (err, reply) => {
+      if (err) throw err;
+      console.log('HSET updated time : id:' + key + ', time: '+ val);
+    });
     await redis_client.hset(id,key,val, (err, reply) => {
       if (err) throw err;
       console.log('HSET Status :'+ id + ', key:' + key + ', val: '+ val);
@@ -67,4 +73,21 @@ exports.flushALL = async function(){
     if (err) throw err;
     console.log("REDIS flushall:" + reply)
   });
+}
+
+exports.flushALLNoUpdate20mins = async function(){
+  try {
+    let result
+    await redis_client.hgetall('update_time', (err, reply) => {
+      if (err) throw err;
+      console.log('HGETALL No Update within 20mins :'+ reply);
+      result = reply
+    });
+    Object.entries(result).forEach(([k, v]) => {
+      redis_modules.resetAllStatus(k, v)
+    });
+  }
+  catch (err) {
+    console.log(`REDIS ERR: ${err}`)
+  }
 }

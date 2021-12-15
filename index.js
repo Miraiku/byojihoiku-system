@@ -20,5 +20,5 @@ express()
 
 cron.schedule('*/20 * * * *', async () =>  {
   //per 20mins
-  await redis.flushALL()
+  await redis.flushALLNoUpdate20mins()
 });
