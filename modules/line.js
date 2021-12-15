@@ -160,7 +160,7 @@ router
             //Name
             case 1:
               if(reservation_reply_status==10){
-                if(isWithin3days(text)){
+                if(isValidRegisterdDay(text)){
                   replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"
                   console.log(await sgl.getAvailableNurseryOnThatDay(text))
                   //redis.hsetStatus(userId,'reservation_date',text)
@@ -387,14 +387,16 @@ function timenumberToDayJP(s){
   return DayToJP(String(day.getFullYear())+String((day.getMonth() + 1))+String(day.getDate()))
 }
 
-function isWithin3days(s){
+function isValidRegisterdDay(s){
   if(isValidDate(s)){
     let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス
     let today = new Date().setHours(0,0,0,0)//時間は考慮しない
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
-    if(reservationday > dayaftertomorrow){
+    if(holiday.isHoliday(reservationday)){
+      return false
+    }else if(reservationday > dayaftertomorrow){
       return false
     }else if(reservationday < today){
       return false
