@@ -31,7 +31,7 @@ exports.getNurseryTable = async function (){
 }
 
 exports.getAvailableNurseryOnThatDay = async function (date){
-  let available = new Object()
+  let available = {id: 'a', capacity: 'mikan'}
   let nursery = await psgl.getNurseryTable()
   Object.entries(nursery).forEach(async ([k, v]) =>  {
     let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+v['ID']+`';`
