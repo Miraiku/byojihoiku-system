@@ -378,7 +378,8 @@ function getDay(s){
 
 function getDayString(s){
   //(月)などを返す
-  return '('+[ "日", "月", "火", "水", "木", "金", "土" ][s.getDay()]+')'
+  let day = new Date(s)
+  return '('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')'
 }
 
 function timenumberToDayJP(s){
