@@ -163,7 +163,7 @@ router
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(dayaftertomorrow)+"」ですね。\n希望利用の園を以下から選択してください。\n"
-                  console.log(await psgl.getAvailableNurseryOnThatDay(text))
+                  console.log(await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text)))
                   //redis.hsetStatus(userId,'reservation_date',text)
                   //redis.hsetStatus(userId,'reservation_status',2)
                   //redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -344,6 +344,15 @@ function isValidNum(s){
   }{
     return true
   }
+}
+
+
+function getTimeStampDayFrom8Number(s){
+  if(isValidDate(s)){
+    return Number(s.substr( 0, 4 ))+'-'+Number(s.substr( 4, 2 ))+'-'+Number(s.substr( 6, 2 ))
+  }else{
+    return s
+  } 
 }
 
 function DayToJP(s){
