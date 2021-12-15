@@ -18,7 +18,7 @@ express()
   .use('/webhook', webhook)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-cron.schedule('0 * * * *', async () =>  {
+cron.schedule('*/20 * * * *', async () =>  {
+  //per 20mins
   await redis.flushALL()
-  //https://crontab.guru/examples.html
 });

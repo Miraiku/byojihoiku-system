@@ -163,7 +163,7 @@ router
                   //redis.hsetStatus(userId,'reservation_status',2)
                   //redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
-                  replyMessage = "申し訳ございません。\n有効な利用希望日を返信してください。\n明後日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "有効な利用希望日を返信してください。\n本日より3開園日までの予約が可能です。\n例）2022年02月22日の場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
             break;//Number of kids
