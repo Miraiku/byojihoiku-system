@@ -7,7 +7,7 @@ const Holidays = require('date-holidays')
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
 const today = new Date()
-const dayaftertomorrow = today.setDate(today.getDate() + 2);
+const dayaftertomorrow = today.setDate(today.getDate() + 2)
 
 router
   .post('/', async (req, res) => {
@@ -31,7 +31,7 @@ router
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
-            registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n'+timenumberToDayJP(dayaftertomorrow)+'までの予約が可能です。\n例）2022年02月22日'
+            registeredMessage = '病児保育の予約ですね。\n予約の希望日を返信してください。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n例）2022年02月22日'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
@@ -374,6 +374,11 @@ function getDay(s){
   }else{
     return s
   }
+}
+
+function getDayString(s){
+  //(月)などを返す
+  return '('+[ "日", "月", "火", "水", "木", "金", "土" ][s.getDay()]+')'
 }
 
 function timenumberToDayJP(s){
