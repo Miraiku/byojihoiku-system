@@ -162,13 +162,13 @@ router
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
-                  replyMessage = "希望日は「"+DayToJP(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"
+                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(dayaftertomorrow)+"」ですね。\n希望利用の園を以下から選択してください。\n"
                   console.log(await psgl.getAvailableNurseryOnThatDay(text))
                   //redis.hsetStatus(userId,'reservation_date',text)
                   //redis.hsetStatus(userId,'reservation_status',2)
                   //redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
-                  replyMessage = "予約希望日が休園日または予約の対象外です。\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "予約希望日が休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
             break;//Number of kids
