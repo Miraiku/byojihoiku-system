@@ -6,7 +6,7 @@ const redis = require('./db_redis')
 const Holidays = require('date-holidays')
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
-const today = new Date.now()
+const today = new Date()
 const dayaftertomorrow = today.setDate(today.getDate() + 2);
 
 router
