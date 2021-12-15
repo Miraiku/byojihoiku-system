@@ -163,6 +163,9 @@ router
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   let d = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
+                  Object.entries(d).forEach(async ([k, v]) =>  {
+                    console.log('nursery :'+ k + ', ' +v)
+                  }) 
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(dayaftertomorrow)+"」ですね。\n希望利用の園を以下から選択してください。\n"+d
                   //redis.hsetStatus(userId,'reservation_date',text)
                   //redis.hsetStatus(userId,'reservation_status',2)
