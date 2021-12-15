@@ -85,9 +85,9 @@ exports.flushALLNoUpdate20mins = async function(){
     Object.entries(result).forEach(([k, v]) => {
       let now = Date.now()
       let diff_time = now - v;
-      console.log("DIFF TIMEL " +diff_time)
       console.log('HDETALL No Update within 20mins :'+ k + ', '+ v);
       let pass_minutes = Math.floor(diff_time / (60 * 1000));
+      console.log("DIFF TIMEL mins " +pass_minutes)
       if(pass_minutes > 20){
         redis_modules.resetAllStatus(k)
       }
