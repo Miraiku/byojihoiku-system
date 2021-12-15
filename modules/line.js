@@ -378,8 +378,7 @@ function getDay(s){
 
 function timenumberToDayJP(s){
   //秒数から○年○月○日と表記
-  let day = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス
-  return DayToJP(day)
+  return DayToJP(s.getFullYear()+(s.getMonth() + 1)+s.getDate())
 }
 
 function isWithin3days(s){
