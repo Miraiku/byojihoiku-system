@@ -19,6 +19,6 @@ express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 cron.schedule('*/20 * * * *', async () =>  {
-  //per 20mins
+  console.log(`Run Cron per 20mins`)
   await redis.flushALLNoUpdate20mins()
 });
