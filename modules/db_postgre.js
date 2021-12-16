@@ -41,5 +41,6 @@ exports.getAvailableNurseryOnThatDay = async function (date){
       available.push({id:v['ID'], capacity:current_capacity})
     }
   }) 
+  console.log(available)
   return available
 }
