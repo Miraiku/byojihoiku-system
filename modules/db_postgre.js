@@ -42,6 +42,7 @@ exports.getAvailableNurseryOnThatDay = async function (date){
     if(current_capacity > 0){
       console.log(current_capacity);
       available.push({id:v['ID'], capacity:current_capacity})
+      console.log(available);
     }
   }) 
   available.forEach(function(n){

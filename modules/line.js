@@ -172,7 +172,7 @@ router
                   //redis.hsetStatus(userId,'reservation_status',2)
                   //redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
-                  replyMessage = "申し訳ございません。希望日は「"+DayToJP(text)+getDayString(dayaftertomorrow)+"」は休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "申し訳ございません。希望日は休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
             break;//Number of kids
