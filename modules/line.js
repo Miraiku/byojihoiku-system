@@ -410,6 +410,8 @@ function isValidRegisterdDay(s){
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
+    console.log(reservationday)
+    console.log(dayaftertomorrow)
     if(holiday.isHoliday(reservationday) || dayaftertomorrow.getDay() == 0 ||  dayaftertomorrow.getDay() == 6){
       return false
     }else if(reservationday > dayaftertomorrow){
