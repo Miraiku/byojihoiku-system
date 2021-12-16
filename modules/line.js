@@ -164,10 +164,10 @@ router
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
                   let d = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
-                  
-                  console.log('AAAAAA'+d);
                   d.forEach(function(n){
-                    console.log('BBBBB'+n);
+                    console.log(n['id']);
+                    console.log(n['capacity']);
+                    
                   });
   
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(dayaftertomorrow)+"」ですね。\n希望利用の園を以下から選択してください。\n"+d

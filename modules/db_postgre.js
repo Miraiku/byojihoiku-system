@@ -41,11 +41,5 @@ exports.getAvailableNurseryOnThatDay = async function (date){
       available.push({id:v['ID'], capacity:current_capacity})
     }
   }
-
-  available.forEach(function(n){
-    console.log('AAAAAAB'+n);
-    console.log(n['id']);
-    console.log(n['capacity']);
-  });
   return available
 }
