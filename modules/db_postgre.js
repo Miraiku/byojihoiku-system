@@ -42,6 +42,8 @@ exports.getAvailableNurseryOnThatDay = async function (date){
       available = {id: v['ID'], capacity: current_capacity}
     }
   }) 
+
+  //TODO 2021/12/15　ここがうまくわたせない
   Object.entries(available).forEach(async ([k, v]) =>  {
     console.log('nursery :'+ k + ', ' +v)
   }) 
