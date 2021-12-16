@@ -38,7 +38,7 @@ exports.getAvailableNurseryOnThatDay = async function (date){
     let c = await psgl.sqlToPostgre(sql)
     let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
     if(current_capacity > 0){
-      available.push({id:v['ID'], capacity:current_capacity})
+      available.push({id:v['ID'], name:v['NurseryName'], capacity:current_capacity})
     }
   }
   return available
