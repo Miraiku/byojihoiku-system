@@ -405,14 +405,15 @@ function timenumberToDayJP(s){
 
 function isValidRegisterdDay(s){
   if(isValidDate(s)){
-    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス, 秒で出力
+    let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
     let today = new Date().setHours(0,0,0,0)//時間は考慮しない
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
     console.log(reservationday)
     console.log(dayaftertomorrow)
-    if(holiday.isHoliday(reservationday) || dayaftertomorrow.getDay() == 0 ||  dayaftertomorrow.getDay() == 6){
+    if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(reservationday > dayaftertomorrow){
       return false
