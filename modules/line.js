@@ -416,7 +416,8 @@ function isValidRegisterdDay(s){
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
     console.log('希望日と曜日：' + reservationday_formatted.getDay() + reservationday_formatted.getDate())
-    console.log('希望日と曜日：' + today.getDay() + today.getDate())
+    const d = new Date();
+    console.log('希望日と曜日：' + d.getDay() + d.getDate())
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(reservationday > dayaftertomorrow){
