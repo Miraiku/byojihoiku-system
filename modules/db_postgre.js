@@ -31,21 +31,20 @@ exports.getNurseryTable = async function (){
 }
 
 exports.getAvailableNurseryOnThatDay = async function (date){
-  let available
+  let available = []
   let nursery = await psgl.getNurseryTable()
   Object.entries(nursery).forEach(async ([k, v]) =>  {
     let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+v['ID']+`';`
     let c = await psgl.sqlToPostgre(sql)
     let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
     if(current_capacity > 0){
-      available = {id: 'a', capacity: 'mikan'}
-      available = {id: v['ID'], capacity: current_capacity}
+      available.push({id:v['ID'], capacity:current_capacity})
     }
   }) 
-
-  //TODO 2021/12/15　ここがうまくわたせない
-  Object.entries(available).forEach(async ([k, v]) =>  {
-    console.log('nursery :'+ k + ', ' +v)
-  }) 
+  available.forEach(function(n){
+    console.log(n['id']);
+    console.log(n['capacity']);
+  });
+  
   return available
 }
