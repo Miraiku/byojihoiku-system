@@ -46,7 +46,7 @@ exports.getAvailableNurseryOnThatDay = async function (date){
     }) 
   
     available.forEach(function(n){
-      console.log(n);
+      console.log('AAAAAAB'+n);
       console.log(n['id']);
       console.log(n['capacity']);
     });
