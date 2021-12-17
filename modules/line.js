@@ -184,12 +184,12 @@ router
             case 2:
               //園確認
               if(await isValidNurseryName(text)){
-                if(await hasNurseryCapacity(text)){
+                  let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = getNurseryIdByName(text)
-                  let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(date), nursery_id)
+                  console.log(reservation_date)
+                  let reservation_date = regis.hgetStatus(userId,'reservation_date')
+                  let reservation_num_on_day = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
                   console.log(avairable_nerseries)
-                }else{
-                }//hasNurseryCapacity
               }else{
                 replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
               }//isValidNursery
