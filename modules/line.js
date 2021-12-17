@@ -172,7 +172,7 @@ router
                       all_info += "・"+nursery_list[i].name+"\n";
                   }
                   //TODO: 曜日がおかしい
-                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info+"\n\n早苗町を希望の場合「早苗町」と返信してください。"
+                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
                   redis.hsetStatus(userId,'reservation_date',text)
                   redis.hsetStatus(userId,'reservation_status',2)
                   redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -190,7 +190,7 @@ router
                   console.log(nursery_id)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   console.log(reservation_date)
-                  let reservation_num_on_day = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
+                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
                   console.log(reservation_num_on_day)
               }else{
                 replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
