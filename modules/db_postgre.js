@@ -30,7 +30,7 @@ exports.getNurseryTable = async function (){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getNurseryIDandName = async function (){
+exports.getNurseryID_Name_Capacity = async function (){
   let nursery_list = []
   let nursery = await psgl.getNurseryTable()
   for await (const v of nursery) {
