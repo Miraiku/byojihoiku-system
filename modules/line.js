@@ -186,10 +186,10 @@ router
               if(await isValidNurseryName(text)){
                   let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = getNurseryIdByName(text)
+                  let reservation_date = redis.hgetStatus(userId,'reservation_date')
                   console.log(reservation_date)
-                  let reservation_date = regis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
-                  console.log(avairable_nerseries)
+                  console.log(reservation_num_on_day)
               }else{
                 replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
               }//isValidNursery
