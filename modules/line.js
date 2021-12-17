@@ -3,7 +3,8 @@ const router = express.Router()
 const https = require("https");
 const psgl = require('./db_postgre')
 const redis = require('./db_redis')
-const Holidays = require('date-holidays')
+const Holidays = require('date-holidays');
+const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
 const today = new Date()
@@ -168,8 +169,10 @@ router
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
                   Object.entries(nursery_list).forEach(([k, v]) => {
-                      if(k=='Name'){
+                      if(k=='NurseryName'){
                         all_info += "保育園名："+v+"\n"
+                      }else if(k=='ID'){
+                        all_info += "番号"+v+"\n"
                       }
                   });
                   //TODO: 曜日がおかしい
