@@ -34,8 +34,10 @@ exports.getNurseryID_Name_Capacity = async function (){
   let nursery_list = []
   let nursery = await psgl.getNurseryTable()
   for await (const v of nursery) {
+    console.log(v)
     nursery_list.push({id:v['ID'], name:v['NurseryName'], capacity:v['Capacity']})
   }
+  console.log(nursery_list)
   return nursery_list
 }
 
