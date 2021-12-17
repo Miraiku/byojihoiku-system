@@ -195,8 +195,8 @@ router
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
                       replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
                       redis.hsetStatus(userId,'reservation_nursery',text)
-                      redis.hsetStatus(userId,'reservation_nursery_opentime',opentime[0].OpenTime.substr( 0, 5 ))
-                      redis.hsetStatus(userId,'reservation_nursery_closetime',closetime[0].CloseTime.substr( 0, 5 ))
+                      redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
+                      redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
                       redis.hsetStatus(userId,'reservation_status',3)
                       redis.hsetStatus(userId,'reservation_reply_status',30)
                     }else{
@@ -363,6 +363,7 @@ function DayToJP(s){
 }
 
 function TimeToJP(s){
+  //2020 -> 20時20分
   if(isValidTime(s)){
     return Number(s.substr( 0, 2 ))+'時'+Number(s.substr( 2, 4 ))+'分'
   }else{
