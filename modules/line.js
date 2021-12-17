@@ -503,9 +503,9 @@ async function isValidNurseryName(s){
   let nursery_list = await psgl.getNurseryName()
   let exist = false
   for(let i = 0; i < nursery_list.length; i++){
-    console.log("isValidNurseryName" + s)
-    console.log("nursery_list[i].name" + nursery_list[i].name)
     if(nursery_list[i].name === s){
+      console.log("isValidNurseryName" + s)
+      console.log("nursery_list[i].name" + nursery_list[i].name)
       exist = true
     }
   }
