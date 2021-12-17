@@ -186,7 +186,7 @@ router
               if(await isValidNurseryName(text)){
                   let nursery_capacity = await hasNurseryCapacity(text)
                   console.log(nursery_capacity)
-                  let nursery_id = getNurseryIdByName(text)
+                  let nursery_id = await getNurseryIdByName(text)
                   console.log(nursery_id)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   console.log(reservation_date)
