@@ -173,7 +173,7 @@ router
                       all_info += nursery_list[i].id+". "+nursery_list[i].name+"\n";
                   }
                   //TODO: 曜日がおかしい
-                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info
+                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info+"\n例）早苗町を希望の場合「1」または「早苗町」と返信してください。"
                   //redis.hsetStatus(userId,'reservation_date',text)
                   //redis.hsetStatus(userId,'reservation_status',2)
                   //redis.hsetStatus(userId,'reservation_reply_status',20)
