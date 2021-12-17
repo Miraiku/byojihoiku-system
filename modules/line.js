@@ -183,7 +183,7 @@ router
             break;
             case 2:
               if(reservation_reply_status==20){
-                //園確認
+                //第１園希望確認
                 //TODO：キャパ計算にredisをいれるか検討
                 if(await isValidNurseryName(text)){
                     let nursery_capacity = await hasNurseryCapacity(text)
@@ -193,8 +193,9 @@ router
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
                       let opentime = await psgl.getNurseryOpenTimeFromName(text)
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
-                      redis.hsetStatus(userId,'reservation_nursery',text)
+                      //replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      redis.hsetStatus(userId,'reservation_nursery_1',text)
                       redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
                       redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
                       redis.hsetStatus(userId,'reservation_status',3)
@@ -208,25 +209,89 @@ router
               }
               break;//CASE2
             case 3:
+              //第2希望
+              if(await isValidNurseryName(text)){
+                  replyMessage = "第2希望の園は「"+text+"」ですね。\n第3希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                  redis.hsetStatus(userId,'reservation_nursery_2',text)
+                  redis.hsetStatus(userId,'reservation_status',4)
+                  redis.hsetStatus(userId,'reservation_reply_status',40)
+              }else{
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
+              }//isValidNursery
+              break;//CASE3
+            case 4:
+              //第3希望
+              if(await isValidNurseryName(text) || text == 'なし'){
+                let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_1')
+                let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
+                let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
+                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+open+"〜"+close+"です。\n例）9時に登園する場合は「0900」"
+                redis.hsetStatus(userId,'reservation_nursery_3',text)
+                redis.hsetStatus(userId,'reservation_status',5)
+                redis.hsetStatus(userId,'reservation_reply_status',50)
+              }else{
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n第3希望がない場合は「なし」と返信してください。"
+              }//isValidNursery
+              break;//CASE4
+            case 5:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
                 replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
-                redis.hsetStatus(userId,'reservation_status',4)
-                redis.hsetStatus(userId,'reservation_reply_status',40)
+                redis.hsetStatus(userId,'reservation_status',6)
+                redis.hsetStatus(userId,'reservation_reply_status',60)
               }else{
                 replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」"
               }
               break;//CASE3
-            case 4:
+            case 6:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "退園時間は「"+TimeToJP(text)+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                replyMessage = "退園時間は「"+TimeToJP(text)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
-                //redis.hsetStatus(userId,'reservation_status',5)
-                //redis.hsetStatus(userId,'reservation_reply_status',50)
+                redis.hsetStatus(userId,'reservation_status',7)
+                redis.hsetStatus(userId,'reservation_reply_status',70)
               }else{
                 replyMessage = "退園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」"
               }
               break;//CASE4
+            case 7:
+                if(isValidNum(text)){
+                  replyMessage = "利用人数は「"+text+"人」ですね。\n\n"
+                  redis.hsetStatus(userId,'reservation_nursery_number',text)
+                  redis.hsetStatus(userId,'reservation_status',8)
+                  redis.hsetStatus(userId,'reservation_reply_status',80)
+                }else{
+                  replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」"
+                }
+              break;//CASE7
+            case 8://人数分ループ
+              let name = text.replace(/\s+/g, "")
+              if(isZenkakuKana(name)){
+                replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
+                //SET Name Value
+                await redis.hsetStatus(userId,'reservation_child_name_1',name)
+                //SET Status 2
+                await redis.hsetStatus(userId,'reservation_status',9)
+                //SET Reply Status 20
+                await redis.hsetStatus(userId,'reservation_reply_status',90)
+              }else{
+                replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
+              }// close ZenkakuKana
+              break;//CASE8
+            case 9:
+              if(isValidDate(text)){
+                replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                //SET Name Value
+                await redis.hsetStatus(userId,'reservation_child_birthday_1',text)
+                //SET Status 3
+                await redis.hsetStatus(userId,'reservation_status',10)
+                //SET Reply Status 30
+                await redis.hsetStatus(userId,'reservation_reply_status',100)
+                let name = await redis.hgetStatus(userId,'reservation_child_name_1')
+                console.log(await isMembered(userId, name, text))
+              }else{
+                replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+              }
+              break;//CASE9
             default:
               console.log('Nothing to do in switch ') 
             break;
@@ -517,6 +582,15 @@ async function withinOpeningTime(id, time){
     }
   }
   return result
+}
+
+async function isMembered(id, name, birthday){
+  let result = await isMembered(id, name, birthday)
+  if(result[0].ID != null){
+    return true
+  }else{
+    false
+  }
 }
 
 module.exports = router

@@ -87,3 +87,8 @@ exports.getNurseryCloseTimeFromName = async function (name){
   let sql = `SELECT "CloseTime" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
 }
+
+exports.isMembered = async function (name, lineid, birthday){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`';`
+  return await psgl.sqlToPostgre(sql)
+}
