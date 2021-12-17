@@ -32,7 +32,7 @@ router
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
-            registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日'
+            registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
@@ -169,10 +169,10 @@ router
                   let all_info = ''
                   for(let i = 0; i < nursery_list.length; i++)
                   {
-                      all_info += nursery_list[i].name+"\n";
+                      all_info += "・"+nursery_list[i].name+"\n";
                   }
                   //TODO: 曜日がおかしい
-                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info+"\n例）早苗町を希望の場合「早苗町」と返信してください。"
+                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\nを希望の場合「早苗町」と返信してください。"
                   redis.hsetStatus(userId,'reservation_date',text)
                   redis.hsetStatus(userId,'reservation_status',2)
                   redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -512,7 +512,12 @@ async function isValidNurseryName(s){
 }
 
 async function getNurseryIdByName(name){
-  consolo.log(await psgl.getNurseryIdByName(name))
+  console.log(await psgl.getNurseryIdByName(name))
+  return null
+}
+
+async function hasNurseryCapacity(name){
+  console.log(await psgl.getNurseryCapacityByName(name))
   return null
 }
 
