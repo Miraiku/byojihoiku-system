@@ -192,8 +192,10 @@ router
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
                       let opentime = await psgl.getNurseryOpenTimeFromName(text)
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n開園時間は、"+opentime+"〜"+closetime+"です。\n例）8時に登園する場合は「」"
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n開園時間は、"+opentime[0].OpenTime+"〜"+closetime[0].CloseTime+"です。\n例）8時に登園する場合は「0800」"
                       redis.hsetStatus(userId,'reservation_nursery',text)
+                      redis.hsetStatus(userId,'reservation_nursery_opentime',opentime[0].OpenTime)
+                      redis.hsetStatus(userId,'reservation_nursery_closetime',closetime[0].CloseTime)
                       redis.hsetStatus(userId,'reservation_status',3)
                       redis.hsetStatus(userId,'reservation_reply_status',30)
                     }else{
