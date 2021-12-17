@@ -190,7 +190,7 @@ router
                   console.log(nursery_id)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   console.log(reservation_date)
-                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
+                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id.ID)
                   console.log(reservation_num_on_day)
               }else{
                 replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
