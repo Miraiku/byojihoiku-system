@@ -185,7 +185,9 @@ router
               //園確認
               if(await isValidNurseryName(text)){
                   let nursery_capacity = await hasNurseryCapacity(text)
+                  console.log(nursery_capacity)
                   let nursery_id = getNurseryIdByName(text)
+                  console.log(nursery_id)
                   let reservation_date = redis.hgetStatus(userId,'reservation_date')
                   console.log(reservation_date)
                   let reservation_num_on_day = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id)
@@ -368,6 +370,7 @@ function isValidNum(s){
 
 function getTimeStampDayFrom8Number(s){
   //20221122 -> 2022-11-22
+  s = String(s)
   if(isValidDate(s)){
     return Number(s.substr( 0, 4 ))+'-'+Number(s.substr( 4, 2 ))+'-'+Number(s.substr( 6, 2 ))
   }else{
