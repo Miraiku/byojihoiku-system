@@ -163,14 +163,16 @@ router
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
-                  let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
+                  //TODO: りよう園→枠確認→予約orキャンセル待ちとうろく
+                  let nursery_list = getNurseryIDandName()
+                  //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
-                  Object.entries(avairable_nerseries).forEach(([k, v]) => {
+                  Object.entries(nursery_list).forEach(([k, v]) => {
                       if(k=='Name'){
                         all_info += "保育園名："+v+"\n"
                       }
                   });
-  
+                  //TODO: 曜日がおかしい
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info
                   //redis.hsetStatus(userId,'reservation_date',text)
                   //redis.hsetStatus(userId,'reservation_status',2)
