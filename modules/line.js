@@ -208,7 +208,7 @@ router
               }
               break;//CASE2
             case 3:
-              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
+              if(isValidTime(TimeFormatFromDB(text))&& await withinOpeningTime(userId, text)){
                 replyMessage = "登園時間は「"+text+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',4)
@@ -218,7 +218,7 @@ router
               }
               break;//CASE3
             case 4:
-              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
+              if(isValidTime(TimeFormatFromDB(text))&& await withinOpeningTime(userId, text)){
                 replyMessage = "退園時間は「"+text+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 //redis.hsetStatus(userId,'reservation_status',5)
@@ -308,6 +308,13 @@ function isValidDate(s){
   }else{
     return false
   }
+}
+
+function TimeFormatFromDB(s){
+  //08:45:00 -> 0845
+  let time = s.replace(':', '')
+  time = time.substr( 0, 4 )
+  return time
 }
 
 function isValidTime(s){
