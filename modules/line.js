@@ -32,7 +32,7 @@ router
         if(text === "予約"){
           let registeredMessage
           if(await isRegisterd(userId)){
-            registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」'
+            registeredMessage = '病児保育の予約ですね。\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。\n\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
@@ -208,7 +208,7 @@ router
               }
               break;//CASE2
             case 3:
-              if(isValidTime(TimeFormatFromDB(text))&& await withinOpeningTime(userId, text)){
+              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
                 replyMessage = "登園時間は「"+text+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',4)
@@ -218,7 +218,7 @@ router
               }
               break;//CASE3
             case 4:
-              if(isValidTime(TimeFormatFromDB(text))&& await withinOpeningTime(userId, text)){
+              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
                 replyMessage = "退園時間は「"+text+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 //redis.hsetStatus(userId,'reservation_status',5)
@@ -499,8 +499,8 @@ async function hasNurseryCapacity(name){
 
 async function withinOpeningTime(id, time){
   let result = false
-  let open = await redis.hgetStatus(id,'reservation_nursery_opentime')
-  let close = await redis.hgetStatus(id,'reservation_nursery_closetime')
+  let open = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_opentime'))
+  let close = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_closetime'))
   if(open != null && close != null){
     if(Number(open)<=Number(time) && Number(close)>=Number(time)){
       result = true
