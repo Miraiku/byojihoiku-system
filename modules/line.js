@@ -169,7 +169,7 @@ router
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
                   console.log(nursery_list)
-                  Object.entries(nursery_list).forEach(([k, v]) => {
+                  Object.entries(nursery_list[0]).forEach(([k, v]) => {
                     if(k=='id'){
                       all_info += v+". "
                     }else if(k=='name'){
