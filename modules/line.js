@@ -168,6 +168,7 @@ router
                   let nursery_list = await psgl.getNurseryID_Name_Capacity()
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
+                  console.log(nursery_list)
                   Object.entries(nursery_list).forEach(([k, v]) => {
                     if(k=='id'){
                       all_info += v+". "
