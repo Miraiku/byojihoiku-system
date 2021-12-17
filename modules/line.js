@@ -590,7 +590,7 @@ async function withinOpeningTime(id, time){
 
 async function isMembered(id, name, birthday){
   let result = await psgl.isMemberedInMemberTable(id, name, birthday)
-  if(result[0].ID != undefined){
+  if(result[0] != undefined && result[0].ID != null){
     return true
   }else{
     false
