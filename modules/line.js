@@ -279,7 +279,6 @@ router
               break;//CASE8
             case 9:
               if(isValidDate(text)){
-                replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                 //SET Name Value
                 await redis.hsetStatus(userId,'reservation_child_birthday_1',text)
                 //SET Status 3
@@ -287,7 +286,12 @@ router
                 //SET Reply Status 30
                 await redis.hsetStatus(userId,'reservation_reply_status',100)
                 let name = await redis.hgetStatus(userId,'reservation_child_name_1')
-                console.log(await isMembered(userId, name, text))
+                if(await isMembered(userId, name, text)){
+                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                }else{
+                  replyMessage = "お子様の情報が登録されていません。\n恐れ入りますが、ご予約の前に会員登録をお願いいたします。\n会員登録を始める場合は「登録」と返信してください。\n\n予約手続きを中止します。"
+                  await redis.resetAllStatus(userId)
+                }
               }else{
                 replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
               }
@@ -586,11 +590,12 @@ async function withinOpeningTime(id, time){
 
 async function isMembered(id, name, birthday){
   let result = await psgl.isMemberedInMemberTable(id, name, birthday)
-  if(result[0].ID != null){
+  if(result[0].ID != undefined){
     return true
   }else{
     false
   }
 }
+
 
 module.exports = router
