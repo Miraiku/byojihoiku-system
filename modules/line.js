@@ -502,8 +502,9 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
 async function isValidNurseryName(s){
   let nursery_list = await psgl.getNurseryName()
   let exist = false
-  for(let i = 0; i < nursery_list.length; i++)
-  {
+  for(let i = 0; i < nursery_list.length; i++){
+    console.log("isValidNurseryName" + s)
+    console.log("nursery_list[i].name" + s)
     if(nursery_list[i].name === s){
       exist = true
     }
@@ -512,13 +513,11 @@ async function isValidNurseryName(s){
 }
 
 async function getNurseryIdByName(name){
-  console.log(await psgl.getNurseryIdByName(name))
-  return null
+  return await psgl.getNurseryIdByName(name)
 }
 
 async function hasNurseryCapacity(name){
-  console.log(await psgl.getNurseryCapacityByName(name))
-  return null
+  return await psgl.getNurseryCapacityByName(name)
 }
 
 module.exports = router
