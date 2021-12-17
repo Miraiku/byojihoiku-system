@@ -501,6 +501,8 @@ async function withinOpeningTime(id, time){
   let result = false
   let open = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_opentime'))
   let close = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_closetime'))
+  console.log(open)
+  console.log(close)
   if(open != null && close != null){
     if(Number(open)<=Number(time) && Number(close)>=Number(time)){
       result = true
