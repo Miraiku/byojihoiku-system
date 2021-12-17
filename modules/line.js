@@ -208,7 +208,7 @@ router
               }
               break;//CASE2
             case 3:
-              if(isValidTime(text)&& await withinOpeningTime(text)){
+              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
                 replyMessage = "登園時間は「"+text+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',4)
@@ -218,7 +218,7 @@ router
               }
               break;//CASE3
             case 4:
-              if(isValidTime(text)&& await withinOpeningTime(text)){
+              if(isValidTime(text)&& await withinOpeningTime(userId, text)){
                 replyMessage = "退園時間は「"+text+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 //redis.hsetStatus(userId,'reservation_status',5)
@@ -490,10 +490,10 @@ async function hasNurseryCapacity(name){
   return await psgl.getNurseryCapacityByName(name)
 }
 
-async function withinOpeningTime(time){
+async function withinOpeningTime(id, time){
   let result = false
-  let open = await redis.hgetStatus(userId,'reservation_nursery_opentime')
-  let close = await redis.hgetStatus(userId,'reservation_nursery_closetime')
+  let open = await redis.hgetStatus(id,'reservation_nursery_opentime')
+  let close = await redis.hgetStatus(id,'reservation_nursery_closetime')
   if(open != null && close != null){
     if(Number(open)<=Number(time) && Number(close)>=Number(time)){
       result = true
