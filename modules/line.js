@@ -499,7 +499,7 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
   }
 }
 
-function isValidNurseryName(s){
+async function isValidNurseryName(s){
   let nursery_list = await psgl.getNurseryName()
   let exist = false
   for(let i = 0; i < nursery_list.length; i++)
