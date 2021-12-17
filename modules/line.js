@@ -168,13 +168,11 @@ router
                   let nursery_list = await psgl.getNurseryID_Name_Capacity()
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
-                  Object.entries(nursery_list[0]).forEach(([k, v]) => {
-                    console.log(k)
-                    console.log(v)
-                    if(k=='NurseryName'){
-                      all_info += "保育園名："+v+"\n"
-                    }else if(k=='ID'){
-                      all_info += "番号"+v+"\n"
+                  Object.entries(nursery_list).forEach(([k, v]) => {
+                    if(k=='id'){
+                      all_info += v+". "
+                    }else if(k=='name'){
+                      all_info += v+"\n"
                     }
                   });
                   //TODO: 曜日がおかしい
