@@ -184,6 +184,7 @@ router
             case 2:
               if(reservation_reply_status==20){
                 //園確認
+                //TODO：キャパ計算にredisをいれるか検討
                 if(await isValidNurseryName(text)){
                     let nursery_capacity = await hasNurseryCapacity(text)
                     let nursery_id = await getNurseryIdByName(text)
@@ -205,75 +206,27 @@ router
                   replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
                 }//isValidNursery
               }
-              /*
-              if(isValidNurseryName(text)){
-                replyMessage = "ご利用希望の園は「"+text+"」ですね。\n次にご利用人数を数字で返信してください。\n例）1人利用の場合「1」、2人利用の場合「2」"
-                //SET Nursery
-                await redis.hsetStatus(userId,'reservation_nursery', text)
-                //SET Status 3
-                await redis.hsetStatus(userId,'reservation_status',3)
-                //SET Reply Status 30
-                await redis.hsetStatus(userId,'reservation_reply_status',30)
-              }
-              */
               break;//CASE2
-            //ReservationStart For Number
             case 3:
-              //キャパ超えてたらキャンセル待ち、そうでなければ予約する
-              if(isReservationableNursery(text)){
-                //SET Name Value
-                await redis.hsetStatus(userId,'Allergy',text)
-                //SET Status 4
-                await redis.hsetStatus(userId,'register_status',4)
-                //SET Reply Status 40
-                await redis.hsetStatus(userId,'register_reply_status',40)
-                //Get all information
-                regsiter_informations = await redis.hgetAll(userId)
-                let all_info = ''
-                Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
-                    console.log({k, v});
-                    if(k=='Name'){
-                      all_info += "お名前："+v+"\n"
-                    }else if(k=='BirthDay'){
-                      all_info += "お誕生日："+DayToJp(v)+"\n"
-                    }else if(k=='Allergy'){
-                      all_info += "アレルギー："+v+"\n"
-                    }
-                });
-
-                replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
-                break;
+              if(isValidTime(text)&&withinOpeningTime(text)){
+                replyMessage = "登園時間は「"+text+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
+                redis.hsetStatus(userId,'reservation_nursery_intime',text)
+                redis.hsetStatus(userId,'reservation_status',4)
+                redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
-                replyMessage = "申し訳ございません。\nご利用希望日は満員です。\nキャンセル待ち登録をする場合は「はい」を返信してください。"
-                break;
-              };//CASE3
+                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」"
+              }
+              break;//CASE3
             case 4:
-              if(yesOrNo(text)){
-                if(text==='はい'){
-                  try {
-                    //Get all information
-                    let info = await redis.hgetAll(id)
-                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-                    '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;                   
-                    const result = await psgl.sqlToPostgre(queryString)
-                    console.log(result);
-                    
-                    await redis.resetAllStatus(userId)
-                  } catch (err) {
-                    console.error(err);
-                  }
-                  replyMessage = "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
-                  break;
-                }else if(text=='いいえ'){
-                  await redis.resetAllStatus(userId)
-                  replyMessage = "会員登録を中止しました。"
-                }
-                break;
+              if(isValidTime(text)&&withinOpeningTime(text)){
+                replyMessage = "退園時間は「"+text+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                redis.hsetStatus(userId,'reservation_nursery_outtime',text)
+                //redis.hsetStatus(userId,'reservation_status',5)
+                //redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "登録を完了する場合は「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。"
-                break;
-              };
-            break;//CASE4
+                replyMessage = "退園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」"
+              }
+              break;//CASE4
             default:
               console.log('Nothing to do in switch ') 
             break;
@@ -351,6 +304,14 @@ function isZenkakuKana(s) {
 
 function isValidDate(s){
   if(s.match(/^[0-9]+$/) && s.length == 8 && Number(s.substr( 0, 4 )) > 1900 && Number(s.substr( 4, 2 )) <= 12 && Number(s.substr( 6, 2 )) <=31 ){
+    return true
+  }else{
+    return false
+  }
+}
+
+function isValidTime(s){
+  if(s.match(/^[0-9]+$/) && s.length == 4 && Number(s.substr( 0, 2 )) <= 24 && Number(s.substr( 2, 4 )) <= 59){
     return true
   }else{
     return false
@@ -527,6 +488,18 @@ async function getNurseryIdByName(name){
 
 async function hasNurseryCapacity(name){
   return await psgl.getNurseryCapacityByName(name)
+}
+
+function withinOpeningTime(time){
+  let result = false
+  let open = await redis.hgetStatus(userId,'reservation_nursery_opentime')
+  let close = await redis.hgetStatus(userId,'reservation_nursery_closetime')
+  if(open != null && close != null){
+    if(Number(open)<=Number(time) && Number(close)>=Number(time)){
+      result = true
+    }
+  }
+  return result
 }
 
 module.exports = router
