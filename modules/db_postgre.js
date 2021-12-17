@@ -50,12 +50,12 @@ exports.getNurseryID_Name_Capacity = async function (){
 
 
 exports.getNurseryCapacityByName = async function (name){
-  let sql = `SELECT "Capacity" FROM public."Nursery" WHERE "NurseryName" = `+name+`;`
+  let sql = `SELECT "Capacity" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
 }
 
 exports.getNurseryIdByName = async function (name){
-  let sql = `SELECT "ID" FROM public."Nursery" WHERE "NurseryName" = `+name+`;`
+  let sql = `SELECT "ID" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
 }
 
