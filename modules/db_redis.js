@@ -62,7 +62,7 @@ exports.resetAllStatus = async function (id){
     Object.keys(reply).forEach(async function (key,val) {
       await redis_client.hdel(id, key,(err, reply) => {
         if (err) throw err;
-        console.log('REDIS DELETED KEY: ' + key + ', VALUE: ' + val)
+        console.log('REDIS DELETED KEY: ' + key)
       });
     });
   });

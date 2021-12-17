@@ -255,7 +255,7 @@ router
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
-                  replyMessage = "利用人数は「"+text+"人」ですね。\n\n"
+                  replyMessage = "利用人数は「"+text+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                   redis.hsetStatus(userId,'reservation_nursery_number',text)
                   redis.hsetStatus(userId,'reservation_status',8)
                   redis.hsetStatus(userId,'reservation_reply_status',80)
@@ -585,7 +585,7 @@ async function withinOpeningTime(id, time){
 }
 
 async function isMembered(id, name, birthday){
-  let result = await isMembered(id, name, birthday)
+  let result = await psgl.isMemberedInMemberTable(id, name, birthday)
   if(result[0].ID != null){
     return true
   }else{
