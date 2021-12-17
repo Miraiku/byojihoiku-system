@@ -30,6 +30,15 @@ exports.getNurseryTable = async function (){
   return await psgl.sqlToPostgre(sql)
 }
 
+exports.getNurseryName = async function (){
+  let nursery_list = []
+  let nursery = await psgl.getNurseryTable()
+  for await (const v of nursery) {
+    nursery_list.push({name:v['NurseryName']})
+  }
+  return nursery_list
+}
+
 exports.getNurseryID_Name_Capacity = async function (){
   let nursery_list = []
   let nursery = await psgl.getNurseryTable()
@@ -37,6 +46,17 @@ exports.getNurseryID_Name_Capacity = async function (){
     nursery_list.push({id:v['ID'], name:v['NurseryName'], capacity:v['Capacity']})
   }
   return nursery_list
+}
+
+
+exports.getNurseryCapacityByName = async function (name){
+  let sql = `SELECT "Capacity" FROM public."Nursery" WHERE "NurseryName" = `+name+`;`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getNurseryIdByName = async function (name){
+  let sql = `SELECT "ID" FROM public."Nursery" WHERE "NurseryName" = `+name+`;`
+  return await psgl.sqlToPostgre(sql)
 }
 
 exports.getAvailableNurseryOnThatDay = async function (date){
@@ -51,4 +71,9 @@ exports.getAvailableNurseryOnThatDay = async function (date){
     }
   }
   return available
+}
+
+exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
+  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`';`
+  return await psgl.sqlToPostgre(sql)
 }

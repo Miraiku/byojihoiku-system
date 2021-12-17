@@ -158,7 +158,7 @@ router
         }else if(reservation_status!=null){
           //ACTION
           switch (Number(reservation_status)) {
-            //Name
+            //Day
             case 1:
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
@@ -166,42 +166,50 @@ router
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
                   //TODO: りよう園→枠確認→予約orキャンセル待ちとうろく
                   let nursery_list = await psgl.getNurseryID_Name_Capacity()
-                  //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
                   for(let i = 0; i < nursery_list.length; i++)
                   {
-                      all_info += nursery_list[i].id+". "+nursery_list[i].name+"\n";
+                      all_info += nursery_list[i].name+"\n";
                   }
                   //TODO: 曜日がおかしい
-                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info+"\n例）早苗町を希望の場合「1」または「早苗町」と返信してください。"
-                  //redis.hsetStatus(userId,'reservation_date',text)
-                  //redis.hsetStatus(userId,'reservation_status',2)
-                  //redis.hsetStatus(userId,'reservation_reply_status',20)
+                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info+"\n例）早苗町を希望の場合「早苗町」と返信してください。"
+                  redis.hsetStatus(userId,'reservation_date',text)
+                  redis.hsetStatus(userId,'reservation_status',2)
+                  redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
                   replyMessage = "申し訳ございません。希望日は休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
               }
-            break;//Number of kids
+            break;
             case 2:
-              if(isValidNum(text)){
-                if(isRegisterdByNameAndBirthDay(name,text)){
-                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
-                  //SET Name Value
-                  await redis.hsetStatus(userId,'BirthDay')
-                  //SET Status 3
-                  await redis.hsetStatus(userId,'register_status',3)
-                  //SET Reply Status 30
-                  await redis.hsetStatus(userId,'register_reply_status',30)
-                }else{//isRegisterdByNameAndBirthDay()
+              //園確認
+              if(isValidNurseryName(text)){
+                if(hasNurseryCapacity(text)){
+                  let nursery_id = getNurseryIdByName(text)
+                  let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(date), nursery_id)
+                  console.log(avairable_nerseries)
+                }else{
+                }//hasNurseryCapacity
+              }else{
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
+              }//isValidNursery
 
-                }
-              }else{//isValidDate()
-                replyMessage = "申し訳ございません。\nご利用希望日は満員です。お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+              /*
+              if(isValidNurseryName(text)){
+                replyMessage = "ご利用希望の園は「"+text+"」ですね。\n次にご利用人数を数字で返信してください。\n例）1人利用の場合「1」、2人利用の場合「2」"
+                //SET Nursery
+                await redis.hsetStatus(userId,'reservation_nursery', text)
+                //SET Status 3
+                await redis.hsetStatus(userId,'reservation_status',3)
+                //SET Reply Status 30
+                await redis.hsetStatus(userId,'reservation_reply_status',30)
               }
+              */
               break;//CASE2
-            //Allergy
+            //ReservationStart For Number
             case 3:
-              if(hasAllergyValidation(text)){
+              //キャパ超えてたらキャンセル待ち、そうでなければ予約する
+              if(isReservationableNursery(text)){
                 //SET Name Value
                 await redis.hsetStatus(userId,'Allergy',text)
                 //SET Status 4
@@ -225,7 +233,7 @@ router
                 replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
-                replyMessage = "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\nご利用希望日は満員です。\nキャンセル待ち登録をする場合は「はい」を返信してください。"
                 break;
               };//CASE3
             case 4:
@@ -345,6 +353,7 @@ function hankaku2Zenkaku(s) {
 }
 
 function isValidNum(s){
+  //半角と全角どちらでも受け付ける
   if(Number(s) == NaN){
     if(Number(hankaku2Zenkaku(s)) == NaN){
       return false
@@ -490,5 +499,21 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
   }
 }
 
+function isValidNurseryName(s){
+  let nursery_list = await psgl.getNurseryName()
+  let exist = false
+  for(let i = 0; i < nursery_list.length; i++)
+  {
+    if(nursery_list[i].name === text){
+      exist = true
+    }
+  }
+  return exist
+}
+
+function getNurseryIdByName(name){
+  consolo.log(await psgl.getNurseryIdByName(name))
+  return null
+}
 
 module.exports = router
