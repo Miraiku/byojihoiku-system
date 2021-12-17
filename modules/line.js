@@ -511,7 +511,7 @@ async function isValidNurseryName(s){
   return exist
 }
 
-function getNurseryIdByName(name){
+async function getNurseryIdByName(name){
   consolo.log(await psgl.getNurseryIdByName(name))
   return null
 }
