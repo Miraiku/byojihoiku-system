@@ -504,11 +504,10 @@ async function isValidNurseryName(s){
   let exist = false
   for(let i = 0; i < nursery_list.length; i++){
     if(nursery_list[i].name === s){
-      console.log("isValidNurseryName" + s)
-      console.log("nursery_list[i].name" + nursery_list[i].name)
       exist = true
     }
   }
+  console.log(exist)
   return exist
 }
 
