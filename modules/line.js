@@ -164,7 +164,7 @@ router
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
                   //TODO: りよう園→枠確認→予約orキャンセル待ちとうろく
-                  let nursery_list = getNurseryIDandName()
+                  let nursery_list = psgl.getNurseryIDandName()
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
                   Object.entries(nursery_list).forEach(([k, v]) => {
