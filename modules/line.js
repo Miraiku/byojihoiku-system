@@ -169,6 +169,7 @@ router
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
                   Object.entries(nursery_list[0]).forEach(([k, v]) => {
+                    console.log(k)
                     console.log(v)
                     if(k=='NurseryName'){
                       all_info += "保育園名："+v+"\n"
