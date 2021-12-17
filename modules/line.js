@@ -182,20 +182,27 @@ router
               }
             break;
             case 2:
-              //園確認
-              if(await isValidNurseryName(text)){
-                  let nursery_capacity = await hasNurseryCapacity(text)
-                  console.log(nursery_capacity)
-                  let nursery_id = await getNurseryIdByName(text)
-                  console.log(nursery_id)
-                  let reservation_date = await redis.hgetStatus(userId,'reservation_date')
-                  console.log(reservation_date)
-                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
-                  console.log(reservation_num_on_day)
-              }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
-              }//isValidNursery
-
+              if(reservation_reply_status==20){
+                //園確認
+                if(await isValidNurseryName(text)){
+                    let nursery_capacity = await hasNurseryCapacity(text)
+                    let nursery_id = await getNurseryIdByName(text)
+                    let reservation_date = await redis.hgetStatus(userId,'reservation_date')
+                    let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
+                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
+                      let opentime = await psgl.getNurseryOpenTimeFromName(text)
+                      let closetime = await psgl.getNurseryCloseTimeFromName(text)
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n開園時間は、"+strIns(opentime, 2, ':')+"〜"+strIns(closetime, 2, ':')+"です。\n例）キャンセル待ち登録をする場合は「はい」を返信してください。"
+                      redis.hsetStatus(userId,'reservation_nursery',text)
+                      redis.hsetStatus(userId,'reservation_status',3)
+                      redis.hsetStatus(userId,'reservation_reply_status',30)
+                    }else{
+                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\nキャンセル待ち登録をする場合は「はい」を返信してください。"
+                    }
+                }else{
+                  replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
+                }//isValidNursery
+              }
               /*
               if(isValidNurseryName(text)){
                 replyMessage = "ご利用希望の園は「"+text+"」ですね。\n次にご利用人数を数字で返信してください。\n例）1人利用の場合「1」、2人利用の場合「2」"

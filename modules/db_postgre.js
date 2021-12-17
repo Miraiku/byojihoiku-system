@@ -77,3 +77,13 @@ exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
   let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`';`
   return await psgl.sqlToPostgre(sql)
 }
+
+exports.getNurseryOpenTimeFromName = async function (name){
+  let sql = `SELECT "OpenTime" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getNurseryCloseTimeFromName = async function (name){
+  let sql = `SELECT "CloseTime" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
+  return await psgl.sqlToPostgre(sql)
+}
