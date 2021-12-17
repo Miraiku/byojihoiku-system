@@ -168,14 +168,10 @@ router
                   let nursery_list = await psgl.getNurseryID_Name_Capacity()
                   //let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(text))
                   let all_info = ''
-                  console.log(nursery_list)
-                  Object.entries(nursery_list[0]).forEach(([k, v]) => {
-                    if(k=='id'){
-                      all_info += v+". "
-                    }else if(k=='name'){
-                      all_info += v+"\n"
-                    }
-                  });
+                  for(let i = 0; i < nursery_list.length; i++)
+                  {
+                      all_info += nursery_list[i].id+". "+nursery_list[i].name+"\n";
+                  }
                   //TODO: 曜日がおかしい
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n"+all_info
                   //redis.hsetStatus(userId,'reservation_date',text)
