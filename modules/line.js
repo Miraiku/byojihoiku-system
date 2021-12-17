@@ -183,8 +183,8 @@ router
             break;
             case 2:
               //園確認
-              if(isValidNurseryName(text)){
-                if(hasNurseryCapacity(text)){
+              if(await isValidNurseryName(text)){
+                if(await hasNurseryCapacity(text)){
                   let nursery_id = getNurseryIdByName(text)
                   let avairable_nerseries = await psgl.getAvailableNurseryOnThatDay(getTimeStampDayFrom8Number(date), nursery_id)
                   console.log(avairable_nerseries)
@@ -507,7 +507,6 @@ async function isValidNurseryName(s){
       exist = true
     }
   }
-  console.log(exist)
   return exist
 }
 
