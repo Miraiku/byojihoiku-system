@@ -193,10 +193,10 @@ router
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
                       let opentime = await psgl.getNurseryOpenTimeFromName(text)
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n開園時間は、"+opentime[0].OpenTime+"〜"+closetime[0].CloseTime+"です。\n例）8時に登園する場合は「0800」"
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
                       redis.hsetStatus(userId,'reservation_nursery',text)
-                      redis.hsetStatus(userId,'reservation_nursery_opentime',opentime[0].OpenTime)
-                      redis.hsetStatus(userId,'reservation_nursery_closetime',closetime[0].CloseTime)
+                      redis.hsetStatus(userId,'reservation_nursery_opentime',opentime[0].OpenTime.substr( 0, 5 ))
+                      redis.hsetStatus(userId,'reservation_nursery_closetime',closetime[0].CloseTime.substr( 0, 5 ))
                       redis.hsetStatus(userId,'reservation_status',3)
                       redis.hsetStatus(userId,'reservation_reply_status',30)
                     }else{
@@ -209,7 +209,7 @@ router
               break;//CASE2
             case 3:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "登園時間は「"+text+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
+                replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',4)
                 redis.hsetStatus(userId,'reservation_reply_status',40)
@@ -219,7 +219,7 @@ router
               break;//CASE3
             case 4:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "退園時間は「"+text+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                replyMessage = "退園時間は「"+TimeToJP(text)+"」ですね。\nお子様の名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 //redis.hsetStatus(userId,'reservation_status',5)
                 //redis.hsetStatus(userId,'reservation_reply_status',50)
@@ -361,6 +361,15 @@ function DayToJP(s){
     return s
   }
 }
+
+function TimeToJP(s){
+  if(isValidTime(s)){
+    return Number(s.substr( 0, 2 ))+'時'+Number(s.substr( 2, 4 ))+'分'
+  }else{
+    return s
+  }
+}
+
 function getYear(s){
   if(isValidDate(s)){
     return Number(s.substr( 0, 4 ))
@@ -499,10 +508,8 @@ async function hasNurseryCapacity(name){
 
 async function withinOpeningTime(id, time){
   let result = false
-  let open = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_opentime'))
-  let close = TimeFormatFromDB(await redis.hgetStatus(id,'reservation_nursery_closetime'))
-  console.log(open)
-  console.log(close)
+  let open = await redis.hgetStatus(id,'reservation_nursery_opentime')
+  let close = await redis.hgetStatus(id,'reservation_nursery_closetime')
   if(open != null && close != null){
     if(Number(open)<=Number(time) && Number(close)>=Number(time)){
       result = true
