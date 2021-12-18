@@ -196,15 +196,24 @@ router
               if(reservation_reply_status==20){
                 //第１園希望確認
                 //TODO：キャパ計算にredisをいれるか検討
+                //TODO　予約できない時間になったらできないという
+                let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
+                if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
+                  await redis.hsetStatus(userId,'reservation_status_cancel','true')
+                }
                 if(await isValidNurseryName(text)){
+                  if(cancel === undefined){
                     let nursery_capacity = await hasNurseryCapacity(text)
                     let nursery_id = await getNurseryIdByName(text)
                     let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                     let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
                     
-                    console.log(getTimeStampDayFrom8Number(reservation_date)+','+ nursery_id[0].ID)
-                    console.log(reservation_num_on_day)
-                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
+                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
+                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
+                      await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                      break;
+                    }
+                  }
                       let opentime = await psgl.getNurseryOpenTimeFromName(text)
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
                       //replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
@@ -215,9 +224,7 @@ router
                       redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
                       redis.hsetStatus(userId,'reservation_status',3)
                       redis.hsetStatus(userId,'reservation_reply_status',30)
-                    }else{
-                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\nキャンセル待ち登録をする場合は「はい」を返信してください。"
-                    }
+                    
                 }else{
                   replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
                 }//isValidNursery
