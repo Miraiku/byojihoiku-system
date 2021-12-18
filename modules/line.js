@@ -409,33 +409,34 @@ router
               break;
             case 16://Register
               //TODO　キャンセル待ちフロー作成
-              replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-              await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
-              r = await redis.hgetAll(userId)
-              let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
-              let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
-              Object.entries(r).forEach(([k, v]) => {
-                let i = k.slice(-1);
-                if(Number(i)!==NaN){
-                  if((k).includes('reservation_child_name_'+i)){
-                    childname[i] = v
-                  }else if((k).includes('reservation_child_birthday_'+i)){
-                    birthday[i] = v
-                  }else if((k).includes('reservation_child_memberid_'+i)){
-                    memberid[i] = v
-                  }else if((k).includes('reservation_child_disase_id_'+i)){
-                    disase_id[i] = v
-                  }else if((k).includes('reservation_child_meal_id_'+i)){
-                    meal_id[i] = v
-                  }else if((k).includes('reservation_child_meal_caution_'+i)){
-                    meal_caution[i] = v
-                  }else if((k).includes('reservation_child_cramps_caution_'+i)){
-                    cramps_caution[i] = v
-                  }else if((k).includes('reservation_child_allergy_caution_'+i)){
-                    allergy_caution[i] = v
+              try {
+                replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
+                r = await redis.hgetAll(userId)
+                let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
+                let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
+                Object.entries(r).forEach(([k, v]) => {
+                  let i = k.slice(-1);
+                  if(Number(i)!==NaN){
+                    if((k).includes('reservation_child_name_'+i)){
+                      childname[i] = v
+                    }else if((k).includes('reservation_child_birthday_'+i)){
+                      birthday[i] = v
+                    }else if((k).includes('reservation_child_memberid_'+i)){
+                      memberid[i] = v
+                    }else if((k).includes('reservation_child_disase_id_'+i)){
+                      disase_id[i] = v
+                    }else if((k).includes('reservation_child_meal_id_'+i)){
+                      meal_id[i] = v
+                    }else if((k).includes('reservation_child_meal_caution_'+i)){
+                      meal_caution[i] = v
+                    }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                      cramps_caution[i] = v
+                    }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                      allergy_caution[i] = v
+                    }
                   }
-                }
               });
               for (const i of total) {
                 queryString = `WITH rows AS (INSERT INTO public."Reservation"(
@@ -445,8 +446,9 @@ router
               }
               let reservationID = await registerIntoReservationTable(queryString)
               
-
-              break;
+              } catch (error) {
+                break;
+              }
             default:
               console.log('Nothing to do in switch ') 
             break;
