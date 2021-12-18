@@ -48,34 +48,38 @@ router
             let memberids = await psgl.getMermerIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
-              for (const rsv of complete_reservations) {
-                replyMessage += "予約完了\n"
-                let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
-                for (const details of reservations_details) {
-                  //await getJpValueFromPsglIds(details)
-                  replyMessage += "お子様氏名："+details.MemberID+"\n"
-                  replyMessage += "症状："+details.DiseaseID+"\n"
-                  replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                  replyMessage += "第１希望："+details.firstNursery+"\n"
-                  replyMessage += "第２希望："+details.secondNursery+"\n"
-                  replyMessage += "第３希望："+details.thirdNursery+"\n"
-                  replyMessage += "保護者氏名："+details.ParentName+"\n"
-                  replyMessage += "食事："+details.MealType+"\n"
-                  replyMessage += "アレルギー："+details.Allergy+"\n"
-                  replyMessage += "お預り時間："+getJpTimeHourFromFormattedDate(details.InTime)+"〜"+getJpTimeHourFromFormattedDate(details.OutTime)+"\n"
-                  replyMessage += "保護者連絡先："+details.ParentTel+"\n"
-                  replyMessage += "熱性けいれん："+details.Cramps+"\n"
+              if(complete_reservations != null){
+                for (const rsv of complete_reservations) {
+                  replyMessage += "予約完了\n"
+                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
+                  for (const details of reservations_details) {
+                    //await getJpValueFromPsglIds(details)
+                    replyMessage += "お子様氏名："+details.MemberID+"\n"
+                    replyMessage += "症状："+details.DiseaseID+"\n"
+                    replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "第１希望："+details.firstNursery+"\n"
+                    replyMessage += "第２希望："+details.secondNursery+"\n"
+                    replyMessage += "第３希望："+details.thirdNursery+"\n"
+                    replyMessage += "保護者氏名："+details.ParentName+"\n"
+                    replyMessage += "食事："+details.MealType+"\n"
+                    replyMessage += "アレルギー："+details.Allergy+"\n"
+                    replyMessage += "お預り時間："+getJpTimeHourFromFormattedDate(details.InTime)+"〜"+getJpTimeHourFromFormattedDate(details.OutTime)+"\n"
+                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
+                  }
                 }
-              }
+              }//end complete_reservations
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
               for (const rsv of waiting_reservations) {
-                replyMessage += "キャンセル待ち\n"
                 let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
-                for (const details of reservations_details) {
-                  replyMessage += details+"\n"
+                if(reservations_details != null){
+                  replyMessage += "キャンセル待ち\n"
+                  for (const details of reservations_details) {
+                    replyMessage += details+"\n"
+                  }
                 }
-              }
-            }
+              }//end waiting_reservations
+            }//end memberids
           } catch (error) {
             
           }
