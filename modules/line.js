@@ -221,7 +221,7 @@ router
                   }
                   let opentime = await psgl.getNurseryOpenTimeFromName(text)
                   let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                  //replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
+                  //TODO 開園時間が0800になってるのでなおす
                   if(cancel == null){
                     replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
                   }else{
@@ -568,7 +568,7 @@ router
                       }
                     });
                     for (let i = 1; i <= total; i++) {
-                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', ''${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
+                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
                       let reservationID = await registerIntoReservationTable(queryString)
                       if(Number.isInteger(reservationID)){
                         queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "1stNursery", "2ndNursery", "3rdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}]');`
