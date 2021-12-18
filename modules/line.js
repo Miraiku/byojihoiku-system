@@ -31,6 +31,7 @@ router
         let reservation_reply_status = await redis.hgetStatus(userId,'reservation_reply_status')
 
         if(text === "予約"){
+          await redis.resetAllStatus(userId)
           let registeredMessage
           if(await isRegisterd(userId)){
             registeredMessage = '病児保育の予約ですね。\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。\n\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」'
@@ -50,6 +51,7 @@ router
 
           replyMessage = "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
         }else if(text === "登録"){
+          await redis.resetAllStatus(userId)
           //SET Status 1
           await redis.hsetStatus(userId,'register_status',1)
           //SET Reply Status 10
