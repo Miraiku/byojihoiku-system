@@ -418,10 +418,7 @@ router
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
-                  console.log(i +', '+ v)
-                  console.log(Number(i))
-                  console.log(isNaN(Number(i)))
-                  if(isNaN(Number(i))){
+                  if(Number.isIntegeri(i)){
                     console.log("数字つき")
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
