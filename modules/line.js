@@ -407,7 +407,20 @@ router
               await redis.hsetStatus(userId,'reservation_status',16)
               await redis.hsetStatus(userId,'reservation_reply_status',160)
               break;
-            case 16://Register
+              case 16://Register
+                //TODO　キャンセル待ちフロー作成
+                try {
+                  regsiter_informations = await redis.hgetAll(userId)
+                  let all_info = ''
+                  Object.entries(regsiter_informations).forEach(([k, v]) => { 
+                        all_info += k+"："+v+"\n"
+                  });
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+                } catch (error) {
+                  console.log(`Reservation ERR: ${error}`)
+                }
+                break;
+            case 17://Register
               //TODO　キャンセル待ちフロー作成
               try {
                 replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
@@ -448,13 +461,20 @@ router
                 });
                 for (let i = 1; i <= total; i++) {
                   queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
+                  let reservationID = await registerIntoReservationTable(queryString)
+                  if(Number.isInteger(reservationID)){
+                    queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "1stNursery", "2ndNursery", "3rdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}]');`
+                    let reserved = await insertReservationDetails(queryString)
+                    if(reserved){
+
+                    }
+                  }
                 }
-                let reservationID = await registerIntoReservationTable(queryString)
                 console.log(reservationID)
               } catch (error) {
                 console.log(`Reservation ERR: ${error}`)
-                break;
               }
+              break;
             default:
               console.log('Nothing to do in switch ') 
             break;
@@ -743,9 +763,9 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
   }
 }
 
-async function registerIntoReservationTable(sql){
+async function registerIntoReservationTable(queryString){
   try {
-    const results = await psgl.sqlToPostgre(sql)
+    const results = await psgl.sqlToPostgre(queryString)
     if(Object.keys(results).length == 0){
       return 0
     }else{
@@ -754,6 +774,20 @@ async function registerIntoReservationTable(sql){
   }
   catch (err) {
     console.log(`PSGL ERR @registerIntoReservationTable: ${err}`)
+  }
+}
+
+async function insertReservationDetails(queryString){
+  try {
+    const results = await psgl.sqlToPostgre(queryString)
+    if(Object.keys(results).length == 0){
+      return false
+    }else{
+      return true
+    }
+  }
+  catch (err) {
+    console.log(`PSGL ERR @insertReservationDetails: ${err}`)
   }
 }
 
