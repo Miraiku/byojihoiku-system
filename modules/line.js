@@ -350,7 +350,8 @@ router
                 let mealname = await psgl.getMealNameFromID(text)
                 replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                await redis.hsetStatus(userId,'reservation_child_meal_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_meal_name'+current_child_number,mealname[0].MealName)
+                await redis.hsetStatus(userId,'reservation_child_meal_id'+current_child_number,text)
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
@@ -412,18 +413,38 @@ router
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
               r = await redis.hgetAll(userId)
-              n = 1
-              queryString = `WITH rows AS (INSERT INTO public."Reservation"(
-                "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
-                VALUES ('${r.reservation_child_memberid_+n}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
-                RETURNING ID);` 
-              let reservationID = await registerIntoReservationTable(queryString)
-              if(false){
-                queryString = `INSERT INTO public."Reservation"(
+              let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
+              let name,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
+              Object.entries(r).forEach(([k, v]) => {
+                let i = k.slice(-1);
+                if(Number(i)!==NaN){
+                  if((k).includes('reservation_child_name_'+i)){
+                    name[i] = v
+                  }else if((k).includes('reservation_child_birthday_'+i)){
+                    birthday[i] = v
+                  }else if((k).includes('reservation_child_memberid_'+i)){
+                    memberid[i] = v
+                  }else if((k).includes('reservation_child_disase_id_'+i)){
+                    disase_id[i] = v
+                  }else if((k).includes('reservation_child_meal_id_'+i)){
+                    meal_id[i] = v
+                  }else if((k).includes('reservation_child_meal_caution_'+i)){
+                    meal_caution[i] = v
+                  }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                    cramps_caution[i] = v
+                  }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                    allergy_caution[i] = v
+                  }
+                }
+              });
+              for (const i of total) {
+                queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                   "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
-                  VALUES ('${r.reservation_child_memberid_+n}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}');`   
-
+                  VALUES ('${memberid[i]}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
+                  RETURNING ID);` 
               }
+              let reservationID = await registerIntoReservationTable(queryString)
+              
 
               break;
             default:

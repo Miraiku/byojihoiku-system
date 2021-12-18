@@ -46,7 +46,7 @@ exports.hgetAll = async function (id,key){
       if (err) throw err;
       Object.entries(reply).forEach(([k, v]) => {
         console.log("REDIS hgetall result: "+k+"："+v)
-    });
+      });
       result = reply
     });
     return result
