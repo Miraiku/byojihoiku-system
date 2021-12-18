@@ -18,6 +18,7 @@ router
       const userId = req.body.events[0].source.userId
       let dataString = null
       let replyMessage = null
+      let current_child_number = null
 
       res.send("HTTP POST request sent to the webhook URL!")
       
@@ -267,7 +268,7 @@ router
                 }
               break;//CASE7
             case 70://人数分ループ用IF
-                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
 
                 replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 if(text=='なし'){
@@ -283,7 +284,7 @@ router
               if(isZenkakuKana(name)){
                 replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                 //SET Name Value
-                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_name_'+current_child_number,name)
                 //SET Status 2
                 await redis.hsetStatus(userId,'reservation_status',9)
@@ -301,7 +302,7 @@ router
                 {
                     all_info += meals[i].id+". "+meals[i].name+"\n";
                 }
-                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 let name = await redis.hgetStatus(userId,'reservation_child_name_'+current_child_number)
                 if(await isMembered(userId, name, text)){
                   replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」"+all_info
@@ -320,7 +321,7 @@ router
             case 10:
               if(await isValidMeal(text)){
                 replyMessage = "希望の食事は「"+text+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
-                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_meal_'+current_child_number,text)
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
@@ -331,7 +332,7 @@ router
             case 11:
               replyMessage = "食事の追記事項は「"+text+"」ですね。\n\n熱性けいれんの経験がある場合\n回数、初回の年齢、最終の年齢についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
               if(text=='なし'){
-                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
               }else{
                 await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,text)
@@ -341,7 +342,7 @@ router
               break;//CASE11
             case 12:
               replyMessage = "熱性けいれんの経験は「"+text+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
-              let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
@@ -363,7 +364,7 @@ router
               break;//CASE12
             case 13://Register
               replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-              let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
