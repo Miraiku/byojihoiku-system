@@ -418,8 +418,9 @@ router
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
-                  if(Number.isIntegeri(i)){
+                  if(Number.isInteger(i)){
                     console.log("数字つき")
+                    console.log(k)
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
                     }else if((k).includes('reservation_child_birthday_'+i)){
