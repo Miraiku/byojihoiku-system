@@ -43,7 +43,18 @@ router
           replyMessage = registeredMessage
 
         }else if(text === "予約確認"){
-          await psgl.getMermerIDByLINEID(userId)
+          let raaa = await psgl.getMermerIDByLINEID(userId)
+          for (const key in raaa) {
+            if (Object.hasOwnProperty.call(object, key)) {
+              console.log(object[key])
+              
+            }
+          }
+          for (const iterator of raaa) {
+            
+            console.log(iterator)
+          }
+          
 
           replyMessage = "テスト中"
         }else if(text === "登録"){
