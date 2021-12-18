@@ -413,7 +413,7 @@ router
                 replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
-                r = await redis.hgetAll(userId)
+                let res = await redis.hgetAll(userId)
                 let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
                 Object.entries(r).forEach(([k, v]) => {
@@ -442,7 +442,7 @@ router
                 for (let i = 0; i < total; i++) {
                   queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                     "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
-                    VALUES ('${memberid[i]}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
+                    VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}')
                     RETURNING ID);` 
                   console.log(queryString)
                 }
