@@ -198,7 +198,8 @@ router
                       let closetime = await psgl.getNurseryCloseTimeFromName(text)
                       //replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
                       replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
-                      redis.hsetStatus(userId,'reservation_nursery_1',text)
+                      redis.hsetStatus(userId,'reservation_nursery_name_1',text)
+                      redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
                       redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
                       redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
                       redis.hsetStatus(userId,'reservation_status',3)
@@ -215,7 +216,9 @@ router
               //第2希望
               if(await isValidNurseryName(text)){
                   replyMessage = "第2希望の園は「"+text+"」ですね。\n第3希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
-                  redis.hsetStatus(userId,'reservation_nursery_2',text)
+                  let nursery_id = await getNurseryIdByName(text)
+                  redis.hsetStatus(userId,'reservation_nursery_name_2',text)
+                  redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
                   redis.hsetStatus(userId,'reservation_status',4)
                   redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
@@ -225,11 +228,15 @@ router
             case 4:
               //第3希望
               if(await isValidNurseryName(text) || text == 'なし'){
-                let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_1')
+                let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_name_1')
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
+                let nursery_id = await getNurseryIdByName(text)
                 replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+open+"〜"+close+"です。\n例）9時に登園する場合は「0900」"
-                redis.hsetStatus(userId,'reservation_nursery_3',text)
+                redis.hsetStatus(userId,'reservation_nursery_name_3',text)
+                if( text != 'なし'){
+                  redis.hsetStatus(userId,'reservation_nursery_id_3',0)
+                }
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
@@ -404,13 +411,20 @@ router
               replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
-              regsiter_informations = await redis.hgetAll(userId)
-              let all_info = ''
-              Object.entries(regsiter_informations).forEach(([k, v]) => {
-                  all_info += k+"："+v+"\n"
-              });//getTimeStampFromDay8NumberAndTime4Number
-              console.log(all_info)
-              console.log(regsiter_informations.reservation_child_parent_tel)
+              r = await redis.hgetAll(userId)
+              n = 1
+              queryString = `WITH rows AS (INSERT INTO public."Reservation"(
+                "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
+                VALUES ('${r.reservation_child_memberid_+n}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
+                RETURNING ID);` 
+              let reservationID = await registerIntoReservationTable(queryString)
+              if(false){
+                queryString = `INSERT INTO public."Reservation"(
+                  "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
+                  VALUES ('${r.reservation_child_memberid_+n}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}');`   
+
+              }
+
               break;
             default:
               console.log('Nothing to do in switch ') 
@@ -672,6 +686,7 @@ async function isRegisterd(id){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl.sqlToPostgre(queryString)
+    
     if(Object.keys(results).length == 0){
       return false
     }else{
@@ -698,6 +713,21 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
     console.log(`PSGL ERR: ${err}`)
   }
 }
+
+async function registerIntoReservationTable(sql){
+  try {
+    const results = await psgl.sqlToPostgre(sql)
+    if(Object.keys(results).length == 0){
+      return 0
+    }else{
+      return results[0].ID
+    }
+  }
+  catch (err) {
+    console.log(`PSGL ERR @registerIntoReservationTable: ${err}`)
+  }
+}
+
 
 async function isValidNurseryName(s){
   let nursery_list = await psgl.getNurseryName()
