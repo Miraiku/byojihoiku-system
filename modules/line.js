@@ -395,6 +395,8 @@ router
             case 15:
               replyMessage = "保護者さまのお名前は「"+text+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
               await redis.hsetStatus(userId,'reservation_child_parent_name',text)
+              await redis.hsetStatus(userId,'reservation_status',16)
+              await redis.hsetStatus(userId,'reservation_reply_status',160)
               break;
             case 16://Register
               //TODO　キャンセル待ちフロー作成
