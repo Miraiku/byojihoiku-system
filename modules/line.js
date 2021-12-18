@@ -481,8 +481,8 @@ router
                   console.log(`Reservation ERR: ${error}`)
                 }
                 replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info
-                //await redis.hsetStatus(userId,'reservation_status',17)
-                //await redis.hsetStatus(userId,'reservation_reply_status',170)
+                await redis.hsetStatus(userId,'reservation_status',17)
+                await redis.hsetStatus(userId,'reservation_reply_status',170)
               } catch (error) {
                 console.log(`Reservation ERR: ${error}`)
               }
@@ -757,8 +757,6 @@ function getDayString(s){
     s = getTimeStampWithTimeDayFrom8Number(s)
   }
   let day = new Date(s)
-  console.log(day)
-  console.log('('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')')
   return '('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')'
 }
 
