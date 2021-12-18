@@ -200,11 +200,10 @@ router
                 //TODO：キャパ計算にredisをいれるか検討
                 //TODO　予約できない時間になったらできないという
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
-                console.log('cancel:' + cancel)
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
                 }
-                if(await isValidNurseryName(text)){
+                if(await isValidNurseryName(text)|| cancel != null){
 
                   let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = await getNurseryIdByName(text)
