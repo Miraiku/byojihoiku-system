@@ -145,3 +145,29 @@ exports.getUniqueIDFromDiseaseID = async function (id){
   let sql = `SELECT "ID" FROM public."Disease" WHERE "DiseaseID" = '`+id+`';`
   return await psgl.sqlToPostgre(sql)
 }
+
+exports.getReservationStatusByMemberID = async function (id){
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id};`
+
+  let result = await psgl.sqlToPostgre(sql)
+  console.log(result)
+  console.log(result[0])
+  return result
+}
+exports.getReservationDetailsByMemberID = async function (id){
+  let sql = `SELECT * FROM public."ReservationDetails" WHERE "MemberID" = ${id};`
+
+  let result = await psgl.sqlToPostgre(sql)
+  console.log(result)
+  console.log(result[0])
+  return result
+}
+
+exports.getMermerIDByLINEID = async function (id){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  console.log(result)
+  console.log(result[0])
+  return result
+}

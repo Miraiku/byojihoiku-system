@@ -43,13 +43,9 @@ router
           replyMessage = registeredMessage
 
         }else if(text === "予約確認"){
-          //本日以降の予約内容があれば出力する
-          //SET Status 1
-          await redis.hsetStatus(userId,'register_status',1)
-          //SET Reply Status 10
-          await redis.hsetStatus(userId,'register_reply_status',10)
+          await psgl.getMermerIDByLINEID(userId)
 
-          replyMessage = "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+          replyMessage = "テスト中"
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
@@ -575,7 +571,12 @@ router
                         let reserved = await insertReservationDetails(queryString)
                         if(reserved){
                           await redis.resetAllStatus(userId)
-                          replyMessage = "予約を完了しました。"//TODO注意事項をかく
+                          if(cancel_status == 'true'){
+                            replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                          }else{
+                            replyMessage = "予約を完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                          }
+                          
                         }
                       }
                     }
@@ -704,6 +705,7 @@ function zenkaku2Hankaku(str) {
 }
 
 //TODO　ちゃんと判定できているか不安
+
 function isValidNum(s){
   //半角と全角どちらでも受け付ける
   if(Number(s) == NaN){
