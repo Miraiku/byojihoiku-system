@@ -782,7 +782,7 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
 }
 
 
-function DayToJPFromDateObj(date){
+function DayToJPFromDateObj(dt){
   var y = dt.getFullYear();
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
