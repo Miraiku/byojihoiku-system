@@ -438,7 +438,7 @@ router
                     }
                   }
                 });
-                for (let i = 1; i < total; i++) {
+                for (let i = 1; i <= total; i++) {
                   queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                     "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
                     VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}')
