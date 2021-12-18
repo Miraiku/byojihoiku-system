@@ -348,7 +348,7 @@ router
                 let disasename = await psgl.getDiseaseNameFromID(text)
                 let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(text)
                 replyMessage = "お子様の症状は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
-                await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id)
+                await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
                 await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
