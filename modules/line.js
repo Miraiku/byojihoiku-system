@@ -432,7 +432,6 @@ router
                     }else if((k).includes('reservation_child_birthday_'+i)){
                       birthday[i] = v
                     }else if((k).includes('reservation_child_memberid_'+i)){
-                      console.log('reservation_child_memberid_'+i)
                       memberid[i] = v
                     }else if((k).includes('reservation_child_disase_id_'+i)){
                       disase_id[i] = v
@@ -447,11 +446,10 @@ router
                     }
                   }
                 });
-                console.log('memberid'+memberid)
                 for (let i = 1; i <= total; i++) {
-                  queryString = `WITH rows AS (INSERT INTO public."Reservation"(
-                    "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
-                    VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}')
+                  queryString = `WITH rows AS (INSERT INTO public."Reservation"(\
+                    "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")\
+                    VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}')\
                     RETURNING ID);` 
                   console.log(queryString)
                 }
