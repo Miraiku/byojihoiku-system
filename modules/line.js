@@ -45,8 +45,9 @@ router
         }else if(text === "予約確認"){
           let raaa = await psgl.getMermerIDByLINEID(userId)
           for (const key in raaa) {
-            if (Object.hasOwnProperty.call(object, key)) {
-              console.log(object[key])
+            if (Object.hasOwnProperty.call(raaa, key)) {
+              console.log(raaa[key])
+              console.log(key)
               
             }
           }
