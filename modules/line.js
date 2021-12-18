@@ -327,6 +327,8 @@ router
                 }
                 break;//CASE9  
             case 10:
+              console.log(isValidDisease(text))
+              console.log(text)
               if(isValidDisease(text)){
                 let meals = await psgl.getMealList()
                 let all_info = ''
