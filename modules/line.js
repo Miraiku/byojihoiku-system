@@ -198,13 +198,11 @@ router
                 //TODO：キャパ計算にredisをいれるか検討
                 if(await isValidNurseryName(text)){
                     let nursery_capacity = await hasNurseryCapacity(text)
-                    console.log(nursery_capacity)
                     let nursery_id = await getNurseryIdByName(text)
-                    console.log(nursery_id)
                     let reservation_date = await redis.hgetStatus(userId,'reservation_date')
-                    console.log(reservation_date)
                     let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
                     
+                    console.log(getTimeStampDayFrom8Number(reservation_date)+','+ nursery_id[0].ID)
                     console.log(reservation_num_on_day)
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) > 0){
                       let opentime = await psgl.getNurseryOpenTimeFromName(text)
