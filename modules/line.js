@@ -276,7 +276,6 @@ router
               break;//CASE7
             case 70://人数分ループ用IF
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 if(text=='なし'){
                   await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
                 }else{
@@ -284,6 +283,8 @@ router
                 }
                 await redis.hsetStatus(userId,'reservation_status',8)
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
+                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',Number(current_child_number)+1)
+                replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               break;//CASE70
             case 8:
               let name = text.replace(/\s+/g, "")
@@ -384,7 +385,6 @@ router
                 await redis.hsetStatus(userId,'reservation_status',14)
                 await redis.hsetStatus(userId,'reservation_reply_status',140)
               }else{
-                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',Number(current_child_number)+1)
                 //case 7-8のあいだ
                 await redis.hsetStatus(userId,'reservation_status',70)
                 await redis.hsetStatus(userId,'reservation_reply_status',700)
