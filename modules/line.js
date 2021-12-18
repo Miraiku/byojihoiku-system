@@ -43,21 +43,20 @@ router
           replyMessage = registeredMessage
 
         }else if(text === "予約確認"){
-          let raaa = await psgl.getMermerIDByLINEID(userId)
-          for (const key in raaa) {
-            if (Object.hasOwnProperty.call(raaa, key)) {
-              console.log(raaa[key])
-              console.log(key)
-              
+          //[{},{}]
+          let memberids = await psgl.getMermerIDByLINEID(userId)
+          for (const member of memberids) {
+            let reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
+            let reservations_details = await psgl.getReservationDetailsByMemberIDGraterThanToday(member.ID)
+            for (const iterator of reservations) {
+              replyMessage += iterator +"\n"
+            }
+            for (const iterator of reservations_details) {
+              replyMessage += iterator+"\n"
             }
           }
-          for (const iterator of raaa) {
-            
-            console.log(iterator)
-          }
-          
-
-          replyMessage = "テスト中"
+        
+          replyMessage = "\nテスト中"
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
