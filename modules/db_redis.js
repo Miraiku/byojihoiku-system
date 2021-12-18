@@ -45,6 +45,10 @@ exports.hgetAll = async function (id,key){
     await redis_client.hgetall(id, (err, reply) => {
       if (err) throw err;
       console.log('HGETALL Status :'+ reply);
+      
+      Object.entries(reply).forEach(([k, v]) => {
+        console.log(k+"："+v)
+    });
       result = reply
     });
     return result

@@ -305,7 +305,7 @@ router
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 let name = await redis.hgetStatus(userId,'reservation_child_name_'+current_child_number)
                 if(await isMembered(userId, name, text)){
-                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」"+all_info
+                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」\n\n"+all_info
                   let member_id = await psgl.getMemberedIDFromNameAndBirthDay(userId, name, text)
                   await redis.hsetStatus(userId,'reservation_child_birthday_'+current_child_number,text)
                   await redis.hsetStatus(userId,'reservation_child_memberid_'+current_child_number,member_id[0].ID)
@@ -319,6 +319,7 @@ router
               }
               break;//CASE9
             case 10:
+              //TODO 全角半角チェックがあまい、休日チェックも
               if(await isValidMeal(text)){
                 replyMessage = "希望の食事は「"+text+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
