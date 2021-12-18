@@ -41,6 +41,14 @@ router
           }holiday
           replyMessage = registeredMessage
 
+        }else if(text === "予約確認"){
+          //本日以降の予約内容があれば出力する
+          //SET Status 1
+          await redis.hsetStatus(userId,'register_status',1)
+          //SET Reply Status 10
+          await redis.hsetStatus(userId,'register_reply_status',10)
+
+          replyMessage = "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
         }else if(text === "登録"){
           //SET Status 1
           await redis.hsetStatus(userId,'register_status',1)
@@ -283,8 +291,9 @@ router
                 }
                 await redis.hsetStatus(userId,'reservation_status',8)
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
-                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',Number(current_child_number)+1)
-                replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                let update_current_child_number = Number(current_child_number)+1
+                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',update_current_child_number)
+                replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               break;//CASE70
             case 8:
               let name = text.replace(/\s+/g, "")
@@ -381,7 +390,7 @@ router
                 await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,text)
               }
               let total_child_number = await redis.hgetStatus(userId,'reservation_nursery_number')
-              if(Number(current_child_number)==Number(total_child_number)){
+              if(Number(current_child_number)>=Number(total_child_number)){
                 //人数分情報を聞いたらcase13の登録へ
                 await redis.hsetStatus(userId,'reservation_status',14)
                 await redis.hsetStatus(userId,'reservation_reply_status',140)
