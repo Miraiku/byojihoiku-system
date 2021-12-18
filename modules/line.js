@@ -46,14 +46,17 @@ router
           //[{},{}]
           let memberids = await psgl.getMermerIDByLINEID(userId)
           for (const member of memberids) {
+            console.log(member)
             replyMessage += member +"\n"
             let reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
             let reservations_details = await psgl.getReservationDetailsByMemberIDGraterThanToday(member.ID)
             for (const iterator of reservations) {
               replyMessage += iterator +"\n"
+              console.log(iterator)
             }
             for (const iterator of reservations_details) {
               replyMessage += iterator+"\n"
+              console.log(iterator)
             }
           }
         
