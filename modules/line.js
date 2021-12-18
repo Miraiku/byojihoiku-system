@@ -445,7 +445,7 @@ router
                   RETURNING ID);` 
               }
               let reservationID = await registerIntoReservationTable(queryString)
-              
+              await registerIntoReservationTable(queryString)
               } catch (error) {
                 break;
               }
