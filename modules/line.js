@@ -45,10 +45,12 @@ router
         }else if(text === "予約確認"){
           try {
             //[{},{}]
+            replyMessage =''
             let memberids = await psgl.getMermerIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
               if(complete_reservations != null){
+                replyMessage += "ご予約状況"
                 for (const rsv of complete_reservations) {
                   replyMessage += "予約完了\n"
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
@@ -83,7 +85,9 @@ router
           } catch (error) {
             
           }
-          replyMessage += "\nテスト中"
+          if(replyMessage==''){
+            replyMessage += "現在、予約はございません。"
+          }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
