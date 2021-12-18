@@ -55,7 +55,7 @@ router
                   //await getJpValueFromPsglIds(details)
                   replyMessage += "お子様氏名："+details.MemberID+"\n"
                   replyMessage += "症状："+details.DiseaseID+"\n"
-                  replyMessage += "ご予約日："+details.ReservationDate+"\n"
+                  replyMessage += "ご予約日："+new Date(details.ReservationDate).toDateString+"\n"
                   replyMessage += "第１希望："+details.firstNursery+"\n"
                   replyMessage += "第２希望："+details.secondNursery+"\n"
                   replyMessage += "第３希望："+details.thirdNursery+"\n"
