@@ -417,8 +417,8 @@ router
                 let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
                 Object.entries(res).forEach(([k, v]) => {
-                  console.log(k +', '+ v)
                   let i = k.slice(-1);
+                  console.log(i +', '+ v)
                   if(Number(i)!=NaN){
                     console.log("数字つき")
                     if((k).includes('reservation_child_name_'+i)){
