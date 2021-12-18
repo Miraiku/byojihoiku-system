@@ -272,9 +272,9 @@ router
 
                 replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 if(text=='なし'){
-                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_1','false')
+                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
                 }else{
-                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_1',text)
+                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
                 }
                 await redis.hsetStatus(userId,'reservation_status',8)
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
@@ -345,9 +345,9 @@ router
               replyMessage = "熱性けいれんの経験は「"+text+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
-                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
+                await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
               }else{
-                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,text)
               }
               let total_child_number = await redis.hgetStatus(userId,'reservation_nursery_number')
               if(Number(current_child_number)==Number(total_child_number)){
