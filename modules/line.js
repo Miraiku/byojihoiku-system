@@ -416,7 +416,7 @@ router
                 let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => {
                   if(k == 'reservation_date'){
-                    all_info += "予約日："+DayToJP(v)+getDayString(v)"\n"
+                    all_info += "予約日："+DayToJP(v)+getDayString(v)+"\n"
                   }else if(k == 'reservation_nursery_name_1'){
                     all_info += "第1希望："+v+"\n"
                   }else if(k == 'reservation_nursery_name_2'){
