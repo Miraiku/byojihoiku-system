@@ -52,18 +52,19 @@ router
                 replyMessage += "予約完了\n"
                 let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                 for (const details of reservations_details) {
-                  replyMessage += details.MemberID+"\n"
-                  replyMessage += details.DiseaseID+"\n"
-                  replyMessage += details.ReservationDate+"\n"
-                  replyMessage += details.firstNursery+"\n"
-                  replyMessage += details.secondNursery+"\n"
-                  replyMessage += details.thirdNursery+"\n"
-                  replyMessage += details.ParentName+"\n"
-                  replyMessage += details.MealType+"\n"
-                  replyMessage += details.Allergy+"\n"
-                  replyMessage += details.ReservationTime+"\n"
-                  replyMessage += details.ParentTel+"\n"
-                  replyMessage += details.Cramps+"\n"
+                  //await getJpValueFromPsglIds(details)
+                  replyMessage += "お子様氏名："+details.MemberID+"\n"
+                  replyMessage += "症状："+details.DiseaseID+"\n"
+                  replyMessage += "ご予約日："+details.ReservationDate+"\n"
+                  replyMessage += "第１希望："+details.firstNursery+"\n"
+                  replyMessage += "第２希望："+details.secondNursery+"\n"
+                  replyMessage += "第３希望："+details.thirdNursery+"\n"
+                  replyMessage += "保護者氏名："+details.ParentName+"\n"
+                  replyMessage += "食事："+details.MealType+"\n"
+                  replyMessage += "アレルギー："+details.Allergy+"\n"
+                  replyMessage += "お預り時間："+details.ReservationTime+"\n"
+                  replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                  replyMessage += "熱性けいれん："+details.Cramps+"\n"
                 }
               }
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
@@ -1019,6 +1020,34 @@ async function isValidDisease(id){
     }
   } catch (error) {
     return false
+  }
+}
+
+async function getJpValueFromPsglIds(obj){
+  try {
+    let result = []
+    for (const o of obj) {
+      let val = await psgl.getValueNameByMemberID(o.MemberID)
+      result.push({MemberID:val})
+      val = await psgl.getValueNameByDiseaseID(o.DiseaseID)
+      result.push({DiseaseID:val})
+      val = await psgl.getValueNameByDiseaseID(o.ReservationDate)
+      result.push({ReservationDate:val})
+      val = await psgl.getValueNameByNurseryID(o.firstNursery)
+      result.push({firstNursery:val})
+      let val = await psgl.getValueNameByNurseryrID(o.secondNursery)
+      result.push({secondNursery:val})
+      val = await psgl.getValueNameByNurseryID(o.thirdNursery)
+      result.push({thirdNursery:val})
+      val = await psgl.getValueNameByMealType(o.MealType)
+      result.push({MealType:val})
+      val = await psgl.getValueNameByDiseaseID(o.ReservationTime)
+      result.push({ReservationTime:val})
+      //ReservationDate: 2021-12-19T15:00:00.000Z, なおす
+    }
+    return result
+  } catch (error) {
+    console.log("ERROR @getJpValueFromPsglIds()")
   }
 }
 
