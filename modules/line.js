@@ -425,6 +425,7 @@ router
                     }else if((k).includes('reservation_child_birthday_'+i)){
                       birthday[i] = v
                     }else if((k).includes('reservation_child_memberid_'+i)){
+                      console.log('reservation_child_memberid_'+i)
                       memberid[i] = v
                     }else if((k).includes('reservation_child_disase_id_'+i)){
                       disase_id[i] = v
@@ -439,7 +440,7 @@ router
                     }
                   }
                 });
-                console.log(memberid)
+                console.log('memberid'+memberid)
                 for (let i = 1; i <= total; i++) {
                   queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                     "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
