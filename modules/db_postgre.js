@@ -113,3 +113,23 @@ exports.isValidMealInMealTable = async function (id){
   let sql = `SELECT "ID" FROM public."Meal" WHERE "ID" = '`+id+`';`
   return await psgl.sqlToPostgre(sql)
 }
+
+exports.isValidMealInMealTable = async function (id){
+  let sql = `SELECT "ID" FROM public."Disease" WHERE "DiseaseID" = '`+id+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getDiseaseList = async function (date){
+  let results = []
+  let sql = `SELECT "DiseaseID", "DiseaseName" FROM public."Disease";`
+  let r = await psgl.sqlToPostgre(sql)
+  for await (const v of r) {
+    results.push({id:v['DiseaseID'], name:v['MealName']})
+  }
+  return results
+}
+
+exports.getDiseaseNameFromID = async function (id){
+  let sql = `SELECT "DiseaseName" FROM public."Disease" WHERE "DiseaseID" = '`+id+`';`
+  return await psgl.sqlToPostgre(sql)
+}
