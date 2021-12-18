@@ -202,7 +202,7 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
-                  replyMessage = "希望利用の園を返信してください。\n早苗町を希望の場合「早苗町」"
+                  replyMessage = "キャンセル待ち登録をされたい園を返信してください。\n早苗町を希望の場合「早苗町」"
                   break;
                 }
                 if(await isValidNurseryName(text)){
