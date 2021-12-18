@@ -419,6 +419,7 @@ router
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
                   if(Number.isInteger(Number(i))){
+                    i = Number(i)
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
                     }else if((k).includes('reservation_child_birthday_'+i)){
