@@ -419,7 +419,9 @@ router
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
                   console.log(i +', '+ v)
-                  if(Number(i)!=NaN){
+                  console.log(Number(i))
+                  console.log(isNaN(Number(i)))
+                  if(isNaN(Number(i))){
                     console.log("数字つき")
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
