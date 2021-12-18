@@ -419,8 +419,6 @@ router
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
                   if(Number.isInteger(Number(i))){
-                    console.log("数字つき")
-                    console.log(k)
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
                     }else if((k).includes('reservation_child_birthday_'+i)){
@@ -440,7 +438,7 @@ router
                     }
                   }
                 });
-                for (let i = 0; i < total; i++) {
+                for (let i = 1; i < total; i++) {
                   queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                     "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
                     VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}')
