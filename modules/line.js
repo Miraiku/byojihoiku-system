@@ -306,7 +306,7 @@ router
                 let name = await redis.hgetStatus(userId,'reservation_child_name_'+current_child_number)
                 if(await isMembered(userId, name, text)){
                   replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」"+all_info
-                  let member_id = await psgl.getMemberedIDFromNameAndBirthDay()
+                  let member_id = await psgl.getMemberedIDFromNameAndBirthDay(userId, name, text)
                   await redis.hsetStatus(userId,'reservation_child_birthday_'+current_child_number,text)
                   await redis.hsetStatus(userId,'reservation_child_memberid_'+current_child_number,member_id[0].ID)
                   await redis.hsetStatus(userId,'reservation_status',10)
