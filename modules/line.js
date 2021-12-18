@@ -202,8 +202,10 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
+                  replyMessage = "希望利用の園を返信してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」"
+                  break;
                 }
-                if(await isValidNurseryName(text)|| cancel != null){
+                if(await isValidNurseryName(text)){
 
                   let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = await getNurseryIdByName(text)
@@ -502,7 +504,14 @@ router
                     all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
                     all_info +=  "アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info
+                  let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
+                  let reservation_status = ''
+                  if(cancel_status == 'true'){
+                    reservation_status = 'キャンセル待ち登録'
+                  }else{
+                    reservation_status = '予約'
+                  }
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
@@ -511,10 +520,15 @@ router
               }
               break;
             case 17://Register
-              //TODO　キャンセル待ちフロー作成
-
               if(yesOrNo(text)){
                 if(text==='はい'){
+                  let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
+                  let reservation_status = ''
+                  if(cancel_status == 'true'){
+                    reservation_status = 'Unread'
+                  }else{
+                    reservation_status = 'Reserved'
+                  }
                   try {
                     let res = await redis.hgetAll(userId)
                     let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
@@ -550,7 +564,7 @@ router
                       }
                     });
                     for (let i = 1; i <= total; i++) {
-                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', ''Reserved', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
+                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', ''${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
                       let reservationID = await registerIntoReservationTable(queryString)
                       if(Number.isInteger(reservationID)){
                         queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "1stNursery", "2ndNursery", "3rdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}]');`
