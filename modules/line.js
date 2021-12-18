@@ -350,8 +350,8 @@ router
                 let mealname = await psgl.getMealNameFromID(text)
                 replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                await redis.hsetStatus(userId,'reservation_child_meal_name'+current_child_number,mealname[0].MealName)
-                await redis.hsetStatus(userId,'reservation_child_meal_id'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_meal_name_'+current_child_number,mealname[0].MealName)
+                await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,text)
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
@@ -438,6 +438,7 @@ router
                     }
                   }
                 });
+                console.log(memberid)
                 for (let i = 1; i <= total; i++) {
                   queryString = `WITH rows AS (INSERT INTO public."Reservation"(
                     "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
