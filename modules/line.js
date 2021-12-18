@@ -418,7 +418,7 @@ router
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
                 Object.entries(res).forEach(([k, v]) => {
                   let i = k.slice(-1);
-                  console.log(Number.isInteger(i))
+                  console.log(Number.isInteger(Number(i)))
                   if(Number.isInteger(i)){
                     console.log("数字つき")
                     console.log(k)
