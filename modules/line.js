@@ -368,7 +368,7 @@ router
               }
               await redis.hsetStatus(userId,'reservation_status',13)
               await redis.hsetStatus(userId,'reservation_reply_status',130)
-              break;//CASE11
+              break;
             case 13:
               replyMessage = "熱性けいれんの経験は「"+text+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
@@ -390,7 +390,7 @@ router
               }
               await redis.hsetStatus(userId,'reservation_nursery_current_register_number',current_child_number)
 
-              break;//CASE12
+              break;
             case 14:
               replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
               if(text=='なし'){
@@ -438,17 +438,18 @@ router
                       allergy_caution[i] = v
                     }
                   }
-              });
-              for (const i of total) {
-                queryString = `WITH rows AS (INSERT INTO public."Reservation"(
-                  "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
-                  VALUES ('${memberid[i]}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
-                  RETURNING ID);` 
-                console.log(queryString)
-              }
-              let reservationID = await registerIntoReservationTable(queryString)
-              await registerIntoReservationTable(queryString)
+                });
+                for (const i of total) {
+                  queryString = `WITH rows AS (INSERT INTO public."Reservation"(
+                    "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
+                    VALUES ('${memberid[i]}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
+                    RETURNING ID);` 
+                  console.log(queryString)
+                }
+                let reservationID = await registerIntoReservationTable(queryString)
+                await registerIntoReservationTable(queryString)
               } catch (error) {
+                console.log(`Reservation ERR: ${error}`)
                 break;
               }
             default:
