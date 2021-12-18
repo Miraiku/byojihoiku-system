@@ -433,9 +433,57 @@ router
                     all_info += "保護者連絡先"+v+"\n"
                   }
                 });
+                try {
+                  let total = Number(regsiter_informations.reservation_nursery_number)
+                  let childname = []
+                  let birthday = []
+                  let memberid = []
+                  let disase_id = []
+                  let meal_id = []
+                  let meal_caution = []
+                  let cramps_caution = []
+                  let allergy_caution = []
+                  Object.entries(regsiter_informations).forEach(([k, v]) => {
+                    let i = k.slice(-1);
+                    if(Number.isInteger(Number(i))){
+                      i = Number(i)
+                      if((k).includes('reservation_child_name_'+i)){
+                        childname[i] = v
+                      }else if((k).includes('reservation_child_birthday_'+i)){
+                        birthday[i] = v
+                      }else if((k).includes('reservation_child_memberid_'+i)){
+                        memberid[i] = v
+                      }else if((k).includes('reservation_child_disase_id_'+i)){
+                        disase_id[i] = v
+                      }else if((k).includes('reservation_child_meal_id_'+i)){
+                        meal_id[i] = v
+                      }else if((k).includes('reservation_child_meal_caution_'+i)){
+                        meal_caution[i] = v
+                      }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                        cramps_caution[i] = v
+                      }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                        allergy_caution[i] = v
+                      }
+                    }
+                  });
+                  for (let i = 1; i <= total; i++) {
+                    if(total >= 1){
+                      all_info += '\n★'+i+ "人目のお子様\n"
+                    }
+                    all_info +=  "お子様氏名："+childname[i]+"\n"
+                    all_info +=  "症状："+disase_id[i]+"\n"
+                    all_info +=  "食事："+meal_id[i]+"\n"
+                    all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
+                    all_info +=  "熱性けいれんの注意事項："+cramps_caution[i]+"\n"
+                    all_info +=  "アレルギーの注意事項："+allergy_caution[i]+"\n"
+                  }
+                  console.log(reservationID)
+                } catch (error) {
+                  console.log(`Reservation ERR: ${error}`)
+                }
                 replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"+all_info
-                await redis.hsetStatus(userId,'reservation_status',17)
-                await redis.hsetStatus(userId,'reservation_reply_status',170)
+                //await redis.hsetStatus(userId,'reservation_status',17)
+                //await redis.hsetStatus(userId,'reservation_reply_status',170)
               } catch (error) {
                 console.log(`Reservation ERR: ${error}`)
               }
