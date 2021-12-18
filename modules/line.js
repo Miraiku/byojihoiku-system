@@ -62,7 +62,7 @@ router
                   replyMessage += "保護者氏名："+details.ParentName+"\n"
                   replyMessage += "食事："+details.MealType+"\n"
                   replyMessage += "アレルギー："+details.Allergy+"\n"
-                  replyMessage += "お預り時間："+details.ReservationTime[0]+"〜"+details.ReservationTime[1]+"\n"
+                  replyMessage += "お預り時間："+getJpTimeHourFromFormattedDate(details.InTime)+"〜"+getJpTimeHourFromFormattedDate(details.OutTime)+"\n"
                   replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   replyMessage += "熱性けいれん："+details.Cramps+"\n"
                 }
@@ -601,7 +601,7 @@ router
                       queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
                       let reservationID = await registerIntoReservationTable(queryString)
                       if(Number.isInteger(reservationID)){
-                        queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}]');`
+                        queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                         let reserved = await insertReservationDetails(queryString)
                         if(reserved){
                           await redis.resetAllStatus(userId)
@@ -781,12 +781,18 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
   } 
 }
 
+function getJpTimeHourFromFormattedDate(day){
+  //2021-12-31 11:30 -> 11時30分
+  let time = day.replace(':', '')
+  return time.substr( 11, 2 )+':'+time.substr( 13, 2 )
+}
+
 
 function DayToJPFromDateObj(dt){
   var y = dt.getFullYear();
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
-  var w = '('+[ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]+')'
+  var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
   return (y + '年' + m + '月' + d + '日('+w+')');
 }
 
