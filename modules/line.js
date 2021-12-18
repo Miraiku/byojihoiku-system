@@ -443,6 +443,7 @@ router
                   "MemberID", "NurseryID", "ReservationStatus", "ReservationDate")
                   VALUES ('${memberid[i]}' ,'${r.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(r.reservation_date)}')
                   RETURNING ID);` 
+                console.log(queryString)
               }
               let reservationID = await registerIntoReservationTable(queryString)
               await registerIntoReservationTable(queryString)
