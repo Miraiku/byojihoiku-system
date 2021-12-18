@@ -414,12 +414,12 @@ router
               await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
               r = await redis.hgetAll(userId)
               let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
-              let name,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
+              let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
               Object.entries(r).forEach(([k, v]) => {
                 let i = k.slice(-1);
                 if(Number(i)!==NaN){
                   if((k).includes('reservation_child_name_'+i)){
-                    name[i] = v
+                    childname[i] = v
                   }else if((k).includes('reservation_child_birthday_'+i)){
                     birthday[i] = v
                   }else if((k).includes('reservation_child_memberid_'+i)){
