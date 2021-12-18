@@ -55,7 +55,7 @@ router
                   //await getJpValueFromPsglIds(details)
                   replyMessage += "お子様氏名："+details.MemberID+"\n"
                   replyMessage += "症状："+details.DiseaseID+"\n"
-                  replyMessage += "ご予約日："+new Date(details.ReservationDate).toDateString+"\n"
+                  replyMessage += "ご予約日："+DayToJPFromDateObj(details.ReservationDate)+"\n"
                   replyMessage += "第１希望："+details.firstNursery+"\n"
                   replyMessage += "第２希望："+details.secondNursery+"\n"
                   replyMessage += "第３希望："+details.thirdNursery+"\n"
@@ -781,6 +781,14 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
   } 
 }
 
+
+function DayToJPFromDateObj(date){
+  var y = dt.getFullYear();
+  var m = ('00' + (dt.getMonth()+1)).slice(-2);
+  var d = ('00' + dt.getDate()).slice(-2);
+  var w = dt.getDay();
+  return (y + '年' + m + '月' + d + '日('+w+')');
+}
 
 function DayToJP(s){
   if(isValidDate(s)){
