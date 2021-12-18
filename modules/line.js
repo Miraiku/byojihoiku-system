@@ -752,6 +752,10 @@ function getDay(s){
 
 function getDayString(s){
   //(月)などを返す
+  //timestampのみ受付
+  if(Number(s) && s.length == 8){
+    s = getTimeStampWithTimeDayFrom8Number(s)
+  }
   let day = new Date(s)
   console.log(day)
   console.log('('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')')
