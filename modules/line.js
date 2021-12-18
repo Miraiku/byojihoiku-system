@@ -428,9 +428,9 @@ router
                   }else if(k == 'reservation_nursery_outtime'){
                     all_info += "登園時間："+TimeToJP(v)+"\n"
                   }else if(k == 'reservation_child_parent_name'){
-                    all_info += "保護者氏名"+v+"\n"
+                    all_info += "保護者氏名："+v+"\n"
                   }else if(k == 'reservation_child_parent_tel'){
-                    all_info += "保護者連絡先"+v+"\n"
+                    all_info += "保護者連絡先："+v+"\n"
                   }
                 });
                 try {
@@ -453,9 +453,9 @@ router
                         birthday[i] = v
                       }else if((k).includes('reservation_child_memberid_'+i)){
                         memberid[i] = v
-                      }else if((k).includes('reservation_child_disase_id_'+i)){
+                      }else if((k).includes('reservation_child_disase_name_'+i)){
                         disase_id[i] = v
-                      }else if((k).includes('reservation_child_meal_id_'+i)){
+                      }else if((k).includes('reservation_child_meal_name_'+i)){
                         meal_id[i] = v
                       }else if((k).includes('reservation_child_meal_caution_'+i)){
                         meal_caution[i] = v
@@ -467,21 +467,21 @@ router
                     }
                   });
                   for (let i = 1; i <= total; i++) {
-                    if(total >= 1){
+                    if(total > 1){
                       all_info += '\n★'+i+ "人目のお子様\n"
                     }
                     all_info +=  "お子様氏名："+childname[i]+"\n"
                     all_info +=  "症状："+disase_id[i]+"\n"
                     all_info +=  "食事："+meal_id[i]+"\n"
-                    all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
-                    all_info +=  "熱性けいれんの注意事項："+cramps_caution[i]+"\n"
-                    all_info +=  "アレルギーの注意事項："+allergy_caution[i]+"\n"
+                    all_info +=  "食事の注意事項："+convertBooleanToJP(meal_caution[i])+"\n"
+                    all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
+                    all_info +=  "アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
                   console.log(reservationID)
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
-                replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"+all_info
+                replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info
                 //await redis.hsetStatus(userId,'reservation_status',17)
                 //await redis.hsetStatus(userId,'reservation_reply_status',170)
               } catch (error) {
@@ -801,6 +801,17 @@ function convertAllergyBoolean(s){
     return 'false'
   }else{
     return 'false'
+  }
+}
+
+
+function convertBooleanToJP(s){
+  if(s === 'true'){
+    return 'あり'
+  }else if(s === 'false'){
+    return 'なし'
+  }else{
+    return s
   }
 }
 
