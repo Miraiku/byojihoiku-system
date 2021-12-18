@@ -548,6 +548,7 @@ router
                         }
                       }
                     }
+                    replyMessage = "テスト中"//TODO注意事項をかく
                   } catch (error) {
                     console.log(`Reservation ERR: ${error}`)
                   }
@@ -882,6 +883,7 @@ async function registerIntoReservationTable(queryString){
 async function insertReservationDetails(queryString){
   try {
     const results = await psgl.sqlToPostgre(queryString)
+    console.log(results.length)
     if(Object.keys(results).length == 0){
       return false
     }else{
