@@ -329,8 +329,8 @@ router
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 let disasename = await psgl.getDiseaseNameFromID(text)
                 replyMessage = "お子様の症状は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
-                await redis.hsetStatus(userId,'reservation_child_disase_id'+current_child_number,text)
-                await redis.hsetStatus(userId,'reservation_child_disase_name'+current_child_number,disasename)
+                await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
               }else{
@@ -382,22 +382,31 @@ router
               await redis.hsetStatus(userId,'reservation_nursery_current_register_number',current_child_number)
 
               break;//CASE12
-            case 14://Register
-
-              //TODO　キャンセル待ちフロー作成
-              replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+            case 14:
+              replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
               }
-              regsiter_informations = await redis.hgetAll(userId)
-              let all_info = ''
-              Object.entries(regsiter_informations).forEach(([k, v]) => {
-                  all_info += k+"："+v+"\n"
-              });
+              await redis.hsetStatus(userId,'reservation_status',15)
+              await redis.hsetStatus(userId,'reservation_reply_status',150)
               break;
+            case 15:
+              replyMessage = "保護者さまのお名前は「"+text+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
+              await redis.hsetStatus(userId,'reservation_child_parent_name',text)
+              break;
+            case 16://Register
+            //TODO　キャンセル待ちフロー作成
+            replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+            current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+            await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
+            regsiter_informations = await redis.hgetAll(userId)
+            let all_info = ''
+            Object.entries(regsiter_informations).forEach(([k, v]) => {
+                all_info += k+"："+v+"\n"
+            });
+            break;
             default:
               console.log('Nothing to do in switch ') 
             break;
