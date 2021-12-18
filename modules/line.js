@@ -420,6 +420,7 @@ router
                   console.log(k +', '+ v)
                   let i = k.slice(-1);
                   if(Number(i)!=NaN){
+                    console.log("数字つき")
                     if((k).includes('reservation_child_name_'+i)){
                       childname[i] = v
                     }else if((k).includes('reservation_child_birthday_'+i)){
