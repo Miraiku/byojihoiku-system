@@ -1022,7 +1022,7 @@ async function isValidDisease(id){
     return false
   }
 }
-
+/*
 async function getJpValueFromPsglIds(obj){
   try {
     let result = []
@@ -1049,6 +1049,6 @@ async function getJpValueFromPsglIds(obj){
   } catch (error) {
     console.log("ERROR @getJpValueFromPsglIds()")
   }
-}
+}*/
 
 module.exports = router
