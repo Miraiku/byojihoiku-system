@@ -276,12 +276,11 @@ router
               break;//CASE7
             case 70://人数分ループ用IF
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-
                 replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                 if(text=='なし'){
                   await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
                 }else{
-                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
+                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number, text)
                 }
                 await redis.hsetStatus(userId,'reservation_status',8)
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
@@ -394,7 +393,8 @@ router
 
               break;
             case 14:
-              replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
+              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
@@ -414,10 +414,28 @@ router
               try {
                 regsiter_informations = await redis.hgetAll(userId)
                 let all_info = ''
-                Object.entries(regsiter_informations).forEach(([k, v]) => { 
-                      all_info += k+"："+v+"\n"
+                Object.entries(regsiter_informations).forEach(([k, v]) => {
+                  if(k == 'reservation_date'){
+                    all_info += "予約日："+DayToJP(v)+"\n"
+                  }else if(k == 'reservation_nursery_name_1'){
+                    all_info += "第1希望："+v+"\n"
+                  }else if(k == 'reservation_nursery_name_2'){
+                    all_info += "第2希望："+v+"\n"
+                  }else if(k == 'reservation_nursery_name_3'){
+                    all_info += "第3希望："+v+"\n"
+                  }else if(k == 'reservation_nursery_intime'){
+                    all_info += "登園時間："+TimeToJP(v)+"\n"
+                  }else if(k == 'reservation_nursery_outtime'){
+                    all_info += "登園時間："+TimeToJP(v)+"\n"
+                  }else if(k == 'reservation_child_parent_name'){
+                    all_info += "保護者氏名"+v+"\n"
+                  }else if(k == 'reservation_child_parent_tel'){
+                    all_info += "保護者連絡先"+v+"\n"
+                  }
                 });
                 replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"+all_info
+                await redis.hsetStatus(userId,'reservation_status',17)
+                await redis.hsetStatus(userId,'reservation_reply_status',170)
               } catch (error) {
                 console.log(`Reservation ERR: ${error}`)
               }
