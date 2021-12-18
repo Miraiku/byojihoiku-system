@@ -43,23 +43,41 @@ router
           replyMessage = registeredMessage
 
         }else if(text === "予約確認"){
-          //[{},{}]
-          let memberids = await psgl.getMermerIDByLINEID(userId)
-          for (const member of memberids) {
-            console.log(member)
-            replyMessage += member +"\n"
-            let reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
-            let reservations_details = await psgl.getReservationDetailsByMemberIDGraterThanToday(member.ID)
-            for (const iterator of reservations) {
-              replyMessage += iterator +"\n"
-              console.log(iterator)
+          try {
+            //[{},{}]
+            let memberids = await psgl.getMermerIDByLINEID(userId)
+            for (const member of memberids) {
+              let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
+              for (const rsv of complete_reservations) {
+                replyMessage += "予約完了\n"
+                let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
+                for (const details of reservations_details) {
+                  replyMessage += details.MemberID+"\n"
+                  replyMessage += details.DiseaseID+"\n"
+                  replyMessage += details.ReservationDate+"\n"
+                  replyMessage += details.1stNursery+"\n"
+                  replyMessage += details.2ndNursery+"\n"
+                  replyMessage += details.3rdNursery+"\n"
+                  replyMessage += details.ParentName+"\n"
+                  replyMessage += details.MealType+"\n"
+                  replyMessage += details.Allergy+"\n"
+                  replyMessage += details.ReservationTime+"\n"
+                  replyMessage += details.ParentTel+"\n"
+                  replyMessage += details.Cramps+"\n"
+                }
+              }
+              let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
+              for (const rsv of waiting_reservations) {
+                replyMessage += "キャンセル待ち\n"
+                let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
+                for (const details of reservations_details) {
+                  replyMessage += details+"\n"
+                }
+              }
             }
-            for (const iterator of reservations_details) {
-              replyMessage += iterator+"\n"
-              console.log(iterator)
-            }
+          } catch (error) {
+            
           }
-        
           replyMessage += "\nテスト中"
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
