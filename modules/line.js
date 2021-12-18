@@ -57,7 +57,7 @@ router
             }
           }
         
-          replyMessage = "\nテスト中"
+          replyMessage += "\nテスト中"
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
