@@ -477,7 +477,6 @@ router
                     all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
                     all_info +=  "アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
-                  console.log(reservationID)
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
@@ -754,6 +753,8 @@ function getDay(s){
 function getDayString(s){
   //(月)などを返す
   let day = new Date(s)
+  console.log(day)
+  console.log('('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')')
   return '('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')'
 }
 
