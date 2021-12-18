@@ -234,7 +234,7 @@ router
                 let nursery_id = await getNurseryIdByName(text)
                 replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+open+"〜"+close+"です。\n例）9時に登園する場合は「0900」"
                 redis.hsetStatus(userId,'reservation_nursery_name_3',text)
-                if( text != 'なし'){
+                if( text == 'なし'){
                   redis.hsetStatus(userId,'reservation_nursery_id_3',0)
                 }
                 redis.hsetStatus(userId,'reservation_status',5)
