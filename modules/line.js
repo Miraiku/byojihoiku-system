@@ -389,7 +389,6 @@ router
                 await redis.hsetStatus(userId,'reservation_status',70)
                 await redis.hsetStatus(userId,'reservation_reply_status',700)
               }
-              await redis.hsetStatus(userId,'reservation_nursery_current_register_number',current_child_number)
 
               break;
             case 14:
