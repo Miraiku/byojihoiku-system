@@ -786,7 +786,7 @@ function DayToJPFromDateObj(dt){
   var y = dt.getFullYear();
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
-  var w = dt.getDay();
+  var w = '('+[ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]+')'
   return (y + '年' + m + '月' + d + '日('+w+')');
 }
 
