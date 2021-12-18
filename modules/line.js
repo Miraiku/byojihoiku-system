@@ -397,16 +397,17 @@ router
               await redis.hsetStatus(userId,'reservation_child_parent_name',text)
               break;
             case 16://Register
-            //TODO　キャンセル待ちフロー作成
-            replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-            current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-            await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
-            regsiter_informations = await redis.hgetAll(userId)
-            let all_info = ''
-            Object.entries(regsiter_informations).forEach(([k, v]) => {
-                all_info += k+"："+v+"\n"
-            });
-            break;
+              //TODO　キャンセル待ちフロー作成
+              replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
+              regsiter_informations = await redis.hgetAll(userId)
+              let all_info = ''
+              Object.entries(regsiter_informations).forEach(([k, v]) => {
+                  all_info += k+"："+v+"\n"
+              });//getTimeStampFromDay8NumberAndTime4Number
+              console.log(all_info)
+              break;
             default:
               console.log('Nothing to do in switch ') 
             break;
@@ -540,6 +541,25 @@ function getTimeStampDayFrom8Number(s){
     return s
   } 
 }
+
+function getTimeStampWithTimeDayFrom8Number(s){
+  //20221122 -> 2022-11-22 0:00
+  if(isValidDate(s)){
+    return Number(s.substr( 0, 4 ))+'-'+Number(s.substr( 4, 2 ))+'-'+Number(s.substr( 6, 2 ))+' 0:00'
+  }else{
+    return s
+  } 
+}
+
+function getTimeStampFromDay8NumberAndTime4Number(day, time){
+  //20221122,1500 -> 2022-11-22 15:00
+  if(isValidDate(day) && isValidTime(time)){
+    return Number(day.substr( 0, 4 ))+'-'+Number(day.substr( 4, 2 ))+'-'+Number(day.substr( 6, 2 ))+' '+Number(time.substr( 0, 2 ))+':'+Number(time.substr( 2, 4 ))
+  }else{
+    return day
+  } 
+}
+
 
 function DayToJP(s){
   if(isValidDate(s)){
