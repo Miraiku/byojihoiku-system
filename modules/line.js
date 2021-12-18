@@ -416,7 +416,7 @@ router
                 let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => {
                   if(k == 'reservation_date'){
-                    all_info += "予約日："+DayToJP(v)+"\n"
+                    all_info += "予約日："+DayToJP(v)+getDayString(v)"\n"
                   }else if(k == 'reservation_nursery_name_1'){
                     all_info += "第1希望："+v+"\n"
                   }else if(k == 'reservation_nursery_name_2'){
@@ -468,9 +468,9 @@ router
                   });
                   for (let i = 1; i <= total; i++) {
                     if(total > 1){
-                      all_info += '\n★'+i+ "人目のお子様\n"
+                      all_info += '\n★'+i+ "人目のお子様"
                     }
-                    all_info +=  "お子様氏名："+childname[i]+"\n"
+                    all_info +=  "\nお子様氏名："+childname[i]+"\n"
                     all_info +=  "症状："+disase_id[i]+"\n"
                     all_info +=  "食事："+meal_id[i]+"\n"
                     all_info +=  "食事の注意事項："+convertBooleanToJP(meal_caution[i])+"\n"
