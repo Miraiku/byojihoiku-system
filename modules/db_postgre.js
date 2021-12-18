@@ -86,9 +86,30 @@ exports.getNurseryOpenTimeFromName = async function (name){
 exports.getNurseryCloseTimeFromName = async function (name){
   let sql = `SELECT "CloseTime" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
+  //コントローラーではopentime[0].CloseTimeで取得
 }
 
 exports.isMemberedInMemberTable = async function (lineid, name, birthday){
   let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthday){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getMealList = async function (date){
+  let results = []
+  let sql = `SELECT "ID", "MealName" FROM public."Meal";`
+  let r = await psgl.sqlToPostgre(sql)
+  for await (const v of r) {
+    results.push({id:v['ID'], name:v['MealName']})
+  }
+  return results
+}
+
+exports.isValidMealInMealTable = async function (id){
+  let sql = `SELECT "ID" FROM public."Meal" WHERE "ID" = '`+id+`';`
   return await psgl.sqlToPostgre(sql)
 }

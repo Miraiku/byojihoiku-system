@@ -133,6 +133,8 @@ router
               if(yesOrNo(text)){
                 if(text==='はい'){
                   try {
+                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
+                      '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
                   } catch (err) {
@@ -256,19 +258,33 @@ router
             case 7:
                 if(isValidNum(text)){
                   replyMessage = "利用人数は「"+text+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
-                  redis.hsetStatus(userId,'reservation_nursery_number',text)
-                  redis.hsetStatus(userId,'reservation_status',8)
-                  redis.hsetStatus(userId,'reservation_reply_status',80)
+                  await redis.hsetStatus(userId,'reservation_nursery_number',text)
+                  await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
+                  await redis.hsetStatus(userId,'reservation_status',8)
+                  await redis.hsetStatus(userId,'reservation_reply_status',80)
                 }else{
                   replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」"
                 }
               break;//CASE7
-            case 8://人数分ループ
+            case 70://人数分ループ用IF
+                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+
+                replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n"+current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                if(text=='なし'){
+                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_1','false')
+                }else{
+                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_1',text)
+                }
+                await redis.hsetStatus(userId,'reservation_status',8)
+                await redis.hsetStatus(userId,'reservation_reply_status',80)
+              break;//CASE70
+            case 8:
               let name = text.replace(/\s+/g, "")
               if(isZenkakuKana(name)){
                 replyMessage = "お子様のお名前は「"+name+"」さんですね。\n次に、お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と入力してください。"
                 //SET Name Value
-                await redis.hsetStatus(userId,'reservation_child_name_1',name)
+                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                await redis.hsetStatus(userId,'reservation_child_name_'+current_child_number,name)
                 //SET Status 2
                 await redis.hsetStatus(userId,'reservation_status',9)
                 //SET Reply Status 20
@@ -279,23 +295,86 @@ router
               break;//CASE8
             case 9:
               if(isValidDate(text)){
-                //SET Name Value
-                await redis.hsetStatus(userId,'reservation_child_birthday_1',text)
-                //SET Status 3
-                await redis.hsetStatus(userId,'reservation_status',10)
-                //SET Reply Status 30
-                await redis.hsetStatus(userId,'reservation_reply_status',100)
-                let name = await redis.hgetStatus(userId,'reservation_child_name_1')
+                let meals = await psgl.getMealList()
+                let all_info = ''
+                for(let i = 0; i < meals.length; i++)
+                {
+                    all_info += meals[i].id+". "+meals[i].name+"\n";
+                }
+                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                let name = await redis.hgetStatus(userId,'reservation_child_name_'+current_child_number)
                 if(await isMembered(userId, name, text)){
-                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                  replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」"+all_info
+                  let member_id = await psgl.getMemberedIDFromNameAndBirthDay()
+                  await redis.hsetStatus(userId,'reservation_child_birthday_'+current_child_number,text)
+                  await redis.hsetStatus(userId,'reservation_child_memberid_'+current_child_number,member_id[0].ID)
+                  await redis.hsetStatus(userId,'reservation_status',10)
+                  await redis.hsetStatus(userId,'reservation_reply_status',100)
                 }else{
-                  replyMessage = "お子様の情報が登録されていません。\n恐れ入りますが、ご予約の前に会員登録をお願いいたします。\n会員登録を始める場合は「登録」と返信してください。\n\n予約手続きを中止します。"
-                  await redis.resetAllStatus(userId)
+                  replyMessage = "お子様の情報が登録されていません。\nもう一度お子様の名前を全角カナで返信していただくか、\n「登録」と返信して会員登録をしてください。\n"
                 }
               }else{
                 replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
               }
               break;//CASE9
+            case 10:
+              if(await isValidMeal(text)){
+                replyMessage = "希望の食事は「"+text+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
+                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                await redis.hsetStatus(userId,'reservation_child_meal_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_status',11)
+                await redis.hsetStatus(userId,'reservation_reply_status',110)
+              }else{
+                replyMessage = "申し訳ございません。\n希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」\n\n手続きを中止する場合は「中止」と返信してください。"
+              }
+              break;//CASE10
+            case 11:
+              replyMessage = "食事の追記事項は「"+text+"」ですね。\n\n熱性けいれんの経験がある場合\n回数、初回の年齢、最終の年齢についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
+              if(text=='なし'){
+                let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
+              }else{
+                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,text)
+              }
+              await redis.hsetStatus(userId,'reservation_status',12)
+              await redis.hsetStatus(userId,'reservation_reply_status',120)
+              break;//CASE11
+            case 12:
+              replyMessage = "熱性けいれんの経験は「"+text+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
+              let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              if(text=='なし'){
+                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
+              }else{
+                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
+              }
+              let total_child_number = await redis.hgetStatus(userId,'reservation_nursery_number')
+              if(Number(current_child_number)==Number(total_child_number)){
+                //人数分情報を聞いたらcase13の登録へ
+                await redis.hsetStatus(userId,'reservation_status',13)
+                await redis.hsetStatus(userId,'reservation_reply_status',130)
+              }else{
+                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',Number(current_child_number)+1)
+                //case 7-8のあいだ
+                await redis.hsetStatus(userId,'reservation_status',70)
+                await redis.hsetStatus(userId,'reservation_reply_status',700)
+              }
+              await redis.hsetStatus(userId,'reservation_nursery_current_register_number',current_child_number)
+
+              break;//CASE12
+            case 13://Register
+              replyMessage = "アレルギーに関する連絡事項がある場合「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+              let current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              if(text=='なし'){
+                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
+              }else{
+                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
+              }
+              regsiter_informations = await redis.hgetAll(userId)
+              let all_info = ''
+              Object.entries(regsiter_informations).forEach(([k, v]) => {
+                  all_info += k+"："+v+"\n"
+              });
+              break;
             default:
               console.log('Nothing to do in switch ') 
             break;
@@ -400,10 +479,17 @@ function hankaku2Zenkaku(s) {
   });
 }
 
+function zenkaku2Hankaku(str) {
+  return str.replace(/[A-Za-z0-9]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
+  });
+}
+
+//TODO　ちゃんと判定できているか不安
 function isValidNum(s){
   //半角と全角どちらでも受け付ける
   if(Number(s) == NaN){
-    if(Number(hankaku2Zenkaku(s)) == NaN){
+    if(Number(zenkaku2Hankaku(s)) == NaN){
       return false
     }else{
       return true
@@ -597,5 +683,13 @@ async function isMembered(id, name, birthday){
   }
 }
 
+async function isValidMeal(id){
+  let result = await psgl.isValidMealInMealTable(id)
+  if(result[0] != undefined && result[0].ID != null){
+    return true
+  }else{
+    false
+  }
+}
 
 module.exports = router
