@@ -55,14 +55,14 @@ router
                   //await getJpValueFromPsglIds(details)
                   replyMessage += "お子様氏名："+details.MemberID+"\n"
                   replyMessage += "症状："+details.DiseaseID+"\n"
-                  replyMessage += "ご予約日："+DayToJPFromDateObj(details.ReservationDate)+"\n"
+                  replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                   replyMessage += "第１希望："+details.firstNursery+"\n"
                   replyMessage += "第２希望："+details.secondNursery+"\n"
                   replyMessage += "第３希望："+details.thirdNursery+"\n"
                   replyMessage += "保護者氏名："+details.ParentName+"\n"
                   replyMessage += "食事："+details.MealType+"\n"
                   replyMessage += "アレルギー："+details.Allergy+"\n"
-                  replyMessage += "お預り時間："+details.ReservationTime+"\n"
+                  replyMessage += "お預り時間："+details.ReservationTime[0]+"〜"+details.ReservationTime[1]+"\n"
                   replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   replyMessage += "熱性けいれん："+details.Cramps+"\n"
                 }
