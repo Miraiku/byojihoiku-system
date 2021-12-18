@@ -320,6 +320,8 @@ router
                     await redis.hsetStatus(userId,'reservation_reply_status',100)
                   }else{
                     replyMessage = "お子様の情報が登録されていません。\nもう一度お子様の名前を全角カナで返信していただくか、\n「登録」と返信して会員登録をしてください。\n"
+                    await redis.hsetStatus(userId,'reservation_status',8)
+                    await redis.hsetStatus(userId,'reservation_reply_status',80)
                   }
                 }else{
                   replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
@@ -407,73 +409,87 @@ router
               await redis.hsetStatus(userId,'reservation_status',16)
               await redis.hsetStatus(userId,'reservation_reply_status',160)
               break;
-              case 16://Register
-                //TODO　キャンセル待ちフロー作成
-                try {
-                  regsiter_informations = await redis.hgetAll(userId)
-                  let all_info = ''
-                  Object.entries(regsiter_informations).forEach(([k, v]) => { 
-                        all_info += k+"："+v+"\n"
-                  });
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-                } catch (error) {
-                  console.log(`Reservation ERR: ${error}`)
-                }
-                break;
-            case 17://Register
+            case 16://Register
               //TODO　キャンセル待ちフロー作成
               try {
-                replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
-                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
-                let res = await redis.hgetAll(userId)
-                let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
-                let childname = []
-                let birthday = []
-                let memberid = []
-                let disase_id = []
-                let meal_id = []
-                let meal_caution = []
-                let cramps_caution = []
-                let allergy_caution = []
-                Object.entries(res).forEach(([k, v]) => {
-                  let i = k.slice(-1);
-                  if(Number.isInteger(Number(i))){
-                    i = Number(i)
-                    if((k).includes('reservation_child_name_'+i)){
-                      childname[i] = v
-                    }else if((k).includes('reservation_child_birthday_'+i)){
-                      birthday[i] = v
-                    }else if((k).includes('reservation_child_memberid_'+i)){
-                      memberid[i] = v
-                    }else if((k).includes('reservation_child_disase_id_'+i)){
-                      disase_id[i] = v
-                    }else if((k).includes('reservation_child_meal_id_'+i)){
-                      meal_id[i] = v
-                    }else if((k).includes('reservation_child_meal_caution_'+i)){
-                      meal_caution[i] = v
-                    }else if((k).includes('reservation_child_cramps_caution_'+i)){
-                      cramps_caution[i] = v
-                    }else if((k).includes('reservation_child_allergy_caution_'+i)){
-                      allergy_caution[i] = v
-                    }
-                  }
+                regsiter_informations = await redis.hgetAll(userId)
+                let all_info = ''
+                Object.entries(regsiter_informations).forEach(([k, v]) => { 
+                      all_info += k+"："+v+"\n"
                 });
-                for (let i = 1; i <= total; i++) {
-                  queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
-                  let reservationID = await registerIntoReservationTable(queryString)
-                  if(Number.isInteger(reservationID)){
-                    queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "1stNursery", "2ndNursery", "3rdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}]');`
-                    let reserved = await insertReservationDetails(queryString)
-                    if(reserved){
-
-                    }
-                  }
-                }
-                console.log(reservationID)
+                replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"+all_info
               } catch (error) {
                 console.log(`Reservation ERR: ${error}`)
               }
+              break;
+            case 17://Register
+              //TODO　キャンセル待ちフロー作成
+
+              if(yesOrNo(text)){
+                if(text==='はい'){
+                  try {
+                    replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で予約します。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。"
+                    current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                    await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
+                    let res = await redis.hgetAll(userId)
+                    let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
+                    let childname = []
+                    let birthday = []
+                    let memberid = []
+                    let disase_id = []
+                    let meal_id = []
+                    let meal_caution = []
+                    let cramps_caution = []
+                    let allergy_caution = []
+                    Object.entries(res).forEach(([k, v]) => {
+                      let i = k.slice(-1);
+                      if(Number.isInteger(Number(i))){
+                        i = Number(i)
+                        if((k).includes('reservation_child_name_'+i)){
+                          childname[i] = v
+                        }else if((k).includes('reservation_child_birthday_'+i)){
+                          birthday[i] = v
+                        }else if((k).includes('reservation_child_memberid_'+i)){
+                          memberid[i] = v
+                        }else if((k).includes('reservation_child_disase_id_'+i)){
+                          disase_id[i] = v
+                        }else if((k).includes('reservation_child_meal_id_'+i)){
+                          meal_id[i] = v
+                        }else if((k).includes('reservation_child_meal_caution_'+i)){
+                          meal_caution[i] = v
+                        }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                          cramps_caution[i] = v
+                        }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                          allergy_caution[i] = v
+                        }
+                      }
+                    });
+                    for (let i = 1; i <= total; i++) {
+                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', 'Registerd', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}') RETURNING "ID";` 
+                      let reservationID = await registerIntoReservationTable(queryString)
+                      if(Number.isInteger(reservationID)){
+                        queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "1stNursery", "2ndNursery", "3rdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "ReservationTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '[${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}, ${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}]');`
+                        let reserved = await insertReservationDetails(queryString)
+                        if(reserved){
+                          await redis.resetAllStatus(userId)
+                          replyMessage = "予約を完了しました。"//TODO注意事項をかく
+                        }
+                      }
+                    }
+                    console.log(reservationID)
+                  } catch (error) {
+                    console.log(`Reservation ERR: ${error}`)
+                  }
+                  break;
+                }else if(text=='いいえ'){
+                  await redis.resetAllStatus(userId)
+                  replyMessage = "予約を中止しました。"
+                }
+                break;
+              }else{
+                replyMessage =  "予約を完了する場合は「はい」を返信してください。\n中止する場合は「いいえ」を返信してください。"
+                break;
+              };
               break;
             default:
               console.log('Nothing to do in switch ') 
