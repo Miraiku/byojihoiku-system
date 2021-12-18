@@ -938,8 +938,10 @@ async function isValidDisease(id){
     let result = await psgl.isValidDiseaseInDiseaseTable(id)
     console.log(result[0])
     if(result[0] != undefined && result[0].ID != null){
+      console.log(true)
       return true
     }else{
+      console.log(false)
       return false
     }
   } catch (error) {
