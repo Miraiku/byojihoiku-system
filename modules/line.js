@@ -222,7 +222,11 @@ router
                   let opentime = await psgl.getNurseryOpenTimeFromName(text)
                   let closetime = await psgl.getNurseryCloseTimeFromName(text)
                   //replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+text+"の開園時間は、"+opentime[0].OpenTime.substr( 0, 5 )+"〜"+closetime[0].CloseTime.substr( 0, 5 )+"です。\n例）9時に登園する場合は「0900」"
-                  replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                  if(cancel == null){
+                    replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                  }else{
+                    replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                  }
                   redis.hsetStatus(userId,'reservation_nursery_name_1',text)
                   redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
                   redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
