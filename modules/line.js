@@ -416,6 +416,7 @@ router
                 r = await redis.hgetAll(userId)
                 let total = Number(await redis.hgetStatus(userId,'reservation_nursery_number'))
                 let childname,birthday,memberid,disase_id,meal_id,meal_caution,cramps_caution,allergy_caution
+                console.log(total)
                 Object.entries(r).forEach(([k, v]) => {
                   let i = k.slice(-1);
                   if(Number(i)!==NaN){
