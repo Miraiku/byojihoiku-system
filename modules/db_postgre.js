@@ -20,6 +20,7 @@ exports.sqlToPostgre = async function (queryString){
     //{k: index, v:{sql result}}
   }
   catch (err) {
+    console.log(`Postgles sql: `+ queryString)
     console.log(`PSGL ERR: ${err}`)
     return null
   }
