@@ -934,11 +934,15 @@ async function isValidMeal(id){
 }
 
 async function isValidDisease(id){
-  let result = await psgl.isValidDiseaseInDiseaseTable(id)
-  if(result[0] != undefined && result[0].ID != null){
-    return true
-  }else{
-    false
+  try {
+    let result = await psgl.isValidDiseaseInDiseaseTable(id)
+    if(result[0] != undefined && result[0].ID != null){
+      return true
+    }else{
+      return false
+    }
+  } catch (error) {
+    return false
   }
 }
 
