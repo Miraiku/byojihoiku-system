@@ -69,8 +69,8 @@ router
                     }
                     replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                    replyMessage += "第１希望："+c.firstNursery+"\n"
+                    replyMessage += "第２希望："+c.secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "症状："+c.DiseaseID+"\n"
@@ -84,9 +84,7 @@ router
                 }//end complete_reservations
               }//end if null
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
-              console.log(waiting_reservations)
-              if(waiting_reservations != null){
-                replyMessage += "\n-----\n\nキャンセル待ち状況："
+              if(waiting_reservations.length != 0){
                 for (const rsv of waiting_reservations) {
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
                   for (const details of reservations_details) {
