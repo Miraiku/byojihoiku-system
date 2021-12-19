@@ -44,6 +44,8 @@ router
 
         }else if(text === "予約確認"){
           try {
+            //TODO HTML char
+            //TODOuploaded timestamp をReservationに追加する
             //[{},{}]
             replyMessage =''
             let memberids = await psgl.getMermerIDByLINEID(userId)
@@ -84,7 +86,7 @@ router
             
           }
           if(replyMessage==''){
-            replyMessage += "現在、予約はございません。"
+            replyMessage = "現在、予約はございません。"
           }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
@@ -328,6 +330,18 @@ router
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
+                  //TODO 2枠のこってないと兄妹みれないことにする
+                  let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
+                  let reservation_date = await redis.hgetStatus(userId,'reservation_date')
+                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
+                  
+                  if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) < 2){
+                    replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
+                    await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                    await redis.hsetStatus(userId,'reservation_status',2)
+                    await redis.hsetStatus(userId,'reservation_reply_status',20)
+                    break;
+                  }
                   replyMessage = "利用人数は「"+text+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                   await redis.hsetStatus(userId,'reservation_nursery_number',text)
                   await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
