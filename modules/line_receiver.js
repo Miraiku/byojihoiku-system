@@ -313,10 +313,7 @@ router
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
                   replyMessage = "キャンセル待ち登録をされたい園を返信してください。\n早苗町を希望の場合「早苗町」"
-                  break;
-                }
-                if(await isValidNurseryName(text)){
-
+                }else if(await isValidNurseryName(text)){
                   let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = await getNurseryIdByName(text)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
@@ -326,23 +323,22 @@ router
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
                       replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n\n・他の園名を返信してください。\n・キャンセル待ち登録をする場合は「はい」を返信してください。\n・始めからやり直す場合は「予約」を返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
-                      break;
                     }
-                  }
-                  let opentime = await psgl.getNurseryOpenTimeFromName(text)
-                  let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                  if(cancel == 'true'){
-                    replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
                   }else{
-                    replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                    if(cancel == 'true'){
+                      replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                    }else{
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                    }
+                    let opentime = await psgl.getNurseryOpenTimeFromName(text)
+                    let closetime = await psgl.getNurseryCloseTimeFromName(text)
+                    redis.hsetStatus(userId,'reservation_nursery_name_1',text)
+                    redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
+                    redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
+                    redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
+                    redis.hsetStatus(userId,'reservation_status',3)
+                    redis.hsetStatus(userId,'reservation_reply_status',30)
                   }
-                  redis.hsetStatus(userId,'reservation_nursery_name_1',text)
-                  redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
-                  redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
-                  redis.hsetStatus(userId,'reservation_nursery_closetime',TimeFormatFromDB(closetime[0].CloseTime))
-                  redis.hsetStatus(userId,'reservation_status',3)
-                  redis.hsetStatus(userId,'reservation_reply_status',30)
-                    
                 }else{
                   replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
                 }//isValidNursery
@@ -363,6 +359,8 @@ router
               break;//CASE3
             case 4:
               //第3希望
+              //TODO前日の夜に予約したものはリマインドおくられないのでは？
+              //TODOスライドのリマインドで聞く留意事項を調査する
               if(await isValidNurseryName(text) || text == 'なし'){
                 let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_name_1')
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
@@ -815,9 +813,16 @@ router
       const push_message = req.body.line_push_from_cron
       const lineid = req.body.id
       console.log(req.body.line_push_from_cron +' '+req.body.id)
-      if(push_message == 'today7am'){
-        res.send(lineid)
-        replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、お預かりはキャンセルとなります。'
+      if(push_message != undefined){
+        if(push_message == '20pm'){
+          res.send(lineid)
+          replyMessage = 'ご来園の返信がなかっため本日のご予約はキャンセルさせていただきました。\nご不明点がある場合はみらいくまで直接お問い合わせください。'
+          
+        }else if(push_message == 'today7am'){
+          res.send(lineid)
+          replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、お預かりはキャンセルとなります。'
+          
+        }
         
         // リクエストヘッダー
         dataString = JSON.stringify({

@@ -184,6 +184,22 @@ exports.getTomorrowReminderStatusByLINEID = async function (lineid){
   }
 }
 
+exports.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled = async function (){
+  try {
+    let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'today' and "Reminder" = 'waiting' and "ReservationStatus" = 'Reserved';`
+    let memberids = await psgl.sqlToPostgre(sql)
+    let status = []
+    for (const r of memberids) {
+      let sql = `UPDATE public."Reservation" SET "Reminder"= 'canceled' WHERE "MemberID"= '${r.MemberID}' and "ReservationDate" <= DATE 'today' and "ReservationStatus" = 'Reserved';`
+      console.log(sql)
+      lineids.push(getLINEIDByMemberID(r.MemberID))
+    }
+    return lineids
+  } catch (error) {
+    console.log('getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled: ' + error)
+    return []
+  }
+}
 
 exports.getLINEIDByReservedTomorrow = async function (){
   let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`

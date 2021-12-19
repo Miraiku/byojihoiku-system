@@ -26,26 +26,29 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理
-cron.schedule('0 0 7 * * *', () => {
-  //User且つwaitingで7amまでに
-  //当日の予約のうち、waitingのものをCancelにする、
-  //waiting -> canceled, res status canceled
-  //キャンセル通知する 
-  //TODO create
-  /*
-  request.post(
-    { headers: {'content-type' : 'application/json'},
-    url: 'https://byojihoiku-system.herokuapp.com/webhook',
-    body: JSON.stringify({
-      "line_push_from_cron": "today7am"
-      })
-    },
-    function(error, response, body){
-      console.log("cron schedule:"+ error); 
-      console.log("cron schedule:"+ response && response.statusCode); 
-      console.log("cron schedule:"+ body); 
+cron.schedule('0 0 7 * * *', async () => {
+  try {
+    let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled()
+    for (const id of lineids) {
+      console.log(id[0].LINEID)
+      request.post(
+        { headers: {'content-type' : 'application/json'},
+        url: 'https://byojihoiku-system.herokuapp.com/webhook',
+        body: JSON.stringify({
+          "line_push_from_cron": "today7am",
+          "id": id[0].LINEID
+          })
+        },
+        function(error, response, body){
+          console.log("cron schedule 7am:"+ error); 
+          console.log("cron schedule 7am:"+ response && response.statusCode); 
+          console.log("cron schedule 7am:"+ body); 
+        }
+      );
     }
-  ); */
+  } catch (error) {
+    console.log('7am error:'+ error)
+  }
 });
 
 //前日リマインダー送信
@@ -56,7 +59,7 @@ cron.schedule('0 0 20 * * *', async () => {
       { headers: {'content-type' : 'application/json'},
       url: 'https://byojihoiku-system.herokuapp.com/webhook',
       body: JSON.stringify({
-        "line_push_from_cron": "today7am",
+        "line_push_from_cron": "20pm",
         "id": id[0].LINEID,
         })
       },
