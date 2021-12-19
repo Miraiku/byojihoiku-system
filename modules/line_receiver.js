@@ -416,7 +416,7 @@ router
                   console.log(Number(reservation_num_on_day[0].count))
                   console.log(childnum)
                   console.log(Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count) >= childnum)
-                  if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) >= childnum){
+                  if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= childnum){
                     replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
                     await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     await redis.hsetStatus(userId,'reservation_status',2)
