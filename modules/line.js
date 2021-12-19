@@ -46,7 +46,6 @@ router
 
         }else if(text === "予約確認"){
           try {
-            //TODO HTML char
             //[{},{}]
             replyMessage ='【ご予約状況】\n'
             let memberids = await psgl.getMemberIDByLINEID(userId)
@@ -82,6 +81,8 @@ router
                   }
                 }//end complete_reservations
               }//end if null
+            }//end memberids normal
+            for (const member of memberids) {
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
               if(waiting_reservations.length != 0){
                 for (const rsv of waiting_reservations) {
@@ -114,7 +115,7 @@ router
                   }
                 }//end waiting_reservations
               }//end if null
-            }//end memberids
+            }//end memberids cancel
           } catch (error) {
             console.log("予約確認： " +error)
           }
@@ -259,7 +260,7 @@ router
                   }
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
-                  //TODO: りよう園→枠確認→予約orキャンセル待ちとうろく
+                  //りよう園→枠確認→予約orキャンセル待ちとうろく
                   let nursery_list = await psgl.getNurseryID_Name_Capacity()
                   let all_info = ''
                   for(let i = 0; i < nursery_list.length; i++)
@@ -278,7 +279,6 @@ router
             case 2:
               if(reservation_reply_status==20){
                 //第１園希望確認
-                //TODO：キャパ計算にredisをいれるか検討
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
@@ -338,7 +338,7 @@ router
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
                 let nursery_id = await getNurseryIdByName(text)
-                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。\n例）9時に登園する場合は「0900」"
+                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n"+first_nursery+"の開園時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
                 redis.hsetStatus(userId,'reservation_nursery_name_3',text)
                 if( text == 'なし'){
                   await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
@@ -353,7 +353,7 @@ router
               break;//CASE4
             case 5:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
+                replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',6)
                 redis.hsetStatus(userId,'reservation_reply_status',60)
@@ -662,7 +662,6 @@ router
                       try {
                         queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
                         let reservationID = await registerIntoReservationTable(queryString)
-                        //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
                         console.log(Number.isInteger(reservationID))
                         if(Number.isInteger(reservationID)){
                           queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
@@ -814,8 +813,6 @@ function hankaku2Zenkaku(str) {
       return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
   });
 }
-
-//TODO　ちゃんと判定できているか不安
 
 function isValidNum(s){
   //半角と全角どちらでも受け付ける
