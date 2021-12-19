@@ -764,6 +764,55 @@ router
         request.write(dataString)
         request.end()
       }
+
+      /*
+      リマインダートリガー
+      */
+
+      const push_message = req.body.line_push_from_cron
+      if(push_message == 'today7am'){
+        replyMessage = 'push message'
+        
+        // リクエストヘッダー
+        dataString = JSON.stringify({
+          to: 'Ucd4cd000eb62d24fe5ff3b355f94d45b',
+          messages: [
+            {
+              "type": "text",
+              "text": replyMessage
+            }
+          ]
+        })
+
+        const headers = {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + TOKEN
+        }
+        // リクエストに渡すオプション
+        const webhookOptions = {
+          "hostname": "api.line.me",
+          "path": "/v2/bot/message/push",
+          "method": "POST",
+          "headers": headers,
+          "body": dataString
+        }
+    
+        // リクエストの定義
+        const request = https.request(webhookOptions, (res) => {
+          res.on("data", (d) => {
+            process.stdout.write(d)
+          })
+        })
+    
+        // エラーをハンドル
+        request.on("error", (err) => {
+          console.error(err)
+        })
+    
+        // データを送信
+        request.write(dataString)
+        request.end()
+      }
     } catch (err) {
         console.error(err);
     }

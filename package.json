@@ -18,7 +18,8 @@
     "https": "^1.0.0",
     "ioredis": "^4.28.2",
     "node-cron": "^3.0.0",
-    "pg": "^8.7.1"
+    "pg": "^8.7.1",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "got": "^11.3.0",
