@@ -134,16 +134,16 @@ router
             //TODO キャンセル巡回機能を作成する
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             console.log(reminderstatus)
-            for (const status of reminderstatus) {
+            for (const status of reminderstatus[0]) {
               console.log(status)
-              if(status[0].Reminder == 'waiting'){
+              if(status.Reminder == 'waiting'){
                 await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
-              }else if(status[0].Reminder == 'canceled'){
+              }else if(status.Reminder == 'canceled'){
                 replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
-              }else if(status[0].Reminder == 'replied'){
+              }else if(status.Reminder == 'replied'){
                 replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
               }
