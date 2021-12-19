@@ -57,6 +57,7 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
+                    console.log(c)
                     if(details.Cramps == 'false'){
                       details.Cramps = 'なし'
                     }
@@ -1136,26 +1137,20 @@ async function getJpValueFromPsglIds(o){
     let result = []
     let val = await psgl.getMemberNameByMemberID(o.MemberID)
     result.push({MemberID:val[0].Name})
-    console.log(val[0])
     val = await psgl.getDiseaseNameFromUniqueID(o.DiseaseID)
     result.push({DiseaseID:val[0].DiseaseName})
-    console.log(val[0])
     val = await psgl.getNurseryNameByID(o.firstNursery)
     result.push({firstNursery:val[0].NurseryName})
-    console.log(val[0])
     val = await psgl.getNurseryNameByID(o.secondNursery)
     result.push({secondNursery:val[0].NurseryName})
-    console.log(val[0])
     try {
       val = await psgl.getNurseryNameByID(o.thirdNursery)
       result.push({thirdNursery:val[0].NurseryName})
-      console.log(val[0])
     } catch (error) {
       //NurseryID = 0
       result.push('なし')
     }
     val = await psgl.getMealNameFromID(o.MealType)
-    console.log(val[0])
     result.push({MealType:val[0].MealName})
     return result
   } catch (error) {
