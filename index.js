@@ -28,16 +28,11 @@ cron.schedule('*/20 * * * *', async () =>  {
 //cron.schedule('0 0 7 * * *', () => {
 
 cron.schedule('*/1 * * * *', () => {
-  //当日の予約のうち、返信がきたもの
-
-  //当日かつReservedかつ
-  //Remimber Update = waiting
-  //返信くる
-  //
+  //当日の予約のうち、waitingのものをCancelにする、
   
   request.post(
     { headers: {'content-type' : 'application/json'},
-    url: 'https://localhost/webhook:'+PORT,
+    url: 'https://byojihoiku-system.herokuapp.com/webhook',
     body: JSON.stringify({
       "line_push_from_cron": "today7am"
       })
@@ -52,5 +47,10 @@ cron.schedule('*/1 * * * *', () => {
 
 //前日リマインダー送信
 cron.schedule('0 0 20 * * *', () => {
+
+  //当日かつReservedかつ
+  //Remimber Update = waiting
+  //返信くる、特定単語で
+  //User且つwaitingで7amまでに
   console.log("おはよう！朝ご飯、ちゃんと食べた？( ﾟДﾟ)");
 });
