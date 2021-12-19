@@ -94,8 +94,7 @@ router
           replyMessage += "今日日付: " +today.getDate()
           replyMessage += "今日曜日: " + DayToJPFromDateObj(today)
           replyMessage += "明後日: " +dayaftertomorrow
-          replyMessage += "明後日日付: " +dayaftertomorrow
-          replyMessage += "明後日曜日: " + DayToJPFromDateObj(dayaftertomorrow)
+          replyMessage += "明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
