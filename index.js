@@ -53,24 +53,28 @@ cron.schedule('0 0 7 * * *', async () => {
 
 //前日リマインダー送信
 cron.schedule('0 0 20 * * *', async () => {
-  let ids = await psgl.getLINEIDByReservedTomorrow()
-  for (const id of ids) {   
-    request.post(
-      { headers: {'content-type' : 'application/json'},
-      url: 'https://byojihoiku-system.herokuapp.com/webhook',
-      body: JSON.stringify({
-        "line_push_from_cron": "20pm",
-        "id": id[0].LINEID,
-        })
-      },
-      async function(error, response, body){
-        if(response.statusCode == '200' && body != null){
-          let lineid = body
-          await psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
+  try {
+    let ids = await psgl.getLINEIDByReservedTomorrow()
+    for (const id of ids) {   
+      request.post(
+        { headers: {'content-type' : 'application/json'},
+        url: 'https://byojihoiku-system.herokuapp.com/webhook',
+        body: JSON.stringify({
+          "line_push_from_cron": "20pm",
+          "id": id[0].LINEID,
+          })
+        },
+        async function(error, response, body){
+          if(response.statusCode == '200' && body != null){
+            let lineid = body
+            await psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
+          }
+          console.log("cron schedule error:"+ error); 
         }
-        console.log("cron schedule error:"+ error); 
-      }
-    ); 
+      ); 
+    }
+  } catch (error) {
+    console.log('8pm error:'+ error)
   }
 });
 
