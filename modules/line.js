@@ -92,10 +92,10 @@ router
         }else if(text === "テスト"){
           replyMessage += "今日: " +today
           replyMessage += "今日日付: " +today.getDate()
-          replyMessage += "今日曜日: " + DayToJP(today)
+          replyMessage += "今日曜日: " + DayToJPFromDateObj(today)
           replyMessage += "明後日: " +dayaftertomorrow
           replyMessage += "明後日日付: " +dayaftertomorrow.getDate()
-          replyMessage += "明後日曜日: " + DayToJP(dayaftertomorrow)
+          replyMessage += "明後日曜日: " + DayToJPFromDateObj(dayaftertomorrow)
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
