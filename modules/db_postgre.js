@@ -156,14 +156,14 @@ exports.getUniqueIDFromDiseaseID = async function (id){
 }
 
 exports.getReservationStatusByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" > now()::date;`
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" <= DATE 'today';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result
 }
 
 exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" > now()::date and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" <= DATE 'today' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   return result
 }
@@ -174,7 +174,7 @@ exports.getTomorrowReminderStatusByLINEID = async function (lineid){
     let memberids = await psgl.getMemberIDByLINEID(lineid)
     let status = []
     for (const r of memberids) {
-      let sql = `SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
+      let sql = `SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
       status.push(await psgl.sqlToPostgre(sql))
     }
     return status
@@ -202,7 +202,7 @@ exports.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled = asyn
 }
 
 exports.getLINEIDByReservedTomorrow = async function (){
-  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   let ids = []
   for (const r of result) {
@@ -216,7 +216,7 @@ exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (line
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
-    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
+    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
     console.log(sql)
     res.push(await psgl.sqlToPostgre(sql))
   }
@@ -224,14 +224,14 @@ exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (line
 }
 
 exports.getReservationStatusWaitingByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" > now()::date and "ReservationStatus" = 'Unread';`
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" <= DATE 'today' and "ReservationStatus" = 'Unread';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result
 }
 
 exports.getReservationDetailsByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."ReservationDetails" WHERE "MemberID" = ${id} and "ReservationDate" > now()::date;`
+  let sql = `SELECT * FROM public."ReservationDetails" WHERE "MemberID" = ${id} and "ReservationDate" <= DATE 'today';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result
