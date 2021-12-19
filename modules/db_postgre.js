@@ -171,11 +171,11 @@ exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (
 }
 
 //TODO　境界チェック
-exports.getTomorrowReplyStatusByLINEID = async function (lineid){
+exports.getTomorrowReminderStatusByLINEID = async function (lineid){
   let memberids = await psgl.getMemberIDByLINEID(lineid)
   let status = []
   for (const r of memberids) {
-    let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
+    let sql = `SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
     status.push(await psgl.sqlToPostgre(sql))
   }
   return status
