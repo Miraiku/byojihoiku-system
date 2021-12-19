@@ -139,10 +139,10 @@ router
               await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
               replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
               break;
-            }else if(tatus.Reminder == 'canceled'){
+            }else if(status.Reminder == 'canceled'){
               replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
               break;
-            }else if(tatus.Reminder == 'replied'){
+            }else if(status.Reminder == 'replied'){
               replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
               break;
             }
