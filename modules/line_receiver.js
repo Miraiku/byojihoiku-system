@@ -19,7 +19,9 @@ router
     応答Message
     */
     try {
-      
+      if(req.body.events == undefined){
+        break;
+      }
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
       let dataString = null
@@ -769,13 +771,16 @@ router
       }
 
     } catch (err) {
-        console.error(err);
+        console.error("応答メッセージ： "+err);
     }
 
     /*
     リマインダートリガー
     */
     try {
+      if(req.body.line_push_from_cron == undefined){
+        break;
+      }
       res.send("HTTP POST request sent to the webhook URL! from CRON")
       console.log(req.body)
       const push_message = req.body.line_push_from_cron
@@ -823,7 +828,7 @@ router
         request.end()
       }
     } catch (error) {
-      
+      console.error("トリガー： "+err);
     }
   })
 
