@@ -201,6 +201,7 @@ exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (line
   let res = []
   for (const r of result) {
     let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now';`
+    console.log(sql)
     res.push(await psgl.sqlToPostgre(sql))
   }
   return res
