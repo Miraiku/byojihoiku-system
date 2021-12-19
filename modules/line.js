@@ -1132,7 +1132,12 @@ async function getJpValueFromPsglIds(o){
     result.push({firstNursery:val[0].NurseryName})
     val = await psgl.getNurseryNameByID(o.secondNursery)
     result.push({secondNursery:val[0].NurseryName})
-    val = await psgl.getNurseryNameByID(o.thirdNursery)
+    try {
+      val = await psgl.getNurseryNameByID(o.thirdNursery)
+    } catch (error) {
+      //NurseryID = 0
+      val = 'なし'
+    }
     result.push({thirdNursery:val[0].NurseryName})
     val = await psgl.getMealNameFromID(o.MealType)
     result.push({MealType:val[0].MealName})
