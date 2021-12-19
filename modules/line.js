@@ -10,8 +10,6 @@ const holiday = new Holidays('JP')
 const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
 const today = new Date(JST)
 const dayaftertomorrow = today.setDate(today.getDate() + 2)
-console.log('today:reservationday' + dayaftertomorrow)
-console.log('dayaftertomorrow:reservationday_formatted' + dayaftertomorrow)
 
 router
   .post('/', async (req, res) => {
@@ -91,6 +89,13 @@ router
           if(replyMessage==''){
             replyMessage = "現在、予約はございません。"
           }
+        }else if(text === "テスト"){
+          replyMessage += "今日: " +today
+          replyMessage += "今日日付: " +today.getDate()
+          replyMessage += "今日曜日: " + DayToJP(today)
+          replyMessage += "明後日: " +dayaftertomorrow
+          replyMessage += "明後日日付: " +dayaftertomorrow.getDate()
+          replyMessage += "明後日曜日: " + DayToJP(dayaftertomorrow)
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
