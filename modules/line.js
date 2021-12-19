@@ -86,10 +86,33 @@ router
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
               if(waiting_reservations != null){
                 for (const rsv of waiting_reservations) {
-                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
-                    for (const details of reservations_details) {
-                      replyMessage += details+"\n"
+                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
+                  for (const details of reservations_details) {
+                    let c = await getJpValueFromPsglIds(details)
+                    console.log(c)
+                    if(details.Cramps == 'false'){
+                      details.Cramps = 'なし'
                     }
+                    if(details.Allergy == 'false'){
+                      details.Allergy = 'なし'
+                    }
+                    if(details.MealDetails == 'false'){
+                      details.MealDetails = 'なし'
+                    }
+                    replyMessage += "\nキャンセル待ち希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "お預り希望時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                    replyMessage += "第３希望："+c[0].thirdNursery+"\n"
+                    replyMessage += "お子様氏名："+c[0].MemberID+"\n"
+                    replyMessage += "症状："+c[0].DiseaseID+"\n"
+                    replyMessage += "食事："+c[0].MealType+"\n"
+                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
+                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
+                    replyMessage += "アレルギー："+details.Allergy+"\n"
+                    replyMessage += "保護者氏名："+details.ParentName+"\n"
+                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                  }
                 }//end waiting_reservations
               }//end if null
             }//end memberids
