@@ -53,7 +53,6 @@ router
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
               if(complete_reservations != null){
-                replyMessage += "予約状況\n\n"
                 for (const rsv of complete_reservations) {
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
@@ -835,7 +834,6 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
 function getJpTimeHourFromFormattedDate(day){
   //2021-12-31 11:30:00 -> 11時30分
   let time = day.substr( 11, 2 )+'時'+day.substr( 14, 2 )+'分'
-  time = time.replace(':', '')
   return time 
 }
 
