@@ -95,12 +95,12 @@ exports.getNurseryCloseTimeFromName = async function (name){
 }
 
 exports.isMemberedInMemberTable = async function (lineid, name, birthday){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`';`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL;`
   return await psgl.sqlToPostgre(sql)
 }
 
 exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthday){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`';`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL;`
   return await psgl.sqlToPostgre(sql)
 }
 
