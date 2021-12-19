@@ -133,11 +133,7 @@ router
           try {
             //TODO キャンセル巡回機能を作成する
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
-            console.log(reminderstatus)
-            console.log(reminderstatus[0])
-            console.log(reminderstatus[0].Reminder)
-            console.log(reminderstatus.Reminder)
-            for (const s of reminderstatus[0]) {
+            for (const s of reminderstatus) {
               console.log(s)
               if(s.Reminder == 'waiting'){
                 await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
