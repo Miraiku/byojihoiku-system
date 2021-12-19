@@ -35,9 +35,9 @@ cron.schedule('*/1 * * * *', () => {
     body: {
       "line_push_from_cron": "today7am"
       }
-    }
-  , function(error, response, body){
-    console.log("cron schedule:"+ body); 
+    },
+    function(error, response, body){
+      console.log("cron schedule:"+ body); 
     }
   ); 
 });
