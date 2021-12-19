@@ -64,8 +64,6 @@ exports.getNurseryNameByID = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
-
-
 exports.getAvailableNurseryOnThatDay = async function (date){
   let available = []
   let nursery = await psgl.getNurseryTable()
@@ -172,13 +170,18 @@ exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (
 
 //TODO　境界チェック
 exports.getTomorrowReminderStatusByLINEID = async function (lineid){
-  let memberids = await psgl.getMemberIDByLINEID(lineid)
-  let status = []
-  for (const r of memberids) {
-    let sql = `SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
-    status.push(await psgl.sqlToPostgre(sql))
+  try {
+    let memberids = await psgl.getMemberIDByLINEID(lineid)
+    let status = []
+    for (const r of memberids) {
+      let sql = `SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
+      status.push(await psgl.sqlToPostgre(sql))
+    }
+    return status
+  } catch (error) {
+    console.log('getTomorrowReminderStatusByLINEID: ' + error)
+    return []
   }
-  return status
 }
 
 
