@@ -73,8 +73,8 @@ router
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "症状："+c[0].DiseaseID+"\n"
-                    replyMessage += "食事："+c[0].MealType+"\n"
+                    replyMessage += "症状："+c.DiseaseID+"\n"
+                    replyMessage += "食事："+c+"\n"
                     replyMessage += "食事の注意事項："+details.MealDetails+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
@@ -84,6 +84,7 @@ router
                 }//end complete_reservations
               }//end if null
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
+              console.log(waiting_reservations)
               if(waiting_reservations != null){
                 replyMessage += "\n-----\n\nキャンセル待ち状況："
                 for (const rsv of waiting_reservations) {
@@ -1172,7 +1173,7 @@ async function getJpValueFromPsglIds(o){
       result.push({thirdNursery:val[0].NurseryName})
     } catch (error) {
       //NurseryID = 0
-      result.push('なし')
+      result.push({thirdNursery:'なし'})
     }
     val = await psgl.getMealNameFromID(o.MealType)
     result.push({MealType:val[0].MealName})
