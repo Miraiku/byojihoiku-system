@@ -1121,23 +1121,21 @@ async function isValidDisease(id){
   }
 }
 
-async function getJpValueFromPsglIds(obj){
+async function getJpValueFromPsglIds(o){
   try {
     let result = []
-    for (const o of obj) {
-      let val = await psgl.getValueNameByMemberID(o.MemberID)
-      result.push({MemberID:val[0].Name})
-      val = await psgl.getDiseaseNameFromID(o.DiseaseID)
-      result.push({DiseaseID:val[0].DiseaseName})
-      val = await psgl.getNurseryNameByID(o.firstNursery)
-      result.push({firstNursery:val[0].NurseryName})
-      val = await psgl.getNurseryNameByID(o.secondNursery)
-      result.push({secondNursery:val[0].NurseryName})
-      val = await psgl.getNurseryNameByID(o.thirdNursery)
-      result.push({thirdNursery:val[0].NurseryName})
-      val = await psgl.getMealNameFromID(o.MealType)
-      result.push({MealType:val[0].MealName})
-    }
+    let val = await psgl.getValueNameByMemberID(o.MemberID)
+    result.push({MemberID:val[0].Name})
+    val = await psgl.getDiseaseNameFromID(o.DiseaseID)
+    result.push({DiseaseID:val[0].DiseaseName})
+    val = await psgl.getNurseryNameByID(o.firstNursery)
+    result.push({firstNursery:val[0].NurseryName})
+    val = await psgl.getNurseryNameByID(o.secondNursery)
+    result.push({secondNursery:val[0].NurseryName})
+    val = await psgl.getNurseryNameByID(o.thirdNursery)
+    result.push({thirdNursery:val[0].NurseryName})
+    val = await psgl.getMealNameFromID(o.MealType)
+    result.push({MealType:val[0].MealName})
     return result
   } catch (error) {
     console.log("ERROR @getJpValueFromPsglIds() "+error)
