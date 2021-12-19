@@ -66,6 +66,7 @@ router
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "食事："+details.MealType+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
+                    replyMessage += "お預り時間："+details.InTime+"〜"+details.OutTime+"\n"
                     replyMessage += "お預り時間："+getJpTimeHourFromFormattedDate(details.InTime)+"〜"+getJpTimeHourFromFormattedDate(details.OutTime)+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
@@ -833,6 +834,7 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
 
 function getJpTimeHourFromFormattedDate(day){
   //2021-12-31 11:30:00 -> 11時30分
+  let s = String(day)
   let time = day.substr( 11, 2 )+'時'+day.substr( 14, 2 )+'分'
   return time 
 }
