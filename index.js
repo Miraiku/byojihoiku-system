@@ -6,6 +6,7 @@ const request = require('request');
 const webhook = require('./modules/line_receiver')
 const cron = require('node-cron');
 const redis = require('./modules/db_redis')
+const psgl = require('./db_postgre')
 process.env.TZ = "Asia/Tokyo";
 const PORT = process.env.PORT || 5555;
 
@@ -25,9 +26,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理
-//cron.schedule('0 0 7 * * *', () => {
-
-cron.schedule('*/1 * * * *', () => {
+cron.schedule('0 0 7 * * *', () => {
   //当日の予約のうち、waitingのものをCancelにする、
   //waiting -> canceled, res status canceled
   //キャンセル通知する 
@@ -40,20 +39,37 @@ cron.schedule('*/1 * * * *', () => {
     },
     function(error, response, body){
       console.log("cron schedule:"+ error); 
-      console.log("cron schedule:"+ response[0]); 
+      console.log("cron schedule:"+ response && response.statusCode); 
       console.log("cron schedule:"+ body); 
     }
   ); 
 });
 
 //前日リマインダー送信
-cron.schedule('0 0 20 * * *', () => {
-  
+//cron.schedule('0 0 20 * * *', async () => {
+cron.schedule('*/1 * * * *', () => {
+  let ids = await psgl.getLINEIDByReservedTomorrow()
+  for (const id of ids) {   
+    request.post(
+      { headers: {'content-type' : 'application/json'},
+      url: 'https://byojihoiku-system.herokuapp.com/webhook',
+      body: JSON.stringify({
+        "line_push_from_cron": "today7am",
+        "id": id,
+        })
+      },
+      function(error, response, body){
+        console.log("cron schedule:"+ error); 
+        console.log("cron schedule:"+ response && response.statusCode); 
+        console.log("cron schedule:"+ body); 
+      }
+    ); 
+  }
   //翌日に予約あるかつReservedかつ
   //memberID→UserIDでpush送信　Remimber Update = waiting
-  //返信くる、特定単語で
-  // 
+  //返信くる、特定単語で（User IDで今日以降の予約かつ状態がWaiting）
   //翌日＆UserIDの予約を　Remimber update = replied
   //User且つwaitingで7amまでに
   console.log("おはよう！朝ご飯、ちゃんと食べた？( ﾟДﾟ)");
 });
+

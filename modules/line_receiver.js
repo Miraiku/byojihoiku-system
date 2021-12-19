@@ -5,7 +5,6 @@ const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
-const cron = require('node-cron');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
 const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
@@ -130,6 +129,8 @@ router
           replyMessage += "\n今日曜日: " + DayToJPFromDateObj(today)
           replyMessage += "\n明後日: " +dayaftertomorrow
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
+        }else if(text === "来園"){
+          replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。\n予約内容を確認する場合は「予約確認」と返信してください。"
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
@@ -776,14 +777,14 @@ router
     */
     try {
       res.send("HTTP POST request sent to the webhook URL! from CRON")
-      console.log(req.body)
       const push_message = req.body.line_push_from_cron
+      const lineid = req.body.id
       if(push_message == 'today7am'){
-        replyMessage = 'push message'
+        replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、お預かりはキャンセルとなります。'
         
         // リクエストヘッダー
         dataString = JSON.stringify({
-          to: 'Ucd4cd000eb62d24fe5ff3b355f94d45b',
+          to: lineid,
           messages: [
             {
               "type": "text",
