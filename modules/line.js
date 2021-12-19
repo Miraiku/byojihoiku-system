@@ -7,8 +7,10 @@ const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
-const today = new Date()
+const today = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
 const dayaftertomorrow = today.setDate(today.getDate() + 2)
+console.log('today:reservationday' + dayaftertomorrow)
+console.log('dayaftertomorrow:reservationday_formatted' + dayaftertomorrow)
 
 router
   .post('/', async (req, res) => {
@@ -59,7 +61,7 @@ router
                     //await getJpValueFromPsglIds(details)
                     replyMessage += "お子様氏名："+details.MemberID+"\n"
                     replyMessage += "症状："+details.DiseaseID+"\n"
-                    replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate).toLocaleString({ timeZone: 'Asia/Tokyo' }))+"\n"
                     replyMessage += "第１希望："+details.firstNursery+"\n"
                     replyMessage += "第２希望："+details.secondNursery+"\n"
                     replyMessage += "第３希望："+details.thirdNursery+"\n"
@@ -334,7 +336,6 @@ router
                   let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
-                  console.log("CAPACITIL"+ (Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)))
                   if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) < 2){
                     replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
                     await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
@@ -863,25 +864,30 @@ function getDayString(s){
   if(Number(s) && s.length == 8){
     s = getTimeStampWithTimeDayFrom8Number(s)
   }
-  let day = new Date(s)
+  let day = new Date(s).toLocaleString({ timeZone: 'Asia/Tokyo' });
   return '('+[ "日", "月", "火", "水", "木", "金", "土" ][day.getDay()]+')'
 }
 
 function timenumberToDayJP(s){
   //秒数から○年○月○日と表記
-  let day = new Date(s)
+  let day = new Date(s).toLocaleString({ timeZone: 'Asia/Tokyo' });
   return DayToJP(String(day.getFullYear())+String((day.getMonth() + 1))+String(day.getDate()))
 }
 
 function isValidRegisterdDay(s){
   if(isValidDate(s)){
-    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス, 秒で出力
-    let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
+    let reservationday_formatted = new Date(reservationday).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
     let today = new Date().setHours(0,0,0,0)//時間は考慮しない
-    let dayaftertomorrow = new Date(today)
+    let dayaftertomorrow = new Date(today).toLocaleString({ timeZone: 'Asia/Tokyo' })
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
-    const d = new Date();
+    const d = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+    console.log('isValidRegisterdDay:reservationday' + reservationday)
+    console.log('isValidRegisterdDay:reservationday_formatted' + reservationday_formatted)
+    console.log('isValidRegisterdDay: d' + d)
+    console.log('isValidRegisterdDay:today ' + today )
+    console.log('isValidRegisterdDay: ' + reservationday_formatted.getDay())
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(reservationday > dayaftertomorrow){
