@@ -777,7 +777,7 @@ router
     */
     try {
       const push_message = req.body.line_push_from_cron
-      const lineid = req.body.id
+      const lineid = req.body.id[0].LINEID
       console.log(req.body)
       if(push_message == 'today7am'){
         res.send(lineid)
