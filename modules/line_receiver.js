@@ -135,19 +135,16 @@ router
             replyMessage = ''
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             for (const s of reminderstatus) {
-              if(s[0] == undefined){
+              if(s[0] == undefined || replyMessage != ''){
                 continue
               }
               if(s[0].Reminder == 'waiting'){
                 await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-                break;
               }else if(s[0].Reminder == 'canceled'){
                 replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-                break;
               }else if(s[0].Reminder == 'replied'){
                 replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-                break;
               }
             }
           } catch (error) {
