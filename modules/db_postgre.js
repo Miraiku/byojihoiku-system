@@ -184,12 +184,12 @@ exports.getLINEIDByReservedTomorrow = async function (){
 exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (lineid, status){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}';`
   let result = await psgl.sqlToPostgre(sql)
-  let ids = []
+  let res = []
   for (const r of result) {
     let result = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" > DATE 'now';`
-    ids.push(await psgl.getLINEIDByMemberID(r.ID))
+    res.push(result)
   }
-  return ids
+  return res
 }
 
 exports.getReservationStatusWaitingByMemberIDGraterThanToday = async function (id){

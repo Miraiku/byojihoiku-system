@@ -60,8 +60,8 @@ cron.schedule('*/1 * * * *', async () => {
       },
       function(error, response, body){
         if(response.statusCode == '200' && body != null){
-          let lineid = body
-          psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
+          let lineid = body.LINEID
+          await psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
         }
         console.log("cron schedule:"+ error); 
         console.log("cron schedule:"+ response && response.statusCode); 
@@ -71,8 +71,8 @@ cron.schedule('*/1 * * * *', async () => {
   }
           //翌日に予約あるかつReservedかつ
           //memberID→UserIDでpush送信
-  //Remimber Update = waiting
-  //返信くる、特定単語で（User IDで今日以降の予約かつ状態がWaiting）
+        //Remimber Update = waiting
+       //返信くる、特定単語で（User IDで今日以降の予約かつ状態がWaiting）
   //翌日＆UserIDの予約を　Remimber update = replied
   //User且つwaitingで7amまでに
   console.log("おはよう！朝ご飯、ちゃんと食べた？( ﾟДﾟ)");
