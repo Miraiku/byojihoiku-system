@@ -83,7 +83,7 @@ router
               }//end if null
             }//end memberids
           } catch (error) {
-            
+            console.log("予約確認： " +error)
           }
           if(replyMessage==''){
             replyMessage = "現在、予約はございません。"
