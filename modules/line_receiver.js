@@ -130,21 +130,25 @@ router
           replyMessage += "\n明後日: " +dayaftertomorrow
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
-          //TODO キャンセル巡回機能を作成する
-          let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
-          for (const status of reminderstatus) {
-            console.log(status)
-            if(status[0].Reminder == 'waiting'){
-              await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
-              replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              break;
-            }else if(status[0].Reminder == 'canceled'){
-              replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              break;
-            }else if(status[0].Reminder == 'replied'){
-              replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              break;
+          try {
+            //TODO キャンセル巡回機能を作成する
+            let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
+            for (const status of reminderstatus) {
+              console.log(status)
+              if(status[0].Reminder == 'waiting'){
+                await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
+                replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+                break;
+              }else if(status[0].Reminder == 'canceled'){
+                replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+                break;
+              }else if(status[0].Reminder == 'replied'){
+                replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+                break;
+              }
             }
+          } catch (error) {
+            console.log('来園: '+error)
           }
           //else
           replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
