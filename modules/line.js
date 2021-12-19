@@ -1164,12 +1164,13 @@ async function getJpValueFromPsglIds(o){
     let thirdn
     try {
       thirdn = await psgl.getNurseryNameByID(o.thirdNursery)
+      thirdn = thirdn[0].NurseryName
     } catch (error) {
       //NurseryID = 0
       thirdn = 'なし'
     }
     let mealname = await psgl.getMealNameFromID(o.MealType)
-    result.push({MemberID:name[0].Name, DiseaseID:disease.DiseaseName, firstNursery:firstn[0].NurseryName, secondNursery:secondn[0].NurseryName, thirdNursery:thirdn[0].NurseryName, MealType:mealname[0].MealName})
+    result.push({MemberID:name[0].Name, DiseaseID:disease.DiseaseName, firstNursery:firstn[0].NurseryName, secondNursery:secondn[0].NurseryName, thirdNursery:thirdn, MealType:mealname[0].MealName})
     return result
   } catch (error) {
     console.log("ERROR @getJpValueFromPsglIds() "+error)
