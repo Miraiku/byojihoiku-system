@@ -49,7 +49,7 @@ router
             //TODO HTML char
             //[{},{}]
             replyMessage ='【ご予約状況】\n'
-            let memberids = await psgl.getMermberIDByLINEID(userId)
+            let memberids = await psgl.getMemberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
               if(complete_reservations != null){
@@ -1124,7 +1124,7 @@ async function isValidDisease(id){
 async function getJpValueFromPsglIds(o){
   try {
     let result = []
-    let val = await psgl.getValueNameByMemberID(o.MemberID)
+    let val = await psgl.getMemberNameByMemberID(o.MemberID)
     result.push({MemberID:val[0].Name})
     val = await psgl.getDiseaseNameFromID(o.DiseaseID)
     result.push({DiseaseID:val[0].DiseaseName})

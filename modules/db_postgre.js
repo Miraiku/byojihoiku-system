@@ -188,14 +188,14 @@ exports.getReservationDetailsByReservationID = async function (id){
   return result
 }
 
-exports.getMermberIDByLINEID = async function (id){
+exports.getMemberIDByLINEID = async function (id){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
 
-exports.getMermberNameByMemberID = async function (id){
+exports.getMemberNameByMemberID = async function (id){
   let sql = `SELECT "Name" FROM public."Member" WHERE "ID" = '${id}';`
 
   let result = await psgl.sqlToPostgre(sql)
