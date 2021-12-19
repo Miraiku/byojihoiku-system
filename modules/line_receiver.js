@@ -252,7 +252,7 @@ router
                   try {
                     //Get all information
                     let info
-                    await redis_client.hgetall(userId, (err, reply) => {
+                    await redis.hgetall(userId, (err, reply) => {
                       if (err) throw err;
                       info = reply
                     });
