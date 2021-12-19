@@ -40,7 +40,7 @@ cron.schedule('*/1 * * * *', () => {
     },
     function(error, response, body){
       console.log("cron schedule:"+ error); 
-      console.log("cron schedule:"+ response); 
+      console.log("cron schedule:"+ response[0]); 
       console.log("cron schedule:"+ body); 
     }
   ); 
