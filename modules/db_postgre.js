@@ -59,6 +59,12 @@ exports.getNurseryIdByName = async function (name){
   let sql = `SELECT "ID" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
 }
+exports.getNurseryNameByID = async function (id){
+  let sql = `SELECT "NurseryName" FROM public."Nursery" WHERE "ID" = '`+id+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+
 
 exports.getAvailableNurseryOnThatDay = async function (date){
   let available = []
@@ -187,4 +193,11 @@ exports.getMermberIDByLINEID = async function (id){
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
+}
+
+exports.getMermberNameByMemberID = async function (id){
+  let sql = `SELECT "Name" FROM public."Member" WHERE "ID" = '${id}';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
 }

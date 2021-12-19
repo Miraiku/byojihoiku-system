@@ -48,7 +48,7 @@ router
           try {
             //TODO HTML char
             //[{},{}]
-            replyMessage ='ご予約状況\n'
+            replyMessage ='【ご予約状況】\n'
             let memberids = await psgl.getMermberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
@@ -56,15 +56,15 @@ router
                 for (const rsv of complete_reservations) {
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
-                    //await getJpValueFromPsglIds(details)
+                    let c = await getJpValueFromPsglIds(details)
                     replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "第１希望："+details.firstNursery+"\n"
-                    replyMessage += "第２希望："+details.secondNursery+"\n"
-                    replyMessage += "第３希望："+details.thirdNursery+"\n"
-                    replyMessage += "お子様氏名："+details.MemberID+"\n"
-                    replyMessage += "症状："+details.DiseaseID+"\n"
-                    replyMessage += "食事："+details.MealType+"\n"
+                    replyMessage += "第１希望："+c.firstNursery+"\n"
+                    replyMessage += "第２希望："+c.secondNursery+"\n"
+                    replyMessage += "第３希望："+c.thirdNursery+"\n"
+                    replyMessage += "お子様氏名："+c.MemberID+"\n"
+                    replyMessage += "症状："+c.DiseaseID+"\n"
+                    replyMessage += "食事："+c.MealType+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
@@ -1120,34 +1120,29 @@ async function isValidDisease(id){
     return false
   }
 }
-/*
+
 async function getJpValueFromPsglIds(obj){
   try {
     let result = []
     for (const o of obj) {
       let val = await psgl.getValueNameByMemberID(o.MemberID)
-      result.push({MemberID:val})
-      val = await psgl.getValueNameByDiseaseID(o.DiseaseID)
-      result.push({DiseaseID:val})
-      val = await psgl.getValueNameByDiseaseID(o.ReservationDate)
-      result.push({ReservationDate:val})
-      val = await psgl.getValueNameByNurseryID(o.firstNursery)
-      result.push({firstNursery:val})
-      let val = await psgl.getValueNameByNurseryrID(o.secondNursery)
-      result.push({secondNursery:val})
-      val = await psgl.getValueNameByNurseryID(o.thirdNursery)
-      result.push({thirdNursery:val})
-      val = await psgl.getValueNameByMealType(o.MealType)
-      result.push({MealType:val})
-      val = await psgl.getValueNameByDiseaseID(o.ReservationTime)
-      result.push({ReservationTime:val})
-      //ReservationDate: 2021-12-19T15:00:00.000Z, なおす
+      result.push({MemberID:val[0].Name})
+      val = await psgl.getDiseaseNameFromID(o.DiseaseID)
+      result.push({DiseaseID:val[0].DiseaseName})
+      val = await psgl.getNurseryNameByID(o.firstNursery)
+      result.push({firstNursery:val[0].NurseryName})
+      let val = await psgl.getNurseryNameByID(o.secondNursery)
+      result.push({secondNursery:val[0].NurseryName})
+      val = await psgl.getNurseryNameByID(o.thirdNursery)
+      result.push({thirdNursery:val[0].NurseryName})
+      val = await psgl.getMealNameFromID(o.MealType)
+      result.push({MealType:val[0].MealName})
     }
     return result
   } catch (error) {
     console.log("ERROR @getJpValueFromPsglIds()")
   }
-}*/
+}
 
 function escapeHTML(string){
   return string.replace(/&/g, '&lt;')
