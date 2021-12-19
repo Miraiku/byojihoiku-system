@@ -120,7 +120,7 @@ router
           } catch (error) {
             console.log("予約確認： " +error)
           }
-          if(replyMessage=='ご予約状況\n'){
+          if(replyMessage=='【ご予約状況】\n'){
             replyMessage = "現在、予約はございません。"
           }
         }else if(text === "テスト"){
