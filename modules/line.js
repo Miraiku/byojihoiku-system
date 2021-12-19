@@ -885,13 +885,15 @@ function timenumberToDayJP(s){
 function isBeforeToday8AM(s){
   if(isValidDate(s)){
     let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
+    let reservationday_dateobj = new Date(reservationday)
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
-    console.log('isValidRegisterdDay:reservationday' + reservationday.getMilliseconds())
+    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj.getMilliseconds())
+    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj)
     console.log('isValidRegisterdDay:getHours' + today_hour.getHours())
     console.log('isValidRegisterdDay:today.getMilliseconds ' + today.getMilliseconds() )
-    if(today.getMilliseconds() == reservationday &&  today_hour.getHours() > 8){
+    if(today.getMilliseconds() == reservationday_dateobj.getMilliseconds() &&  today_hour.getHours() > 8){
       return false
     }
     return true
