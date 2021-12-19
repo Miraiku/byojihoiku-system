@@ -768,7 +768,7 @@ router
       /*
       リマインダートリガー
       */
-
+      console.log(req.body)
       const push_message = req.body.line_push_from_cron
       if(push_message == 'today7am'){
         replyMessage = 'push message'

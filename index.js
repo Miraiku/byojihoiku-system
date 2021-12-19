@@ -29,6 +29,12 @@ cron.schedule('*/20 * * * *', async () =>  {
 
 cron.schedule('*/1 * * * *', () => {
   //当日の予約のうち、返信がきたもの
+
+  //当日かつReservedかつ
+  //Remimber Update = waiting
+  //返信くる
+  //
+  
   request.post(
     { headers: {'content-type' : 'application/json'},
     url: 'https://localhost/webhook:'+PORT,
