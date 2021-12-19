@@ -55,12 +55,12 @@ cron.schedule('*/3 * * * *', async () => {
       url: 'https://byojihoiku-system.herokuapp.com/webhook',
       body: JSON.stringify({
         "line_push_from_cron": "today7am",
-        "id": id,
+        "id": id.LINEID,
         })
       },
       async function(error, response, body){
         if(response.statusCode == '200' && body != null){
-          let lineid = body.LINEID
+          let lineid = body
           await psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
         }
         console.log("cron schedule error:"+ error); 
