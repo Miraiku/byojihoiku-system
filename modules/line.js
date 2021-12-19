@@ -57,6 +57,15 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
+                    if(details.Cramps == 'false'){
+                      details.Cramps = 'なし'
+                    }
+                    if(details.Allergy == 'false'){
+                      details.Allergy = 'なし'
+                    }
+                    if(details.MealDetails == 'false'){
+                      details.MealDetails = 'なし'
+                    }
                     replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
@@ -65,6 +74,7 @@ router
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "症状："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
+                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
@@ -632,7 +642,7 @@ router
                         //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
                         console.log(Number.isInteger(reservationID))
                         if(Number.isInteger(reservationID)){
-                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
+                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                           let reserved = await insertReservationDetails(queryString)
                           if(reserved){
                             await redis.resetAllStatus(userId)
