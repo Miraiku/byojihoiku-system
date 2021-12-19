@@ -1089,8 +1089,8 @@ async function isMembered(id, name, birthday){
 
 async function isValidMeal(id){
   try {
-    id = zenkaku2Hankaku(id)
-    let result = await psgl.isValidMealInMealTable(id)
+    let num = zenkaku2Hankaku(id)
+    let result = await psgl.isValidMealInMealTable(num)
     if(result[0] != undefined && result[0].ID != null){
       return true
     }else{
@@ -1103,8 +1103,8 @@ async function isValidMeal(id){
 
 async function isValidDisease(id){
   try {
-    id = zenkaku2Hankaku(id)
-    let result = await psgl.isValidDiseaseInDiseaseTable(id)
+    let num = zenkaku2Hankaku(id)
+    let result = await psgl.isValidDiseaseInDiseaseTable(num)
     if(result[0] != undefined || result[0].ID != null){
       return true
     }else{
