@@ -1140,7 +1140,7 @@ async function getJpValueFromPsglIds(obj){
     }
     return result
   } catch (error) {
-    console.log("ERROR @getJpValueFromPsglIds()")
+    console.log("ERROR @getJpValueFromPsglIds() "+error)
   }
 }
 
