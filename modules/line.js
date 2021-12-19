@@ -921,7 +921,6 @@ function isValidRegisterdDay(s){
     console.log(today)
     console.log(dayaftertomorrow)
     console.log(reservationday_formatted)
-    console.log(today.getTime())
     console.log(dayaftertomorrow.getTime())
     console.log(reservationday_formatted.getTime())
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
