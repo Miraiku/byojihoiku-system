@@ -20,7 +20,7 @@ router
     */
     try {
       if(req.body.events == undefined){
-        break;
+        continue;
       }
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
@@ -779,7 +779,7 @@ router
     */
     try {
       if(req.body.line_push_from_cron == undefined){
-        break;
+        continue;
       }
       res.send("HTTP POST request sent to the webhook URL! from CRON")
       console.log(req.body)
