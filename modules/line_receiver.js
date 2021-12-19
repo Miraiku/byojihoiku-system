@@ -151,6 +151,7 @@ router
             console.log('来園: '+error)
           }
           //else
+          console.log(replyMessage)
           if(replyMessage = ''){
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
           }
