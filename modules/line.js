@@ -36,7 +36,7 @@ router
           await redis.resetAllStatus(userId)
           let registeredMessage
           if(await isRegisterd(userId)){
-            registeredMessage = '病児保育の予約ですね。\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。\n\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」'
+            registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」\n\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else{
@@ -89,7 +89,6 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
-                    console.log(c)
                     if(details.Cramps == 'false'){
                       details.Cramps = 'なし'
                     }
@@ -142,7 +141,7 @@ router
             messages: [
               {
                 "type": "text",
-                "text": "予約状況のカレンダーは以下のURLをご参照ください$\n https://sample.net",
+                "text": "予約状況のカレンダーは以下のURLをご参照ください$\n https://sample.net\n（カレンダーページは現在作成中です）",
                 "emojis": [
                   {
                     "index": 25,
@@ -673,6 +672,7 @@ router
                             }else{
                               replyMessage = "予約が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
                             }
+                            replyMessage += "\n\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
                         }
                       } catch (error) {
