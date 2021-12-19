@@ -415,7 +415,8 @@ router
                 }
                 break;//CASE9  
             case 10:
-              if(await isValidDisease(text)){
+              let diseaseid_text = zenkaku2Hankaku(text)
+              if(await isValidDisease(diseaseid_text)){
                 let meals = await psgl.getMealList()
                 let all_info = ''
                 for(let i = 0; i < meals.length; i++)
@@ -423,8 +424,8 @@ router
                     all_info += meals[i].id+". "+meals[i].name+"\n";
                 }
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                let disasename = await psgl.getDiseaseNameFromID(text)
-                let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(text)
+                let disasename = await psgl.getDiseaseNameFromID(diseaseid_text)
+                let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(diseaseid_text)
                 replyMessage = "お子様の症状は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
                 await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
                 await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
@@ -435,13 +436,13 @@ router
               }
               break;
             case 11:
-              //TODO 全角半角チェックがあまい、休日チェックも
-              if(await isValidMeal(text)){
-                let mealname = await psgl.getMealNameFromID(text)
+              let mealid_text = zenkaku2Hankaku(text)
+              if(await isValidMeal(mealid_text)){
+                let mealname = await psgl.getMealNameFromID(mealid_text)
                 replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_meal_name_'+current_child_number,mealname[0].MealName)
-                await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,mealid_text)
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
@@ -449,23 +450,23 @@ router
               }
               break;
             case 12:
-              replyMessage = "食事の追記事項は「"+text+"」ですね。\n\n熱性けいれんの経験がある場合\n回数、初回の年齢、最終の年齢についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"  
+              replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの経験がある場合\n回数、初回の年齢、最終の年齢についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"  
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
               }else{
-                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,escapeHTML(text))
               }
               await redis.hsetStatus(userId,'reservation_status',13)
               await redis.hsetStatus(userId,'reservation_reply_status',130)
               break;
             case 13:
-              replyMessage = "熱性けいれんの経験は「"+text+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
+              replyMessage = "熱性けいれんの経験は「"+escapeHTML(text)+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
               }else{
-                await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,escapeHTML(text))
               }
               let total_child_number = await redis.hgetStatus(userId,'reservation_nursery_number')
               if(Number(current_child_number)>=Number(total_child_number)){
@@ -481,24 +482,24 @@ router
               break;
             case 14:
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-              replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
+              replyMessage = "アレルギーに関する連絡事項は「"+escapeHTML(text)+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
-                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,text)
+                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,escapeHTML(text))
               }
               await redis.hsetStatus(userId,'reservation_status',15)
               await redis.hsetStatus(userId,'reservation_reply_status',150)
               break;
             case 15:
-              replyMessage = "保護者さまのお名前は「"+text+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
-              await redis.hsetStatus(userId,'reservation_child_parent_name',text)
+              replyMessage = "保護者さまのお名前は「"+escapeHTML(text)+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
+              await redis.hsetStatus(userId,'reservation_child_parent_name',escapeHTML(text))
               await redis.hsetStatus(userId,'reservation_status',16)
               await redis.hsetStatus(userId,'reservation_reply_status',160)
               break;
             case 16://Register
               try {
-                await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
+                await redis.hsetStatus(userId,'reservation_child_parent_tel',escapeHTML(text))
                 await redis.hsetStatus(userId,'reservation_status',17)
                 await redis.hsetStatus(userId,'reservation_reply_status',170)
                 regsiter_informations = await redis.hgetAll(userId)
@@ -764,7 +765,6 @@ function isValidTime(s){
   }
 }
 function zenkaku2Hankaku(val) {
-  console.log(val)
   var regex = /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g;
 
   // 入力値の全角を半角の文字に置換
@@ -775,8 +775,6 @@ function zenkaku2Hankaku(val) {
     .replace(/[‐－―]/g, "-") // ハイフンなど
     .replace(/[～〜]/g, "~") // チルダ
     .replace(/　/g, " "); // スペース
-
-  console.log(value)
   return value;
 }
 function hankaku2Zenkaku(str) {
@@ -1145,4 +1143,11 @@ async function getJpValueFromPsglIds(obj){
   }
 }*/
 
+function escapeHTML(string){
+  return string.replace(/&/g, '&lt;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, "&#x27;");
+}
 module.exports = router
