@@ -331,9 +331,9 @@ router
             case 7:
                 if(isValidNum(text)){
                   //TODO 2枠のこってないと兄妹みれないことにする
-                  let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
+                  let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
-                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
+                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
                   console.log("CAPACITIL"+ (Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)))
                   if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) < 2){
                     replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
