@@ -889,8 +889,7 @@ function isBeforeToday8AM(s){
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
-    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj)
-    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj.getMilliseconds())
+    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj.getTime())
     console.log('isValidRegisterdDay:getHours' + today_hour.getHours())
     console.log('isValidRegisterdDay:today.getMilliseconds ' + today )
     if(today == reservationday_dateobj &&  today_hour.getHours() > 8){
