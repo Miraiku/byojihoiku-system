@@ -5,6 +5,7 @@ const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
+const cron = require('node-cron');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
 const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
