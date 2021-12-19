@@ -175,10 +175,8 @@ exports.getLINEIDByReservedTomorrow = async function (){
   let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" > DATE 'now' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   let ids = []
-  console.log(result)
   for (const r of result) {
-    console.log(r.ID)
-    ids.push(await psgl.getLINEIDByMemberID(r.ID))
+    ids.push(await psgl.getLINEIDByMemberID(r.MemberID))
   }
   return ids
 }
@@ -188,7 +186,6 @@ exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (line
   let result = await psgl.sqlToPostgre(sql)
   let ids = []
   for (const r of result) {
-    //true tomorrow  
     let result = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" > DATE 'now';`
     ids.push(await psgl.getLINEIDByMemberID(r.ID))
   }
