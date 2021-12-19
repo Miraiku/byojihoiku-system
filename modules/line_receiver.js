@@ -319,17 +319,25 @@ router
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
                   
+                  let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
                       replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n\n・他の園名を返信してください。\n・キャンセル待ち登録をする場合は「はい」を返信してください。\n・始めからやり直す場合は「予約」を返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                    }else{
+                      replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      next_step = true
                     }
                   }else{
                     if(cancel == 'true'){
                       replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      next_step = true
                     }else{
                       replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      next_step = true
                     }
+                  }
+                  if(next_step){
                     let opentime = await psgl.getNurseryOpenTimeFromName(text)
                     let closetime = await psgl.getNurseryCloseTimeFromName(text)
                     redis.hsetStatus(userId,'reservation_nursery_name_1',text)
