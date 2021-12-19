@@ -49,12 +49,12 @@ router
             //TODO HTML char
             //[{},{}]
             replyMessage =''
-            let memberids = await psgl.getMermerIDByLINEID(userId)
+            let memberids = await psgl.getMermberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
               if(complete_reservations != null){
+                replyMessage += "予約状況\n\n"
                 for (const rsv of complete_reservations) {
-                  replyMessage += "予約完了\n"
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     //await getJpValueFromPsglIds(details)
@@ -446,7 +446,7 @@ router
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
-                replyMessage = "申し訳ございません。\n希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\n希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」と返信してください。"
               }
               break;
             case 12:
@@ -831,11 +831,12 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
     return day
   } 
 }
-today
+
 function getJpTimeHourFromFormattedDate(day){
-  //2021-12-31 11:30 -> 11時30分
-  let time = day.replace(':', '')
-  return time.substr( 11, 2 )+':'+time.substr( 13, 2 )
+  //2021-12-31 11:30:00 -> 11時30分
+  let time = day.substr( 11, 2 )+'時'+day.substr( 14, 2 )+'分'
+  time = time.replace(':', '')
+  return time 
 }
 
 
@@ -1005,7 +1006,6 @@ async function isRegisterdByNameAndBirthDay(name,birthday){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+`;`
     const results = await psgl.sqlToPostgre(queryString)
-    console.log(results);
     if(Object.keys(results).length == 0){
       return false
     }else{

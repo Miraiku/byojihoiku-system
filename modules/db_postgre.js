@@ -182,7 +182,7 @@ exports.getReservationDetailsByReservationID = async function (id){
   return result
 }
 
-exports.getMermerIDByLINEID = async function (id){
+exports.getMermberIDByLINEID = async function (id){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}';`
 
   let result = await psgl.sqlToPostgre(sql)
