@@ -55,7 +55,7 @@ cron.schedule('*/3 * * * *', async () => {
       url: 'https://byojihoiku-system.herokuapp.com/webhook',
       body: JSON.stringify({
         "line_push_from_cron": "today7am",
-        "id": id.LINEID,
+        "id": id[0].LINEID,
         })
       },
       async function(error, response, body){
