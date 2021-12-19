@@ -85,6 +85,7 @@ router
               }//end if null
               let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
               if(waiting_reservations != null){
+                replyMessage += "\n-----\n\nキャンセル待ち状況："
                 for (const rsv of waiting_reservations) {
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
                   for (const details of reservations_details) {
