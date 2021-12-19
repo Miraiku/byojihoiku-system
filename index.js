@@ -61,7 +61,7 @@ cron.schedule('*/1 * * * *', async () => {
       function(error, response, body){
         if(response.statusCode == '200' && body != null){
           let lineid = body
-          psgl.updateReminderStatusByLineID(lineid, 'waiting')
+          psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
         }
         console.log("cron schedule:"+ error); 
         console.log("cron schedule:"+ response && response.statusCode); 
