@@ -139,6 +139,8 @@ router
             replyMessage = "ご予約はキャンセルされております。"
           }else if(result == 'replied'){
             replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"
+          }else{
+            replyMessage = "直前のご予約はございません。"
           }
           （User IDで今日以降の予約かつ状態がWaiting）
           replyMessage += "\n予約内容を確認する場合は「予約確認」と返信してください。"*/
