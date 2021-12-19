@@ -6,7 +6,7 @@ const request = require('request');
 const webhook = require('./modules/line_receiver')
 const cron = require('node-cron');
 const redis = require('./modules/db_redis')
-const psgl = require('./db_postgre')
+const psgl = require('./modules/db_postgre')
 process.env.TZ = "Asia/Tokyo";
 const PORT = process.env.PORT || 5555;
 
