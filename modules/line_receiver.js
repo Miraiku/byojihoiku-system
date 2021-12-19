@@ -137,16 +137,16 @@ router
             console.log(reminderstatus[0])
             console.log(reminderstatus[0].Reminder)
             console.log(reminderstatus.Reminder)
-            for (const status of reminderstatus[0]) {
-              console.log(status)
-              if(status.Reminder == 'waiting'){
+            for (const s of reminderstatus[0]) {
+              console.log(s)
+              if(s.Reminder == 'waiting'){
                 await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
-              }else if(status.Reminder == 'canceled'){
+              }else if(s.Reminder == 'canceled'){
                 replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
-              }else if(status.Reminder == 'replied'){
+              }else if(s.Reminder == 'replied'){
                 replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
                 break;
               }
