@@ -403,10 +403,16 @@ router
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
+                  let childnum = 0
+                  if(text == '1'){
+                    childnum = Number(1)
+                  }else{
+                    childnum = Number(2)
+                  }
                   let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
-                  if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) < 2){
+                  if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) >= childnum){
                     replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
                     await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     await redis.hsetStatus(userId,'reservation_status',2)
