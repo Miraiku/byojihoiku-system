@@ -285,24 +285,25 @@ router
             case 1:
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
+                  console.log(isBeforeToday8AM(text))
                   if(!isBeforeToday8AM(text)){
                     replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
                     await redis.resetAllStatus(userId)
-                    break;
+                  }else{
+                    //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
+                    //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
+                    //りよう園→枠確認→予約orキャンセル待ちとうろく
+                    let nursery_list = await psgl.getNurseryID_Name_Capacity()
+                    let all_info = ''
+                    for(let i = 0; i < nursery_list.length; i++)
+                    {
+                        all_info += "・"+nursery_list[i].name+"\n";
+                    }
+                    replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
+                    redis.hsetStatus(userId,'reservation_date',text)
+                    redis.hsetStatus(userId,'reservation_status',2)
+                    redis.hsetStatus(userId,'reservation_reply_status',20)
                   }
-                  //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
-                  //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
-                  //りよう園→枠確認→予約orキャンセル待ちとうろく
-                  let nursery_list = await psgl.getNurseryID_Name_Capacity()
-                  let all_info = ''
-                  for(let i = 0; i < nursery_list.length; i++)
-                  {
-                      all_info += "・"+nursery_list[i].name+"\n";
-                  }
-                  replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
-                  redis.hsetStatus(userId,'reservation_date',text)
-                  redis.hsetStatus(userId,'reservation_status',2)
-                  redis.hsetStatus(userId,'reservation_reply_status',20)
                 }else{
                   replyMessage = "申し訳ございません。希望日は休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
                 }
@@ -1065,6 +1066,9 @@ function isBeforeToday8AM(s){
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
+    console.log(reservationday_dateobj.getTime())
+    console.log(today)
+    console.log(today_hour.getHours())
     if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() > 8){
       return false
     }
