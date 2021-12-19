@@ -131,19 +131,25 @@ router
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
           //TODO キャンセル巡回機能を作成する
-          console.log(await psgl.getTomorrowReminderStatusByLINEID(userId))
-          /*if(result == 'waiting'){
-            replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"
+          let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
+
+          console.log(reminderstatus)
+          for (const status of reminderstatus) {
+            if(status.Reminder == 'waiting'){
+              await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
+              replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              break;
+            }else if(tatus.Reminder == 'canceled'){
+              replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              break;
+            }else if(tatus.Reminder == 'replied'){
+              replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              break;
+            }
           }
-          else if(result == 'canceled'){{
-            replyMessage = "ご予約はキャンセルされております。"
-          }else if(result == 'replied'){
-            replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"
-          }else{
-            replyMessage = "直前のご予約はございません。"
-          }
-          （User IDで今日以降の予約かつ状態がWaiting）
-          replyMessage += "\n予約内容を確認する場合は「予約確認」と返信してください。"*/
+          //else
+          replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
