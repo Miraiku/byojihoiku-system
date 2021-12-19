@@ -130,8 +130,30 @@ router
           replyMessage += "\n明後日: " +dayaftertomorrow
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
+          try {
+            //TODO キャンセル巡回機能を作成する
+            replyMessage = ''
+            let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
+            for (const s of reminderstatus) {
+              if(s[0] == undefined || replyMessage != ''){
+                continue
+              }
+              console.log(s[0].Reminder)
+              if(s[0].Reminder == 'waiting'){
+                await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
+                replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              }else if(s[0].Reminder == 'canceled'){
+                replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              }else if(s[0].Reminder == 'replied'){
+                replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+              }
+            }
+          } catch (error) {
+            console.log('来園: '+error)
+          }
+          //else
           console.log(replyMessage)
-          if(replyMessage = ''){
+          if(replyMessage == ''){
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
           }
 
