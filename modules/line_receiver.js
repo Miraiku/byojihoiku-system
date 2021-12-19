@@ -1069,7 +1069,7 @@ function isBeforeToday8AM(s){
     console.log(reservationday_dateobj.getTime())
     console.log(today)
     console.log(today_hour.getHours())
-    if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() > 8){
+    if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() >= 8){
       return false
     }
     return true
