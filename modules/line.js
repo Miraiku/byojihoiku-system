@@ -66,8 +66,7 @@ router
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "食事："+details.MealType+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
-                    replyMessage += "お預り時間："+details.InTime+"〜"+details.OutTime+"\n"
-                    replyMessage += "お預り時間："+getTimeStampFromDayDataObj(details.InTime)+"〜"+getTimeStampFromDayDataObj(details.OutTime)+"\n"
+                    replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                   }
@@ -823,6 +822,14 @@ function getTimeStampFromDayDataObj(dataobj){
   let date = new Date(dataobj);
   return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2)
 }
+
+
+function getTimeJPFormattedFromDayDataObj(dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11:41
+  let date = new Date(dataobj);
+  return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
+}
+
 function getTimeStampFromDay8NumberAndTime4Number(day, time){
   //20221122,1500 -> 2022-11-22 15:00
   if(isValidDate(day) && isValidTime(time)){
