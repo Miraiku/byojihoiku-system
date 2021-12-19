@@ -1131,7 +1131,7 @@ async function getJpValueFromPsglIds(obj){
       result.push({DiseaseID:val[0].DiseaseName})
       val = await psgl.getNurseryNameByID(o.firstNursery)
       result.push({firstNursery:val[0].NurseryName})
-      let val = await psgl.getNurseryNameByID(o.secondNursery)
+      val = await psgl.getNurseryNameByID(o.secondNursery)
       result.push({secondNursery:val[0].NurseryName})
       val = await psgl.getNurseryNameByID(o.thirdNursery)
       result.push({thirdNursery:val[0].NurseryName})
