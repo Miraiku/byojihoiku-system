@@ -46,7 +46,6 @@ router
         }else if(text === "予約確認"){
           try {
             //TODO HTML char
-            //TODOuploaded timestamp をReservationに追加する
             //[{},{}]
             replyMessage =''
             let memberids = await psgl.getMermerIDByLINEID(userId)
@@ -90,11 +89,11 @@ router
             replyMessage = "現在、予約はございません。"
           }
         }else if(text === "テスト"){
-          replyMessage += "今日: " +today
-          replyMessage += "今日日付: " +today.getDate()
-          replyMessage += "今日曜日: " + DayToJPFromDateObj(today)
-          replyMessage += "明後日: " +dayaftertomorrow
-          replyMessage += "明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
+          replyMessage = "\n今日: " +today
+          replyMessage += "\n今日日付: " +today.getDate()
+          replyMessage += "\n今日曜日: " + DayToJPFromDateObj(today)
+          replyMessage += "\n明後日: " +dayaftertomorrow
+          replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
@@ -248,7 +247,6 @@ router
               if(reservation_reply_status==20){
                 //第１園希望確認
                 //TODO：キャパ計算にredisをいれるか検討
-                //TODO　予約できない時間になったらできないという
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
@@ -271,7 +269,6 @@ router
                   }
                   let opentime = await psgl.getNurseryOpenTimeFromName(text)
                   let closetime = await psgl.getNurseryCloseTimeFromName(text)
-                  //TODO 開園時間が0800になってるのでなおす
                   if(cancel == 'true'){
                     replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
                   }else{
@@ -308,7 +305,7 @@ router
                 let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_name_1')
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
-                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+open+"〜"+close+"です。\n例）9時に登園する場合は「0900」"
+                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。\n例）9時に登園する場合は「0900」"
                 redis.hsetStatus(userId,'reservation_nursery_name_3',text)
                 if( text == 'なし'){
                   console.log(text)
@@ -342,7 +339,6 @@ router
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
-                  //TODO 2枠のこってないと兄妹みれないことにする
                   let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
@@ -631,6 +627,7 @@ router
                     for (let i = 1; i <= total; i++) {
                       queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}',${today}) RETURNING "ID";` 
                       let reservationID = await registerIntoReservationTable(queryString)
+                      //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
                       console.log(Number.isInteger(reservationID))
                       if(Number.isInteger(reservationID)){
                         queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
@@ -640,7 +637,7 @@ router
                           if(cancel_status == 'true'){
                             replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
                           }else{
-                            replyMessage = "予約を完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                            replyMessage = "予約が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
                           }
                           
                         }
