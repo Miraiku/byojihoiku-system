@@ -624,23 +624,33 @@ router
                       }
                     });
                     for (let i = 1; i <= total; i++) {
-                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}',${getTimeStampFromDayDataObj(today)}) RETURNING "ID";` 
-                      let reservationID = await registerIntoReservationTable(queryString)
-                      //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
-                      console.log(Number.isInteger(reservationID))
-                      if(Number.isInteger(reservationID)){
-                        queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
-                        let reserved = await insertReservationDetails(queryString)
-                        if(reserved){
-                          await redis.resetAllStatus(userId)
-                          if(cancel_status == 'true'){
-                            replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
-                          }else{
-                            replyMessage = "予約が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                      try {
+                        queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
+                        let reservationID = await registerIntoReservationTable(queryString)
+                        //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
+                        console.log(Number.isInteger(reservationID))
+                        if(Number.isInteger(reservationID)){
+                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDatails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
+                          let reserved = await insertReservationDetails(queryString)
+                          if(reserved){
+                            await redis.resetAllStatus(userId)
+                            if(cancel_status == 'true'){
+                              replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                            }else{
+                              replyMessage = "予約が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                            }
                           }
-                          
                         }
+                      } catch (error) {
+                        if(reservationID!=null){
+                          queryString = `DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
+                          await registerIntoReservationTable(queryString)
+                          replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
+                          await redis.resetAllStatus(userId)
+                        }
+                        
                       }
+                      
                     }
                   } catch (error) {
                     console.log(`Reservation ERR: ${error}`)
@@ -804,7 +814,7 @@ function getTimeStampWithTimeDayFrom8Number(s){
 function getTimeStampFromDayDataObj(dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19 11:41:53
   let date = new Date(dataobj);
-  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds()
+  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2)
 }
 function getTimeStampFromDay8NumberAndTime4Number(day, time){
   //20221122,1500 -> 2022-11-22 15:00
