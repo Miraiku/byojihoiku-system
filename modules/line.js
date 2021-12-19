@@ -909,7 +909,7 @@ function isValidRegisterdDay(s){
     let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない //1639839600000
-    let dayaftertomorrow = new Date(today) //2021-12-20T15:00:00.000Z
+    let dayaftertomorrow = new Date(JST) //2021-12-20T15:00:00.000Z
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
     console.log(holiday.isHoliday(reservationday))
@@ -921,7 +921,6 @@ function isValidRegisterdDay(s){
     console.log(today)
     console.log(dayaftertomorrow)
     console.log(reservationday_formatted)
-    console.log(reservationday.getTime())
     console.log(today.getTime())
     console.log(dayaftertomorrow.getTime())
     console.log(reservationday_formatted.getTime())
