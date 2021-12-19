@@ -734,6 +734,7 @@ router
                           replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
                           await redis.resetAllStatus(userId)
                         }
+                        replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
                       }
                     }// end for
                   } catch (error) {
