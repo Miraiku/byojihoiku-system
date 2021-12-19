@@ -131,7 +131,7 @@ router
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
           //TODO キャンセル巡回機能を作成する
-          console.log(await psgl.getTomorrowReplyStatusByLINEID())
+          console.log(await psgl.getTomorrowReplyStatusByLINEID(userId))
           /*if(result == 'waiting'){
             replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"
           }
