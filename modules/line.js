@@ -764,6 +764,7 @@ function isValidTime(s){
   }
 }
 function zenkaku2Hankaku(val) {
+  console.log(val)
   var regex = /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g;
 
   // 入力値の全角を半角の文字に置換
@@ -775,6 +776,7 @@ function zenkaku2Hankaku(val) {
     .replace(/[～〜]/g, "~") // チルダ
     .replace(/　/g, " "); // スペース
 
+  console.log(value)
   return value;
 }
 function hankaku2Zenkaku(str) {
