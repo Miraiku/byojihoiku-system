@@ -37,13 +37,15 @@ router
         if(text === "予約"){
           await redis.resetAllStatus(userId)
           let registeredMessage
-          if(await isRegisterd(userId)){
+          if(await isAvailableReservation(userId)){
             registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」\n\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
+          }else if(await isRegisterd(userId)){
+            registeredMessage = '管理者による会員情報の確認中です。\nもう少し待ってからご予約をお願いいたします。\nお急ぎの方はみらいくまで直接お問い合わせください。\n※こちらのLINEは応答専用です。ご質問いただいてもお返事することができません。'
           }else{
             registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
-          }holiday
+          }
           replyMessage = registeredMessage
 
         }else if(text === "予約確認"){
@@ -750,7 +752,7 @@ router
           }// end of switch
         }else{
           //通常Message
-          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n▶会員登録は「登録」\nと返信してください。"
+          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n▶会員登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
         }// end default message reply
 
     
@@ -1134,6 +1136,22 @@ function yesOrNo(s){
 async function isRegisterd(id){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
+    const results = await psgl.sqlToPostgre(queryString)
+    
+    if(Object.keys(results).length == 0){
+      return false
+    }else{
+      return true
+    }
+  }
+  catch (err) {
+    console.log(`PSGL ERR: ${err}`)
+  }
+}
+
+async function isAvailableReservation(id){
+  try {
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`' and "MiraikuID" IS NOT NULL;`;
     const results = await psgl.sqlToPostgre(queryString)
     
     if(Object.keys(results).length == 0){
