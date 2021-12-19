@@ -234,7 +234,6 @@ router
                   {
                       all_info += "・"+nursery_list[i].name+"\n";
                   }
-                  //TODO: 曜日がおかしい
                   replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
                   redis.hsetStatus(userId,'reservation_date',text)
                   redis.hsetStatus(userId,'reservation_status',2)
@@ -263,7 +262,7 @@ router
                   
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
-                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
+                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n\n・他の園名を返信してください。\n・キャンセル待ち登録をする場合は「はい」を返信してください。\n・始めからやり直す場合は「予約」を返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       break;
                     }
@@ -496,7 +495,6 @@ router
               await redis.hsetStatus(userId,'reservation_reply_status',160)
               break;
             case 16://Register
-              //TODO　キャンセル待ちフロー作成
               try {
                 await redis.hsetStatus(userId,'reservation_child_parent_tel',text)
                 await redis.hsetStatus(userId,'reservation_status',17)
@@ -626,7 +624,7 @@ router
                       }
                     });
                     for (let i = 1; i <= total; i++) {
-                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}',${today}) RETURNING "ID";` 
+                      queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}',${getTimeStampFromDayDataObj(today)}) RETURNING "ID";` 
                       let reservationID = await registerIntoReservationTable(queryString)
                       //TODO 複数ID返ってきた土岐おかしい、ReservationできなかったらDetailにもいれない
                       console.log(Number.isInteger(reservationID))
@@ -802,6 +800,12 @@ function getTimeStampWithTimeDayFrom8Number(s){
   } 
 }
 
+
+function getTimeStampFromDayDataObj(dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19 11:41:53
+  let date = new Date(dataobj);
+  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2) + '.' + date.getMilliseconds()
+}
 function getTimeStampFromDay8NumberAndTime4Number(day, time){
   //20221122,1500 -> 2022-11-22 15:00
   if(isValidDate(day) && isValidTime(time)){
@@ -810,7 +814,7 @@ function getTimeStampFromDay8NumberAndTime4Number(day, time){
     return day
   } 
 }
-
+today
 function getJpTimeHourFromFormattedDate(day){
   //2021-12-31 11:30 -> 11時30分
   let time = day.replace(':', '')
@@ -892,9 +896,6 @@ function isBeforeToday8AM(s){
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
-    console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj.getTime())
-    console.log('isValidRegisterdDay:getHours' + today_hour.getHours())
-    console.log('isValidRegisterdDay:today.getMilliseconds ' + today )
     if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() > 8){
       return false
     }
@@ -912,20 +913,15 @@ function isValidRegisterdDay(s){
     let dayaftertomorrow = new Date(JST) //2021-12-20T15:00:00.000Z
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
-    console.log(holiday.isHoliday(reservationday))
-    console.log(reservationday_formatted.getDay() )
-    console.log(reservationday > dayaftertomorrow)
-    console.log(reservationday < today)
-    console.log(reservationday >= today && reservationday <= dayaftertomorrow)
-    console.log(reservationday)
-    console.log(today)
-    console.log(dayaftertomorrow)
-    console.log(reservationday_formatted)
-    console.log(dayaftertomorrow.getTime())
-    console.log(reservationday_formatted.getTime())
     let milltime_of_today = today
     let milltime_of_reservationday = reservationday_formatted.getTime()
     let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
+    
+    console.log(holiday.isHoliday(reservationday))
+    console.log(reservationday_formatted.getDay() )
+    console.log(milltime_of_reservationday > milltime_of_dayaftertomorrow)
+    console.log(milltime_of_reservationday < milltime_of_today)
+    console.log(milltime_of_reservationday >= milltime_of_today && milltime_of_reservationday <= milltime_of_dayaftertomorrow)
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){
