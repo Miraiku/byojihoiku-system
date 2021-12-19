@@ -19,9 +19,6 @@ router
     応答Message
     */
     try {
-      if(req.body.events == undefined){
-        continue;
-      }
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
       let dataString = null
@@ -778,9 +775,6 @@ router
     リマインダートリガー
     */
     try {
-      if(req.body.line_push_from_cron == undefined){
-        continue;
-      }
       res.send("HTTP POST request sent to the webhook URL! from CRON")
       console.log(req.body)
       const push_message = req.body.line_push_from_cron

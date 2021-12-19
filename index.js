@@ -48,7 +48,7 @@ cron.schedule('*/1 * * * *', () => {
 
 //前日リマインダー送信
 cron.schedule('0 0 20 * * *', () => {
-
+  
   //翌日に予約あるかつReservedかつ
   //memberID→UserIDでpush送信　Remimber Update = waiting
   //返信くる、特定単語で
