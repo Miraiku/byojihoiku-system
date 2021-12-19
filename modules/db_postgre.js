@@ -188,7 +188,7 @@ exports.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled = asyn
   try {
     let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'today' and "Reminder" = 'waiting' and "ReservationStatus" = 'Reserved';`
     let memberids = await psgl.sqlToPostgre(sql)
-    let status = []
+    let lineids = []
     for (const r of memberids) {
       let sql = `UPDATE public."Reservation" SET "Reminder"= 'canceled' WHERE "MemberID"= '${r.MemberID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
       console.log(sql)

@@ -26,7 +26,8 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理
-cron.schedule('0 0 7 * * *', async () => {
+cron.schedule('*/3 * * * *', async () =>  {
+//cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled()
     for (const id of lineids) {
@@ -52,10 +53,11 @@ cron.schedule('0 0 7 * * *', async () => {
 });
 
 //前日リマインダー送信
-cron.schedule('0 0 20 * * *', async () => {
+//cron.schedule('0 0 20 * * *', async () => {
+cron.schedule('*/1 * * * *', async () =>  {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
-    for (const id of ids) {   
+    for (const id of ids) {
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku-system.herokuapp.com/webhook',
