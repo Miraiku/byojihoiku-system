@@ -47,7 +47,7 @@ cron.schedule('0 0 7 * * *', () => {
 
 //前日リマインダー送信
 //cron.schedule('0 0 20 * * *', async () => {
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('*/3 * * * *', async () => {
   let ids = await psgl.getLINEIDByReservedTomorrow()
   for (const id of ids) {   
     request.post(
@@ -63,9 +63,7 @@ cron.schedule('*/1 * * * *', async () => {
           let lineid = body.LINEID
           await psgl.updateTomorrowTodayReservedReminderStatusByLineID(lineid, 'waiting')
         }
-        console.log("cron schedule:"+ error); 
-        console.log("cron schedule:"+ response && response.statusCode); 
-        console.log("cron schedule:"+ body); 
+        console.log("cron schedule error:"+ error); 
       }
     ); 
   }
