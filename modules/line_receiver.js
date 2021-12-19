@@ -130,8 +130,9 @@ router
           replyMessage += "\n明後日: " +dayaftertomorrow
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
-          await psgl.getTomorrowReplyStatusByLINEID()
-          if(result == 'waiting'){
+          //TODO キャンセル巡回機能を作成する
+          console.log(await psgl.getTomorrowReplyStatusByLINEID())
+          /*if(result == 'waiting'){
             replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"
           }
           else if(result == 'canceled'){{
@@ -140,7 +141,7 @@ router
             replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"
           }
           （User IDで今日以降の予約かつ状態がWaiting）
-          replyMessage += "\n予約内容を確認する場合は「予約確認」と返信してください。"
+          replyMessage += "\n予約内容を確認する場合は「予約確認」と返信してください。"*/
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1

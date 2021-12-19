@@ -170,7 +170,7 @@ exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (
   return result
 }
 
-//TODO　協会✔
+//TODO　境界チェック
 exports.getTomorrowReplyStatusByLINEID = async function (lineid){
   let memberids = await psgl.getMemberIDByLINEID(lineid)
   let status = []
