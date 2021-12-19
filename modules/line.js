@@ -48,7 +48,7 @@ router
           try {
             //TODO HTML char
             //[{},{}]
-            replyMessage =''
+            replyMessage ='ご予約状況\n'
             let memberids = await psgl.getMermberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
@@ -57,7 +57,7 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     //await getJpValueFromPsglIds(details)
-                    replyMessage += "お子様氏名："+details.MemberID+"\n"
+                    replyMessage += "\nお子様氏名："+details.MemberID+"\n"
                     replyMessage += "症状："+details.DiseaseID+"\n"
                     replyMessage += "ご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "第１希望："+details.firstNursery+"\n"
@@ -85,7 +85,7 @@ router
           } catch (error) {
             console.log("予約確認： " +error)
           }
-          if(replyMessage==''){
+          if(replyMessage=='ご予約状況\n'){
             replyMessage = "現在、予約はございません。"
           }
         }else if(text === "テスト"){
