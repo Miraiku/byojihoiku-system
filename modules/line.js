@@ -215,6 +215,10 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
+                if(isBeforeToday8AM(text)){
+                  replyMessage = "申し訳ございません。\n当日の予約受付はAM8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
+                  await redis.resetAllStatus(userId)
+                }
                 if(isValidRegisterdDay(text)){
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
@@ -877,19 +881,32 @@ function timenumberToDayJP(s){
   return DayToJP(String(day.getFullYear())+String((day.getMonth() + 1))+String(day.getDate()))
 }
 
+function isBeforeToday8AM(s){
+  if(isValidDate(s)){
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
+    let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+    let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
+    let today_hour = new Date(JST)//時間は考慮しない
+    console.log('isValidRegisterdDay:reservationday' + reservationday)
+    console.log('isValidRegisterdDay:getHours' + today_hour.getHours)
+    console.log('isValidRegisterdDay:today.getMilliseconds ' + today.getMilliseconds )
+    if(today.getMilliseconds() == reservationday &&  today_hour.getHours() > 8){
+      return false
+    }
+    return true
+  }
+  return false
+}
+
 function isValidRegisterdDay(s){
   if(isValidDate(s)){
-    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).setHours(0,0,0,0)//月のみ0インデックス, 秒で出力
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
     let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let dayaftertomorrow = new Date(today)
     dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2)
     dayaftertomorrow.setHours(0,0,0,0)
-    console.log('isValidRegisterdDay:reservationday' + reservationday)
-    console.log('isValidRegisterdDay:reservationday_formatted' + reservationday_formatted)
-    console.log('isValidRegisterdDay:today ' + today )
-    console.log('isValidRegisterdDay: ' + reservationday_formatted.getDay())
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(reservationday > dayaftertomorrow){
