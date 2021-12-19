@@ -220,6 +220,7 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
+                
                 if(isBeforeToday8AM(text)){
                   replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
                   await redis.resetAllStatus(userId)
@@ -897,7 +898,7 @@ function isBeforeToday8AM(s){
     console.log('isValidRegisterdDay:reservationday' + reservationday_dateobj.getTime())
     console.log('isValidRegisterdDay:getHours' + today_hour.getHours())
     console.log('isValidRegisterdDay:today.getMilliseconds ' + today )
-    if(today == reservationday_dateobj &&  today_hour.getHours() > 8){
+    if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() > 8){
       return false
     }
     return true
