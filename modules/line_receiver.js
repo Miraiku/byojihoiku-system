@@ -132,6 +132,7 @@ router
         }else if(text === "来園"){
           try {
             //TODO キャンセル巡回機能を作成する
+            replyMessage = ''
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             for (const s of reminderstatus) {
               if(s[0] == undefined){
@@ -153,7 +154,9 @@ router
             console.log('来園: '+error)
           }
           //else
-          replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+          if(replyMessage = ''){
+            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+          }
 
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
