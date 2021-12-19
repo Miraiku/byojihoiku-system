@@ -1081,16 +1081,22 @@ async function isMembered(id, name, birthday){
 }
 
 async function isValidMeal(id){
-  let result = await psgl.isValidMealInMealTable(id)
-  if(result[0] != undefined && result[0].ID != null){
-    return true
-  }else{
-    false
+  try {
+    id = hankaku2Zenkaku(id)
+    let result = await psgl.isValidMealInMealTable(id)
+    if(result[0] != undefined && result[0].ID != null){
+      return true
+    }else{
+      false
+    }
+  } catch (error) {
+    return false
   }
 }
 
 async function isValidDisease(id){
   try {
+    id = hankaku2Zenkaku(id)
     let result = await psgl.isValidDiseaseInDiseaseTable(id)
     if(result[0] != undefined || result[0].ID != null){
       return true
