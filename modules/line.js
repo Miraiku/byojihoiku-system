@@ -923,13 +923,16 @@ function isValidRegisterdDay(s){
     console.log(reservationday_formatted)
     console.log(dayaftertomorrow.getTime())
     console.log(reservationday_formatted.getTime())
+    let milltime_of_today = today
+    let milltime_of_reservationday = reservationday_formatted.getTime()
+    let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
-    }else if(reservationday > dayaftertomorrow){
+    }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){
       return false
-    }else if(reservationday < today){
+    }else if(milltime_of_reservationday < milltime_of_today){
       return false
-    }else if(reservationday >= today && reservationday <= dayaftertomorrow){
+    }else if(milltime_of_reservationday >= milltime_of_today && milltime_of_reservationday <= milltime_of_dayaftertomorrow){
       return true
     }
   }else{
