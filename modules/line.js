@@ -7,7 +7,7 @@ const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 const holiday = new Holidays('JP')
-const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+const JST = new Date().now().toLocaleString({ timeZone: 'Asia/Tokyo' })
 const today = new Date(JST)
 const dayaftertomorrow = today.setDate(today.getDate() + 2)
 
