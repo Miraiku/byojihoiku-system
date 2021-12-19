@@ -47,7 +47,7 @@ cron.schedule('0 0 7 * * *', () => {
 
 //前日リマインダー送信
 //cron.schedule('0 0 20 * * *', async () => {
-cron.schedule('*/1 * * * *', () => {
+cron.schedule('*/1 * * * *', async () => {
   let ids = await psgl.getLINEIDByReservedTomorrow()
   for (const id of ids) {   
     request.post(
@@ -59,14 +59,19 @@ cron.schedule('*/1 * * * *', () => {
         })
       },
       function(error, response, body){
+        if(response.statusCode == '200' && body != null){
+          let lineid = body
+          psgl.updateReminderStatusByLineID('waiting')
+        }
         console.log("cron schedule:"+ error); 
         console.log("cron schedule:"+ response && response.statusCode); 
         console.log("cron schedule:"+ body); 
       }
     ); 
   }
-  //翌日に予約あるかつReservedかつ
-  //memberID→UserIDでpush送信　Remimber Update = waiting
+          //翌日に予約あるかつReservedかつ
+          //memberID→UserIDでpush送信
+  //Remimber Update = waiting
   //返信くる、特定単語で（User IDで今日以降の予約かつ状態がWaiting）
   //翌日＆UserIDの予約を　Remimber update = replied
   //User且つwaitingで7amまでに

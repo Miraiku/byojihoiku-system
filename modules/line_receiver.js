@@ -776,10 +776,10 @@ router
     リマインダートリガー
     */
     try {
-      res.send("HTTP POST request sent to the webhook URL! from CRON")
       const push_message = req.body.line_push_from_cron
       const lineid = req.body.id
       if(push_message == 'today7am'){
+        res.send(lineid)
         replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、お預かりはキャンセルとなります。'
         
         // リクエストヘッダー
