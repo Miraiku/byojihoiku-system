@@ -316,6 +316,9 @@ router
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
                   replyMessage = "キャンセル待ち登録をされたい園を返信してください。\n早苗町を希望の場合「早苗町」"
                 }else if(await isValidNurseryName(text)){
+                  if(cancel == 'maybe'){//true以外は初期化
+                    await redis.hsetStatus(userId,'reservation_status_cancel', '')
+                  }
                   let nursery_capacity = await hasNurseryCapacity(text)
                   let nursery_id = await getNurseryIdByName(text)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
