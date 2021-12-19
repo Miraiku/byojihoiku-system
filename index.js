@@ -32,11 +32,13 @@ cron.schedule('*/1 * * * *', () => {
   request.post(
     { headers: {'content-type' : 'application/json'},
     url: 'https://localhost/webhook:'+PORT,
-    body: {
+    body: JSON.stringify({
       "line_push_from_cron": "today7am"
-      }
+      })
     },
     function(error, response, body){
+      console.log("cron schedule:"+ error); 
+      console.log("cron schedule:"+ response); 
       console.log("cron schedule:"+ body); 
     }
   ); 
