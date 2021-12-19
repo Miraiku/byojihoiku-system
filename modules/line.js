@@ -305,10 +305,11 @@ router
                 let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_name_1')
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
+                let nursery_id = await getNurseryIdByName(text)
                 replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n\n"+first_nursery+"の開園時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。\n例）9時に登園する場合は「0900」"
                 redis.hsetStatus(userId,'reservation_nursery_name_3',text)
+                await redis.hsetStatus(userId,'reservation_nursery_id_3',nursery_id[0].ID)
                 if( text == 'なし'){
-                  console.log(text)
                   await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
                 }
                 redis.hsetStatus(userId,'reservation_status',5)
@@ -648,10 +649,8 @@ router
                           replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
                           await redis.resetAllStatus(userId)
                         }
-                        
                       }
-                      
-                    }
+                    }// end for
                   } catch (error) {
                     console.log(`Reservation ERR: ${error}`)
                   }
@@ -926,12 +925,6 @@ function isValidRegisterdDay(s){
     let milltime_of_today = today
     let milltime_of_reservationday = reservationday_formatted.getTime()
     let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
-    
-    console.log(holiday.isHoliday(reservationday))
-    console.log(reservationday_formatted.getDay() )
-    console.log(milltime_of_reservationday > milltime_of_dayaftertomorrow)
-    console.log(milltime_of_reservationday < milltime_of_today)
-    console.log(milltime_of_reservationday >= milltime_of_today && milltime_of_reservationday <= milltime_of_dayaftertomorrow)
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){
