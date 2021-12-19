@@ -218,12 +218,12 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
-                if(!isBeforeToday8AM(text)){
-                  replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
-                  await redis.resetAllStatus(userId)
-                  break;
-                }
                 if(isValidRegisterdDay(text)){
+                  if(!isBeforeToday8AM(text)){
+                    replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
+                    await redis.resetAllStatus(userId)
+                    break;
+                  }
                   //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
                   //TODO：　定員はredis＆posgleの足し算で換算する（同時予約でブッキングしないように）
                   //TODO: りよう園→枠確認→予約orキャンセル待ちとうろく
