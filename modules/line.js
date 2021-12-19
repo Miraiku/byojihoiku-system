@@ -216,7 +216,7 @@ router
             case 1:
               if(reservation_reply_status==10){
                 if(isBeforeToday8AM(text)){
-                  replyMessage = "申し訳ございません。\n当日の予約受付はAM8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
+                  replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
                   await redis.resetAllStatus(userId)
                 }
                 if(isValidRegisterdDay(text)){
@@ -887,9 +887,9 @@ function isBeforeToday8AM(s){
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
-    console.log('isValidRegisterdDay:reservationday' + reservationday)
-    console.log('isValidRegisterdDay:getHours' + today_hour.getHours)
-    console.log('isValidRegisterdDay:today.getMilliseconds ' + today.getMilliseconds )
+    console.log('isValidRegisterdDay:reservationday' + reservationday.getMilliseconds())
+    console.log('isValidRegisterdDay:getHours' + today_hour.getHours())
+    console.log('isValidRegisterdDay:today.getMilliseconds ' + today.getMilliseconds() )
     if(today.getMilliseconds() == reservationday &&  today_hour.getHours() > 8){
       return false
     }
