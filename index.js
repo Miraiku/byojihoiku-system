@@ -29,7 +29,8 @@ cron.schedule('*/20 * * * *', async () =>  {
 
 cron.schedule('*/1 * * * *', () => {
   //当日の予約のうち、waitingのものをCancelにする、
-  
+  //waiting -> canceled, res status canceled
+  //キャンセル通知する 
   request.post(
     { headers: {'content-type' : 'application/json'},
     url: 'https://byojihoiku-system.herokuapp.com/webhook',
@@ -48,9 +49,11 @@ cron.schedule('*/1 * * * *', () => {
 //前日リマインダー送信
 cron.schedule('0 0 20 * * *', () => {
 
-  //当日かつReservedかつ
-  //Remimber Update = waiting
+  //翌日に予約あるかつReservedかつ
+  //memberID→UserIDでpush送信　Remimber Update = waiting
   //返信くる、特定単語で
+  // 
+  //翌日＆UserIDの予約を　Remimber update = replied
   //User且つwaitingで7amまでに
   console.log("おはよう！朝ご飯、ちゃんと食べた？( ﾟДﾟ)");
 });

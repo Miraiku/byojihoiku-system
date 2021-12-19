@@ -15,6 +15,9 @@ dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2);
 
 router
   .post('/', async (req, res) => {
+    /*
+    応答Message
+    */
     try {
       
       const text = req.body.events[0].message.text
@@ -765,9 +768,15 @@ router
         request.end()
       }
 
-      /*
-      リマインダートリガー
-      */
+    } catch (err) {
+        console.error(err);
+    }
+
+    /*
+    リマインダートリガー
+    */
+    try {
+      res.send("HTTP POST request sent to the webhook URL! from CRON")
       console.log(req.body)
       const push_message = req.body.line_push_from_cron
       if(push_message == 'today7am'){
@@ -813,8 +822,8 @@ router
         request.write(dataString)
         request.end()
       }
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+      
     }
   })
 
