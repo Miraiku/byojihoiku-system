@@ -260,10 +260,10 @@ router
                   let opentime = await psgl.getNurseryOpenTimeFromName(text)
                   let closetime = await psgl.getNurseryCloseTimeFromName(text)
                   //TODO 開園時間が0800になってるのでなおす
-                  if(cancel == null){
-                    replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
-                  }else{
+                  if(cancel == 'true'){
                     replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                  }else{
+                    replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
                   }
                   redis.hsetStatus(userId,'reservation_nursery_name_1',text)
                   redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
@@ -983,6 +983,7 @@ async function registerIntoReservationTable(queryString){
 async function insertReservationDetails(queryString){
   try {
     const results = await psgl.sqlToPostgre(queryString)
+    console.log('insertReservationDetails Object.keys(results).length:'+Object.keys(results).length)
     if(Object.keys(results).length == 0){
       return true
     }else{
