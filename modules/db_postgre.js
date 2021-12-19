@@ -147,6 +147,11 @@ exports.getDiseaseNameFromID = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
+exports.getDiseaseNameFromUniqueID = async function (id){
+  let sql = `SELECT "ID" FROM public."Disease" WHERE "ID" = '`+id+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
 exports.getUniqueIDFromDiseaseID = async function (id){
   let sql = `SELECT "ID" FROM public."Disease" WHERE "DiseaseID" = '`+id+`';`
   return await psgl.sqlToPostgre(sql)
