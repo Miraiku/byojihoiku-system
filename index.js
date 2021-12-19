@@ -27,6 +27,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 
 //予約の当日朝キャンセル処理
 cron.schedule('0 0 7 * * *', () => {
+  //User且つwaitingで7amまでに
   //当日の予約のうち、waitingのものをCancelにする、
   //waiting -> canceled, res status canceled
   //キャンセル通知する 
@@ -48,8 +49,7 @@ cron.schedule('0 0 7 * * *', () => {
 });
 
 //前日リマインダー送信
-//cron.schedule('0 0 20 * * *', async () => {
-cron.schedule('*/3 * * * *', async () => {
+cron.schedule('0 0 20 * * *', async () => {
   let ids = await psgl.getLINEIDByReservedTomorrow()
   for (const id of ids) {   
     request.post(
@@ -69,6 +69,5 @@ cron.schedule('*/3 * * * *', async () => {
       }
     ); 
   }
-  //User且つwaitingで7amまでに
 });
 
