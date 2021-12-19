@@ -57,7 +57,6 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
-                    console.log(c)
                     if(details.Cramps == 'false'){
                       details.Cramps = 'なし'
                     }
@@ -69,12 +68,12 @@ router
                     }
                     replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "第１希望："+c.firstNursery+"\n"
-                    replyMessage += "第２希望："+c.secondNursery+"\n"
+                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "症状："+c.DiseaseID+"\n"
-                    replyMessage += "食事："+c+"\n"
+                    replyMessage += "症状："+c[0].DiseaseID+"\n"
+                    replyMessage += "食事："+c[0].MealType+"\n"
                     replyMessage += "食事の注意事項："+details.MealDetails+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                     replyMessage += "アレルギー："+details.Allergy+"\n"
@@ -1158,23 +1157,19 @@ async function isValidDisease(id){
 async function getJpValueFromPsglIds(o){
   try {
     let result = []
-    let val = await psgl.getMemberNameByMemberID(o.MemberID)
-    result.push({MemberID:val[0].Name})
-    val = await psgl.getDiseaseNameFromUniqueID(o.DiseaseID)
-    result.push({DiseaseID:val[0].DiseaseName})
-    val = await psgl.getNurseryNameByID(o.firstNursery)
-    result.push({firstNursery:val[0].NurseryName})
-    val = await psgl.getNurseryNameByID(o.secondNursery)
-    result.push({secondNursery:val[0].NurseryName})
+    let name = await psgl.getMemberNameByMemberID(o.MemberID)
+    let disease= await psgl.getDiseaseNameFromUniqueID(o.DiseaseID)
+    let firstn= await psgl.getNurseryNameByID(o.firstNursery)
+    let secondn= await psgl.getNurseryNameByID(o.secondNursery)
+    let thirdn
     try {
-      val = await psgl.getNurseryNameByID(o.thirdNursery)
-      result.push({thirdNursery:val[0].NurseryName})
+      thirdn = await psgl.getNurseryNameByID(o.thirdNursery)
     } catch (error) {
       //NurseryID = 0
-      result.push({thirdNursery:'なし'})
+      thirdn = 'なし'
     }
-    val = await psgl.getMealNameFromID(o.MealType)
-    result.push({MealType:val[0].MealName})
+    let mealname = await psgl.getMealNameFromID(o.MealType)
+    result.push({MemberID:name[0].Name, DiseaseID:disease.DiseaseName, firstNursery:firstn[0].NurseryName, secondNursery:secondn[0].NurseryName, thirdNursery:thirdn[0].NurseryName, MealType:mealname[0].MealName})
     return result
   } catch (error) {
     console.log("ERROR @getJpValueFromPsglIds() "+error)
