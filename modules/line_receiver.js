@@ -251,11 +251,7 @@ router
                 if(text==='はい'){
                   try {
                     //Get all information
-                    let info
-                    await redis.hgetall(userId, (err, reply) => {
-                      if (err) throw err;
-                      info = reply
-                    });
+                    let info = await redis.hgetAll(userId)
                     let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
                       '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
                     const result = await psgl.sqlToPostgre(queryString)
