@@ -68,7 +68,7 @@ router
                     if(details.MealDetails == 'false'){
                       details.MealDetails = 'なし'
                     }
-                    replyMessage += "\n利用希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
                     replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
