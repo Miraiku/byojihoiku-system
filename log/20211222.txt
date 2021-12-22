@@ -1,0 +1,100 @@
+2021-12-21T22:00:00.162057+00:00 app[web.1]: Postgles sql: UPDATE public."Reservation" SET "Reminder"= 'canceled' WHERE "MemberID"= '19' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:00:00.162738+00:00 app[web.1]: Postgles sql: SELECT "LINEID" FROM public."Member" WHERE "ID" = '19';
+2021-12-21T22:00:00.162775+00:00 app[web.1]: Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:00:00.164716+00:00 app[web.1]: Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.164893+00:00 app[web.1]: Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.165005+00:00 app[web.1]: Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:00:00.198521+00:00 app[web.1]: 応答メッセージ： TypeError: Cannot read property '0' of undefined
+2021-12-21T22:00:00.198534+00:00 app[web.1]: today7am Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.202624+00:00 app[web.1]: 応答メッセージ： TypeError: Cannot read property '0' of undefined
+2021-12-21T22:00:00.202639+00:00 app[web.1]: today7am Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.204129+00:00 app[web.1]: cron schedule 7am:null
+2021-12-21T22:00:00.204152+00:00 app[web.1]: 200
+2021-12-21T22:00:00.204165+00:00 app[web.1]: cron schedule 7am:Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.204671+00:00 app[web.1]: cron schedule 7am:null
+2021-12-21T22:00:00.204692+00:00 app[web.1]: 200
+2021-12-21T22:00:00.204703+00:00 app[web.1]: cron schedule 7am:Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:00:00.205934+00:00 app[web.1]: 応答メッセージ： TypeError: Cannot read property '0' of undefined
+2021-12-21T22:00:00.205945+00:00 app[web.1]: today7am Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:00:00.208288+00:00 app[web.1]: 応答メッセージ： TypeError: Cannot read property '0' of undefined
+2021-12-21T22:00:00.208309+00:00 app[web.1]: today7am Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:00:00.209992+00:00 app[web.1]: cron schedule 7am:null
+2021-12-21T22:00:00.210023+00:00 app[web.1]: 200
+2021-12-21T22:00:00.210037+00:00 app[web.1]: cron schedule 7am:Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:00:00.210375+00:00 app[web.1]: cron schedule 7am:null
+2021-12-21T22:00:00.210404+00:00 app[web.1]: 200
+2021-12-21T22:00:00.210417+00:00 app[web.1]: cron schedule 7am:Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:11:27.196308+00:00 app[web.1]: {}{}{}{}HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:register_status, val: null
+2021-12-21T22:11:27.197441+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:register_reply_status, val: null
+2021-12-21T22:11:27.198391+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:reservation_status, val: null
+2021-12-21T22:11:27.199376+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:reservation_reply_status, val: null
+2021-12-21T22:11:27.224809+00:00 app[web.1]: undefined undefined
+2021-12-21T22:11:32.232910+00:00 app[web.1]: {}HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:register_status, val: null
+2021-12-21T22:11:32.233947+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:register_reply_status, val: null
+2021-12-21T22:11:32.234866+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:reservation_status, val: null
+2021-12-21T22:11:32.235806+00:00 app[web.1]: HGET Status :Ucd4cd000eb62d24fe5ff3b355f94d45b, key:reservation_reply_status, val: null
+2021-12-21T22:11:32.308487+00:00 app[web.1]: Postgles sql: SELECT "ID" FROM public."Member" WHERE "LINEID" = 'Ucd4cd000eb62d24fe5ff3b355f94d45b';
+2021-12-21T22:11:32.317904+00:00 app[web.1]: Postgles sql: SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '13' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:11:32.320984+00:00 app[web.1]: Postgles sql: SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '16' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:11:32.324727+00:00 app[web.1]: Postgles sql: SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '17' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:11:32.328274+00:00 app[web.1]: Postgles sql: SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '15' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:11:32.332203+00:00 app[web.1]: Postgles sql: SELECT "Reminder" FROM public."Reservation" WHERE "MemberID" = '14' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';
+2021-12-21T22:11:32.332239+00:00 app[web.1]: canceled
+2021-12-21T22:11:32.333040+00:00 app[web.1]: undefined undefined
+2021-12-21T22:20:00.226993+00:00 app[web.1]: {}Run Cron per 20mins
+2021-12-21T22:20:00.228230+00:00 app[web.1]: HDETALL No Update within 20mins :Ucd4cd000eb62d24fe5ff3b355f94d45b, 1640069002314
+2021-12-21T22:20:00.228252+00:00 app[web.1]: DIFF TIMEL mins 936
+2021-12-21T22:20:00.228326+00:00 app[web.1]: HDETALL No Update within 20mins :Ub7e0ac64b9174c153296857f4bdc5483, 1640001894835
+2021-12-21T22:20:00.228340+00:00 app[web.1]: DIFF TIMEL mins 2055
+2021-12-21T22:20:00.228387+00:00 app[web.1]: HDETALL No Update within 20mins :U26fc9e26250ff9204917ea3a3e022387, 1640048152167
+2021-12-21T22:20:00.228400+00:00 app[web.1]: DIFF TIMEL mins 1284
+2021-12-21T22:20:00.228442+00:00 app[web.1]: HDETALL No Update within 20mins :Uea5e646ef624eb68d88e3213403e4554, 1640063305952
+2021-12-21T22:20:00.228455+00:00 app[web.1]: DIFF TIMEL mins 1031
+2021-12-21T22:20:00.228502+00:00 app[web.1]: HDETALL No Update within 20mins :U2ef32eb874a337f33f3bc52eca85c47a, 1640064563532
+2021-12-21T22:20:00.228514+00:00 app[web.1]: DIFF TIMEL mins 1010
+2021-12-21T22:20:00.228552+00:00 app[web.1]: HDETALL No Update within 20mins :Uee95cf235d27fed1053aa5d894ca0de4, 1640003547462
+2021-12-21T22:20:00.228564+00:00 app[web.1]: DIFF TIMEL mins 2027
+2021-12-21T22:20:00.229314+00:00 app[web.1]: REDIS DELETED ID: Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:20:00.229331+00:00 app[web.1]: REDIS DELETED ID: Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:20:00.229418+00:00 app[web.1]: REDIS DELETED ID: U26fc9e26250ff9204917ea3a3e022387
+2021-12-21T22:20:00.229432+00:00 app[web.1]: REDIS DELETED ID: Uea5e646ef624eb68d88e3213403e4554
+2021-12-21T22:20:00.229485+00:00 app[web.1]: REDIS DELETED ID: U2ef32eb874a337f33f3bc52eca85c47a
+2021-12-21T22:20:00.229504+00:00 app[web.1]: REDIS DELETED ID: Uee95cf235d27fed1053aa5d894ca0de4
+2021-12-21T22:40:00.431087+00:00 app[web.1]: Run Cron per 20mins
+2021-12-21T22:40:00.434381+00:00 app[web.1]: HDETALL No Update within 20mins :Ucd4cd000eb62d24fe5ff3b355f94d45b, 1640069002314
+2021-12-21T22:40:00.434427+00:00 app[web.1]: DIFF TIMEL mins 956
+2021-12-21T22:40:00.434518+00:00 app[web.1]: HDETALL No Update within 20mins :Ub7e0ac64b9174c153296857f4bdc5483, 1640001894835
+2021-12-21T22:40:00.434539+00:00 app[web.1]: DIFF TIMEL mins 2075
+2021-12-21T22:40:00.434594+00:00 app[web.1]: HDETALL No Update within 20mins :U26fc9e26250ff9204917ea3a3e022387, 1640048152167
+2021-12-21T22:40:00.434614+00:00 app[web.1]: DIFF TIMEL mins 1304
+2021-12-21T22:40:00.434665+00:00 app[web.1]: HDETALL No Update within 20mins :Uea5e646ef624eb68d88e3213403e4554, 1640063305952
+2021-12-21T22:40:00.434685+00:00 app[web.1]: DIFF TIMEL mins 1051
+2021-12-21T22:40:00.434754+00:00 app[web.1]: HDETALL No Update within 20mins :U2ef32eb874a337f33f3bc52eca85c47a, 1640064563532
+2021-12-21T22:40:00.434774+00:00 app[web.1]: DIFF TIMEL mins 1030
+2021-12-21T22:40:00.434854+00:00 app[web.1]: HDETALL No Update within 20mins :Uee95cf235d27fed1053aa5d894ca0de4, 1640003547462
+2021-12-21T22:40:00.434875+00:00 app[web.1]: DIFF TIMEL mins 2047
+2021-12-21T22:40:00.435671+00:00 app[web.1]: REDIS DELETED ID: Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T22:40:00.435725+00:00 app[web.1]: REDIS DELETED ID: Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T22:40:00.435753+00:00 app[web.1]: REDIS DELETED ID: U26fc9e26250ff9204917ea3a3e022387
+2021-12-21T22:40:00.435878+00:00 app[web.1]: REDIS DELETED ID: Uea5e646ef624eb68d88e3213403e4554
+2021-12-21T22:40:00.435904+00:00 app[web.1]: REDIS DELETED ID: U2ef32eb874a337f33f3bc52eca85c47a
+2021-12-21T22:40:00.435968+00:00 app[web.1]: REDIS DELETED ID: Uee95cf235d27fed1053aa5d894ca0de4
+2021-12-21T23:00:00.614413+00:00 app[web.1]: Run Cron per 20mins
+2021-12-21T23:00:00.615570+00:00 app[web.1]: HDETALL No Update within 20mins :Ucd4cd000eb62d24fe5ff3b355f94d45b, 1640069002314
+2021-12-21T23:00:00.615595+00:00 app[web.1]: DIFF TIMEL mins 976
+2021-12-21T23:00:00.615660+00:00 app[web.1]: HDETALL No Update within 20mins :Ub7e0ac64b9174c153296857f4bdc5483, 1640001894835
+2021-12-21T23:00:00.615672+00:00 app[web.1]: DIFF TIMEL mins 2095
+2021-12-21T23:00:00.615718+00:00 app[web.1]: HDETALL No Update within 20mins :U26fc9e26250ff9204917ea3a3e022387, 1640048152167
+2021-12-21T23:00:00.615722+00:00 app[web.1]: DIFF TIMEL mins 1324
+2021-12-21T23:00:00.615753+00:00 app[web.1]: HDETALL No Update within 20mins :Uea5e646ef624eb68d88e3213403e4554, 1640063305952
+2021-12-21T23:00:00.615765+00:00 app[web.1]: DIFF TIMEL mins 1071
+2021-12-21T23:00:00.615805+00:00 app[web.1]: HDETALL No Update within 20mins :U2ef32eb874a337f33f3bc52eca85c47a, 1640064563532
+2021-12-21T23:00:00.615817+00:00 app[web.1]: DIFF TIMEL mins 1050
+2021-12-21T23:00:00.615851+00:00 app[web.1]: HDETALL No Update within 20mins :Uee95cf235d27fed1053aa5d894ca0de4, 1640003547462
+2021-12-21T23:00:00.615862+00:00 app[web.1]: DIFF TIMEL mins 2067
+2021-12-21T23:00:00.616927+00:00 app[web.1]: REDIS DELETED ID: Ucd4cd000eb62d24fe5ff3b355f94d45b
+2021-12-21T23:00:00.616945+00:00 app[web.1]: REDIS DELETED ID: Ub7e0ac64b9174c153296857f4bdc5483
+2021-12-21T23:00:00.617024+00:00 app[web.1]: REDIS DELETED ID: U26fc9e26250ff9204917ea3a3e022387
+2021-12-21T23:00:00.617038+00:00 app[web.1]: REDIS DELETED ID: Uea5e646ef624eb68d88e3213403e4554
+2021-12-21T23:00:00.617049+00:00 app[web.1]: REDIS DELETED ID: U2ef32eb874a337f33f3bc52eca85c47a
+2021-12-21T23:00:00.617060+00:00 app[web.1]: REDIS DELETED ID: Uee95cf235d27fed1053aa5d894ca0de4

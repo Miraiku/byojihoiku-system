@@ -6,14 +6,14 @@ const redis = require('./db_redis')
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const holiday = new Holidays('JP')
-const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
-const today = new Date(JST)
-const dayaftertomorrow = new Date(today);
-dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2);
 
 router
   .post('/', async (req, res) => {
+    const holiday = new Holidays('JP')
+    const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+    const today = new Date(JST)
+    const dayaftertomorrow = new Date(today);
+    dayaftertomorrow.setDate(dayaftertomorrow.getDate() + 2);
     /*
     応答Message
     */
@@ -144,7 +144,7 @@ router
               if(s[0].Reminder == 'waiting'){
                 await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              }else if(s[0].Reminder == 'canceled'){
+              }else if(s[0].Reminder == 'cancelled'){
                 replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
               }else if(s[0].Reminder == 'replied'){
                 replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
@@ -285,7 +285,6 @@ router
             case 1:
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
-                  console.log(isBeforeToday8AM(text))
                   if(!isBeforeToday8AM(text)){
                     replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
                     await redis.resetAllStatus(userId)
@@ -373,8 +372,6 @@ router
               break;//CASE3
             case 4:
               //第3希望
-              //TODO前日の夜に予約したものはリマインドおくられないのでは？
-              //TODOスライドのリマインドで聞く留意事項を調査する
               if(await isValidNurseryName(text) || text == 'なし'){
                 let first_nursery = await redis.hgetStatus(userId, 'reservation_nursery_name_1')
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
@@ -1066,9 +1063,6 @@ function isBeforeToday8AM(s){
     let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
-    console.log(reservationday_dateobj.getTime())
-    console.log(today)
-    console.log(today_hour.getHours())
     if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() >= 8){
       return false
     }

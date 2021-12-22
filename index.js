@@ -28,7 +28,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 //予約の当日朝キャンセル処理
 cron.schedule('0 0 7 * * *', async () => {
   try {
-    let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCanceled()
+    let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
     for (const id of lineids) {
       console.log(id[0].LINEID)
       request.post(
