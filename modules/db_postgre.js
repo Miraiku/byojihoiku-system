@@ -211,14 +211,24 @@ exports.getLINEIDByReservedTomorrow = async function (){
   return ids
 }
 
-//TODO　翌日深夜に返信してもリマインドオフになる
-//TODO　前日に返信してもリマインドオフになる
-exports.updateTomorrowTodayReservedReminderStatusByLineID = async function (lineid, status){
+exports.updateTomorrowReservedReminderStatusByLineID = async function (lineid, status){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}';`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
-    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" <= DATE 'tomorrow' and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
+    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+    console.log(sql)
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res
+}
+
+exports.updateTodayReservedReminderStatusByLineID = async function (lineid, status){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}';`
+  let result = await psgl.sqlToPostgre(sql)
+  let res = []
+  for (const r of result) {
+    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
     console.log(sql)
     res.push(await psgl.sqlToPostgre(sql))
   }

@@ -9,7 +9,6 @@ const TOKEN = process.env.LINE_ACCESS_TOKEN
 
 router
   .post('/', async (req, res) => {
-    const holiday = new Holidays('JP')
     const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     const today = new Date(JST)
     const dayaftertomorrow = new Date(today);
@@ -140,9 +139,13 @@ router
               if(s[0] == undefined || replyMessage != ''){
                 continue
               }
-              console.log(s[0].Reminder)
               if(s[0].Reminder == 'waiting'){
-                await psgl.updateTomorrowTodayReservedReminderStatusByLineID(userId, 'replied')
+                console.log('Waiting Reminder:' + new Date().getHours())
+                if(new Date().getHours() >= 20 && new Date().getHours() <= 24){
+                  await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
+                }else if(new Date().getHours() >= 0 && new Date().getHours() <= 7){
+                  await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
+                }
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
               }else if(s[0].Reminder == 'cancelled'){
                 replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
@@ -1072,6 +1075,7 @@ function isBeforeToday8AM(s){
 }
 
 function isValidRegisterdDay(s){
+  const holiday = new Holidays('JP')
   if(isValidDate(s)){
     let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力 //12/21/2021, 12:00:00 AM
     let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
