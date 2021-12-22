@@ -174,9 +174,9 @@ router
               }
               if(s[0].Reminder == 'waiting'){
                 console.log('Waiting Reminder:' + new Date().getHours())
-                if(new Date().getHours() >= 20 && new Date().getHours() <= 24){
+                if(new Date().getHours() >= 20 && new Date().getHours() <= 24){//20-24:00
                   await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
-                }else if(new Date().getHours() >= 0 && new Date().getHours() <= 7){
+                }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59
                   await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
                 }
                 replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
