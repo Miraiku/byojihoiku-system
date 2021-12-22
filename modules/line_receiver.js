@@ -1322,7 +1322,14 @@ async function getJpValueFromPsglIds(o){
     let name = await psgl.getMemberNameByMemberID(o.MemberID)
     let disease= await psgl.getDiseaseNameFromUniqueID(o.DiseaseID)
     let firstn= await psgl.getNurseryNameByID(o.firstNursery)
-    let secondn= await psgl.getNurseryNameByID(o.secondNursery)
+    let secondn
+    try {
+      secondn = await psgl.getNurseryNameByID(o.secondNursery)
+      secondn = secondn[0].NurseryName
+    } catch (error) {
+      //NurseryID = 0
+      secondn = 'なし'
+    }
     let thirdn
     try {
       thirdn = await psgl.getNurseryNameByID(o.thirdNursery)
