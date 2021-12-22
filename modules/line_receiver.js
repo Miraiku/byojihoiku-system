@@ -169,7 +169,7 @@ router
             replyMessage = ''
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             for (const s of reminderstatus) {
-              console.log('Waiting Reminder:' + s[0])
+              console.log('Waiting Reminder:' + s[0].Reminder)
               if(s[0] == undefined || replyMessage != ''){
                 continue
               }
