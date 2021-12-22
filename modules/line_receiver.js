@@ -169,6 +169,7 @@ router
             replyMessage = ''
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             for (const s of reminderstatus) {
+              console.log('Waiting Reminder:' + s)
               if(s[0] == undefined || replyMessage != ''){
                 continue
               }
@@ -437,7 +438,7 @@ router
               break;//CASE3
             case 6:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "降園時間は「"+TimeToJP(text)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。"
+                replyMessage = "降園時間は「"+TimeToJP(text)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 redis.hsetStatus(userId,'reservation_status',7)
                 redis.hsetStatus(userId,'reservation_reply_status',70)

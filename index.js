@@ -25,7 +25,7 @@ cron.schedule('*/20 * * * *', async () =>  {
   await redis.flushALLNoUpdate20mins()
 });
 
-//予約の当日朝キャンセル処理
+//予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
