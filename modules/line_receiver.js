@@ -37,13 +37,13 @@ router
           await redis.resetAllStatus(userId)
           let registeredMessage
           if(await isAvailableReservation(userId)){
-            registeredMessage = '病児保育の予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n\n予約の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」\n\nまだ、お子様の会員登録が済んでいない方は「登録」と返信してください。'
+            registeredMessage = '病児保育の利用予約ですね。\n'+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+'までの予約が可能です。\n\n利用の希望日を返信してください。\n例）2022年02月22日の場合は「20220222」\n\nまだ、お子様のアカウント登録が済んでいない方は「登録」と返信してください。'
             await redis.hsetStatus(userId,'reservation_status',1)
             await redis.hsetStatus(userId,'reservation_reply_status',10)
           }else if(await isRegisterd(userId)){
             registeredMessage = '管理者による会員情報の確認中です。\nもう少し待ってからご予約をお願いいたします。\nお急ぎの方はみらいくまで直接お問い合わせください。\n※こちらのLINEは応答専用です。ご質問いただいてもお返事することができません。'
           }else{
-            registeredMessage = 'ご予約の前に会員登録をお願いいたします。\n会員登録をご希望の場合は「登録」と返信してください。'
+            registeredMessage = 'ご予約の前にアカウント登録をお願いいたします。\nアカウント登録をご希望の場合は「登録」と返信してください。'
           }
           replyMessage = registeredMessage
 
@@ -68,17 +68,17 @@ router
                     if(details.MealDetails == 'false'){
                       details.MealDetails = 'なし'
                     }
-                    replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                    replyMessage += "お預り時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                    replyMessage += "\n利用希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "症状："+c[0].DiseaseID+"\n"
+                    replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
                     replyMessage += "食事の注意事項："+details.MealDetails+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "アレルギー："+details.Allergy+"\n"
+                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   }
@@ -101,17 +101,17 @@ router
                     if(details.MealDetails == 'false'){
                       details.MealDetails = 'なし'
                     }
-                    replyMessage += "\nキャンセル待ち希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                    replyMessage += "お預り希望時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                    replyMessage += "\nキャンセル待ち利用希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "症状："+c[0].DiseaseID+"\n"
+                    replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
                     replyMessage += "食事の注意事項："+details.MealDetails+"\n"
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "アレルギー："+details.Allergy+"\n"
+                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   }
@@ -168,21 +168,14 @@ router
           //SET Reply Status 10
           await redis.hsetStatus(userId,'register_reply_status',10)
 
-          replyMessage = "会員登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
-        }else if(text === 'カレンダー'){
+          replyMessage = "アカウント登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+        }else if(text === '空き状況'){
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
             messages: [
               {
                 "type": "text",
-                "text": "予約状況のカレンダーは以下のURLをご参照ください$\n https://sample.net\n（カレンダーページは現在作成中です）",
-                "emojis": [
-                  {
-                    "index": 25,
-                    "productId": "5ac1bfd5040ab15980c9b435",
-                    "emojiId": "012"
-                  }
-                ]
+                "text": "予約状況の空き状況は以下のURLをご参照ください。\n https://sample.net\n（空き状況ページは現在作成中です）",
             }
             ]
           })
@@ -212,7 +205,7 @@ router
             //BirthDay
             case 2:
               if(isValidDate(text)){
-                replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様のアレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
+                replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n次に、お子様の食物アレルギーの有無を返信してください。\n例）有りの場合「あり」、無しの場合「なし」"
                 //SET Name Value
                 await redis.hsetStatus(userId,'BirthDay',text)
                 //SET Status 3
@@ -242,13 +235,13 @@ router
                     }else if(k=='BirthDay'){
                       all_info += "お誕生日："+DayToJP(v)+"\n"
                     }else if(k=='Allergy'){
-                      all_info += "アレルギー："+v+"\n"
+                      all_info += "食物アレルギー："+v+"\n"
                     }
                 });
-                replyMessage = "お子様のアレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
+                replyMessage = "お子様の食物アレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
-                replyMessage = "申し訳ございません。\n再度、お子様のアレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\n再度、お子様の食物アレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
                 break;
               };//CASE3
             case 4:
@@ -265,11 +258,11 @@ router
                     console.error(err);
                   }
                   await redis.resetAllStatus(userId)
-                  replyMessage = "会員登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
+                  replyMessage = "アカウント登録を完了しました。\n続けてご兄妹を登録する場合は「登録」と返信してください。"
                   break;
                 }else if(text=='いいえ'){
                   await redis.resetAllStatus(userId)
-                  replyMessage = "会員登録を中止しました。"
+                  replyMessage = "アカウント登録を中止しました。"
                 }
                 break;
               }else{
@@ -301,13 +294,13 @@ router
                     {
                         all_info += "・"+nursery_list[i].name+"\n";
                     }
-                    replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n希望利用の園を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
+                    replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n利用したい病児室を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
                     redis.hsetStatus(userId,'reservation_date',text)
                     redis.hsetStatus(userId,'reservation_status',2)
                     redis.hsetStatus(userId,'reservation_reply_status',20)
                   }
                 }else{
-                  replyMessage = "申し訳ございません。希望日は休園日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "申し訳ございません。希望日は閉所日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 }
               }
             break;
@@ -333,15 +326,15 @@ router
                       replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n\n・他の園名を返信してください。\n・キャンセル待ち登録をする場合は「はい」を返信してください。\n・始めからやり直す場合は「予約」を返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     }else{
-                      replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      replyMessage = "第1希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }
                   }else{
                     if(cancel == 'true'){
-                      replyMessage = "キャンセル登録希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      replyMessage = "キャンセル登録第1希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }else{
-                      replyMessage = "利用希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。"
+                      replyMessage = "第1希望の園は「"+text+"」ですね。\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }
                   }
@@ -362,15 +355,20 @@ router
               break;//CASE2
             case 3:
               //第2希望
-              if(await isValidNurseryName(text)){
+              if(await isValidNurseryName(text) || text == 'なし'){
                   replyMessage = "第2希望の園は「"+text+"」ですね。\n第3希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
                   let nursery_id = await getNurseryIdByName(text)
-                  redis.hsetStatus(userId,'reservation_nursery_name_2',text)
-                  redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
+                  if( text == 'なし'){
+                    await redis.hsetStatus(userId,'reservation_nursery_id_2',0)
+                    await redis.hsetStatus(userId,'reservation_nursery_name_2',text)
+                  }else{
+                    await redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
+                    await redis.hsetStatus(userId,'reservation_nursery_name_2','第2希望はなし')
+                  }
                   redis.hsetStatus(userId,'reservation_status',4)
                   redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }//isValidNursery
               break;//CASE3
             case 4:
@@ -380,68 +378,68 @@ router
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
                 let nursery_id = await getNurseryIdByName(text)
-                replyMessage = "利用希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n"+first_nursery+"の開園時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
-                redis.hsetStatus(userId,'reservation_nursery_name_3',text)
+                replyMessage = "第3希望の園は「"+text+"」ですね。\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n病児保育室の開所時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
                 if( text == 'なし'){
                   await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
+                  await redis.hsetStatus(userId,'reservation_nursery_name_3',text)
                 }else{
                   await redis.hsetStatus(userId,'reservation_nursery_id_3',nursery_id[0].ID)
+                  await redis.hsetStatus(userId,'reservation_nursery_name_3','第3希望はなし')
                 }
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n第3希望がない場合は「なし」と返信してください。"
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }//isValidNursery
               break;//CASE4
             case 5:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n\n退園時間を返信してください。\n例）16時に退園する場合は「1600」"
+                replyMessage = "登園時間は「"+TimeToJP(text)+"」ですね。\n\n降園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text)
                 redis.hsetStatus(userId,'reservation_status',6)
                 redis.hsetStatus(userId,'reservation_reply_status',60)
               }else{
-                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」"
+                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;//CASE3
             case 6:
               if(isValidTime(text)&& await withinOpeningTime(userId, text)){
-                replyMessage = "退園時間は「"+TimeToJP(text)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」"
+                replyMessage = "降園時間は「"+TimeToJP(text)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text)
                 redis.hsetStatus(userId,'reservation_status',7)
                 redis.hsetStatus(userId,'reservation_reply_status',70)
               }else{
-                replyMessage = "退園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」"
+                replyMessage = "降園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
-                  let childnum = 0
-                  if(text == '1'){
-                    childnum = Number(1)
+                  let childnum = Number(text)
+                  if(childnum > 2){
+                    replyMessage = '申し訳ございません。\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。'
                   }else{
-                    childnum = Number(2)
+                    let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
+                    let reservation_date = await redis.hgetStatus(userId,'reservation_date')
+                    let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
+                    let new_amount = childnum + Number(reservation_num_on_day[0].count)
+                    let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
+                    console.log(Number(nursery_capacity[0].Capacity))
+                    console.log(new_amount)
+                    if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
+                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                      await redis.hsetStatus(userId,'reservation_status',2)
+                      await redis.hsetStatus(userId,'reservation_reply_status',20)
+                      break;
+                    }
+                    replyMessage = "利用人数は「"+text+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                    await redis.hsetStatus(userId,'reservation_nursery_number',text)
+                    await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
+                    await redis.hsetStatus(userId,'reservation_status',8)
+                    await redis.hsetStatus(userId,'reservation_reply_status',80)
                   }
-                  let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
-                  let reservation_date = await redis.hgetStatus(userId,'reservation_date')
-                  let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
-                  let new_amount = childnum + Number(reservation_num_on_day[0].count)
-                  let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
-                  console.log(Number(nursery_capacity[0].Capacity))
-                  console.log(new_amount)
-                  if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                    replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\nキャンセル待ち登録をする場合は「はい」を返信してください。\n"
-                    await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
-                    await redis.hsetStatus(userId,'reservation_status',2)
-                    await redis.hsetStatus(userId,'reservation_reply_status',20)
-                    break;
-                  }
-                  replyMessage = "利用人数は「"+text+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
-                  await redis.hsetStatus(userId,'reservation_nursery_number',text)
-                  await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
-                  await redis.hsetStatus(userId,'reservation_status',8)
-                  await redis.hsetStatus(userId,'reservation_reply_status',80)
                 }else{
-                  replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」"
+                  replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 }
               break;//CASE7
             case 70://人数分ループ用IF
@@ -455,7 +453,7 @@ router
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
                 let update_current_child_number = Number(current_child_number)+1
                 await redis.hsetStatus(userId,'reservation_nursery_current_register_number',update_current_child_number)
-                replyMessage = "アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                replyMessage = "食物アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               break;//CASE70
             case 8:
               let name = text.replace(/\s+/g, "")
@@ -469,7 +467,7 @@ router
                 //SET Reply Status 20
                 await redis.hsetStatus(userId,'reservation_reply_status',90)
               }else{
-                replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }// close ZenkakuKana
               break;//CASE8
             case 9:
@@ -483,19 +481,19 @@ router
                   current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                   let name = await redis.hgetStatus(userId,'reservation_child_name_'+current_child_number)
                   if(await isMembered(userId, name, text)){
-                    replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n以下から、当てはまる症状を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」\n\n"+all_info
+                    replyMessage = "お子様の誕生日は「"+DayToJP(text)+"」ですね。\n\n医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」\n\n"+all_info
                     let member_id = await psgl.getMemberedIDFromNameAndBirthDay(userId, name, text)
                     await redis.hsetStatus(userId,'reservation_child_birthday_'+current_child_number,text)
                     await redis.hsetStatus(userId,'reservation_child_memberid_'+current_child_number,member_id[0].ID)
                     await redis.hsetStatus(userId,'reservation_status',10)
                     await redis.hsetStatus(userId,'reservation_reply_status',100)
                   }else{
-                    replyMessage = "お子様の情報が登録されていません。\nもう一度お子様の名前を全角カナで返信していただくか、\n「登録」と返信して会員登録をしてください。\n"
+                    replyMessage = "お子様の情報が登録されていません。\nもう一度お子様の名前を全角カナで返信していただくか、\n「登録」と返信してアカウント登録をしてください。\n"
                     await redis.hsetStatus(userId,'reservation_status',8)
                     await redis.hsetStatus(userId,'reservation_reply_status',80)
                   }
                 }else{
-                  replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 }
                 break;//CASE9  
             case 10:
@@ -510,13 +508,13 @@ router
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 let disasename = await psgl.getDiseaseNameFromID(diseaseid_text)
                 let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(diseaseid_text)
-                replyMessage = "お子様の症状は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
+                replyMessage = "お子様の病名は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
                 await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
                 await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
               }else{
-                replyMessage = "申し訳ございません。\n当てはまる症状を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\n医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;
             case 11:
@@ -530,11 +528,11 @@ router
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
-                replyMessage = "申し訳ございません。\n希望する食事を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "申し訳ございません。\n希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;
             case 12:
-              replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの経験がある場合\n回数、初回の年齢、最終の年齢についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"  
+              replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
@@ -545,7 +543,7 @@ router
               await redis.hsetStatus(userId,'reservation_reply_status',130)
               break;
             case 13:
-              replyMessage = "熱性けいれんの経験は「"+escapeHTML(text)+"」ですね。\n\nアレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
+              replyMessage = "熱性けいれんの既往歴「"+escapeHTML(text)+"」ですね。\n\n食物アレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
@@ -566,7 +564,7 @@ router
               break;
             case 14:
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-              replyMessage = "アレルギーに関する連絡事項は「"+escapeHTML(text)+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
+              replyMessage = "食物アレルギーに関する連絡事項は「"+escapeHTML(text)+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
               }else{
@@ -645,11 +643,11 @@ router
                       all_info += '\n★'+i+ "人目のお子様"
                     }
                     all_info +=  "\nお子様氏名："+childname[i]+"\n"
-                    all_info +=  "症状："+disase_id[i]+"\n"
+                    all_info +=  "病名："+disase_id[i]+"\n"
                     all_info +=  "食事："+meal_id[i]+"\n"
                     all_info +=  "食事の注意事項："+convertBooleanToJP(meal_caution[i])+"\n"
                     all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
-                    all_info +=  "アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
+                    all_info +=  "食物アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
                   let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
                   let reservation_status = ''
@@ -658,7 +656,7 @@ router
                   }else{
                     reservation_status = '予約'
                   }
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info+"\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
@@ -732,10 +730,10 @@ router
                         if(reservationID!=null){
                           queryString = `DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
                           await registerIntoReservationTable(queryString)
-                          replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
+                          replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。\n予約をやり直す場合は「予約」と返信してください。"
                           await redis.resetAllStatus(userId)
                         }
-                        replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。"
+                        replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。\n予約をやり直す場合は「予約」と返信してください。"
                       }
                     }// end for
                   } catch (error) {
@@ -748,7 +746,7 @@ router
                 }
                 break;
               }else{
-                replyMessage =  "予約を完了する場合は「はい」を返信してください。\n中止する場合は「いいえ」を返信してください。"
+                replyMessage =  "・予約を完了する場合は「はい」\n・予約を中止する場合は「いいえ」\n・予約をやり直す場合は「予約」\nと返信してください。"
                 break;
               };
               break;
@@ -758,7 +756,7 @@ router
           }// end of switch
         }else{
           //通常Message
-          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「カレンダー」\n▶会員登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
+          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
         }// end default message reply
 
     
