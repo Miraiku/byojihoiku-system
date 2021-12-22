@@ -169,13 +169,11 @@ router
             replyMessage = ''
             let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
             for (const s of reminderstatus) {
-              console.log('Waiting Reminder:' + s.Reminder)
               if(s[0] == undefined || replyMessage != ''){
                 continue
               }
               if(s[0].Reminder == 'waiting'){
-                console.log('Waiting Reminder:' + new Date().getHours())
-                if(new Date().getHours() >= 20 && new Date().getHours() <= 24){//20-24:00
+                if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00
                   await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
                 }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59
                   await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
