@@ -117,7 +117,40 @@ router
                   }
                 }//end waiting_reservations
               }//end if null
-            }//end memberids cancel
+            }//end memberids waiting
+            for (const member of memberids) {
+              let cancelled_reservations = await psgl.getReservationStatusCancelledByMemberIDGraterThanToday(member.ID)
+              if(cancelled_reservations.length != 0){
+                for (const rsv of cancelled_reservations) {
+                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
+                  for (const details of reservations_details) {
+                    let c = await getJpValueFromPsglIds(details)
+                    if(details.Cramps == 'false'){
+                      details.Cramps = 'なし'
+                    }
+                    if(details.Allergy == 'false'){
+                      details.Allergy = 'なし'
+                    }
+                    if(details.MealDetails == 'false'){
+                      details.MealDetails = 'なし'
+                    }
+                    replyMessage += "\nキャンセル済みのご予約："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
+                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                    replyMessage += "第３希望："+c[0].thirdNursery+"\n"
+                    replyMessage += "お子様氏名："+c[0].MemberID+"\n"
+                    replyMessage += "病名："+c[0].DiseaseID+"\n"
+                    replyMessage += "食事："+c[0].MealType+"\n"
+                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
+                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
+                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                    replyMessage += "保護者氏名："+details.ParentName+"\n"
+                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                  }
+                }//end cancelled_reservations
+              }//end if null
+            }//end memberids cancelled
           } catch (error) {
             console.log("予約確認： " +error)
           }
@@ -282,7 +315,7 @@ router
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text)){
                   if(!isBeforeToday8AM(text)){
-                    replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。"
+                    replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
                     await redis.resetAllStatus(userId)
                   }else{
                     //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
@@ -416,7 +449,7 @@ router
                 if(isValidNum(text)){
                   let childnum = Number(text)
                   if(childnum > 2){
-                    replyMessage = '申し訳ございません。\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。'
+                    replyMessage = '申し訳ございません。\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。'
                   }else{
                     let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                     let reservation_date = await redis.hgetStatus(userId,'reservation_date')
@@ -532,6 +565,7 @@ router
               }
               break;
             case 12:
+              //TODO 例）入力内容を間違えてしまったときは「戻る」と返信すると、1つ前の項目に戻る…など？どんな解決方法があるのかわからないので、機能として追加していただきたいと思います。
               replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
@@ -656,7 +690,7 @@ router
                   }else{
                     reservation_status = '予約'
                   }
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\nよろしければ「はい」、予約しない場合は「いいえ」を返信してください。\n\n"+all_info+"\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\n\n"+all_info+"\n\n\n・上記の内容でよろしければ「はい」\n・予約しない場合は「いいえ」\nと返信してください。"
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }

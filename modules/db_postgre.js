@@ -168,6 +168,22 @@ exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (
   return result
 }
 
+
+exports.getReservationStatusWaitingByMemberIDGraterThanToday = async function (id){
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Unread';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result
+}
+
+
+exports.getReservationStatusCancelledByMemberIDGraterThanToday = async function (id){
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Cancelled';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result
+}
+
 //TODO　境界チェック
 exports.getTomorrowReminderStatusByLINEID = async function (lineid){
   try {
@@ -235,12 +251,6 @@ exports.updateTodayReservedReminderStatusByLineID = async function (lineid, stat
   return res
 }
 
-exports.getReservationStatusWaitingByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Unread';`
-
-  let result = await psgl.sqlToPostgre(sql)
-  return result
-}
 
 exports.getReservationDetailsByMemberIDGraterThanToday = async function (id){
   let sql = `SELECT * FROM public."ReservationDetails" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today';`
