@@ -167,23 +167,41 @@ router
           try {
             //TODO キャンセル巡回機能を作成する
             replyMessage = ''
-            let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
-            for (const s of reminderstatus) {
-              if(s[0] == undefined || replyMessage != ''){
-                continue
-              }
-              if(s[0].Reminder == 'waiting'){
-                if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00
-                  await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
-                }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59
-                  await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
+            let success_replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let replied_replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00 change tomorrow
+              let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
+              for (const s of reminderstatus) {
+                if(s[0] == undefined || replyMessage != ''){
+                  continue
                 }
-                replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              }else if(s[0].Reminder == 'cancelled'){
-                replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-              }else if(s[0].Reminder == 'replied'){
-                replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+                if(s[0].Reminder == 'waiting'){
+                  await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
+                  replyMessage = success_replyMessage
+                }else if(s[0].Reminder == 'cancelled'){
+                  replyMessage = cancel_replyMessage
+                }else if(s[0].Reminder == 'replied'){
+                  replyMessage = replied_replyMessage
+                }
               }
+              await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
+            }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59 change today
+              let reminderstatus = await psgl.getTodayReminderStatusByLINEID(userId)
+              for (const s of reminderstatus) {
+                if(s[0] == undefined || replyMessage != ''){
+                  continue
+                }
+                if(s[0].Reminder == 'waiting'){
+                  await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
+                  replyMessage = success_replyMessage
+                }else if(s[0].Reminder == 'cancelled'){
+                  replyMessage = cancel_replyMessage
+                }else if(s[0].Reminder == 'replied'){
+                  replyMessage = replied_replyMessage
+                }
+              }
+              await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
             }
           } catch (error) {
             console.log('来園: '+error)
