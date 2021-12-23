@@ -52,9 +52,7 @@ cron.schedule('0 0 7 * * *', async () => {
 });
 
 //前日リマインダー送信
-//cron.schedule('0 0 20 * * *', async () => {
-
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
     for (const id of ids) {
@@ -63,7 +61,7 @@ cron.schedule('*/1 * * * *', async () => {
         url: 'https://byojihoiku-system.herokuapp.com/webhook',
         body: JSON.stringify({
           "line_push_from_cron": "20pm",
-          "id": 'U8e7088dec021bf6cd421a68176e43f53',
+          "id": id[0].LINEID,
           })
         },
         async function(error, response, body){
