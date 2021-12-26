@@ -4,13 +4,6 @@ const https = require("https");
 const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays');
-Holidays.setTimezone('JST')
-Holidays.setHoliday('12-29', 'miraiku-holiday')
-Holidays.setHoliday('12-30', 'miraiku-holiday')
-Holidays.setHoliday('12-31', 'miraiku-holiday')
-Holidays.setHoliday('01-01', 'miraiku-holiday')
-Holidays.setHoliday('01-02', 'miraiku-holiday')
-Holidays.setHoliday('01-03', 'miraiku-holiday')
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 
@@ -1132,6 +1125,13 @@ function isBeforeToday8AM(s){
 
 function isValidRegisterdDay(s){
   const holiday = new Holidays('JP')
+  holiday.setTimezone('JST')
+  holiday.setHoliday('12-29', 'miraiku-holiday')
+  holiday.setHoliday('12-30', 'miraiku-holiday')
+  holiday.setHoliday('12-31', 'miraiku-holiday')
+  holiday.setHoliday('01-01', 'miraiku-holiday')
+  holiday.setHoliday('01-02', 'miraiku-holiday')
+  holiday.setHoliday('01-03', 'miraiku-holiday')
   if(isValidDate(s)){
     let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力 //12/21/2021, 12:00:00 AM
     let reservationday_formatted = new Date(reservationday)//月のみ0インデックス, 秒で出力
