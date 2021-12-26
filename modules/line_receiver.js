@@ -4,6 +4,13 @@ const https = require("https");
 const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays');
+Holidays.setTimezone('JST')
+Holidays.setHoliday('12-29', 'miraiku-holiday')
+Holidays.setHoliday('12-30', 'miraiku-holiday')
+Holidays.setHoliday('12-31', 'miraiku-holiday')
+Holidays.setHoliday('01-01', 'miraiku-holiday')
+Holidays.setHoliday('01-02', 'miraiku-holiday')
+Holidays.setHoliday('01-03', 'miraiku-holiday')
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 
