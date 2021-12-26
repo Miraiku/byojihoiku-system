@@ -1,0 +1,83 @@
+@charset "UTF-8";
+@mixin anim {
+	transition: all .4s;
+}
+@mixin center_xy {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateY(-50%) translateX(-50%);
+	-webkit-transform: translateY(-50%) translateX(-50%);
+}
+@mixin center_y {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+}
+@mixin center_x {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+}
+@mixin center_xy {
+	top: 50%;
+	left: 50%;
+	transform: translateY(-50%) translateX(-50%);
+	-webkit-transform: translateY(-50%) translateX(-50%);
+}
+@function get_vw($px, $viewport){
+	$rate: 100 / $viewport;
+	@return $rate * $px * 1vw;
+}
+
+$black: #111A28;
+$red: #F16B6D;
+$dark-gray: #5B5963;
+$light-gray: #9A9EA5;
+
+$bg-blue: #E5EAF5;
+$bg-yellow: #FEF9E6;
+$bg-red: #FFE1E1;
+$bg-violet: #EBE9F5;
+$bg-opanel: #F8FAFB;
+
+$font-blue: #3665AA;
+$font-green: #5D9379;
+$font-red: #9F6E6F;
+$font-violet: #5B4DA6;
+$font-yellow: #8B7F52;
+$font-blue: #3665AA;
+
+$btn-green: #DCF7E9;
+$btn-red: #FFE1E1;
+$btn-violet: #EBE9F5;
+$btn-yellow: #FEF9E6;
+$btn-blue: #E5EAF5;
+
+$bg-gray: #F3F5F6;
+$bg-light-gray: #fbfbfb;
+$bg-pink: #FFF7F6;
+
+$light-border: #F0F0F0;
+$border: #999999;
+
+$form-lg: 480px;
+$form-md: 240px;
+$form-sm: 160px;
+$form-text-ss: 80px;
+$form-select-ss: 60px;
+
+$header-sp: 70px;
+$header-pc: 100px;
+$footer: 50px;
+
+$pc: 1240px; // PC（1240まで）
+$sp: 768px; // スマホ
+
+@mixin pc {
+  @media (min-width: ($sp)) {
+    @content;
+  }
+}

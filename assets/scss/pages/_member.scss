@@ -1,0 +1,43 @@
+.page.member {
+  h2 {
+    button {
+      margin-left: 10px;
+    }
+  }
+  .operation {
+    margin-bottom: 20px;
+    input[type=text] {
+      padding-left: 30px;
+      background: url("/assets/img/icon-search.svg") left 5px center / 12px 12px no-repeat;
+      width: 160px!important;
+    }
+    button {
+      img {
+        vertical-align: text-top;
+        margin-left: 3px;
+      }
+    }
+    a {
+      span {
+        display: none;
+      }
+      @include pc() {
+        span {
+          display: inline;
+        }
+      }
+    }
+  }
+  .table-wrap {
+    width: 100%;
+    .table {
+      th,
+      td {
+        text-align: center;
+      }
+    }
+  }
+  .tab_content {
+    width: 100%;
+  }
+}

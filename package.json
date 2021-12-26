@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "got": "^11.3.0",
+    "node-sass": "^7.0.0",
     "tape": "^4.7.0"
   },
   "repository": {

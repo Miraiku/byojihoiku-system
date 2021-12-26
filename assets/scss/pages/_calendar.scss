@@ -1,0 +1,88 @@
+.page.calendar {
+  .l-main {
+    padding: 50px 0;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 50px;
+    img {
+      width: 100px;
+      margin-bottom: 20px;
+      @include pc() {
+        width: 160px;
+      }
+    }
+  }
+  .calendar-status {
+    @include pc() {
+      display: flex;
+    }
+  }
+  table {
+    th,
+    td {
+      border: solid 1px #eee;
+      text-align: center;
+      vertical-align: middle;
+    }
+    th {
+      height: 40px;
+      font-size: 13px;
+      background: #FFF7F6;
+    }
+    td {
+      height: 50px;
+      font-size: 16px;
+    }
+  }
+  .row1 {
+    @include pc() {
+      width: 50%;
+    }
+    table {
+      width: 100%;
+      th,
+      td {
+        width: 25%;
+      }
+      tr {
+        td:last-child {
+          border-right: none;
+        }
+        th:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+  .row2 {
+    display: flex;
+    @include pc() {
+      width: 50%;
+    }
+    table {
+      width: 75%;
+      th,
+      td {
+        width: calc(100% / 3);
+      }
+      th {
+        border-top: none;
+        @include pc() {
+          border: solid 1px #eee;
+        }
+      }
+    }
+    ul {
+      width: 25%;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      li {
+        margin-bottom: 10px;
+        padding-left: 4px;
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+@import "definition.scss";
+
+// components：共通レイアウト
+@import 'components/common';
+
+// pages
+@import 'pages/login';
+@import 'pages/home';
+@import 'pages/reservation';
+@import 'pages/member';
+@import 'pages/calendar';
