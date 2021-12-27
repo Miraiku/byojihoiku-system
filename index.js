@@ -17,6 +17,10 @@ express()
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
+  .get('/calendar', (req, res) => res.render('pages/calendar'))
+  .get('/home', (req, res) => res.render('pages/home'))
+  .get('/member', (req, res) => res.render('pages/member'))
+  .get('/reservation', (req, res) => res.render('pages/reservation'))
   .use('/webhook', webhook)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
