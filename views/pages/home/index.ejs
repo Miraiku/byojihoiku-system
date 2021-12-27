@@ -1,0 +1,286 @@
+<!doctype html>
+<html>
+<head>
+  <%- include ("../../partials/head.ejs") %>
+</head>
+
+<body class="home page">
+  <%- include ("../../partials/header.ejs") %>
+
+  <main class="l-main">
+
+    <section>
+      <div class="l-container">
+        <h3>現在の予約状況</h3>
+        <div class="reservation-panel">
+          <div class="tabs">
+            <input id="tab1" type="radio" name="tab_item" checked>
+            <label class="tab_item" for="tab1">早苗町</label>
+            <input id="tab2" type="radio" name="tab_item">
+            <label class="tab_item" for="tab2">高田</label>
+            <input id="tab3" type="radio" name="tab_item">
+            <label class="tab_item" for="tab3">小布施</label>
+            <div class="tab_content" id="tab1_content">
+              <div class="tab_content_description">
+                <div class="reservation-items">
+                  <div class="reservation-item">
+                    <h2>2021/11/1(月)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>1</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/2(火)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/3(水)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="btns">
+                  <a class="btn-l" href="#">早苗町の予約ページへ</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab_content" id="tab2_content">
+              <div class="tab_content_description">
+                <div class="reservation-items">
+                  <div class="reservation-item">
+                    <h2>2021/11/1(月)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/2(火)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/3(水)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="btns">
+                  <a class="btn-l" href="#">高田の予約ページへ</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab_content" id="tab3_content">
+              <div class="tab_content_description">
+                <div class="reservation-items">
+                  <div class="reservation-item">
+                    <h2>2021/11/1(月)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>3</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/2(火)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <div class="reservation-item">
+                    <h2>2021/11/3(水)</h2>
+                    <div>
+                      <dl>
+                        <dt>予約確定</dt>
+                        <dd><span>2</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル待ち</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                      <dl>
+                        <dt>キャンセル</dt>
+                        <dd><span>5</span>件</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="btns">
+                  <a class="btn-l" href="#">小布施の予約ページへ</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="l-container">
+        <h3>未処理の予約</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <tr>
+              <th>&nbsp;</th>
+              <th>会員ID</th>
+              <th>名前</th>
+              <th>年齢</th>
+              <th>利用希望日</th>
+              <th>病名</th>
+              <th>第1希望</th>
+              <th>第2希望</th>
+              <th>第3希望</th>
+              <th>&nbsp;</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>21001</td>
+              <td>ヤマダタロウ</td>
+              <td>2歳1ヶ月</td>
+              <td>2021/01/01(月)</td>
+              <td class="is-left">
+                01.急性上気道炎<br>
+                03.病名が入ります病名が入ります
+              </td>
+              <td>早苗町</td>
+              <td>高田</td>
+              <td>小布施</td>
+              <td>
+                <select name="">
+                  <option value="sanaecho">早苗町</option>
+                  <option value="takada">高田</option>
+                  <option value="obuse">小布施</option>
+                </select>
+                <button type="button" class="is-green">予約確定</button>
+                <button type="button" class="is-yellow">キャンセル待ち</button>
+                <button type="button" class="is-red">対応不可</button>
+                <button type="button" class="is-violet">キャンセル</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>21001</td>
+              <td>ヤマダタロウ</td>
+              <td>2歳1ヶ月</td>
+              <td>2021/01/01(月)</td>
+              <td class="is-left">
+                01.急性上気道炎<br>
+                03.病名が入ります病名が入ります
+              </td>
+              <td>早苗町</td>
+              <td>高田</td>
+              <td>小布施</td>
+              <td>
+                <select name="" class="is-sm">
+                  <option value="sanaecho">早苗町</option>
+                  <option value="takada">高田</option>
+                  <option value="obuse">小布施</option>
+                </select>
+                <button type="button" class="is-green">予約確定</button>
+                <button type="button" class="is-yellow">キャンセル待ち</button>
+                <button type="button" class="is-red">対応不可</button>
+                <button type="button" class="is-violet">キャンセル</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <%- include ("../../partials/footer.ejs") %>
+</body>
+</html>

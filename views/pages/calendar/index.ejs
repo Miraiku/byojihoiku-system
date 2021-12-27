@@ -1,36 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <%- include ("../partials/head.ejs") %>
+
+  <%- include ("../../partials/footer.ejs") %>
 </head>
 
-<body class="login page">
+<body class="calendar page">
   <main class="l-main">
 
-    <section class="login l-container">
-      
+    <section class="calendar l-container">
       <h1>
-        <img src="<?='/miraiku/byojihoiku-confirm-html' ?>/assets/img/top-logo.svg"><br>
+        <img src="img/top-logo.svg"><br>
         みらいく病児予約システム
       </h1>
-      <div class="login-panel">
-        <dl>
-          <dt>ID</dt>
-          <dd><input type="text" class="is-lg" /></dd>
-        </dl>
-        <dl>
-          <dt>パスワード</dt>
-          <dd><input type="text" class="is-lg" /></dd>
-        </dl>
-        <div class="btns">
-          <button class="btn-l">ログイン</a>
+      <section>
+        <h2>早苗町</h2>
+        <div class="calendar-status">
+          <div class="row1">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/1<br>(火)
+                  </th>
+                  <th>
+                    11/2<br>(水)
+                  </th>
+                  <th>
+                    11/3<br>(木)
+                  </th>
+                  <th>
+                    11/4<br>(金)
+                  </th>
+                </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                  <td>○</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row2">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/5<br>(火)
+                  </th>
+                  <th>
+                    11/6<br>(水)
+                  </th>
+                  <th>
+                    11/7<br>(木)
+                  </th>
+              </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                </tr>
+              </tbody>
+            </table>
+            <ul>
+              <li>○:予約可</li>
+              <li>×:予約不可</li>
+            </ul>
+          <div>
         </div>
-      </div>
+      </section>
+      <section>
+        <h2>高田</h2>
+        <div class="calendar-status">
+          <div class="row1">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/1<br>(火)
+                  </th>
+                  <th>
+                    11/2<br>(水)
+                  </th>
+                  <th>
+                    11/3<br>(木)
+                  </th>
+                  <th>
+                    11/4<br>(金)
+                  </th>
+                </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                  <td>○</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row2">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/5<br>(火)
+                  </th>
+                  <th>
+                    11/6<br>(水)
+                  </th>
+                  <th>
+                    11/7<br>(木)
+                  </th>
+              </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                </tr>
+              </tbody>
+            </table>
+            <ul>
+              <li>○:予約可</li>
+              <li>×:予約不可</li>
+            </ul>
+          <div>
+        </div>
+      </section>
+      <section>
+        <h2>小布施</h2>
+        <div class="calendar-status">
+          <div class="row1">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/1<br>(火)
+                  </th>
+                  <th>
+                    11/2<br>(水)
+                  </th>
+                  <th>
+                    11/3<br>(木)
+                  </th>
+                  <th>
+                    11/4<br>(金)
+                  </th>
+                </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                  <td>○</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row2">
+            <table>
+              <tbody>
+                <tr>
+                  <th>
+                    11/5<br>(火)
+                  </th>
+                  <th>
+                    11/6<br>(水)
+                  </th>
+                  <th>
+                    11/7<br>(木)
+                  </th>
+                </tr>
+                <tr>
+                  <td>○</td>
+                  <td>×</td>
+                  <td>×</td>
+                </tr>
+              </tbody>
+            </table>
+            <ul>
+              <li>○:予約可</li>
+              <li>×:予約不可</li>
+            </ul>
+          <div>
+        </div>
+      </section>
     </section>
-
   </main>
-
-<%- include ("../partials/footer.ejs") %>
-
+  <%- include ("../../partials/footer.ejs") %>
 </body>
 </html>

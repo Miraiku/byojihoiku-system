@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+
+  <%- include ("../../partials/head.ejs") %>
+</head>
+
+<body class="member-entry page">
+  <%- include ("../../partials/header.ejs") %>
+  <main class="l-main">
+    <section>
+      <h2 class="is-center">会員編集</h2>
+      <div class="form-panel is-entry l-container is-md">
+        <dl>
+          <dt>会員ID</dt>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="21001"></dd>
+        </dl>
+        <dl>
+          <dt>LINE識別番号</dt>
+          <dd>
+            <input type="text" class="is-md" placeholder="samplelineid" value="testhanako2021">
+            <span>半角英数で入力してください。</span>
+        </dd>
+        </dl>
+        <dl>
+          <dt>児童名</dt>
+          <dd>
+            <input type="text" class="is-md" placeholder="ヤマダタロウ" value="ヤマダタロウ">
+            <span>全角カタカナで入力してください</span>
+          </dd>
+        </dl>
+        <dl>
+          <dt>生年月日</dt>
+          <dd>
+            <input type="text" class="is-text-ss" placeholder="2021" value="2021">
+            年
+            <select class="is-select-ss" name="">月
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+            月
+            <select class="is-select-ss" name="">
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+              <option value="31">31</option>
+            </select>
+            日
+          </dd>
+        </dl>
+        <dl>
+          <dt>アレルギー</dt>
+          <dd>
+            <input type="radio" id="allergy1" name="allergy" checked>
+            <label for="allergy1" class="radio">有り</label>
+            <input type="radio" id="allergy2" name="allergy">
+            <label for="allergy2" class="radio">無し</label>
+          </dd>
+        </dl>
+      </div>
+      <div class="btns">
+        <button class="btn-l is-border">戻る</button>
+        <button class="btn-l">変更</button>
+      </div>
+    </section>
+  </main>
+
+  <%- include ("../../partials/footer.ejs") %>
+
+</body>
+</html>
