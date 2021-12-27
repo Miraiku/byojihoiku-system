@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "node test.js",
-    "build": "holidays2json --pick JP --min"
+    "build": "holidays2json --pick JP --min",
+    "sass": "node-sass assets/scss/vendor.scss --output public/css/ --output-style compressed --watch --source-map true"
   },
   "dependencies": {
     "cool-ascii-faces": "^1.3.4",

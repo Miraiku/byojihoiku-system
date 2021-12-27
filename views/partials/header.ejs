@@ -1,6 +1,41 @@
-<title>Node.js Getting Started on Heroku</title>
-<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 
+<title>みらいく病児予約システム</title>
+<meta name="description" content="">
+
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- OGP -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="みらいく病児予約システム">
+<meta property="og:title" content="みらいく病児予約システム">
+<meta property="og:description" content="">
+<meta property="og:url" content="https://byojihoiku.chiikihoiku.net/">
+<meta property="og:locale" content="ja_JP">
+<meta property="fb:app_id" content="">
+<meta property="og:image" content="">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@VookJp">
+<meta name="twitter:image" content="">
+
+<link rel="shortcut icon" href="/assets/img/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/img/webclip.png">
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/assets/css/reset.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/vendor.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(function(){
+  $('tr[data-href]').click(function (e) {
+      if ($(e.target).is('td')) {
+        window.location = $(this).data('href');
+      };
+  });
+});
+</script>
