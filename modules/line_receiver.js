@@ -1124,8 +1124,8 @@ function isBeforeToday8AM(s){
 }
 
 function isValidRegisterdDay(s){
-  const holiday = new Holidays(process.env.TZ)
-  holiday.setTimezone('JST')
+  const holiday = new Holidays('JP')
+  holiday.setTimezone(process.env.TZ)
   holiday.setHoliday('12-29', 'miraiku-holiday')
   holiday.setHoliday('12-30', 'miraiku-holiday')
   holiday.setHoliday('12-31', 'miraiku-holiday')
