@@ -18,11 +18,6 @@ express()
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
   .use('/webhook', webhook)
-  .use(function(request, response, next) {
-    if (process.env.NODE_ENV != 'development' && !request.secure) {
-       return response.redirect("https://" + request.headers.host + request.url);
-    }
-    next();})
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 cron.schedule('*/20 * * * *', async () =>  {
