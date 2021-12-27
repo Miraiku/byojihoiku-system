@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const app = express();
 const bcrypt = require('bcrypt');
 const passport = require('passport');
@@ -46,4 +46,4 @@ passport.deserializeUser((user, done) => {
 
 });
 
-module.exports = passport;
+module.exports = passport;*/

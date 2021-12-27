@@ -38,7 +38,23 @@ express()
   .use('/webhook', webhook)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-  
+/*
+  .get('/', (req, res) => {
+  const errorMessage = req.flash('error').join('<br>');
+  res.render('/form', {
+    errorMessage: errorMessage
+  })})
+  .post('/',
+  passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/',
+    failureFlash: true,
+    badRequestMessage: '「ID」と「パスワード」は必須入力です。'
+  }))
+  get('/home', authMiddleware, (req, res) => {
+    const user = req.user;
+    res.send('ログイン完了！');
+  }) */  
   const authMiddleware = (req, res, next) => {
     if(req.isAuthenticated()) { // ログインしてるかチェック
       next();
