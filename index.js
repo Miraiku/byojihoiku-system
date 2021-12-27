@@ -17,14 +17,6 @@ express()
   .use(express.static(path.join(__dirname, 'public')))
   .use(express.json())
   .use(express.urlencoded({extended: true}))
-  .use(flash())
-  .use(session({
-    secret: 'YOUR-SECRET-STRING',
-    resave: true,
-    saveUninitialized: true
-  }))
-  .use(passport.initialize())
-  .use(passport.session())
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
@@ -39,6 +31,14 @@ express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 /*
+  .use(flash())
+  .use(session({
+    secret: 'YOUR-SECRET-STRING',
+    resave: true,
+    saveUninitialized: true
+  }))
+  .use(passport.initialize())
+  .use(passport.session())
   .get('/', (req, res) => {
   const errorMessage = req.flash('error').join('<br>');
   res.render('/form', {
