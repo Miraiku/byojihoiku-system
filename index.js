@@ -1,3 +1,4 @@
+process.env.TZ = "Asia/Tokyo";
 const cool = require('cool-ascii-faces');
 const express = require('express');
 const path = require('path');
@@ -7,23 +8,46 @@ const webhook = require('./modules/line_receiver')
 const cron = require('node-cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
-process.env.TZ = "Asia/Tokyo";
+const passport = require('./modules/db_login');
+const session = require('express-session');
+const flash = require('connect-flash');
 const PORT = process.env.PORT || 5555;
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .use(express.json())
   .use(express.urlencoded({extended: true}))
+  .use(flash())
+  .use(session({
+    secret: 'YOUR-SECRET-STRING',
+    resave: true,
+    saveUninitialized: true
+  }))
+  .use(passport.initialize())
+  .use(passport.session())
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
   .get('/calendar', (req, res) => res.render('pages/calendar/index'))
   .get('/home', (req, res) => res.render('pages/home/index'))
   .get('/member', (req, res) => res.render('pages/member/index'))
+  .get('/member/entry', (req, res) => res.render('pages/member/entry'))
   .get('/reservation', (req, res) => res.render('pages/reservation/index'))
+  .get('/reservation/confirm', (req, res) => res.render('pages/reservation/confirm'))
+  .get('/reservation/entry', (req, res) => res.render('pages/reservation/entry'))
   .use('/webhook', webhook)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
+  
+  const authMiddleware = (req, res, next) => {
+    if(req.isAuthenticated()) { // ログインしてるかチェック
+      next();
+    } else {
+      res.redirect(302, '/home');
+    }
+  };
+
+//20分以上操作がないRedisの一時クエリを削除
 cron.schedule('*/20 * * * *', async () =>  {
   console.log(`Run Cron per 20mins`)
   await redis.flushALLNoUpdate20mins()
