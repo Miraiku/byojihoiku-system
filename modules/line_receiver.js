@@ -225,7 +225,7 @@ router
             messages: [
               {
                 "type": "text",
-                "text": "予約状況の空き状況は以下のURLをご参照ください。\n https://sample.net\n（空き状況ページは現在作成中です）",
+                "text": "予約状況の空き状況は以下のURLをご参照ください。\n https://byojihoiku.chiikihoiku.net/calendar/",
             }
             ]
           })
