@@ -96,17 +96,17 @@ exports.getNurseryCloseTimeFromName = async function (name){
 }
 
 exports.isMemberedInMemberTable = async function (lineid, name, birthday){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL;`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL and "Disabled" = 'false';`
   return await psgl.sqlToPostgre(sql)
 }
 
 exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthday){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL;`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL and "Disabled" = 'false';`
   return await psgl.sqlToPostgre(sql)
 }
 
 exports.getMemberBirthDayByID = async function (id){
-  let sql = `SELECT "BirthDay" FROM public."Member" WHERE "ID" = '`+id+`' and "MiraikuID" IS NOT NULL;`
+  let sql = `SELECT "BirthDay" FROM public."Member" WHERE "ID" = '`+id+`' and "MiraikuID" IS NOT NULL and "Disabled" = 'false';`
   return await psgl.sqlToPostgre(sql)
 }
 
@@ -248,7 +248,7 @@ exports.getLINEIDByReservedTomorrow = async function (){
 }
 
 exports.updateTomorrowReservedReminderStatusByLineID = async function (lineid, status){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}';`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
@@ -260,7 +260,7 @@ exports.updateTomorrowReservedReminderStatusByLineID = async function (lineid, s
 }
 
 exports.updateTodayReservedReminderStatusByLineID = async function (lineid, status){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}';`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
@@ -285,41 +285,41 @@ exports.getReservationDetailsByReservationID = async function (id){
 }
 
 exports.getMembers = async function (){
-  let sql = `SELECT * FROM public."Member";`
+  let sql = `SELECT * FROM public."Member" and "Disabled" = 'false';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
 
 exports.getMemberInfoByMemberID = async function (id){
-  let sql = `SELECT * FROM public."Member" WHERE "ID" = '${id}';`
+  let sql = `SELECT * FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
 
 exports.getLINEIDByMemberID = async function (id){
-  let sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${id}';`
+  let sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.getMemberIDByLINEID = async function (id){
-  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}';`
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}' and "Disabled" = 'false';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
 
 exports.getMemberNameByMemberID = async function (id){
-  let sql = `SELECT "Name" FROM public."Member" WHERE "ID" = '${id}';`
+  let sql = `SELECT "Name" FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.getMiraikuIDByMemberID = async function (id){
-  let sql = `SELECT "MiraikuID" FROM public."Member" WHERE "ID" = '${id}';`
+  let sql = `SELECT "MiraikuID" FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
