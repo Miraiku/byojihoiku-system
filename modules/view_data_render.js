@@ -166,7 +166,7 @@ exports.getMembersPage = async function (req, res){
     res.render("pages/member/index", {Members:mem})
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
-    res.render("pages/index")
+    res.redirect('/home')
   }
 }
 
@@ -190,7 +190,7 @@ exports.getEntryPage = async function (req, res){
     res.render("pages/member/entry",{Member:info})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
-    res.render("pages/member")
+    res.redirect('/member')
   }
 }
 
