@@ -36,7 +36,6 @@ exports.getMemberNameByMemberID = async function (req, res){
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved})
     }
-    
     res.render("pages/home/index", {Status3Days: status3days})
   } catch (error) {
     console.log("ERR @getMemberNameByMemberID: "+ error)

@@ -7,8 +7,11 @@
 <body class="home page">
   <%- include ("../../partials/header.ejs") %>
 
+  <%- 
+  for (const i of Status3Days) { %>
+    <%= i %>
+  <%- } %>
   <main class="l-main">
-    <%= Status3Days[0] %>
     <section>
       <div class="l-container">
         <h3>現在の予約状況</h3>
