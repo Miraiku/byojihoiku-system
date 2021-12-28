@@ -32,7 +32,7 @@
         <dl>
           <dt>生年月日</dt>
           <dd>
-            <input type="text" class="is-text-ss" placeholder="2021" value="<%=Member[0].bYear%>">
+            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>">
             年
             <select class="is-select-ss" name="">月
               <% for (var i = 0; i < 12; i++) { %>
@@ -42,7 +42,7 @@
             月
             <select class="is-select-ss" name="">
               <% for (var i = 0; i < 31; i++) { %>
-                <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
+                <option value="<%=i+1%>" <% if (Number(Member[0].bDay)==(i+1)) { %>selected<% } %>><%=i+1%></option>
               <% } %>
             </select>
             日
