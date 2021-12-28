@@ -143,7 +143,7 @@ exports.getNurseryStatus3Days = async function (req, res){
 //member view
 exports.getMembersPage = async function (req, res){
   try {
-    let res =[]
+    let mem =[]
     let members = await psgl.getMembers()
     for (const m of members) {
       let id
@@ -161,9 +161,9 @@ exports.getMembersPage = async function (req, res){
       }else{
         allergy = 'なし'
       }
-      res.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy})
+      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy})
     }
-    res.render("pages/member/index", {Members:res})
+    res.render("pages/member/index", {Members:mem})
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
     res.render("pages/index")
