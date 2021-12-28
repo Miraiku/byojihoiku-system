@@ -146,7 +146,12 @@ exports.getMembersPage = async function (req, res){
     let res =[]
     let members = await psgl.getMembers()
     for (const m of members) {
-      let id = m[0].MiraikuID
+      let id
+      if(m[0].MiraikuID == undefined){
+        id = '-'
+      }else{
+        id = m[0].MiraikuID
+      }
       let name = m[0].Name
       let birthday = m[0].BirthDay
       let age = view.getAgeMonth(birthday)
