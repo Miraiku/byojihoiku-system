@@ -170,6 +170,17 @@ exports.getMembersPage = async function (req, res){
   }
 }
 
+//member/entry view
+exports.getEntryPage = async function (req, res){
+  console.log(req.query.value)
+  try {
+    res.render("pages/member/entry", {Members:mem})
+  } catch (error) {
+    console.log("ERR @getEntryPage: "+ error)
+    res.render("pages/index")
+  }
+}
+
 function DayToJPFromDateObj(dt){
   //2021/11/2(火)
   var y = dt.getFullYear()
