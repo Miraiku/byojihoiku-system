@@ -70,6 +70,7 @@ exports.resetAllStatus = async function (id){
       if (err) throw err;
       console.log('REDIS DELETED ID: ' + id)
     });
+  });
 }
 
 exports.flushALL = async function(){
