@@ -182,7 +182,7 @@ exports.getMembersPage = async function (req, res){
 //member/entry view
 exports.getEntryPage = async function (req, res){
   try {
-    const memberid = req.params.id
+    const memberid = req.params.memberid
     let info = await psgl.getMemberInfoByMemberID(memberid)
     let mem =[]
     let id
@@ -295,14 +295,46 @@ exports.getCalendarPage = async function (req, res){
       }
       calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:day1, day2:day2, day3:day3, day4:day4, day5:day5, day6:day6, day7:day7})
     }
-    console.log(   calendarData )
-    console.log(formattedWeek)
     res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
     res.redirect('/')
   }
 }
+
+//reservation view
+exports.getReservationPage = async function (req, res){
+  try {
+    const reservationid = req.params.reservationid
+    res.render("pages/reservation/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+  } catch (error) {
+    console.log("ERR @getReservationPage: "+ error)
+    res.redirect('/reservation')
+  }
+}
+
+//reservation/confirm view
+exports.getReservationConfirmPage = async function (req, res){
+  try {
+    const reservationid = req.params.reservationid
+    res.render("pages/reservation/confirm",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+  } catch (error) {
+    console.log("ERR @getReservationConfirmPage: "+ error)
+    res.redirect('/reservation')
+  }
+}
+
+
+//reservation/entry view
+exports.getReservationEntryPage = async function (req, res){
+  try {
+    res.render("pages/reservation/entry",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+  } catch (error) {
+    console.log("ERR @getReservationEntryPage: "+ error)
+    res.redirect('/reservation')
+  }
+}
+
 
 function MonthDayToJPFromDateObj(dt){
   //11/2
