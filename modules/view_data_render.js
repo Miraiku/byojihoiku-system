@@ -307,7 +307,7 @@ function MonthDayToJPFromDateObj(dt){
   var m = dt.getMonth()+1
   var d = dt.getDate()
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
-  return ( m + '/' + d + '<br/>('+w+')');
+  return ( m + "/" + d + "<br/>("+w+")");
 }
 
 function DayToJPFromDateObj(dt){
