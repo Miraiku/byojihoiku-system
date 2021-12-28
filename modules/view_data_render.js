@@ -13,6 +13,15 @@ const view = require('./view_data_render');
 const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
+const Holidays = require('date-holidays');
+const holiday = new Holidays('JP')
+holiday.setTimezone(process.env.TZ)
+holiday.setHoliday('12-29', 'miraiku-holiday')
+holiday.setHoliday('12-30', 'miraiku-holiday')
+holiday.setHoliday('12-31', 'miraiku-holiday')
+holiday.setHoliday('01-01', 'miraiku-holiday')
+holiday.setHoliday('01-02', 'miraiku-holiday')
+holiday.setHoliday('01-03', 'miraiku-holiday')
 
 //home view
 exports.getNurseryStatus3Days = async function (req, res){
@@ -201,6 +210,28 @@ exports.getEntryPage = async function (req, res){
 exports.getCalendarPage = async function (req, res){
   try {
     //園ごとの日付
+    const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+    const day1_JST = new Date(JST)
+    const day2_JST = new Date(day1_JST);
+    day2_JST.setDate(day2_JST.getDate() + 1);
+    const day3_JST = new Date(day1_JST);
+    day3_JST.setDate(day3_JST.getDate() + 2);
+    const day4_JST = new Date(day1_JST);
+    day4_JST.setDate(day4_JST.getDate() + 3);
+    const day5_JST = new Date(day1_JST);
+    day5_JST.setDate(day5_JST.getDate() + 4);
+    const day6_JST = new Date(day1_JST);
+    day6_JST.setDate(day6_JST.getDate() + 5);
+    const day7_JST = new Date(day1_JST);
+    day7_JST.setDate(day7_JST.getDate() + 6);
+
+    let day1,day2,day3,day4,day5,day6,day7
+
+    if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
+
+    }else{
+
+    }
     let today_capa, tomorrow_capa, dayaftertomorrow_capa,t,tr,dat
     let calendarData = []
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
@@ -226,8 +257,8 @@ exports.getCalendarPage = async function (req, res){
       }else{
         dat = '✕'
       }
-      calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, today:t, tomorrow:tr, dayaftertomorrow:dat})
-    }// end for nursery list
+      calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:t, day2:tr, day3:dat, day4, day5, day6, day7})
+    }
     res.render("pages/calendar/index",{calendarData:calendarData})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)

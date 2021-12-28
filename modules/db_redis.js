@@ -97,7 +97,7 @@ exports.flushALLNoUpdate20mins = async function(){
         redis_modules.resetAllStatus(k)
         await redis_client.hdel('update_time', k, (err, reply) => {
           if (err) throw err;
-          console.log('REDIS DELETED update_time: ' + id + ' ,' + reply)
+          console.log('REDIS DELETED update_time: ' + k + ' ,' + reply)
         })
       }
     });
