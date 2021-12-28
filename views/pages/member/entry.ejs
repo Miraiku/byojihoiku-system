@@ -13,8 +13,7 @@
       <div class="form-panel is-entry l-container is-md">
         <dl>
           <dt>会員ID</dt>
-          //TODO　VALUEだせない。誕生日の設定。<%=Member[0].miraikuid%>"><%=Member.name%>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member.miraikuid%>"></dd>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>"></dd>
         </dl>
         <!--dl>
           <dt>LINE識別番号</dt>
@@ -26,69 +25,32 @@
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="<%=Member.name%>" value="<%=Member.name%>">
+            <input type="text" class="is-md" placeholder="<%=Member[0].name%>" value="<%=Member[0].name%>">
             <span>全角カタカナで入力してください</span>
           </dd>
         </dl>
         <dl>
           <dt>生年月日</dt>
           <dd>
-            <input type="text" class="is-text-ss" placeholder="2021" value="2021">
+            <input type="text" class="is-text-ss" placeholder="2021" value="<%=Member[0].bYear%>">
             年
             <select class="is-select-ss" name="">月
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
+              <% for (var i = 0; i < 12; i++) { %>
+                <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
+              <% } %>
             </select>
             月
             <select class="is-select-ss" name="">
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
-              <option value="25">25</option>
-              <option value="26">26</option>
-              <option value="27">27</option>
-              <option value="28">28</option>
-              <option value="29">29</option>
-              <option value="30">30</option>
-              <option value="31">31</option>
+              <% for (var i = 0; i < 31; i++) { %>
+                <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
+              <% } %>
             </select>
             日
           </dd>
         </dl>
         <dl>
           <dt>アレルギー</dt>
-          <dd><% if (Member.allergy) { %>
+          <dd><% if (Member[0].allergy) { %>
                 <input type="radio" id="allergy1" name="allergy" checked>
                 <label for="allergy1" class="radio">有り</label>
                 <input type="radio" id="allergy2" name="allergy">
