@@ -344,6 +344,25 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
   return result//[{}]
 }
 
+
+exports.ReservedTodayByNursery = async function (id){
+  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
+exports.ReservedTomorrowByNursery = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
+exports.ReservedDayAfterTomorrowByNursery = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Reserved';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
 exports.getReservationConfirmationFalseGraterThanToday = async function (){
   let sql = `SELECT "ID" FROM public."Reservation" WHERE "ReservationDate" >= DATE 'today' and "Confirmation" = 'false';`
   let result = await psgl.sqlToPostgre(sql)
