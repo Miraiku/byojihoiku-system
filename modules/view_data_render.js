@@ -175,7 +175,7 @@ exports.getMembersPage = async function (req, res){
     res.render("pages/member/index", {Members:mem})
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
-    res.redirect('/home')
+    res.redirect('/home/')
   }
 }
 
