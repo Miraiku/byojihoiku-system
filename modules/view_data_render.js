@@ -226,40 +226,74 @@ exports.getCalendarPage = async function (req, res){
     day7_JST.setDate(day7_JST.getDate() + 6);
 
     let day1,day2,day3,day4,day5,day6,day7
-
-    if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
-
-    }else{
-
-    }
-    let today_capa, tomorrow_capa, dayaftertomorrow_capa,t,tr,dat
+    let today_capa, tomorrow_capa, dayaftertomorrow_capa
     let calendarData = []
+    let formattedWeek = []
+    formattedWeek.push({day1:DayToJPFromDateObj(day1_JST),day2:DayToJPFromDateObj(day2_JST),day3:DayToJPFromDateObj(day3_JST),day4:DayToJPFromDateObj(day4_JST),day5:DayToJPFromDateObj(day5_JST),day6:DayToJPFromDateObj(day6_JST),day7:DayToJPFromDateObj(day7_JST)})
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
-      let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
-      let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
-      let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
-      today_capa = nursery_list[i].capacity - today[0].count
-      tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
-      dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
-      if(today_capa > 0){
-        t = '○'
+      if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
+        day1 = '休'
       }else{
-        t = '✕'
+        let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
+        today_capa = nursery_list[i].capacity - today[0].count
+        if(today_capa > 0){
+          day1 = '○'
+        }else{
+          day1 = '✕'
+        } 
       }
-      if(tomorrow_capa > 0){
-        tr = '○'
+
+      if(holiday.isHoliday(day2_JST) ||day2_JST.getDay() == 0 ||  day2_JST.getDay() == 6){
+        day2 = '休'
       }else{
-        tr = '✕'
+        let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
+        tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
+        if(tomorrow_capa > 0){
+          day2 = '○'
+        }else{
+          day2 = '✕'
+        } 
       }
-      if(dayaftertomorrow_capa > 0){
-        dat = '○'
+
+      if(holiday.isHoliday(day3_JST) ||day3_JST.getDay() == 0 ||  day3_JST.getDay() == 6){
+        day3 = '休'
       }else{
-        dat = '✕'
+        let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
+        dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
+        if(dayaftertomorrow_capa > 0){
+          day3 = '○'
+        }else{
+          day3 = '✕'
+        } 
       }
-      calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:t, day2:tr, day3:dat, day4, day5, day6, day7})
+    
+      if(holiday.isHoliday(day4_JST) ||day4_JST.getDay() == 0 ||  day4_JST.getDay() == 6){
+        day4 = '休'
+      }else{
+        day4 = '○'
+      }
+
+      if(holiday.isHoliday(day5_JST) ||day5_JST.getDay() == 0 ||  day5_JST.getDay() == 6){
+        day5 = '休'
+      }else{
+        day5 = '○'
+      }
+
+      if(holiday.isHoliday(day6_JST) ||day6_JST.getDay() == 0 ||  day6_JST.getDay() == 6){
+        day6 = '休'
+      }else{
+        day6 = '○'
+      }
+    
+      if(holiday.isHoliday(day7_JST) ||day7_JST.getDay() == 0 ||  day7_JST.getDay() == 6){
+        day7 = '休'
+      }else{
+        day7 = '○'
+      }
+      calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:day1, day2:day2, day3:day3, day4:day4, day5:day5, day6:day6, day7:day7})
     }
-    res.render("pages/calendar/index",{calendarData:calendarData})
+    res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
     res.redirect('/')
