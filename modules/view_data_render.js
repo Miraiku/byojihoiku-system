@@ -157,9 +157,9 @@ exports.getMembersPage = async function (req, res){
       let age = view.getAgeMonth(m.BirthDay)
       let allergy = m.Allergy
       if(allergy){
-        allergy = 'あり'
+        allergy = '有り'
       }else{
-        allergy = 'なし'
+        allergy = '無し'
       }
       mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.MemberID})
     }
@@ -172,9 +172,9 @@ exports.getMembersPage = async function (req, res){
 
 //member/entry view
 exports.getEntryPage = async function (req, res){
-  console.log(req.query.value)
   try {
-    res.render("pages/member/entry", {Members:mem})
+    console.log(req.query.value)
+    res.render("pages/member/entry")
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
     res.render("pages/index")
