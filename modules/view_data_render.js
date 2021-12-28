@@ -22,6 +22,7 @@ exports.getMemberNameByMemberID = async function (req, res){
       let Rejected = 0
       let Reserved = 0
       for (const status of await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id)) {
+        console.log(status)
         if(status == 'Unread'){
           Unread += 1
         }else if(status == 'Cancelled'){
@@ -40,9 +41,6 @@ exports.getMemberNameByMemberID = async function (req, res){
       console.log(status)
     }
     
-    if (error) {
-      throw error;
-    }
     res.render("pages/home/index")//, {todoDbList: results.rows}
   } catch (error) {
     console.log("ERR @getMemberNameByMemberID: "+ error)
