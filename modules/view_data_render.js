@@ -229,7 +229,7 @@ exports.getCalendarPage = async function (req, res){
     let today_capa, tomorrow_capa, dayaftertomorrow_capa
     let calendarData = []
     let formattedWeek = []
-    formattedWeek.push({day1:DayToJPFromDateObj(day1_JST),day2:DayToJPFromDateObj(day2_JST),day3:DayToJPFromDateObj(day3_JST),day4:DayToJPFromDateObj(day4_JST),day5:DayToJPFromDateObj(day5_JST),day6:DayToJPFromDateObj(day6_JST),day7:DayToJPFromDateObj(day7_JST)})
+    formattedWeek.push({day1:MonthDayToJPFromDateObj(day1_JST),day2:MonthDayToJPFromDateObj(day2_JST),day3:MonthDayToJPFromDateObj(day3_JST),day4:MonthDayToJPFromDateObj(day4_JST),day5:MonthDayToJPFromDateObj(day5_JST),day6:MonthDayToJPFromDateObj(day6_JST),day7:MonthDayToJPFromDateObj(day7_JST)})
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
       if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
@@ -293,11 +293,21 @@ exports.getCalendarPage = async function (req, res){
       }
       calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:day1, day2:day2, day3:day3, day4:day4, day5:day5, day6:day6, day7:day7})
     }
+    console.log(   calendarData )
+    console.log(formattedWeek)
     res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
     res.redirect('/')
   }
+}
+
+function MonthDayToJPFromDateObj(dt){
+  //2021/11/2(火)
+  var m = ('00' + (dt.getMonth()+1)).slice(-2);
+  var d = ('00' + dt.getDate()).slice(-2);
+  var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
+  return ( m + '/' + d + '('+w+')');
 }
 
 function DayToJPFromDateObj(dt){
