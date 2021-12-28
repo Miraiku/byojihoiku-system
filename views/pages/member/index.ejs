@@ -15,7 +15,9 @@
     </section>
     <section>
       <div class="tabs is-btn l-container">
-        <input id="tab1" type="radio" name="tab_item" checked>
+        <input id="taball" type="radio" name="tab_item" checked>
+        <label class="tab_item" for="taball">全員</label>
+        <input id="tab1" type="radio" name="tab_item">
         <label class="tab_item" for="tab1">2021年度</label>
         <input id="tab2" type="radio" name="tab_item">
         <label class="tab_item" for="tab2">2020年度</label>
@@ -40,6 +42,60 @@
         <input id="tab12" type="radio" name="tab_item">
         <label class="tab_item" for="tab12">2010年度</span></label>
 
+        <div class="tab_content" id="taball_content">
+          <div class="tab_content_description">
+            <section>
+              <div>
+                <h3>全員</h3>
+                <div class="operation">
+                  <button class="btn-s is-square is-red">削除</button>
+                  <input type="text" class="is-sm" placeholder="名前で検索">
+                  <a href="#" class="btn-s is-square is-yellow">詳細<span>ドキュメントに移動</span><img src="/img/icon-jump.svg"></a>
+                </div>
+                <div class="table-wrap">
+                  <table class="table">
+                    <tr>
+                      <th>&nbsp;</th>
+                      <th>会員ID</th>
+                      <th>LINE識別番号</th>
+                      <th>児童氏名</th>
+                      <th>生年月日</th>
+                      <th>年齢</th>
+                      <th>アレルギー</th>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <tr data-href="/member/entry">
+                      <td>
+                        <input type="checkbox" id="check1" name="">
+                        <label for="check1" class="checkbox"></label>
+                      </td>
+                      <td>21001</td>
+                      <td>testhanako2021</td>
+                      <td>ヤマダタロウ</td>
+                      <td>2021/01/01</td>
+                      <td>2歳1ヶ月</td>
+                      <td>有り</td>
+                      <td><button type="button" class="is-red"> 削除 </button></td>
+                    </tr>
+                    <tr data-href="/member/entry">
+                      <td>
+                        <input type="checkbox" id="check2" name="">
+                        <label for="check2" class="checkbox"></label>
+                      </td>
+                      <td>21001</td>
+                      <td>testhanako2021</td>
+                      <td>ヤマダタロウ</td>
+                      <td>2021/01/01</td>
+                      <td>2歳1ヶ月</td>
+                      <td>有り</td>
+                      <td><button type="button" class="is-red">削除</button></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
         <div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>

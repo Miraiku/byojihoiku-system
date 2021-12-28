@@ -45,7 +45,6 @@ exports.getNurseryStatus3Days = async function (req, res){
         }
         all_unread_list.push({id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
-      console.log(all_unread_list)
     }
 
     /*　各園の3日間の状況 */
