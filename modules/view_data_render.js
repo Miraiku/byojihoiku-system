@@ -161,7 +161,7 @@ exports.getMembersPage = async function (req, res){
       }else{
         allergy = '無し'
       }
-      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.MemberID})
+      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
     }
     res.render("pages/member/index", {Members:mem})
   } catch (error) {
