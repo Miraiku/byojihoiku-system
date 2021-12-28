@@ -8,17 +8,36 @@ const pool = new Pool({
   }
 });
 const https = require("https");
-const psgl = require('./db_postgre')
+const psgl = require('./db_postgre');
+const e = require('connect-flash');
 
 exports.getMemberNameByMemberID = async function (req, res){
   try {
     const nursery_list = await psgl.getNurseryID_Name_Capacity();
     let status3days = []
     for(let i = 0; i < nursery_list.length; i++){
-      status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, status:await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id)})
+      let Unread = 0
+      let Cancelled = 0
+      let Waiting = 0
+      let Rejected = 0
+      let Reserved = 0
+      for (const status of await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id)) {
+        if(status == 'Unread'){
+          Unread += 1
+        }else if(status == 'Cancelled'){
+          Cancelled += 1
+        }else if(status == 'Waiting'){
+          Waiting += 1
+        }else if(status == 'Rejected'){
+          Rejected += 1
+        }else if(status == 'Reserved'){
+          Reserved += 1
+        }
+      }
+      status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved})
     }
     for (const status of status3days) {
-      console.log(status)
+      console.log(status.status[0])
     }
     
     if (error) {
@@ -26,7 +45,7 @@ exports.getMemberNameByMemberID = async function (req, res){
     }
     res.render("pages/home/index")//, {todoDbList: results.rows}
   } catch (error) {
-    
+    console.log("ERR @getMemberNameByMemberID: "+ error)
   }
   //get nursery and date count today tomorrow
   //CURRENT_DATE + 2 AS DAYAFTERTOMORROW
