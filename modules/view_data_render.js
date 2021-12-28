@@ -201,13 +201,6 @@ exports.getEntryPage = async function (req, res){
 exports.getCalendarPage = async function (req, res){
   try {
     //園ごとの日付
-    const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
-    const today_JST = new Date(JST)
-    const tomorrow_JST = new Date(today_JST);
-    tomorrow_JST.setDate(tomorrow_JST.getDate() + 1);
-    const dayaftertomorrow_JST = new Date(today_JST);
-    dayaftertomorrow_JST.setDate(dayaftertomorrow_JST.getDate() + 2);
-    let today_data, tomorrow_data, dayaftertomorrow_data
     let calendarData = []
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
@@ -215,7 +208,9 @@ exports.getCalendarPage = async function (req, res){
       let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
       let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
       console.log(typeof today[0])
-      console.log(today[0])
+      console.log(nursery_list[i].capacity - today[0].count)
+      console.log(nursery_list[i].capacity - tomorrow[0].count)
+      console.log(nursery_list[i].capacity - dayaftertomorrow[0].count)
       calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     }// end for nursery list
     res.render("pages/calendar/index",{calendarData:calendarData})
