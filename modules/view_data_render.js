@@ -173,7 +173,7 @@ exports.getMembersPage = async function (req, res){
 //member/entry view
 exports.getEntryPage = async function (req, res){
   try {
-    console.log(req.query.value)
+    console.log(req.params.name)
     res.render("pages/member/entry")
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
