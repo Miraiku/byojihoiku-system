@@ -148,10 +148,10 @@ function DayToJPFromDateObj(dt){
 }
 
 exports.getAgeMonth = function (eightBirthdayNumber){
-  console.log(typeof eightBirthdayNumber)
-  let bYear = Number(eightBirthdayNumber.substr( 0, 4 ))
-  let bMonth = Number(eightBirthdayNumber.substr( 4, 2 ))
-  let bDay = Number(eightBirthdayNumber.substr( 6, 2 ))
+  let str_birthday = String(eightBirthdayNumber)
+  let bYear = Number(str_birthday.substr( 0, 4 ))
+  let bMonth = Number(str_birthday.substr( 4, 2 ))
+  let bDay = Number(str_birthday.substr( 6, 2 ))
   /// 現在日時と誕生日日時のDateを取得
   let dateNow = new Date();
   let dateBirth = new Date(bYear, bMonth-1, bDay);
