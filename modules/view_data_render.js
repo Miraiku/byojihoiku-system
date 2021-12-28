@@ -18,7 +18,7 @@ exports.getNurseryStatus3Days = async function (req, res){
   try {
     /*　未処理の予約 */
     let all_unread_list = []
-    const list = await psgl.getReservationStatusUnreadGraterThanToday() 
+    const list = await psgl.getReservationConfirmationFalseGraterThanToday() 
     if(list.length > 0){
       for (const member of list) {
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
@@ -148,9 +148,10 @@ function DayToJPFromDateObj(dt){
 }
 
 exports.getAgeMonth = function (eightBirthdayNumber){
-  let bYear = String(eightBirthdayNumber).substr( 0, 4 )
-  let bMonth = String(eightBirthdayNumber).substr( 4, 2 )
-  let bDay = String(eightBirthdayNumber).substr( 6, 2 )
+  console.log(typeof eightBirthdayNumber)
+  let bYear = Number(eightBirthdayNumber.substr( 0, 4 ))
+  let bMonth = Number(eightBirthdayNumber.substr( 4, 2 ))
+  let bDay = Number(eightBirthdayNumber.substr( 6, 2 ))
   /// 現在日時と誕生日日時のDateを取得
   let dateNow = new Date();
   let dateBirth = new Date(bYear, bMonth-1, bDay);
