@@ -26,6 +26,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         birthday = view.getAgeMonth(birthday[0].BirthDay)
         const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        console.log(member[0].ReservationDate)
         let second,third
         try {
           second = await psgl.getNurseryNameByID(member[0].secondNursery)
