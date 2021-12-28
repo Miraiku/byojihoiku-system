@@ -87,7 +87,7 @@ exports.flushALLNoUpdate20mins = async function(){
       if (err) throw err;
       result = reply
     });
-    Object.entries(result).forEach(([k, v]) => {
+    Object.entries(result).forEach(async ([k, v]) => {
       let now = Date.now()
       let diff_time = now - v;
       console.log('HDETALL No Update within 20mins :'+ k + ', '+ v);

@@ -13,72 +13,64 @@
         みらいく病児予約システム
       </h1>
       <% for (var i = 0; i < calendarData.length; i++) { %>
-        <% if (i === 0) { %> 
-          <input id="tab<%=i+1%>" type="radio" name="tab_item" checked>
-          <label class="tab_item" for="tab<%=i+1%>"><%=calendarData[i].today%></label>
-        <% } else { %>
-          <input id="tab<%=i+1%>" type="radio" name="tab_item">
-          <label class="tab_item" for="tab<%=i+1%>"><%=calendarData[i].tomorrow%></label>
-          <%=calendarData[i].dayaftertomorrow%>
-        <% } %>
-      <% } %>
-      <section>
-        <h2>早苗町</h2>
-        <div class="calendar-status">
-          <div class="row1">
-            <table>
-              <tbody>
-                <tr>
-                  <th>
-                    11/1<br>(火)
-                  </th>
-                  <th>
-                    11/2<br>(水)
-                  </th>
-                  <th>
-                    11/3<br>(木)
-                  </th>
-                  <th>
-                    11/4<br>(金)
-                  </th>
+        <section>
+          <h2><%=calendarData[i].name%></h2>
+          <div class="calendar-status">
+            <div class="row1">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>
+                      11/1<br>(火)
+                    </th>
+                    <th>
+                      11/2<br>(水)
+                    </th>
+                    <th>
+                      11/3<br>(木)
+                    </th>
+                    <th>
+                      11/4<br>(金)
+                    </th>
+                  </tr>
+                  <tr>
+                    <td><%=calendarData[i].today%></td>
+                    <td><%=calendarData[i].tomorrow%></td>
+                    <td><%=calendarData[i].dayaftertomorrow%></td>
+                    <td>○</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row2">
+              <table>
+                <tbody>
+                  <tr>
+                    <th>
+                      11/5<br>(火)
+                    </th>
+                    <th>
+                      11/6<br>(水)
+                    </th>
+                    <th>
+                      11/7<br>(木)
+                    </th>
                 </tr>
-                <tr>
-                  <td>○</td>
-                  <td>×</td>
-                  <td>×</td>
-                  <td>○</td>
-                </tr>
-              </tbody>
-            </table>
+                  <tr>
+                    <td>○</td>
+                    <td>×</td>
+                    <td>×</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ul>
+                <li>○:予約可</li>
+                <li>×:予約不可</li>
+              </ul>
+            <div>
           </div>
-          <div class="row2">
-            <table>
-              <tbody>
-                <tr>
-                  <th>
-                    11/5<br>(火)
-                  </th>
-                  <th>
-                    11/6<br>(水)
-                  </th>
-                  <th>
-                    11/7<br>(木)
-                  </th>
-              </tr>
-                <tr>
-                  <td>○</td>
-                  <td>×</td>
-                  <td>×</td>
-                </tr>
-              </tbody>
-            </table>
-            <ul>
-              <li>○:予約可</li>
-              <li>×:予約不可</li>
-            </ul>
-          <div>
-        </div>
-      </section>
+        </section>
+      <% } %>
       <section>
         <h2>高田</h2>
         <div class="calendar-status">
