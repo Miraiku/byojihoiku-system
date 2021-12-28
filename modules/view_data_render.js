@@ -25,6 +25,7 @@ exports.getMemberNameByMemberID = async function (req, res){
     for(let i = 0; i < nursery_list.length; i++){
       let today_data, tomorrow_data, dayaftertomorrow_data
       for (const status of await psgl.ReservationStatusTodayByNursery(nursery_list[i].id)) {
+        console.log(status)
         if(status == undefined){
           today_data = {date:DayToJPFromDateObj(today_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
         }else{
@@ -105,9 +106,9 @@ exports.getMemberNameByMemberID = async function (req, res){
 }
 
 function DayToJPFromDateObj(dt){
-  var y = dt.getFullYear();
+  //12月31日(金)
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
-  return (y + '年' + m + '月' + d + '日('+w+')');
+  return ( m + '月' + d + '日('+w+')');
 }
