@@ -291,6 +291,13 @@ exports.getMembers = async function (){
   return result//[{},{}]
 }
 
+exports.getMemberInfoByMemberID = async function (id){
+  let sql = `SELECT * FROM public."Member" WHERE "ID" = '${id}';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{},{}]
+}
+
 exports.getLINEIDByMemberID = async function (id){
   let sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${id}';`
   let result = await psgl.sqlToPostgre(sql)

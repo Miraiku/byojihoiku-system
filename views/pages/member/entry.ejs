@@ -13,19 +13,19 @@
       <div class="form-panel is-entry l-container is-md">
         <dl>
           <dt>会員ID</dt>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="21001"></dd>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Members[0].miraikuid%>"></dd>
         </dl>
-        <dl>
+        <!--dl>
           <dt>LINE識別番号</dt>
           <dd>
             <input type="text" class="is-md" placeholder="samplelineid" value="testhanako2021">
             <span>半角英数で入力してください。</span>
         </dd>
-        </dl>
+        </dl-->
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="ヤマダタロウ" value="ヤマダタロウ">
+            <input type="text" class="is-md" placeholder="<%=Members[0].name%>" value="<%=Members[0].name%>">
             <span>全角カタカナで入力してください</span>
           </dd>
         </dl>
@@ -87,11 +87,17 @@
         </dl>
         <dl>
           <dt>アレルギー</dt>
-          <dd>
-            <input type="radio" id="allergy1" name="allergy" checked>
-            <label for="allergy1" class="radio">有り</label>
-            <input type="radio" id="allergy2" name="allergy">
-            <label for="allergy2" class="radio">無し</label>
+          <dd><% if (Members[0].allergy) { %>
+                <input type="radio" id="allergy1" name="allergy" checked>
+                <label for="allergy1" class="radio">有り</label>
+                <input type="radio" id="allergy2" name="allergy">
+                <label for="allergy2" class="radio">無し</label>
+              <% } else { %}
+                <input type="radio" id="allergy1" name="allergy">
+                <label for="allergy1" class="radio">有り</label>
+                <input type="radio" id="allergy2" name="allergy" checked>
+                <label for="allergy2" class="radio">無し</label>
+              <% } %>
           </dd>
         </dl>
       </div>

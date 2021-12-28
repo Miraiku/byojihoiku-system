@@ -173,11 +173,24 @@ exports.getMembersPage = async function (req, res){
 //member/entry view
 exports.getEntryPage = async function (req, res){
   try {
-    console.log(req.params.name)
-    res.render("pages/member/entry")
+    const memberid = req.params.id
+    let info = await psgl.getMemberInfoByMemberID(memberid)
+    let mem =[]
+    let id
+    if(info[0].MiraikuID == undefined){
+      id = ''
+    }else{
+      id = info[0].MiraikuID
+    }
+    let name = info[0].Name
+    let birthday = view.getSlashDateFromt8Number(info[0].BirthDay)
+    let age = view.getAgeMonth(info[0].BirthDay)
+    let allergy = info[0].Allergy
+    mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.MemberID})
+    res.render("pages/member/entry",{Member:info})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
-    res.render("pages/index")
+    res.render("pages/member")
   }
 }
 
