@@ -208,18 +208,17 @@ exports.getCalendarPage = async function (req, res){
     const dayaftertomorrow_JST = new Date(today_JST);
     dayaftertomorrow_JST.setDate(dayaftertomorrow_JST.getDate() + 2);
     let today_data, tomorrow_data, dayaftertomorrow_data
-
+    let calendarData = []
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
       let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
       let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
       let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
       console.log(typeof today[0])
+      console.log(today[0])
       calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     }// end for nursery list
-    
-    mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
-    res.render("pages/calendar/index",{Member:info})
+    res.render("pages/calendar/index",{calendarData:calendarData})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
     res.redirect('/')
