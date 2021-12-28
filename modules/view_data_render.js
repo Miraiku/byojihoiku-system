@@ -20,6 +20,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     const list = await psgl.getReservationStatusUnreadGraterThanToday() 
     if(list.length > 0){
       for (const member of list) {
+        console.log(m)
         const name = await psgl.getMemberNameByMemberID(member.MemberID)
         const birthday = await psgl.getMemberBirthDayByID(member.MemberID)
         const disease = await psgl.getDiseaseNameFromID(member.DiseaseID)
