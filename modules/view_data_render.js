@@ -305,7 +305,7 @@ exports.getCalendarPage = async function (req, res){
 //reservation view
 exports.getReservationPage = async function (req, res){
   try {
-    const reservationid = req.params.reservationid
+    const reservationid = req.params.nurseryid
     res.render("pages/reservation/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)

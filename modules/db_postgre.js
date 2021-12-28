@@ -285,7 +285,7 @@ exports.getReservationDetailsByReservationID = async function (id){
 }
 
 exports.getMembers = async function (){
-  let sql = `SELECT * FROM public."Member" and "Disabled" = 'false';`
+  let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false';`
 
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
