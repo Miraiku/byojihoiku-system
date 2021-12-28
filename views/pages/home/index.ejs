@@ -6,16 +6,14 @@
 
 <body class="home page">
   <%- include ("../../partials/header.ejs") %>
-  <% for (var i = 0; i < Status3Days.length; i++) { %>
-    <%= Status3Days[i] %>
-    <%= Status3Days[i].id %>
-    <%= Status3Days[i].name %>
+  <% for (var i = 0; i < AllUnread.length; i++) { %>
+    <% if (i === 0) { %> 
+      <%=AllUnread[i].name%>
+    <% } else { %>
+      <%=AllUnread[i].name%>
     <% } %>
-  <% for (const i of Status3Days) { %>
-    <%= i %>
-    <%= i.today.date %>
-    <%= i.name %>
   <% } %>
+  
   <main class="l-main">
     <section>
       <div class="l-container">

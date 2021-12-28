@@ -11,11 +11,39 @@ const https = require("https");
 const psgl = require('./db_postgre');
 const e = require('connect-flash');
 const { off } = require('process');
+const { all } = require('./line_receiver');
 
-exports.getMemberNameByMemberID = async function (req, res){
+exports.getNurseryStatus3Days = async function (req, res){
   try {
-    const nursery_list = await psgl.getNurseryID_Name_Capacity();
+    /*　未処理の予約 */
+    let all_unread_list = []
+    const list = await psgl.getReservationStatusUnreadGraterThanToday() 
+    if(list.length > 0){
+      for (const member of list) {
+        const name = await psgl.getMemberNameByMemberID(member.MemberID)
+        const birthday = await psgl.getMemberBirthDayByID(member.MemberID)
+        const disease = await psgl.getDiseaseNameFromID(member.DiseaseID)
+        const first = await psgl.getNurseryNameByID(member.firstNursery)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member.secondNursery)
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member.thirdNursery)
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        all_unread_list.push({name:name[0].Name, birthday:birthday[0].BirthDay, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+
+    /*　各園の3日間の状況 */
     let status3days = []
+    const nursery_list = await psgl.getNurseryID_Name_Capacity()
     const JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
     const today_JST = new Date(JST)
     const tomorrow_JST = new Date(today_JST);
@@ -98,7 +126,8 @@ exports.getMemberNameByMemberID = async function (req, res){
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     }// end for nursery list
-    res.render("pages/home/index", {Status3Days: status3days})
+    console.log(all_unread_list[0])
+    res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list[0]})
   } catch (error) {
     res.render("pages/index")
     console.log("ERR @getMemberNameByMemberID: "+ error)

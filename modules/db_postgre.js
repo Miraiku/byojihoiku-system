@@ -62,6 +62,7 @@ exports.getNurseryIdByName = async function (name){
 exports.getNurseryNameByID = async function (id){
   let sql = `SELECT "NurseryName" FROM public."Nursery" WHERE "ID" = '`+id+`';`
   return await psgl.sqlToPostgre(sql)
+  // 0 == 'なし'
 }
 
 exports.getAvailableNurseryOnThatDay = async function (date){
@@ -101,6 +102,11 @@ exports.isMemberedInMemberTable = async function (lineid, name, birthday){
 
 exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthday){
   let sql = `SELECT "ID" FROM public."Member" WHERE "Name" = '`+name+`' and "LINEID" = '`+lineid+`' and "BirthDay" = '`+birthday+`' and "MiraikuID" IS NOT NULL;`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getMemberBirthDayByID = async function (id){
+  let sql = `SELECT "BirthDay" FROM public."Member" WHERE "ID" = '`+id+`' and "MiraikuID" IS NOT NULL;`
   return await psgl.sqlToPostgre(sql)
 }
 
@@ -318,4 +324,10 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
   let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
+}
+
+exports.getReservationStatusUnreadGraterThanToday = async function (){
+  let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Unread';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result
 }
