@@ -231,7 +231,7 @@ exports.getCalendarPage = async function (req, res){
     let formattedWeek = []
     let formattedWeekDay = []
     formattedWeek.push({day1:MonthDayToJPFromDateObj(day1_JST),day2:MonthDayToJPFromDateObj(day2_JST),day3:MonthDayToJPFromDateObj(day3_JST),day4:MonthDayToJPFromDateObj(day4_JST),day5:MonthDayToJPFromDateObj(day5_JST),day6:MonthDayToJPFromDateObj(day6_JST),day7:MonthDayToJPFromDateObj(day7_JST)})
-    formattedWeekDay.push({day1:DayToJPFromDateObj(day1_JST),day2:DayToJPFromDateObj(day2_JST),day3:DayToJPFromDateObj(day3_JST),day4:DayToJPFromDateObj(day4_JST),day5:DayToJPFromDateObj(day5_JST),day6:DayToJPFromDateObj(day6_JST),day7:DayToJPFromDateObj(day7_JST)})
+    formattedWeekDay.push({day1:WeekDayToJPFromDateObj(day1_JST),day2:WeekDayToJPFromDateObj(day2_JST),day3:WeekDayToJPFromDateObj(day3_JST),day4:WeekDayToJPFromDateObj(day4_JST),day5:WeekDayToJPFromDateObj(day5_JST),day6:WeekDayToJPFromDateObj(day6_JST),day7:WeekDayToJPFromDateObj(day7_JST)})
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
       if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
@@ -311,7 +311,7 @@ function MonthDayToJPFromDateObj(dt){
   return ( m + "/" + d );
 }
 
-function DayToJPFromDateObj(dt){
+function WeekDayToJPFromDateObj(dt){
   //(火)
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
   return "("+w+")"
