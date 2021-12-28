@@ -140,7 +140,7 @@ exports.getNurseryStatus3Days = async function (req, res){
 
 function DayToJPFromDateObj(dt){
   //2021/11/2(火)
-  var y = dt.getFullYear();
+  var y = dt.getFullYear()
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
