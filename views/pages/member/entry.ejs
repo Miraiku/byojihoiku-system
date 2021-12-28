@@ -25,8 +25,8 @@
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="<%=Member[0].name%>" value="<%=Member[0].name%>">
-            <span>全角カタカナで入力してください</span>
+            <input type="text" class="is-md" placeholder="<%=Member.name%>" value="<%=Member.name%>">
+            <span><%=Member%>"全角カタカナで入力してください</span>
           </dd>
         </dl>
         <dl>
@@ -87,7 +87,7 @@
         </dl>
         <dl>
           <dt>アレルギー</dt>
-          <dd><% if (Member[0].allergy) { %>
+          <dd><% if (Member.allergy) { %>
                 <input type="radio" id="allergy1" name="allergy" checked>
                 <label for="allergy1" class="radio">有り</label>
                 <input type="radio" id="allergy2" name="allergy">
