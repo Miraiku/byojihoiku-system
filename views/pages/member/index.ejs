@@ -65,7 +65,7 @@
                     <% for (var i = 0; i < Members.length; i++) { %>
                       <tr data-href="/member/entry">
                         <td>
-                          <input type="checkbox" id="check1" name="">
+                          <input type="checkbox" id="check1" name="<%=Members[i].memberid%>">
                           <label for="check1" class="checkbox"></label>
                         </td>
                         <td><%=Members[i].miraikuid%></td>

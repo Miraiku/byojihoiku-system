@@ -148,7 +148,7 @@ exports.getMembersPage = async function (req, res){
     for (const m of members) {
       let id
       if(m.MiraikuID == undefined){
-        id = '-'
+        id = '未付与'
       }else{
         id = m.MiraikuID
       }
@@ -161,7 +161,7 @@ exports.getMembersPage = async function (req, res){
       }else{
         allergy = 'なし'
       }
-      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy})
+      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.MemberID})
     }
     res.render("pages/member/index", {Members:mem})
   } catch (error) {
