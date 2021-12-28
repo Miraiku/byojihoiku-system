@@ -304,6 +304,11 @@ exports.getMemberNameByMemberID = async function (id){
   return result//[{}]
 }
 
+exports.getMiraikuIDByMemberID = async function (id){
+  let sql = `SELECT "MiraikuID" FROM public."Member" WHERE "ID" = '${id}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
 /* View */
 
 

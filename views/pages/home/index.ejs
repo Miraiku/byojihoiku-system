@@ -113,18 +113,18 @@
                 <td>21001</td>
                 <td><%=AllUnread[i].name%></td>
                 <td><%=AllUnread[i].birthday%></td>
-                <td>2021/01/01(月)</td>
+                <td><%=AllUnread[i].date%></td>
                 <td class="is-left">
-                  <td><%=AllUnread[i].disease%></td>
+                  <%=AllUnread[i].disease%>
                 </td>
                 <td><%=AllUnread[i].first%></td>
                 <td><%=AllUnread[i].second%></td>
-                <td><%=AllUnread[i].second%></td>
+                <td><%=AllUnread[i].third%></td>
                 <td>
                   <select name="">
-                    <option value="sanaecho">早苗町</option>
-                    <option value="takada">高田</option>
-                    <option value="obuse">小布施</option>
+                    <% for (var i = 0; i < Status3Days.length; i++) { %>
+                      <option value="<%=Status3Days[i].id%>"><%=Status3Days[i].name%></option>
+                    <% } %>
                   </select>
                   <button type="button" class="is-green">予約確定</button>
                   <button type="button" class="is-yellow">キャンセル待ち</button>

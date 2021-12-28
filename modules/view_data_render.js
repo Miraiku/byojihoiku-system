@@ -22,11 +22,12 @@ exports.getNurseryStatus3Days = async function (req, res){
     if(list.length > 0){
       for (const member of list) {
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
         birthday = view.getAgeMonth(birthday[0].BirthDay)
         const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
-        console.log(member[0].ReservationDate)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
         let second,third
         try {
           second = await psgl.getNurseryNameByID(member[0].secondNursery)
@@ -42,7 +43,7 @@ exports.getNurseryStatus3Days = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        all_unread_list.push({name:name[0].Name, birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        all_unread_list.push({name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
 
@@ -166,4 +167,10 @@ exports.getAgeMonth = function (eightBirthdayNumber){
   let ageM = Math.floor((daysTillNow - 365*ageY) / DAYS_PER_MONTH);
   let ageD = Math.floor((daysTillNow - 365*ageY - DAYS_PER_MONTH*ageM));
   return ageY+"歳"+ageM+"ヶ月"//+ageD+"日"
+}
+
+exports.getDateformatFromPsglTimeStamp = function (dataobj){
+  //2021-12-21T15:00:00.000Z -> 2021/01/01(月)
+  let date = new Date(dataobj);
+  return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + '/' + '('+[ "日", "月", "火", "水", "木", "金", "土" ][date.getDay()]+')'
 }
