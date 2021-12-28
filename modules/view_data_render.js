@@ -45,6 +45,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         }
         all_unread_list.push({id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
+      console.log(all_unread_list)
     }
 
     /*　各園の3日間の状況 */
@@ -172,5 +173,5 @@ exports.getAgeMonth = function (eightBirthdayNumber){
 exports.getDateformatFromPsglTimeStamp = function (dataobj){
   //2021-12-21T15:00:00.000Z -> 2021/01/01(月)
   let date = new Date(dataobj);
-  return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2) + '/' + '('+[ "日", "月", "火", "水", "木", "金", "土" ][date.getDay()]+')'
+  return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2)  + '('+[ "日", "月", "火", "水", "木", "金", "土" ][date.getDay()]+')'
 }
