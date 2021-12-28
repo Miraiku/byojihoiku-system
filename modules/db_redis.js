@@ -58,7 +58,7 @@ exports.hgetAll = async function (id,key){
 }
 
 exports.resetAllStatus = async function (id){
-  await redis_client.hgetall(id, (err, reply) => {
+  await redis_client.hgetall(id, async (err, reply) => {
     if (err) throw err;
     Object.keys(reply).forEach(async function (key,val) {
       await redis_client.hdel(id, key,(err, reply) => {
