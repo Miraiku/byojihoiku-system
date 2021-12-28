@@ -184,9 +184,12 @@ exports.getEntryPage = async function (req, res){
     }
     let name = info[0].Name
     let birthday = view.getSlashDateFromt8Number(info[0].BirthDay)
+    let bYear = info[0].BirthDay.substr( 0, 4 )
+    let bMonth = info[0].BirthDay.substr( 4, 2 )
+    let bDay = info[0].BirthDay.substr( 6, 2 )
     let age = view.getAgeMonth(info[0].BirthDay)
     let allergy = info[0].Allergy
-    mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:info[0].ID})
+    mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
     res.render("pages/member/entry",{Member:info})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
