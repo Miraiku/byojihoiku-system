@@ -284,6 +284,13 @@ exports.getReservationDetailsByReservationID = async function (id){
   return result
 }
 
+exports.getMembers = async function (){
+  let sql = `SELECT * FROM public."Member";`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{},{}]
+}
+
 exports.getLINEIDByMemberID = async function (id){
   let sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${id}';`
   let result = await psgl.sqlToPostgre(sql)

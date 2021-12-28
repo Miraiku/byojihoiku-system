@@ -141,6 +141,29 @@ exports.getNurseryStatus3Days = async function (req, res){
 }
 
 //member view
+exports.getMembersPage = async function (req, res){
+  try {
+    let res =[]
+    let members = await psgl.getMembers()
+    for (const m of members) {
+      let id = m[0].MiraikuID
+      let name = m[0].Name
+      let birthday = m[0].BirthDay
+      let age = view.getAgeMonth(birthday)
+      let allergy = m[0].allergy
+      if(allergy){
+        allergy = 'あり'
+      }else{
+        allergy = 'なし'
+      }
+      res.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy})
+    }
+    res.render("pages/member/index", {Members:res})
+  } catch (error) {
+    console.log("ERR @MembersPage: "+ error)
+    res.render("pages/index")
+  }
+}
 
 function DayToJPFromDateObj(dt){
   //2021/11/2(火)
