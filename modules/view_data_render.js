@@ -41,7 +41,7 @@ exports.getNurseryStatus3Days = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        all_unread_list.push({name:name[0].Name, birthday:birthday[0].BirthDay, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        all_unread_list.push({name:name[0].Name, birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
 
