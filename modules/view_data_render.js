@@ -22,16 +22,15 @@ exports.getMemberNameByMemberID = async function (req, res){
       let Rejected = 0
       let Reserved = 0
       for (const status of await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id)) {
-        console.log(status)
-        if(status == 'Unread'){
+        if(status.ReservationStatus == 'Unread'){
           Unread += 1
-        }else if(status == 'Cancelled'){
+        }else if(status.ReservationStatus == 'Cancelled'){
           Cancelled += 1
-        }else if(status == 'Waiting'){
+        }else if(status.ReservationStatus == 'Waiting'){
           Waiting += 1
-        }else if(status == 'Rejected'){
+        }else if(status.ReservationStatus == 'Rejected'){
           Rejected += 1
-        }else if(status == 'Reserved'){
+        }else if(status.ReservationStatus == 'Reserved'){
           Reserved += 1
         }
       }
