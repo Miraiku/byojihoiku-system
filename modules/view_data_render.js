@@ -21,19 +21,19 @@ exports.getNurseryStatus3Days = async function (req, res){
     if(list.length > 0){
       for (const member of list) {
         console.log(member)
-        const name = await psgl.getMemberNameByMemberID(member.MemberID)
-        const birthday = await psgl.getMemberBirthDayByID(member.MemberID)
-        const disease = await psgl.getDiseaseNameFromID(member.DiseaseID)
-        const first = await psgl.getNurseryNameByID(member.firstNursery)
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        const disease = await psgl.getDiseaseNameFromID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let second,third
         try {
-          second = await psgl.getNurseryNameByID(member.secondNursery)
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
         } catch (error) {
           //NurseryID = 0
           second = 'なし'
         }
         try {
-          third = await psgl.getNurseryNameByID(member.thirdNursery)
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
         } catch (error) {
           //NurseryID = 0
           third = 'なし'
