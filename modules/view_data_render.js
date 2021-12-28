@@ -153,7 +153,7 @@ exports.getMembersPage = async function (req, res){
         id = m.MiraikuID
       }
       let name = m.Name
-      let birthday = m.BirthDay
+      let birthday = getSlashDateFromt8Number(m.BirthDay)
       let age = view.getAgeMonth(birthday)
       let allergy = m.allergy
       if(allergy == 'true'){
@@ -204,4 +204,10 @@ exports.getDateformatFromPsglTimeStamp = function (dataobj){
   //2021-12-21T15:00:00.000Z -> 2021/01/01(月)
   let date = new Date(dataobj);
   return date.getFullYear() + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' +('0' + date.getDate()).slice(-2)  + '('+[ "日", "月", "火", "水", "木", "金", "土" ][date.getDay()]+')'
+}
+
+exports.getSlashDateFromt8Number = function (num){
+//20221122 -> 2022/11/22
+let s = String(num)
+return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr( 6, 2 ))
 }
