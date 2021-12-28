@@ -15,9 +15,7 @@ exports.getMemberNameByMemberID = async function (req, res){
     const nursery_list = await psgl.getNurseryID_Name_Capacity();
     let status3days = []
     for(let i = 0; i < nursery_list.length; i++){
-      status3days.push(await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id))
-      
-      //status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, status:})
+      status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, status:await psgl.ReservationStatus3DaysByNursery(nursery_list[i].id)})
     }
     for (const status of status3days) {
       console.log(status)
@@ -25,8 +23,8 @@ exports.getMemberNameByMemberID = async function (req, res){
     
     if (error) {
       throw error;
-  }
-    res.render("../views/pages/home/index.ejs", {todoDbList: results.rows})
+    }
+    res.render("pages/home/index")//, {todoDbList: results.rows}
   } catch (error) {
     
   }
