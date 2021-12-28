@@ -82,6 +82,7 @@ exports.getMemberNameByMemberID = async function (req, res){
         dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
+      console.log(status3days)
     }
     res.render("pages/home/index", {Status3Days: status3days})
   } catch (error) {
