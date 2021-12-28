@@ -183,6 +183,9 @@ exports.getMembersPage = async function (req, res){
 exports.getEntryPage = async function (req, res){
   try {
     const memberid = req.params.memberid
+    if(!view.isValidNum(memberid)){
+      throw new Error('invalid num')
+    }
     let info = await psgl.getMemberInfoByMemberID(memberid)
     let mem =[]
     let id
@@ -199,6 +202,7 @@ exports.getEntryPage = async function (req, res){
     let age = view.getAgeMonth(info[0].BirthDay)
     let allergy = info[0].Allergy
     mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
+    console.log(Member)
     res.render("pages/member/entry",{Member:mem})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
@@ -306,6 +310,9 @@ exports.getCalendarPage = async function (req, res){
 exports.getReservationPage = async function (req, res){
   try {
     const reservationid = req.params.nurseryid
+    if(!view.isValidNum(reservationid)){
+      throw new Error('invalid num')
+    }
     res.render("pages/reservation/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
@@ -317,6 +324,9 @@ exports.getReservationPage = async function (req, res){
 exports.getReservationConfirmPage = async function (req, res){
   try {
     const reservationid = req.params.reservationid
+    if(!view.isValidNum(reservationid)){
+      throw new Error('invalid num')
+    }
     res.render("pages/reservation/confirm",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
@@ -389,4 +399,31 @@ exports.getSlashDateFromt8Number = function (num){
 //20221122 -> 2022/11/22
 let s = String(num)
 return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr( 6, 2 ))
+}
+
+exports.isValidNum = function (s){
+  //半角と全角どちらでも受け付ける
+  if(Number(s) == NaN){
+    if(Number(view.zenkaku2Hankaku(s)) == NaN){
+      return false
+    }else{
+      return true
+    }
+  }{
+    return true
+  }
+}
+
+exports.zenkaku2Hankaku = function (val) {
+  var regex = /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g;
+
+  // 入力値の全角を半角の文字に置換
+  value = val
+    .replace(regex, function (s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xfee0);
+    })
+    .replace(/[‐－―]/g, "-") // ハイフンなど
+    .replace(/[～〜]/g, "~") // チルダ
+    .replace(/　/g, " "); // スペース
+  return value;
 }
