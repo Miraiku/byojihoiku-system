@@ -9,10 +9,12 @@
   <% for (var i = 0; i < Status3Days.length; i++) { %>
     <%= Status3Days[i] %>
     <%= Status3Days[i].id %>
+    <%= Status3Days[i].name %>
     <% } %>
   <% for (const i of Status3Days) { %>
     <%= i %>
-    <%= i[0].id %>
+    <%= i.id %>
+    <%= i.name %>
   <% } %>
   <main class="l-main">
     <section>
