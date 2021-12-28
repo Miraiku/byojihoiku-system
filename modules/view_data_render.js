@@ -9,6 +9,7 @@ const pool = new Pool({
 });
 const https = require("https");
 const psgl = require('./db_postgre');
+const view = require('./view_data_render');
 const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
@@ -22,18 +23,21 @@ exports.getNurseryStatus3Days = async function (req, res){
       for (const member of list) {
         console.log(member)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
-        const birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday)
         const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let second,third
         try {
           second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
         } catch (error) {
           //NurseryID = 0
           second = 'なし'
         }
         try {
           third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
         } catch (error) {
           //NurseryID = 0
           third = 'なし'
@@ -142,4 +146,24 @@ function DayToJPFromDateObj(dt){
   var d = ('00' + dt.getDate()).slice(-2);
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
   return (y + '/' + m + '/' + d + '('+w+')');
+}
+
+exports.getAgeMonth = function (eightBirthdayNumber){
+  let bYear = Number(eightBirthdayNumber.substr( 0, 4 ))
+  let bMonth = Number(eightBirthdayNumber.substr( 4, 2 ))
+  let bDay = Number(eightBirthdayNumber.substr( 6, 2 ))
+  /// 現在日時と誕生日日時のDateを取得
+  let dateNow = new Date();
+  let dateBirth = new Date(bYear, bMonth-1, bDay);
+ 
+  /// 現在日時までのミリ秒と日数を計算
+  let timeTillNow = dateNow.getTime() - dateBirth.getTime(); 
+  let daysTillNow = timeTillNow / (1000 * 3600 * 24); 
+  
+  /// 年齢の年部分・月部分・日部分をそれぞれ計算
+  const DAYS_PER_MONTH = 365 / 12;
+  let ageY = Math.floor(daysTillNow / 365);
+  let ageM = Math.floor((daysTillNow - 365*ageY) / DAYS_PER_MONTH);
+  let ageD = Math.floor((daysTillNow - 365*ageY - DAYS_PER_MONTH*ageM));
+  return ageY+"歳"+ageM+"ヶ月"//+ageD+"日"
 }

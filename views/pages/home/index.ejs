@@ -7,11 +7,7 @@
 <body class="home page">
   <%- include ("../../partials/header.ejs") %>
   <% for (var i = 0; i < AllUnread.length; i++) { %>
-    <% if (i === 0) { %> 
-      <%=AllUnread[i].name%>
-    <% } else { %>
-      <%=AllUnread[i].name%>
-    <% } %>
+      <%=AllUnread[i]%>
   <% } %>
   
   <main class="l-main">
