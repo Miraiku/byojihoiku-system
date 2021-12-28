@@ -155,7 +155,8 @@ exports.getMembersPage = async function (req, res){
       let name = m.Name
       let birthday = getSlashDateFromt8Number(m.BirthDay)
       let age = view.getAgeMonth(birthday)
-      let allergy = m.allergy
+      let allergy = m.Allergy
+      console.log(typeof allergy)
       if(allergy == 'true'){
         allergy = 'あり'
       }else if(allergy == 'false'){
