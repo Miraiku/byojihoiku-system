@@ -25,7 +25,7 @@ exports.getMemberNameByMemberID = async function (req, res){
     for(let i = 0; i < nursery_list.length; i++){
       let today_data, tomorrow_data, dayaftertomorrow_data
       for (const status of await psgl.ReservationStatusTodayByNursery(nursery_list[i].id)) {
-        console.log(status)
+        console.log("aaaaaa:"+status)
         if(status == undefined){
           today_data = {date:DayToJPFromDateObj(today_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
         }else{
