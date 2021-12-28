@@ -153,7 +153,7 @@ exports.getMembersPage = async function (req, res){
         id = m.MiraikuID
       }
       let name = m.Name
-      let birthday = getSlashDateFromt8Number(m.BirthDay)
+      let birthday = view.getSlashDateFromt8Number(m.BirthDay)
       let age = view.getAgeMonth(birthday)
       let allergy = m.Allergy
       console.log(typeof allergy)
