@@ -6,6 +6,10 @@
 
 <body class="home page">
   <%- include ("../../partials/header.ejs") %>
+  <% for (var i = 0; i < Status3Days.length; i++) { %>
+    <%= Status3Days[i] %>
+    <%= Status3Days[i].id %>
+    <% } %>
   <% for (const i of Status3Days) { %>
     <%= i %>
     <%= i.id %>
