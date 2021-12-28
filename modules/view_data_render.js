@@ -230,6 +230,7 @@ exports.getCalendarPage = async function (req, res){
     let calendarData = []
     let formattedWeek = []
     formattedWeek.push({day1:MonthDayToJPFromDateObj(day1_JST),day2:MonthDayToJPFromDateObj(day2_JST),day3:MonthDayToJPFromDateObj(day3_JST),day4:MonthDayToJPFromDateObj(day4_JST),day5:MonthDayToJPFromDateObj(day5_JST),day6:MonthDayToJPFromDateObj(day6_JST),day7:MonthDayToJPFromDateObj(day7_JST)})
+    formattedWeekDay.push({day1:DayToJPFromDateObj(day1_JST),day2:DayToJPFromDateObj(day2_JST),day3:DayToJPFromDateObj(day3_JST),day4:DayToJPFromDateObj(day4_JST),day5:DayToJPFromDateObj(day5_JST),day6:DayToJPFromDateObj(day6_JST),day7:DayToJPFromDateObj(day7_JST)})
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     for(let i = 0; i < nursery_list.length; i++){
       if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
@@ -303,11 +304,16 @@ exports.getCalendarPage = async function (req, res){
 }
 
 function MonthDayToJPFromDateObj(dt){
-  //11/2 <br/>(火)
+  //11/2
   var m = dt.getMonth()+1
   var d = dt.getDate()
+  return ( m + "/" + d );
+}
+
+function DayToJPFromDateObj(dt){
+  //(火)
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
-  return ( m + "/" + d + "<br/>("+w+")");
+  return "("+w+")"
 }
 
 function DayToJPFromDateObj(dt){
