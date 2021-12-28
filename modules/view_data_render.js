@@ -37,7 +37,7 @@ exports.getMemberNameByMemberID = async function (req, res){
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved})
     }
     for (const status of status3days) {
-      console.log(status.status[0])
+      console.log(status)
     }
     
     if (error) {
