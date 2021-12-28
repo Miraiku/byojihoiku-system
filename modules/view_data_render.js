@@ -206,7 +206,7 @@ exports.getEntryPage = async function (req, res){
     res.render("pages/member/entry",{Member:mem})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
-    res.redirect('/member')
+    res.redirect('/member/')
   }
 }
 
@@ -316,7 +316,7 @@ exports.getReservationPage = async function (req, res){
     res.render("pages/reservation/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
-    res.redirect('/reservation')
+    res.redirect('/home/')
   }
 }
 
@@ -330,7 +330,7 @@ exports.getReservationConfirmPage = async function (req, res){
     res.render("pages/reservation/confirm",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
-    res.redirect('/reservation')
+    res.redirect('/reservation/')
   }
 }
 
@@ -341,7 +341,7 @@ exports.getReservationEntryPage = async function (req, res){
     res.render("pages/reservation/entry",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)
-    res.redirect('/reservation')
+    res.redirect('/reservation/')
   }
 }
 
