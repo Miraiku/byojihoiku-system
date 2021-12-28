@@ -296,7 +296,7 @@ exports.getCalendarPage = async function (req, res){
     }
     console.log(   calendarData )
     console.log(formattedWeek)
-    res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek})
+    res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
     res.redirect('/')
