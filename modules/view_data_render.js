@@ -14,6 +14,7 @@ const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
 
+//home view
 exports.getNurseryStatus3Days = async function (req, res){
   try {
     /*　未処理の予約 */
@@ -138,6 +139,8 @@ exports.getNurseryStatus3Days = async function (req, res){
     res.render("pages/index")
   }
 }
+
+//member view
 
 function DayToJPFromDateObj(dt){
   //2021/11/2(火)
