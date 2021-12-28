@@ -12,6 +12,16 @@
         <img src="/img/top-logo.svg"><br>
         みらいく病児予約システム
       </h1>
+      <% for (var i = 0; i < calendarData.length; i++) { %>
+        <% if (i === 0) { %> 
+          <input id="tab<%=i+1%>" type="radio" name="tab_item" checked>
+          <label class="tab_item" for="tab<%=i+1%>"><%=calendarData[i].today%></label>
+        <% } else { %>
+          <input id="tab<%=i+1%>" type="radio" name="tab_item">
+          <label class="tab_item" for="tab<%=i+1%>"><%=calendarData[i].tomorrow%></label>
+          <%=calendarData[i].dayaftertomorrow%>
+        <% } %>
+      <% } %>
       <section>
         <h2>早苗町</h2>
         <div class="calendar-status">

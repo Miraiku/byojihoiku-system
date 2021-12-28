@@ -63,12 +63,12 @@ exports.resetAllStatus = async function (id){
     Object.keys(reply).forEach(async function (key,val) {
       await redis_client.hdel(id, key,(err, reply) => {
         if (err) throw err;
-        console.log('REDIS DELETED KEY: ' + key)
+        console.log('REDIS DELETED KEY: ' + key+ ' ,' + reply)
       });
     });
     await redis_client.del(id, (err, reply) => {
       if (err) throw err;
-      console.log('REDIS DELETED ID: ' + id)
+      console.log('REDIS DELETED ID: ' + id + ' ,' + reply)
     });
   });
 }
@@ -95,6 +95,10 @@ exports.flushALLNoUpdate20mins = async function(){
       console.log("DIFF TIMEL mins " +pass_minutes)
       if(pass_minutes > 20){
         redis_modules.resetAllStatus(k)
+        await redis_client.hdel('update_time', k, (err, reply) => {
+          if (err) throw err;
+          console.log('REDIS DELETED update_time: ' + id + ' ,' + reply)
+        })
       }
     });
   }
