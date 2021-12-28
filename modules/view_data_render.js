@@ -129,8 +129,8 @@ exports.getNurseryStatus3Days = async function (req, res){
     console.log(all_unread_list[0])
     res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list[0]})
   } catch (error) {
-    res.render("pages/index")
     console.log("ERR @getMemberNameByMemberID: "+ error)
+    res.render("pages/index")
   }
 }
 
