@@ -13,11 +13,7 @@
     <% } %>
   <% for (const i of Status3Days) { %>
     <%= i %>
-    <%= i.today %>
-    <% for (const t of i.today) { %>
-      <%= t.date %>
-      <%= i.reserved %>
-    <% } %>
+    <%= i.today.date %>
     <%= i.name %>
   <% } %>
   <main class="l-main">
