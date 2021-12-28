@@ -130,8 +130,7 @@ exports.getNurseryStatus3Days = async function (req, res){
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     }// end for nursery list
-    console.log(all_unread_list[0])
-    res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list[0]})
+    res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list})
   } catch (error) {
     console.log("ERR @getNurseryStatus3Days: "+ error)
     res.render("pages/index")

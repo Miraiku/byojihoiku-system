@@ -6,10 +6,6 @@
 
 <body class="home page">
   <%- include ("../../partials/header.ejs") %>
-  <% for (var i = 0; i < AllUnread.length; i++) { %>
-      <%=AllUnread[i]%>
-  <% } %>
-  
   <main class="l-main">
     <section>
       <div class="l-container">
@@ -111,6 +107,13 @@
               <th>第3希望</th>
               <th>&nbsp;</th>
             </tr>
+            <% for (var i = 0; i < AllUnread.length; i++) { %>
+              <p><%=AllUnread[i]%></p>
+              <p><%=AllUnread[i].name%></p>
+              <p><%=AllUnread[i].birthday%></p>
+            <% } %>
+
+
             <tr>
               <td>1</td>
               <td>21001</td>
