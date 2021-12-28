@@ -302,8 +302,20 @@ exports.getMemberNameByMemberID = async function (id){
 /* View */
 
 
-exports.ReservationStatus3DaysByNursery = async function (id){
-  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" >= DATE 'today' and "ReservationDate" <= CURRENT_DATE + 2;`
+exports.ReservationStatusTodayByNursery = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
+exports.ReservationStatusTomorrowByNursery = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
+exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
