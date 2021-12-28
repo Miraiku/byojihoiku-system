@@ -156,9 +156,9 @@ exports.getMembersPage = async function (req, res){
       let birthday = m.BirthDay
       let age = view.getAgeMonth(birthday)
       let allergy = m.allergy
-      if(allergy){
+      if(allergy == 'true'){
         allergy = 'あり'
-      }else{
+      }else if(allergy == 'false'){
         allergy = 'なし'
       }
       mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy})
