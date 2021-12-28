@@ -37,19 +37,19 @@
                 <div class="tab_content_description">
                   <div class="reservation-items">
                     <div class="reservation-item">
-                      <h2>2021/11/1(月)</h2>
+                      <h2><%= Status3Days[i].today.date %></h2>
                       <div>
                         <dl>
                           <dt>予約確定</dt>
-                          <dd><span><%=Number(Status3Days[i].reserved)%></span>件</dd>
+                          <dd><span><%=Number(Status3Days[i].today.reserved)%></span>件</dd>
                         </dl>
                         <dl>
                           <dt>キャンセル待ち</dt>
-                          <dd><span><%=Number(Status3Days[i].unread)+Number(Status3Days[i].waiting)%></span>件</dd>
+                          <dd><span><%=Number(Status3Days[i].today.unread)+Number(Status3Days[i].today.waiting)%></span>件</dd>
                         </dl>
                         <dl>
                           <dt>キャンセル</dt>
-                          <dd><span><%=Number(Status3Days[i].rejected)+Number(Status3Days[i].cancelled)%></span>件</dd>
+                          <dd><span><%=Number(Status3Days[i].today.rejected)+Number(Status3Days[i].today.cancelled)%></span>件</dd>
                         </dl>
                       </div>
                     </div>

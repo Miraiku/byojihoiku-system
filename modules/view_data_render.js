@@ -97,7 +97,6 @@ exports.getMemberNameByMemberID = async function (req, res){
         dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
-      console.log(status3days)
     }// end for nursery list
     res.render("pages/home/index", {Status3Days: status3days})
   } catch (error) {
@@ -107,9 +106,10 @@ exports.getMemberNameByMemberID = async function (req, res){
 }
 
 function DayToJPFromDateObj(dt){
-  //12月31日(金)
+  //2021/11/2(火)
+  var y = dt.getFullYear();
   var m = ('00' + (dt.getMonth()+1)).slice(-2);
   var d = ('00' + dt.getDate()).slice(-2);
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
-  return ( m + '月' + d + '日('+w+')');
+  return (y + '/' + m + '/' + d + '('+w+')');
 }
