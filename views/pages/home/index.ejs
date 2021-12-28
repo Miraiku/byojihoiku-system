@@ -16,6 +16,20 @@
     <%= i.id %>
     <%= i.name %>
   <% } %>
+  //get nursery and date count today tomorrow
+  //CURRENT_DATE + 2 AS DAYAFTERTOMORROW
+  //1.Reserved（予約完了）
+  //2. Unread（看護師未確認）,Waiting（看護師確認済かつ看護師が受入可能と判断し、キャンセル待ち登録が完了）
+  //3. Rejected（看護師確認済、かつ看護師が対応不可と判断した状態）,Canceled（リマインダーで当日返信が来ない人）
+  //All Nursery , Unread
+  /**
+   * pool.query(sql, (error, results) => {
+          if (error) {
+              throw error;
+          }
+          res.render("allItemInfo.ejs", {todoDbList: results.rows})
+      })
+   */
   <main class="l-main">
     <section>
       <div class="l-container">
@@ -31,194 +45,70 @@
                 <label class="tab_item" for="tab<%=i+1%>"><%=Status3Days[i].name%></label>
               <% } %>
             <% } %>
-            <input id="tab1" type="radio" name="tab_item" checked>
-            <label class="tab_item" for="tab1">早苗町</label>
-            <input id="tab2" type="radio" name="tab_item">
-            <label class="tab_item" for="tab2">高田</label>
-            <input id="tab3" type="radio" name="tab_item">
-            <label class="tab_item" for="tab3">小布施</label>
-            <div class="tab_content" id="tab1_content">
-              <div class="tab_content_description">
-                <div class="reservation-items">
-                  <div class="reservation-item">
-                    <h2>2021/11/1(月)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>1</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
+
+            <% for (var i = 0; i < Status3Days.length; i++) { %>
+              <div class="tab_content" id="tab<%=i+1%>_content">
+                <div class="tab_content_description">
+                  <div class="reservation-items">
+                    <div class="reservation-item">
+                      <h2>2021/11/1(月)</h2>
+                      <div>
+                        <dl>
+                          <dt>予約確定</dt>
+                          <dd><span><%=Number(Status3Days[i].reserved)%></span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル待ち</dt>
+                          <dd><span><%=Number(Status3Days[i].unread)+Number(Status3Days[i].waiting)%></span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル</dt>
+                          <dd><span><%=Number(Status3Days[i].rejected)+Number(Status3Days[i].cancelled)%></span>件</dd>
+                        </dl>
+                      </div>
+                    </div>
+                    <div class="reservation-item">
+                      <h2>2021/11/2(火)</h2>
+                      <div>
+                        <dl>
+                          <dt>予約確定</dt>
+                          <dd><span>2</span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル待ち</dt>
+                          <dd><span>5</span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル</dt>
+                          <dd><span>5</span>件</dd>
+                        </dl>
+                      </div>
+                    </div>
+                    <div class="reservation-item">
+                      <h2>2021/11/3(水)</h2>
+                      <div>
+                        <dl>
+                          <dt>予約確定</dt>
+                          <dd><span>2</span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル待ち</dt>
+                          <dd><span>5</span>件</dd>
+                        </dl>
+                        <dl>
+                          <dt>キャンセル</dt>
+                          <dd><span>5</span>件</dd>
+                        </dl>
+                      </div>
                     </div>
                   </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/2(火)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
+                  <div class="btns">
+                    <a class="btn-l" href="#"><%=Status3Days[i].name%>の予約ページへ</a>
                   </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/3(水)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-                <div class="btns">
-                  <a class="btn-l" href="#">早苗町の予約ページへ</a>
                 </div>
               </div>
-            </div>
+            <% } %>
             
-            <div class="tab_content" id="tab2_content">
-              <div class="tab_content_description">
-                <div class="reservation-items">
-                  <div class="reservation-item">
-                    <h2>2021/11/1(月)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/2(火)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/3(水)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-                <div class="btns">
-                  <a class="btn-l" href="#">高田の予約ページへ</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="tab_content" id="tab3_content">
-              <div class="tab_content_description">
-                <div class="reservation-items">
-                  <div class="reservation-item">
-                    <h2>2021/11/1(月)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>3</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/2(火)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <div class="reservation-item">
-                    <h2>2021/11/3(水)</h2>
-                    <div>
-                      <dl>
-                        <dt>予約確定</dt>
-                        <dd><span>2</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル待ち</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                      <dl>
-                        <dt>キャンセル</dt>
-                        <dd><span>5</span>件</dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-                <div class="btns">
-                  <a class="btn-l" href="#">小布施の予約ページへ</a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

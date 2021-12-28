@@ -38,20 +38,7 @@ exports.getMemberNameByMemberID = async function (req, res){
     }
     res.render("pages/home/index", {Status3Days: status3days})
   } catch (error) {
+    res.render("pages/index")
     console.log("ERR @getMemberNameByMemberID: "+ error)
   }
-  //get nursery and date count today tomorrow
-  //CURRENT_DATE + 2 AS DAYAFTERTOMORROW
-  //1.Reserved（予約完了）
-  //2. Unread（看護師未確認）,Waiting（看護師確認済かつ看護師が受入可能と判断し、キャンセル待ち登録が完了）
-  //3. Rejected（看護師確認済、かつ看護師が対応不可と判断した状態）,Canceled（リマインダーで当日返信が来ない人）
-  //All Nursery , Unread
-  /**
-   * pool.query(sql, (error, results) => {
-          if (error) {
-              throw error;
-          }
-          res.render("allItemInfo.ejs", {todoDbList: results.rows})
-      })
-   */
 }
