@@ -63,7 +63,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Members.length; i++) { %>
-                      <tr data-href="<%= `/member/entry/${Members[i].memberid}` %>">
+                      <tr data-href="<%= `/member/entry/${Members[i].name}` %>">
                         <td>
                           <input type="checkbox" id="check1" name="<%=`${Members[i].memberid}`%>">
                           <label for="check1" class="checkbox"></label>
