@@ -20,7 +20,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     const list = await psgl.getReservationStatusUnreadGraterThanToday() 
     if(list.length > 0){
       for (const member of list) {
-        console.log(m)
+        console.log(member)
         const name = await psgl.getMemberNameByMemberID(member.MemberID)
         const birthday = await psgl.getMemberBirthDayByID(member.MemberID)
         const disease = await psgl.getDiseaseNameFromID(member.DiseaseID)
@@ -130,7 +130,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     console.log(all_unread_list[0])
     res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list[0]})
   } catch (error) {
-    console.log("ERR @getMemberNameByMemberID: "+ error)
+    console.log("ERR @getNurseryStatus3Days: "+ error)
     res.render("pages/index")
   }
 }
