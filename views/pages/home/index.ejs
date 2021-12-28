@@ -110,7 +110,7 @@
             <% for (var i = 0; i < AllUnread.length; i++) { %>
               <tr>
                 <td><%=i+1%></td>
-                <td>21001</td>
+                <td><%=AllUnread[i].id%></td>
                 <td><%=AllUnread[i].name%></td>
                 <td><%=AllUnread[i].birthday%></td>
                 <td><%=AllUnread[i].date%></td>
@@ -133,58 +133,6 @@
                 </td>
               </tr>
             <% } %>
-
-
-            <tr>
-              <td>1</td>
-              <td>21001</td>
-              <td>ヤマダタロウ</td>
-              <td>2歳1ヶ月</td>
-              <td>2021/01/01(月)</td>
-              <td class="is-left">
-                01.急性上気道炎<br>
-                03.病名が入ります病名が入ります
-              </td>
-              <td>早苗町</td>
-              <td>高田</td>
-              <td>小布施</td>
-              <td>
-                <select name="">
-                  <option value="sanaecho">早苗町</option>
-                  <option value="takada">高田</option>
-                  <option value="obuse">小布施</option>
-                </select>
-                <button type="button" class="is-green">予約確定</button>
-                <button type="button" class="is-yellow">キャンセル待ち</button>
-                <button type="button" class="is-red">対応不可</button>
-                <button type="button" class="is-violet">キャンセル</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>21001</td>
-              <td>ヤマダタロウ</td>
-              <td>2歳1ヶ月</td>
-              <td>2021/01/01(月)</td>
-              <td class="is-left">
-                01.急性上気道炎<br>
-                03.病名が入ります病名が入ります
-              </td>
-              <td>早苗町</td>
-              <td>高田</td>
-              <td>小布施</td>
-              <td>
-                <select name="" class="is-sm">
-                  <option value="sanaecho">早苗町</option>
-                  <option value="takada">高田</option>
-                  <option value="obuse">小布施</option>
-                </select>
-                <button type="button" class="is-green">予約確定</button>
-                <button type="button" class="is-yellow">キャンセル待ち</button>
-                <button type="button" class="is-red">対応不可</button>
-                <button type="button" class="is-violet">キャンセル</button>
-              </td>
-            </tr>
           </table>
         </div>
       </div>
