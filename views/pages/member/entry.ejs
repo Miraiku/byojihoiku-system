@@ -13,7 +13,7 @@
       <div class="form-panel is-entry l-container is-md">
         <dl>
           <dt>会員ID</dt>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Members[0].miraikuid%>"></dd>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>"></dd>
         </dl>
         <!--dl>
           <dt>LINE識別番号</dt>
@@ -25,7 +25,7 @@
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="<%=Members[0].name%>" value="<%=Members[0].name%>">
+            <input type="text" class="is-md" placeholder="<%=Member[0].name%>" value="<%=Member[0].name%>">
             <span>全角カタカナで入力してください</span>
           </dd>
         </dl>
@@ -87,7 +87,7 @@
         </dl>
         <dl>
           <dt>アレルギー</dt>
-          <dd><% if (Members[0].allergy) { %>
+          <dd><% if (Member[0].allergy) { %>
                 <input type="radio" id="allergy1" name="allergy" checked>
                 <label for="allergy1" class="radio">有り</label>
                 <input type="radio" id="allergy2" name="allergy">
