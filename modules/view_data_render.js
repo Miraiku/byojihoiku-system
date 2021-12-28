@@ -23,7 +23,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         console.log(member)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
-        const disease = await psgl.getDiseaseNameFromID(member[0].DiseaseID)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let second,third
         try {
