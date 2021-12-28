@@ -8,6 +8,7 @@ const webhook = require('./modules/line_receiver')
 const cron = require('node-cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
+const views = require('./modules/view_data_render')
 const passport = require('./modules/db_login');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -21,7 +22,7 @@ express()
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
   .get('/calendar', (req, res) => res.render('pages/calendar/index'))
-  .get('/home', (req, res) => res.render('pages/home/index'))
+  .get('/home', views.getMemberNameByMemberID)
   .get('/member', (req, res) => res.render('pages/member/index'))
   .get('/member/entry', (req, res) => res.render('pages/member/entry'))
   .get('/reservation', (req, res) => res.render('pages/reservation/index'))

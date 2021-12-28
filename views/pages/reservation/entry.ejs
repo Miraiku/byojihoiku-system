@@ -10,129 +10,134 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">予約確認</h2>
-      <div class="form-panel is-entry l-container is-md">
-        <dl>
-          <dt>会員ID</dt>
-          <dd>21001</dd>
-        </dl>
-        <dl>
-          <dt>ステータス</dt>
-          <dd>
-            <select class="is-sm" name="">
-              <option value="">予約確定</option>
-              <option value="">対応不可</option>
-              <option value="">キャンセル待ち</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>児童名</dt>
-          <dd>ヤマダタロウ</dd>
-        </dl>
-        <dl>
-          <dt>年齢</dt>
-          <dd>3歳1ヶ月</dd>
-        </dl>
-        <dl>
-          <dt>病名</dt>
-          <dd>
-            <select class="is-md" name="">
-              <option value="">選択してください</option>
-              <option value="">急性上気道炎</option>
-              <option value="">喘息</option>
-            </select><br>
-            <select class="is-md" name="">
-              <option value="">選択してください</option>
-              <option value="">急性上気道炎</option>
-              <option value="">喘息</option>
-            </select><br>
-            <select class="is-md" name="">
-              <option value="">選択してください</option>
-              <option value="">急性上気道炎</option>
-              <option value="">喘息</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>利用日</dt>
-          <dd>
-            <select class="is-md" name="">
-              <option value="">2021/11/1(月)</option>
-              <option value="">2021/11/2(火)</option>
-              <option value="">2021/11/3(水)</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>利用時間</dt>
-          <dd><input type="text" class="is-md" value="9:00-16:00" /></dd>
-        </dl>
-        <dl>
-          <dt>利用園</dt>
-          <dd>
-            <select name="" class="is-md">
-              <option value="sanaecho">早苗町</option>
-              <option value="takada">高田</option>
-              <option value="obuse">小布施</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>保護者名</dt>
-          <dd><input type="text" class="is-md" value="山田花子" /></dd>
-        </dl>
-        <dl>
-          <dt>連絡先</dt>
-          <dd><input type="text" class="is-md" value="080-0000-0000" /></dd>
-        </dl>
-        <dl>
-          <dt>兄妹利用の有無</dt>
-          <dd>
-            <input type="radio" id="family1" name="family" checked>
-            <label for="family1" class="radio">有り</label>
-            <input type="radio" id="family2" name="family">
-            <label for="family2" class="radio">無し</label>
-          </dd>
-        </dl>
-        <dl>
-          <dt>食事の種類</dt>
-          <dd>
-            <select class="is-sm" name="">
-              <option value="">幼児食</option>
-              <option value="">離乳食</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>食事の追加事項</dt>
-          <dd>
-            <select name="">
-              <option value="">おなかに優しい食事（おう吐・下痢）</option>
-            </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt>熱性けいれん</dt>
-          <dd><input type="text" value="回数、初回○歳○ヶ月、最終○歳○ヶ月" /></dd>
-        </dl>
-        <dl>
-          <dt>アレルギー</dt>
-          <dd>
-            <input type="radio" id="allergy1" name="allergy" checked>
-            <label for="allergy1" class="radio">有り</label>
-            <input type="radio" id="allergy2" name="allergy">
-            <label for="allergy2" class="radio">無し</label>
-          <input type="text" value="小麦と卵" />
-          </dd>
-        </dl>
-      </div>
-      <div class="btns">
-        <button class="btn-l is-border" onclick="location.href='/reservation/'">戻る</button>
-        <button class="btn-l">登録</button>
-      </div>
+      <form action="">
+        <div class="form-panel is-entry l-container is-md">
+          <dl>
+            <dt>会員ID</dt>
+            <dd>21001</dd>
+          </dl>
+          <dl>
+            <dt>ステータス</dt>
+            <dd>
+              <select class="is-sm" name="">
+                <option value="">予約確定</option>
+                <option value="">対応不可</option>
+                <option value="">キャンセル待ち</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>児童名</dt>
+            <dd>ヤマダタロウ</dd>
+          </dl>
+          <dl>
+            <dt>年齢</dt>
+            <dd>3歳1ヶ月</dd>
+          </dl>
+          <dl>
+            <dt>病名</dt>
+            <dd>
+              <select class="is-md" name="">
+                <option value="">選択してください</option>
+                <option value="">急性上気道炎</option>
+                <option value="">喘息</option>
+              </select><br>
+              <select class="is-md" name="">
+                <option value="">選択してください</option>
+                <option value="">急性上気道炎</option>
+                <option value="">喘息</option>
+              </select><br>
+              <select class="is-md" name="">
+                <option value="">選択してください</option>
+                <option value="">急性上気道炎</option>
+                <option value="">喘息</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>利用日</dt>
+            <dd>
+              <select class="is-md" name="">
+                <option value="">2021/11/1(月)</option>
+                <option value="">2021/11/2(火)</option>
+                <option value="">2021/11/3(水)</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>利用時間</dt>
+            <dd><input type="text" class="is-md" value="9:00-16:00" required/></dd>
+          </dl>
+          <dl>
+            <dt>利用園</dt>
+            <dd>
+              <select name="" class="is-md">
+                <option value="sanaecho">早苗町</option>
+                <option value="takada">高田</option>
+                <option value="obuse">小布施</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>保護者名</dt>
+            <dd><input type="text" class="is-md" value="山田花子" /></dd>
+          </dl>
+          <dl>
+            <dt>連絡先</dt>
+            <dd><input type="text" class="is-md" value="080-0000-0000" /></dd>
+          </dl>
+          <dl>
+            <dt>兄妹利用の有無</dt>
+            <dd>
+              <input type="radio" id="family1" name="family" checked>
+              <label for="family1" class="radio">有り</label>
+              <input type="radio" id="family2" name="family">
+              <label for="family2" class="radio">無し</label>
+            </dd>
+          </dl>
+          <dl>
+            <dt>食事の種類</dt>
+            <dd>
+              <select class="is-sm" name="">
+                <option value="">幼児食</option>
+                <option value="">離乳食</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>食事の追加事項</dt>
+            <dd>
+              <select name="">
+                <option value="">おなかに優しい食事（おう吐・下痢）</option>
+              </select>
+            </dd>
+          </dl>
+          <dl>
+            <dt>熱性けいれん</dt>
+            <dd><input type="text" value="回数、初回○歳○ヶ月、最終○歳○ヶ月" required/></dd>
+          </dl>
+          <dl>
+            <dt>アレルギー</dt>
+            <dd>
+              <input type="radio" id="allergy1" name="allergy" checked required>
+              <label for="allergy1" class="radio">有り</label>
+              <input type="radio" id="allergy2" name="allergy">
+              <label for="allergy2" class="radio">無し</label>
+            <input type="text" value="小麦と卵" />
+            </dd>
+          </dl>
+        </div>
+        <div class="btns">
+          <button class="btn-l is-border" onclick="location.href='/reservation/'">戻る</button>
+          <button class="btn-l">登録</button>
+        </div>
+      </form>
     </section>
   </main>
 
+  <script>
+    $("#entryForm").validate();
+  </script>
   <%- include ("../../partials/footer.ejs") %>
 </body>
 </html>
