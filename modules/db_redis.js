@@ -60,14 +60,16 @@ exports.hgetAll = async function (id,key){
 exports.resetAllStatus = async function (id){
   await redis_client.hgetall(id, (err, reply) => {
     if (err) throw err;
-    console.log('REDIS DELETED ID: ' + id)
     Object.keys(reply).forEach(async function (key,val) {
       await redis_client.hdel(id, key,(err, reply) => {
         if (err) throw err;
         console.log('REDIS DELETED KEY: ' + key)
       });
     });
-  });
+    await redis_client.del(id, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS DELETED ID: ' + id)
+    });
 }
 
 exports.flushALL = async function(){
