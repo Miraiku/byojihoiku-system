@@ -202,7 +202,7 @@ exports.getEntryPage = async function (req, res){
     let age = view.getAgeMonth(info[0].BirthDay)
     let allergy = info[0].Allergy
     mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
-    console.log(Member)
+    console.log(mem)
     res.render("pages/member/entry",{Member:mem})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
