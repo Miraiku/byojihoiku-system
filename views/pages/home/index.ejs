@@ -22,6 +22,15 @@
         <h3>現在の予約状況</h3>
         <div class="reservation-panel">
           <div class="tabs">
+            <% for (var i = 1; i <= Status3Days.length; i++) { %>
+              <% if (i === 1) { %> 
+                <input id="tab<%=i%>" type="radio" name="tab_item" checked>
+                <label class="tab_item" for="tab<%=i%>"><%=Status3Days[i].name%></label>
+              <% } else { %}
+                <input id="tab<%=i%>" type="radio" name="tab_item">
+                <label class="tab_item" for="tab<%=i%>"><%=Status3Days[i].name%></label>
+              <% } %>
+            <% } %>
             <input id="tab1" type="radio" name="tab_item" checked>
             <label class="tab_item" for="tab1">早苗町</label>
             <input id="tab2" type="radio" name="tab_item">
