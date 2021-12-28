@@ -303,11 +303,11 @@ exports.getCalendarPage = async function (req, res){
 }
 
 function MonthDayToJPFromDateObj(dt){
-  //2021/11/2(火)
-  var m = ('00' + (dt.getMonth()+1)).slice(-2);
-  var d = ('00' + dt.getDate()).slice(-2);
+  //11/2 <br/>(火)
+  var m = ((dt.getMonth()+1)).slice(-2);
+  var d = (dt.getDate()).slice(-2);
   var w = [ "日", "月", "火", "水", "木", "金", "土" ][dt.getDay()]
-  return ( m + '/' + d + '('+w+')');
+  return ( m + '/' + d + '<br/>('+w+')');
 }
 
 function DayToJPFromDateObj(dt){

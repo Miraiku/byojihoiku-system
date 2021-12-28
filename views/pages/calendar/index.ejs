@@ -21,23 +21,23 @@
                 <tbody>
                   <tr>
                     <th>
-                      11/1<br>(火)
+                      <%=formattedWeek[0].day1%>
                     </th>
                     <th>
-                      11/2<br>(水)
+                      <%=formattedWeek[0].day2%>
                     </th>
                     <th>
-                      11/3<br>(木)
+                      <%=formattedWeek[0].day3%>
                     </th>
                     <th>
-                      11/4<br>(金)
+                      <%=formattedWeek[0].day4%>
                     </th>
                   </tr>
                   <tr>
-                    <td><%=calendarData[i].today%></td>
-                    <td><%=calendarData[i].tomorrow%></td>
-                    <td><%=calendarData[i].dayaftertomorrow%></td>
-                    <td>○</td>
+                    <td><%=calendarData[i].day1%></td>
+                    <td><%=calendarData[i].day2%></td>
+                    <td><%=calendarData[i].day3%></td>
+                    <td><%=calendarData[i].day4%></td>
                   </tr>
                 </tbody>
               </table>
@@ -47,19 +47,19 @@
                 <tbody>
                   <tr>
                     <th>
-                      11/5<br>(火)
+                      <%=formattedWeek[0].day5%>
                     </th>
                     <th>
-                      11/6<br>(水)
+                      <%=formattedWeek[0].day6%>
                     </th>
                     <th>
-                      11/7<br>(木)
+                      <%=formattedWeek[0].day7%>
                     </th>
                 </tr>
                   <tr>
-                    <td>○</td>
-                    <td>×</td>
-                    <td>×</td>
+                    <td><%=calendarData[i].day5%></td>
+                    <td><%=calendarData[i].day6%></td>
+                    <td><%=calendarData[i].day7%></td>
                   </tr>
                 </tbody>
               </table>
