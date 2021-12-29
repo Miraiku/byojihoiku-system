@@ -31,13 +31,13 @@ router
           console.log(nursery_capacity)
           console.log(new_capacity)
           if(nursery_capacity - new_capacity > 0){
-            await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
+            //await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           }else{
             res.status(503).send('満員のため変更できませんでした。');
             return
           }
         }else{
-          await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
+          //await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success: '+action);
         }
       }
