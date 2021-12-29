@@ -33,15 +33,16 @@ router
           let new_capacity = Number(reservation_num_on_day[0].count)
           console.log('org'+nursery_capacity)
           console.log('new'+new_capacity)
-          if(nursery_capacity - new_capacity > 0){
+          if((nursery_capacity - new_capacity) > 0){
             await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
+            res.status(200).send('Success');
           }else{
             res.status(406).send('満員のため変更できませんでした。');
             return
           }
         }else{
           await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
-          res.status(200).send('Success: '+action);
+          res.status(200).send('Success');
         }
       }
     } catch (err) {
