@@ -123,7 +123,7 @@
                 <td>
                   <select name="">
                     <% for (var n = 0; n < Status3Days.length; n++) { %>
-                      <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                      <option value="<%=Status3Days[n].id%>"<% if (AllUnread[i].first==Status3Days[n].name) { %>selected<% } %>><%=Status3Days[n].name%></option>
                     <% } %>
                   </select>
                   <button type="button" class="is-green">予約確定</button>
