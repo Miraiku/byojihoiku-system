@@ -310,6 +310,7 @@ exports.getCalendarPage = async function (req, res){
 exports.getReservationPage = async function (req, res){
   try {
     const reservationid = req.params.nurseryid
+    console.log(reservationid)
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
     }
