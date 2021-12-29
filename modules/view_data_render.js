@@ -353,7 +353,7 @@ exports.getReservationPage = async function (req, res){
     }
     let tomorrowStatus = await psgl.ReservationStatusTomorrowByNursery(nurseryid)
     if(tomorrowStatus.length > 0){
-      for (const status of await psgl.ReservationStatusTomorrowByNursery(nursery_list[i].id)) {
+      for (const status of await psgl.ReservationStatusTomorrowByNursery(nurseryid)) {
         let Unread = 0
         let Cancelled = 0
         let Waiting = 0
@@ -377,7 +377,7 @@ exports.getReservationPage = async function (req, res){
     }
     let dayaftertomorrowStatus = await psgl.ReservationStatusDayAfterTomorrowByNursery(nurseryid)
     if(dayaftertomorrowStatus.length > 0){
-      for (const status of await psgl.ReservationStatusDayAfterTomorrowByNursery(nursery_list[i].id)) {
+      for (const status of await psgl.ReservationStatusDayAfterTomorrowByNursery(nurseryid)) {
         let Unread = 0
         let Cancelled = 0
         let Waiting = 0
@@ -491,9 +491,6 @@ return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr
 
 exports.isValidNum = function (s){
   //半角と全角どちらでも受け付ける
-    console.log(s)
-    console.log(Number.isNaN(Number(s)))
-    console.log(Number.isNaN(Number(view.zenkaku2Hankaku(s))))
   if(Number.isNaN(Number(s))){
     if(Number.isNaN(Number(view.zenkaku2Hankaku(s)))){
       return false
@@ -507,7 +504,6 @@ exports.isValidNum = function (s){
 
 exports.zenkaku2Hankaku = function (val) {
   var regex = /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g;
-  console.log('zenkaku2Hankaku '+val)
   // 入力値の全角を半角の文字に置換
   value = val
     .replace(regex, function (s) {
@@ -516,7 +512,5 @@ exports.zenkaku2Hankaku = function (val) {
     .replace(/[‐－―]/g, "-") // ハイフンなど
     .replace(/[～〜]/g, "~") // チルダ
     .replace(/　/g, " "); // スペース
-
-  console.log('zenkaku2Hankaku '+value)
   return value;
 }
