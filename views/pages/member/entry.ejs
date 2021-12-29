@@ -74,67 +74,6 @@
   </main>
 
         
-  <script>
-    (function(){
-      //標準エラーメッセージの変更
-      $.extend($.validator.messages, {
-        miraikuid: '*半角数字で入力してください',
-        year: '*半角数字で入力してください',
-        required: '*入力必須です',
-        miraikuid: '*半角数字で入力してください',
-        year: '*半角数字で入力してください',
-        required: '*入力必須です'
-      });
-      //メソッドの追加
-      $.validator.addMethod('zenkana', function(value, element){
-          if ( this.optional( element ) ) {
-            return true;
-          }
-          return !!value.match(/^[ァ-ヶー　]*$/)
-        },'*全角カナで入力してください');
-
-      //入力項目の検証ルール定義
-      var rules = {
-        miraikuid: {required:true, number: true},
-        year: {required:true, number: true},
-        name: {required: true, zenkana:true}
-      };
-
-      //入力項目ごとのエラーメッセージ定義
-      var messages = {
-        name: {
-          required: "*名前を入力してください",
-        },
-        miraikuid: {
-          required: "*IDを入力してください",
-          number: "*半角数字で入力してください"
-        },
-        year: {
-          required: "*半角数字を入力してください",
-          number: "*半角数字で入力してください"
-        }
-      };
-
-      const memberInfo = $('#memberInfo')
-      $(function(){
-        memberInfo.validate({
-          rules: rules,
-          messages: messages,
-
-          //エラーメッセージ出力箇所調整
-          errorPlacement: function(error, element){
-            error.css('color','#F16B6D');
-            if (element.is(':radio')) {
-              error.appendTo(element.parent());
-            }else {
-              error.insertAfter(element);
-            }
-          }
-        });
-      });
-
-    })();
-  </script>
   <%- include ("../../partials/footer.ejs") %>
 
 </body>

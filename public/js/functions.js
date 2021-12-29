@@ -129,79 +129,135 @@ $(function() {
     })//end of confirm
   });
 
-  //update from /member/entry
-  
-  $(".btn_update_member").on('click', function(e) {
-    if (memberInfo.validate().form()) {
-      const miraikuid = $('input[name="miraikuid"]').val()
-      const name = $('input[name="name"]').val()
-      const year = $('input[name="year"]').val()
-      const month = $('[name="month"] option:selected').val()
-      const day = $('[name="day"] option:selected').val()
-      const allergy = $('input[name="allergy"]:checked').val()
-      console.log(miraikuid)
-      console.log(name)
-      console.log(year)
-      console.log(month)
-      console.log(day)
-      console.log(allergy)         
-      e.preventDefault(); 
-      $.confirmModal('内容を変更しますか？', function(el) {
-        /*$.ajax({
-          url: '/updater',
-          type: 'POST',
-          data: {
-            'action': 'update_status_from_rsv',
-            'status': status,
-            'nurseryid': nurseryid,
-            'rsvid': rsvid
-          },
-          dataType: 'text'
-        }).done(function( data, textStatus, jqXHR ) {
-          notif({
-            type: "success",
-            position: "center",
-            autohide: true,
-            msg: "変更が完了しました",
-            opacity:0.8,
-            multiline: 0,
-            fade: 0,
-            bgcolor: "",
-            color: "",
-            timeout: 5000,
-            zindex: null,
-            offset: 0,
-            animation: 'slide'
-          });
-        }).fail(function( jqXHR, textStatus, errorThrown) {
-          let errmsg = ''
-          if(errorThrown == 'Service Unavailable'){
-            errmsg = '申し訳ありません、変更できませんでした'
-          }else if(errorThrown == 'Not Acceptable'){
-            errmsg = '変更先が満員のため変更できませんでした'
+  // /member/entry validation
+  (function(){
+    $.extend($.validator.messages, {
+      miraikuid: '*半角数字で入力してください',
+      year: '*半角数字で入力してください',
+      required: '*入力必須です',
+      miraikuid: '*半角数字で入力してください',
+      year: '*半角数字で入力してください',
+      required: '*入力必須です'
+    });
+    $.validator.addMethod('zenkana', function(value, element){
+        if ( this.optional( element ) ) {
+          return true;
+        }
+        return !!value.match(/^[ァ-ヶー　]*$/)
+      },'*全角カナで入力してください');
+
+    var rules = {
+      miraikuid: {required:true, number: true},
+      year: {required:true, number: true},
+      name: {required: true, zenkana:true}
+    };
+
+    var messages = {
+      name: {
+        required: "*名前を入力してください",
+      },
+      miraikuid: {
+        required: "*IDを入力してください",
+        number: "*半角数字で入力してください"
+      },
+      year: {
+        required: "*半角数字を入力してください",
+        number: "*半角数字で入力してください"
+      }
+    };
+
+    $(function(){
+      const memberInfo = $('#memberInfo')
+      memberInfo.validate({
+        rules: rules,
+        messages: messages,
+        errorPlacement: function(error, element){
+          error.css('color','#F16B6D');
+          if (element.is(':radio')) {
+            error.appendTo(element.parent());
+          }else {
+            error.insertAfter(element);
           }
-          notif({
-            type: "error",
-            position: "center",
-            msg: errmsg,
-            opacity: 0.8,
-            multiline: 0,
-            fade: 0,
-            bgcolor: "",
-            color: "",
-            timeout: 5000,
-            zindex: null,
-            offset: 0,
-            animation: 'slide'
-          });
-          console.log("失敗"+errorThrown)
-        }).always(function( jqXHR, textStatus) {
-        });//end of ajax*/
-      })//end of confirm
-    } else {
-        return false
-    }
-  });
+        }
+      });
+      //update from /member/entry
+      $(".btn_update_member").on('click', function(e) {
+        if (memberInfo.validate().form()) {
+          const miraikuid = $('input[name="miraikuid"]').val()
+          const name = $('input[name="name"]').val()
+          const year = $('input[name="year"]').val()
+          const month = $('[name="month"] option:selected').val()
+          const day = $('[name="day"] option:selected').val()
+          const allergy = $('input[name="allergy"]:checked').val()
+          console.log(miraikuid)
+          console.log(name)
+          console.log(year)
+          console.log(month)
+          console.log(day)
+          console.log(allergy)         
+          e.preventDefault(); 
+          $.confirmModal('内容を変更しますか？', function(el) {
+            /*$.ajax({
+              url: '/updater',
+              type: 'POST',
+              data: {
+                'action': 'update_member_from_member_entry',
+                'miraikuid':miraikuid,
+                'name':name,
+                'year':year,
+                'month':month,
+                'day':day,
+                'allergy':allergy
+              },
+              dataType: 'text'
+            }).done(function( data, textStatus, jqXHR ) {
+              notif({
+                type: "success",
+                position: "center",
+                autohide: true,
+                msg: "変更が完了しました",
+                opacity:0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+            }).fail(function( jqXHR, textStatus, errorThrown) {
+              let errmsg = ''
+              if(errorThrown == 'Service Unavailable'){
+                errmsg = '申し訳ありません、変更できませんでした'
+              }else if(errorThrown == 'Not Acceptable'){
+                errmsg = '変更先が満員のため変更できませんでした'
+              }
+              notif({
+                type: "error",
+                position: "center",
+                msg: errmsg,
+                opacity: 0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+              console.log("失敗"+errorThrown)
+            }).always(function( jqXHR, textStatus) {
+            });//end of ajax*/
+          })//end of confirm
+        } else {
+            return false
+        }
+      });
+    });//validation function scope
+
+  })();
 
   //update from /reservation/entry
   $(".btn_update_reservation").on('click', function(e) {
