@@ -366,44 +366,71 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
   return result//[{}]
 }
 
-
 exports.WaitingInfoTodayByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
 exports.WaitingInfoTomorrowByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Waiting';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
 exports.WaitingInfoDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Waiting';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
-
 exports.ReservedInfoTodayByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
 exports.ReservedInfoTomorrowByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
 exports.ReservedInfoDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
-  return result//[{}]
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
-
 
 exports.ReservedTodayByNursery = async function (id){
   let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
