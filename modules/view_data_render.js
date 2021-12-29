@@ -524,11 +524,66 @@ exports.getReservationConfirmPage = async function (req, res){
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
     }
-    //reservationid から予約情報と会員情報をとる
-    const rsv = await psgl.getReservationDetailsByReservationID(reservationid)
-    const rsv_details = await psgl.getReservationStatusByReservationID(reservationid)
+    let info = []
+    const rsv = await psgl.getReservationInfoByReservationID(reservationid)
+    const rsv_details = await psgl.getReservationDetailsByReservationID(reservationid)
+    
     console.log(rsv)
     console.log(rsv_details)
+
+    const name = await psgl.getMemberNameByMemberID(rsv[0].MemberID)
+    const miraikuid = await psgl.getMiraikuIDByMemberID(rsv[0].MemberID)
+    let age = await psgl.getMemberBirthDayByID(rsv[0].MemberID)
+    age = view.getAgeMonth(age[0].BirthDay)
+    const disease = await psgl.getDiseaseNameFromUniqueID(rsv_details[0].DiseaseID)
+    console.log(disease)
+    let rsvdate = view.getDateformatFromPsglTimeStamp(rsv[0].ReservationDate)
+    const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
+    const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
+    const nursery = await psgl.getNurseryNameByID(rsv[0].firstNursery)
+    const status = await psgl.getNurseryNameByID(rsv[0].ReservationStatus)
+    const parent_name = rsv_details[0].ParentName
+    const parent_tel = rsv_details[0].ParentTel
+    let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
+    const sameday_members = await psgl.getReservedMemberIDOnTheDay(rsv[0].ReservationDate)
+    let bros_num = 0
+    if(sameday_members.length > 0){
+      for (const m of sameday_members) {
+        let mem = await psgl.getLINEIDByMemberID(m[0].MemberID)
+        if(mem.length > 0 && mem[0].LINEID == lineid[0].LINEID){
+          bros_num += 1
+        }
+      }
+    }
+    if(bros_num > 0){
+      brothers = '有り'
+    }else{
+      brothers = '無し'
+    }
+    const meal = await psgl.getMealNameFromID(rsv_details[0].MealType)
+    let meal_details
+    if(rsv_details[0].MealDetails == 'false'){
+      meal_details = '無し'
+    }else{
+      meal_details = rsv_details[0].MealDetails
+    }
+    let cramps
+    if(rsv_details[0].Cramps == 'false'){
+      cramps = '無し'
+    }else{
+      cramps = rsv_details[0].Cramps
+    }
+    let allergy
+    if(rsv_details[0].Allergy == 'false'){
+      allergy = '無し'
+    }else{
+      allergy = rsv_details[0].Allergy
+    }
+
+    info.push({miraikuid:miraikuid[0].MiraikuID,status:rsv[0].ReservationStatus,name:name[0].Name})
+    //day3_reserved.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+  
+
     res.render("pages/reservation/confirm",{Rsv:rsv, Details:rsv_details})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
@@ -631,4 +686,10 @@ exports.zenkaku2Hankaku = function (val) {
     .replace(/[～〜]/g, "~") // チルダ
     .replace(/　/g, " "); // スペース
   return value;
+}
+
+exports.getHoursJPFormattedFromDayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11:41
+  let date = new Date(dataobj);
+  return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
 }

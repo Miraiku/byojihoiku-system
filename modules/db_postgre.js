@@ -161,7 +161,7 @@ exports.getUniqueIDFromDiseaseID = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getReservationStatusByReservationID = async function (id){
+exports.getReservationInfoByReservationID = async function (id){
   let sql = `SELECT * FROM public."Reservation" WHERE "ID" = ${id};`
   let result = await psgl.sqlToPostgre(sql)
   return result
@@ -465,4 +465,10 @@ exports.getReservationConfirmationFalseGraterThanToday = async function (){
     res.push(await psgl.sqlToPostgre(sql))
   }
   return res
+}
+
+exports.getReservedMemberIDOnTheDay = async function (date){
+  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE '${date}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
 }
