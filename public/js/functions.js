@@ -17,7 +17,7 @@ $(function() {
       console.log(btn_value)
       console.log(status)
       console.log(rsvid)
-      console.log($(`[name=.row_nursery_${rsvid}]`).val())
+      console.log($(`[name=row_nursery_${rsvid}]`).val())
       /*$.ajax({
         url: '/updater',
         type: 'POST',
