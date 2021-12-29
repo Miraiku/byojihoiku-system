@@ -80,41 +80,30 @@
       $.extend($.validator.messages, {
         miraikuid: '*半角数字で入力してください',
         year: '*半角数字で入力してください',
+        required: '*入力必須です',
+        miraikuid: '*半角数字で入力してください',
+        year: '*半角数字で入力してください',
         required: '*入力必須です'
       });
-
-    　//追加ルールの定義
-      var methods = {
-        phone: function(value, element){
-          return this.optional(element) || /^\d{11}$|^\d{3}-\d{4}-\d{4}$/.test(value);
-        },
-        name: function(value, element){
+      //メソッドの追加
+      $.validator.addMethod('zenkana', function(value, element){
           if ( this.optional( element ) ) {
             return true;
           }
-          if (!!value.match(/^[ァ-ヶー　]*$/)) {
-              return true;
-          }
-          return false;
-        }
-      };
-
-      //メソッドの追加
-      $.each(methods, function(key) {
-        $.validator.addMethod(key, this);
-      });
+          return !!value.match(/^[ァ-ヶー　]*$/)
+        },'全角カナで入力してください');
 
       //入力項目の検証ルール定義
       var rules = {
         miraikuid: {required:true, number: true},
         year: {required:true, number: true},
-        name: {required: true}
+        name: {required: true, zenkana:true}
       };
 
       //入力項目ごとのエラーメッセージ定義
       var messages = {
         name: {
-          required: "*名前を入力してください"
+          required: "*名前を入力してください",
         },
         miraikuid: {
           required: "*IDを入力してください",
