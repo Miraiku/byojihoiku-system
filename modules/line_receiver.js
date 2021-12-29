@@ -981,8 +981,8 @@ function hankaku2Zenkaku(str) {
 
 function isValidNum(s){
   //半角と全角どちらでも受け付ける
-  if(Number(s) == NaN){
-    if(Number(zenkaku2Hankaku(s)) == NaN){
+  if(Number.isNaN(Number(s))){
+    if(Number.isNaN(Number(zenkaku2Hankaku(s)))){
       return false
     }else{
       return true

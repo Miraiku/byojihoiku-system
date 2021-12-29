@@ -182,7 +182,8 @@ exports.getMembersPage = async function (req, res){
 //member/entry view
 exports.getEntryPage = async function (req, res){
   try {
-    const memberid = req.params.memberid
+    let memberid = req.params.memberid
+    memberid = view.zenkaku2Hankaku(memberid)
     if(!view.isValidNum(memberid)){
       throw new Error('invalid num')
     }
