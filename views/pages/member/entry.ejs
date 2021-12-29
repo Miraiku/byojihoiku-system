@@ -10,64 +10,66 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">会員編集</h2>
-      <div class="form-panel is-entry l-container is-md" id="memberInfo">
-        <dl>
-          <dt>会員ID</dt>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>" name="miraikuid" required></dd>
-        </dl>
-        <!--dl>
-          <dt>LINE識別番号</dt>
-          <dd>
-            <input type="text" class="is-md" placeholder="samplelineid" value="testhanako2021">
-            <span>半角英数で入力してください。</span>
-        </dd>
-        </dl-->
-        <dl>
-          <dt>児童名</dt>
-          <dd>
-            <input type="text" class="is-md" placeholder="ニシザワミライ" value="<%=Member[0].name%>" name="name" required>
-            <span>全角カタカナで入力してください</span>
+      <form action="#" id="memberInfo">
+        <div class="form-panel is-entry l-container is-md">
+          <dl>
+            <dt>会員ID</dt>
+            <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>" name="miraikuid" required></dd>
+          </dl>
+          <!--dl>
+            <dt>LINE識別番号</dt>
+            <dd>
+              <input type="text" class="is-md" placeholder="samplelineid" value="testhanako2021">
+              <span>半角英数で入力してください。</span>
           </dd>
-        </dl>
-        <dl>
-          <dt>生年月日</dt>
-          <dd>
-            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>" name="year" required>
-            年
-            <select class="is-select-ss" name="month">月
-              <% for (var i = 0; i < 12; i++) { %>
-                <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
-              <% } %>
-            </select>
-            月
-            <select class="is-select-ss" name="day">
-              <% for (var i = 0; i < 31; i++) { %>
-                <option value="<%=i+1%>" <% if (Number(Member[0].bDay)==(i+1)) { %>selected<% } %>><%=i+1%></option>
-              <% } %>
-            </select>
-            日
-          </dd>
-        </dl>
-        <dl>
-          <dt>アレルギー</dt>
-          <dd><% if (Member[0].allergy) { %>
-                <input type="radio" id="allergy1" name="allergy" value="true" checked>
-                <label for="allergy1" class="radio">有り</label>
-                <input type="radio" id="allergy2" name="allergy" value="false">
-                <label for="allergy2" class="radio">無し</label>
-              <% } else { %>
-                <input type="radio" id="allergy1" name="allergy" value="true">
-                <label for="allergy1" class="radio">有り</label>
-                <input type="radio" id="allergy2" name="allergy" value="false" checked>
-                <label for="allergy2" class="radio">無し</label>
-              <% } %>
-          </dd>
-        </dl>
-      </div>
-      <div class="btns">
-        <button class="btn-l is-border" onclick="location.href='/member/'">戻る</button>
-        <button class="btn-l btn_update_member">変更</button>
-      </div>
+          </dl-->
+          <dl>
+            <dt>児童名</dt>
+            <dd>
+              <input type="text" class="is-md" placeholder="ニシザワミライ" value="<%=Member[0].name%>" name="name" required>
+              <span>全角カタカナで入力してください</span>
+            </dd>
+          </dl>
+          <dl>
+            <dt>生年月日</dt>
+            <dd>
+              <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>" name="year" required>
+              年
+              <select class="is-select-ss" name="month">月
+                <% for (var i = 0; i < 12; i++) { %>
+                  <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
+                <% } %>
+              </select>
+              月
+              <select class="is-select-ss" name="day">
+                <% for (var i = 0; i < 31; i++) { %>
+                  <option value="<%=i+1%>" <% if (Number(Member[0].bDay)==(i+1)) { %>selected<% } %>><%=i+1%></option>
+                <% } %>
+              </select>
+              日
+            </dd>
+          </dl>
+          <dl>
+            <dt>アレルギー</dt>
+            <dd><% if (Member[0].allergy) { %>
+                  <input type="radio" id="allergy1" name="allergy" value="true" checked>
+                  <label for="allergy1" class="radio">有り</label>
+                  <input type="radio" id="allergy2" name="allergy" value="false">
+                  <label for="allergy2" class="radio">無し</label>
+                <% } else { %>
+                  <input type="radio" id="allergy1" name="allergy" value="true">
+                  <label for="allergy1" class="radio">有り</label>
+                  <input type="radio" id="allergy2" name="allergy" value="false" checked>
+                  <label for="allergy2" class="radio">無し</label>
+                <% } %>
+            </dd>
+          </dl>
+        </div>
+        <div class="btns">
+          <button class="btn-l is-border" onclick="location.href='/member/'">戻る</button>
+          <button type="submit" class="btn-l btn_update_member">変更</button>
+        </div>
+      </form>
     </section>
   </main>
 
