@@ -68,56 +68,13 @@
                         </td>
                       </tr>
                     <% } %>
-                    <tr data-href="/reservation/confirm">
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
                   </table>
                 </div>
               </div>
             </section>
             <section>
               <div>
+                <!-- //TODO予約はいってないときの処理 -->
                 <h3>キャンセル待ち</h3>
                 <div class="table-wrap">
                   <table class="table">
@@ -130,7 +87,6 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-
                     <% for (var i = 0; i < Day1Wait.length; i++) { %>
                       <tr data-href="/reservation/confirm/<%=Day1Wait[i].memberid%>">
                         <td><%=i+1%></td>
@@ -154,51 +110,7 @@
                         </td>
                       </tr>
                     <% } %>
-                    <tr>
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr class="is-reject">
+                    <!--tr class="is-reject">
                       <td>3</td>
                       <td>21001</td>
                       <td>ヤマダタロウ</td>
@@ -219,7 +131,7 @@
                         <button type="button" class="is-yellow">キャンセル待ち</button>
                         <button type="button" class="is-violet">キャンセル</button>
                       </td>
-                    </tr>
+                    </tr-->
                   </table>
                 </div>
               </div>
@@ -242,50 +154,29 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
+                    <% for (var i = 0; i < Day2Rsv.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day2Rsv[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day2Rsv[i].id%></td>
+                        <td><%=Day2Rsv[i].name%></td>
+                        <td><%=Day2Rsv[i].birthday%></td>
+                        <td><%=Day2Rsv[i].date%></td>
+                        <td class="is-left">
+                          <%=Day2Rsv[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-yellow">キャンセル待ち</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                   </table>
                 </div>
               </div>
@@ -304,50 +195,29 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
+                    <% for (var i = 0; i < Day2Wait.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day2Wait[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day2Wait[i].id%></td>
+                        <td><%=Day2Wait[i].name%></td>
+                        <td><%=Day2Wait[i].birthday%></td>
+                        <td><%=Day2Wait[i].date%></td>
+                        <td class="is-left">
+                          <%=Day2Wait[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="is-sm">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-green">予約確定</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                   </table>
                 </div>
               </div>
@@ -370,51 +240,29 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-                    
-                    <tr data-href="/reservation/confirm">
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-yellow">キャンセル待ち</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
+                    <% for (var i = 0; i < Day3Rsv.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day3Rsv[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day3Rsv[i].id%></td>
+                        <td><%=Day3Rsv[i].name%></td>
+                        <td><%=Day3Rsv[i].birthday%></td>
+                        <td><%=Day3Rsv[i].date%></td>
+                        <td class="is-left">
+                          <%=Day3Rsv[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-yellow">キャンセル待ち</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                   </table>
                 </div>
               </div>
@@ -433,50 +281,29 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>1</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
-                    <tr data-href="/reservation/confirm">
-                      <td>2</td>
-                      <td>21001</td>
-                      <td>ヤマダタロウ</td>
-                      <td>2歳1ヶ月</td>
-                      <td>2021/01/01(月)</td>
-                      <td class="is-left">
-                        01.急性上気道炎<br>
-                        03.病名が入ります病名が入ります
-                      </td>
-                      <td class="is-left">
-                        <select name="" class="is-sm">
-                          <option value="sanaecho">早苗町</option>
-                          <option value="takada">高田</option>
-                          <option value="obuse">小布施</option>
-                        </select>
-                        <button type="button" class="is-blue">園変更</button>
-                        <button type="button" class="is-green">予約確定</button>
-                        <button type="button" class="is-red">対応不可</button>
-                        <button type="button" class="is-violet">キャンセル</button>
-                      </td>
-                    </tr>
+                    <% for (var i = 0; i < Day3Wait.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day3Wait[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day3Wait[i].id%></td>
+                        <td><%=Day3Wait[i].name%></td>
+                        <td><%=Day3Wait[i].birthday%></td>
+                        <td><%=Day3Wait[i].date%></td>
+                        <td class="is-left">
+                          <%=Day3Wait[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="is-sm">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-green">予約確定</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                   </table>
                 </div>
               </div>
