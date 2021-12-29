@@ -213,6 +213,10 @@ $(function() {
     $("option:selected", this).removeAttr("selected");
   });
 
+  $('input[type="radio"]').on('change', function() {
+    $(this).removeAttr("checked");
+  });
+
   function escapeHTML(string){
     return string.replace(/&/g, '&lt;')
     .replace(/</g, '&lt;')
