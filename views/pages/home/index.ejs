@@ -126,10 +126,10 @@
                       <option value="<%=Status3Days[n].id%>"<% if (AllUnread[i].first==Status3Days[n].name) { %>selected<% } %>><%=Status3Days[n].name%></option>
                     <% } %>
                   </select>
-                  <button type="button" class="is-green">予約確定</button>
-                  <button type="button" class="is-yellow">キャンセル待ち</button>
-                  <button type="button" class="is-red">対応不可</button>
-                  <button type="button" class="is-violet">キャンセル</button>
+                  <button type="button" class="is-green btn_status_update">予約確定</button>
+                  <button type="button" class="is-yellow btn_status_update">キャンセル待ち</button>
+                  <button type="button" class="is-red btn_status_update">対応不可</button>
+                  <button type="button" class="is-violet btn_cancelled">キャンセル</button>
                 </td>
               </tr>
             <% } %>
