@@ -540,12 +540,12 @@ exports.getReservationConfirmPage = async function (req, res){
     let rsvdate = view.getDateformatFromPsglTimeStamp(rsv[0].ReservationDate)
     const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
     const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
-    const nursery = await psgl.getNurseryNameByID(rsv[0].firstNursery)
-    const status = await psgl.getNurseryNameByID(rsv[0].ReservationStatus)
+    const nursery = await psgl.getNurseryNameByID(rsv[0].NurseryID)
+    const status = rsv[0].ReservationStatus
     const parent_name = rsv_details[0].ParentName
     const parent_tel = rsv_details[0].ParentTel
     let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
-    const sameday_members = await psgl.getReservedMemberIDOnTheDay(rsv[0].ReservationDate)
+    const sameday_members = await psgl.getReservedMemberIDOnTheDay(view.getPsglTimeStampFromDayDataObj(rsv[0].ReservationDate))
     let bros_num = 0
     if(sameday_members.length > 0){
       for (const m of sameday_members) {
@@ -692,4 +692,10 @@ exports.getHoursJPFormattedFromDayDataObj = function (dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11:41
   let date = new Date(dataobj);
   return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
+}
+
+exports.getPsglTimeStampFromDayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19 11:41:53
+  let date = new Date(dataobj);
+  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2)
 }
