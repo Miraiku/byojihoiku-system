@@ -70,6 +70,8 @@ $(function() {
   });
 
   $('select').on('change', function() {
-    $('option:selected', this).remove();
+    $('option:selected').removeAttr("selected");
+
+    console.log(nurseryid)
   });
 });//end of jquery
