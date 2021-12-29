@@ -12,6 +12,7 @@ $(function() {
     const status = btn_value.substr(0, btn_value.indexOf('_'))
     const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
+    console.log(nurseryid)
     e.preventDefault();            
     //checkd trueにするのをわすれない  
     $.confirmModal('「'+$(this).text()+'」でよろしいですか？', function(el) {
@@ -68,4 +69,7 @@ $(function() {
     })//end of confirm
   });
 
+  $('select').on('change', function() {
+    $('option:selected', this).remove();
+  });
 });//end of jquery
