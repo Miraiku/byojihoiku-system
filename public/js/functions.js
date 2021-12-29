@@ -1,6 +1,7 @@
 const message = "変更を保存しますか？";
 const title = "確認メッセージ";
 
+console.log('aaaaaa')
 $(".btn_status_update").click(function(){
   eModal
   .confirm(message, title)
