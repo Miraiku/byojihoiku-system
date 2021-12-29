@@ -29,6 +29,7 @@ express()
   .get('/reservation/:nurseryid', views.getReservationPage)
   .get('/reservation/confirm/:reservationid', views.getReservationConfirmPage)
   .get('/reservation/entry/:reservationid', views.getReservationEntryPage)
+  .get('/reservation/update', (req, res) => res.render('pages/index'))
   .use('/webhook', webhook)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 

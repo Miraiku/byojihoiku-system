@@ -10,7 +10,7 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">予約確認</h2>
-      <form action="">
+      <form action="/reservation/update">
         <div class="form-panel is-entry l-container is-md">
           <dl>
             <dt>会員ID</dt>
@@ -130,7 +130,7 @@
           </dl>
         </div>
         <div class="btns">
-          <button class="btn-l is-border" onclick="location.href='/reservation/confirm/<%=Info[0].rsvid%>?nursery=<%=Info[0].prev%>'">戻る</button>
+          <button class="btn-l is-border" onclick="location.href='/reservation/confirm/<%=Info[0].rsvid%>?nursery=<%=Info[0].prev%>'" type="button">戻る</button>
           <button class="btn-l">登録</button>
         </div>
       </form>
