@@ -547,7 +547,6 @@ exports.getReservationConfirmPage = async function (req, res){
     let age = await psgl.getMemberBirthDayByID(rsv[0].MemberID)
     age = view.getAgeMonth(age[0].BirthDay)
     const disease = await psgl.getDiseaseNameFromUniqueID(rsv_details[0].DiseaseID)
-    console.log(disease)
     let rsvdate = view.getDateformatFromPsglTimeStamp(rsv[0].ReservationDate)
     const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
     const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
@@ -557,6 +556,7 @@ exports.getReservationConfirmPage = async function (req, res){
     const parent_tel = rsv_details[0].ParentTel
     let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
     const sameday_members = await psgl.getReservedMemberIDOnTheDay(view.getPsglTimeStampFromDayDataObj(rsv[0].ReservationDate))
+    console.log(sameday_members)
     let bros_num = 0
     if(sameday_members.length > 0){
       for (const m of sameday_members) {
