@@ -86,7 +86,7 @@
               </select>
               :
               <select class="is-select-ss" name="">
-                <% for (var i = 0; i < 59; i++) { %>
+                <% for (var i = 0; i <= 59; i++) { %>
                   <option value="<%=i%>" <% if (Number(Info[0].outtime_mins)==i) { %>selected<% } %>><%=( '00' + i ).slice( -2 )%></option>
                 <% } %>
               </select>
