@@ -74,8 +74,8 @@
         </dl>
       </div>
       <div class="btns">
-        <button class="btn-l is-border" onclick="location.href='/reservation/'">戻る</button>
-        <button class="btn-l" onclick="location.href='/reservation/entry/'">編集</button>
+        <button class="btn-l is-border" onclick="location.href='/reservation/?nursery=<%=Info[0].prev%>'"">戻る</button>
+        <button class="btn-l" onclick="location.href='/reservation/entry/<%=Info[0].rsvid%>'">編集</button>
       </div>
     </section>
   </main>
