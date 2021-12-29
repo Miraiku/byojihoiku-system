@@ -21,7 +21,7 @@ router
         const new_nurseryid = req.body.nurseryid
         const rsvid = req.body.rsvid
 
-        let current_nurseryid = await psgl.getNurseryIDByResevationID(nurseryid)
+        let current_nurseryid = await psgl.getNurseryIDByResevationID(new_nurseryid)
         current_nurseryid = current_nurseryid[0].NurseryID
         if(new_nurseryid != current_nurseryid){
           let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
@@ -31,13 +31,13 @@ router
           console.log(nursery_capacity)
           console.log(new_capacity)
           if(nursery_capacity - new_capacity > 0){
-            //await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
+            await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           }else{
-            res.status(503).send('満員のため変更できませんでした。');
+            res.status(406).send('満員のため変更できませんでした。');
             return
           }
         }else{
-          //await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
+          await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success: '+action);
         }
       }
