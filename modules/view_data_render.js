@@ -585,7 +585,7 @@ exports.getReservationConfirmPage = async function (req, res){
       allergy = rsv_details[0].Allergy
     }
 
-    info.push({name:name, miraikuid:miraikuid, age:age, disease:disease, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    info.push({name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
     res.render("pages/reservation/confirm",{Info:info})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
