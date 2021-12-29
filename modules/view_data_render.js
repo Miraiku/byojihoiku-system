@@ -409,6 +409,7 @@ exports.getReservationPage = async function (req, res){
     const day1_waitinglist = await psgl.WaitingInfoTodayByNursery(nurseryid) 
     if(day1_reservedlist.length > 0){
       for (const member of day1_reservedlist) {
+        console.log(member)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
