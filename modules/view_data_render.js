@@ -508,7 +508,7 @@ exports.isValidNum = function (s){
 
 exports.zenkaku2Hankaku = function (val) {
   var regex = /[Ａ-Ｚａ-ｚ０-９！＂＃＄％＆＇（）＊＋，－．／：；＜＝＞？＠［＼］＾＿｀｛｜｝]/g;
-
+  console.log(val)
   // 入力値の全角を半角の文字に置換
   value = val
     .replace(regex, function (s) {
@@ -517,5 +517,7 @@ exports.zenkaku2Hankaku = function (val) {
     .replace(/[‐－―]/g, "-") // ハイフンなど
     .replace(/[～〜]/g, "~") // チルダ
     .replace(/　/g, " "); // スペース
+
+  console.log(value)
   return value;
 }
