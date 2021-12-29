@@ -460,8 +460,8 @@ exports.getReservationPage = async function (req, res){
 
     let day3_reserved = []
     let day3_waiting = []
-    const day3_reservedlist = await psgl.ReservedInfoTomorrowByNursery(nurseryid) 
-    const day3_waitinglist = await psgl.WaitingInfoTomorrowByNursery(nurseryid) 
+    const day3_reservedlist = await psgl.ReservedInfoDayAfterTomorrowByNursery(nurseryid) 
+    const day3_waitinglist = await psgl.WaitingInfoDayAfterTomorrowByNursery(nurseryid) 
     if(day3_reservedlist.length > 0){
       for (const member of day3_reservedlist) {
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
