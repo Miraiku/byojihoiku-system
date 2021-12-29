@@ -536,10 +536,6 @@ exports.getReservationConfirmPage = async function (req, res){
     let info = []
     const rsv = await psgl.getReservationInfoByReservationID(reservationid)
     const rsv_details = await psgl.getReservationDetailsByReservationID(reservationid)
-    
-    console.log(rsv)
-    console.log(rsv_details)
-
     const name = await psgl.getMemberNameByMemberID(rsv[0].MemberID)
     const miraikuid = await psgl.getMiraikuIDByMemberID(rsv[0].MemberID)
     let age = await psgl.getMemberBirthDayByID(rsv[0].MemberID)
@@ -554,7 +550,7 @@ exports.getReservationConfirmPage = async function (req, res){
     const parent_tel = rsv_details[0].ParentTel
     let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
     const sameday_members = await psgl.getReservedMemberIDOnTheDay(view.getPsglTimeStampFromDayDataObj(rsv[0].ReservationDate))
-    console.log(sameday_members)
+
     let bros_num = 0
     if(sameday_members.length > 0){
       for (const m of sameday_members) {
@@ -589,11 +585,8 @@ exports.getReservationConfirmPage = async function (req, res){
       allergy = rsv_details[0].Allergy
     }
 
-    info.push({miraikuid:miraikuid[0].MiraikuID,status:rsv[0].ReservationStatus,name:name[0].Name})
-    //day3_reserved.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
-  
-
-    res.render("pages/reservation/confirm",{Rsv:rsv, Details:rsv_details})
+    info.push({name:name, miraikuid:miraikuid, age:age, disease:disease, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    res.render("pages/reservation/confirm",{Info:info})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
     if(prev != null){

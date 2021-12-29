@@ -12,66 +12,65 @@
       <div class="form-panel l-container is-md">
         <dl>
           <dt>会員ID</dt>
-          <dd>21001</dd>
+          <dd><%=Info[0].miraikuid%></dd>
         </dl>
         <dl>
           <dt>ステータス</dt>
-          <dd>予約確定</dd>
+          <dd><%=Info[0].status%></dd>
         </dl>
         <dl>
           <dt>児童名</dt>
-          <dd>ヤマダタロウ</dd>
+          <dd><%=Info[0].name%></dd>
         </dl>
         <dl>
           <dt>年齢</dt>
-          <dd>3歳1ヶ月</dd>
+          <dd><%=Info[0].age%></dd>
         </dl>
         <dl>
           <dt>病名</dt>
           <dd>
-            急性上気道炎<br>
-            ぜんそく
+            <%=Info[0].disease%>
           </dd>
         </dl>
         <dl>
           <dt>利用日</dt>
-          <dd>2021/11/1(月)</dd>
+          <dd><%=Info[0].rsvdate%></dd>
         </dl>
         <dl>
           <dt>利用時間</dt>
-          <dd>9:00-16:00</dd>
+          <dd><%=Info[0].intime%>-<%=Info[0].outtime%></dd>
         </dl>
         <dl>
           <dt>利用園</dt>
-          <dd>早苗町</dd>
+          <dd><%=Info[0].nursery%></dd>
         </dl>
         <dl>
           <dt>保護者名</dt>
-          <dd>山田花子</dd>
+          <dd><%=Info[0].parent_name%></dd>
         </dl>
         <dl>
           <dt>連絡先</dt>
-          <dd>080-0000-0000</dd>
+          <dd><%=Info[0].parent_tel%></dd>
         </dl>
         <dl>
           <dt>兄妹利用の有無</dt>
-          <dd>なし</dd>
+          <dd><%=Info[0].brothers%></dd>
         </dl>
         <dl>
           <dt>食事の種類</dt>
-          <dd>幼児食</dd>
+          <dd><%=Info[0].meal%></dd>
         </dl>
         <dl>
           <dt>食事の追加事項</dt>
-          <dd>おなかに優しい食事（おう吐・下痢）</dd>
+          <dd><%=Info[0].meal_details%></dd>
         </dl>
         <dl>
           <dt>熱性けいれん</dt>
-          <dd>回数、初回○歳○ヶ月、最終○歳○ヶ月</dd>
+          <dd><%=Info[0].cramps%></dd>
         </dl>
         <dl>
           <dt>アレルギー</dt>
-          <dd>小麦と卵</dd>
+          <dd><%=Info[0].allergy%></dd>
         </dl>
       </div>
       <div class="btns">
