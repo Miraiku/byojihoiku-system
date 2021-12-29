@@ -30,7 +30,7 @@ $(function() {
           type: "success",
           position: "center",
           autohide: true,
-          msg: "",
+          msg: "変更が完了しました。",
           opacity:0.8,
           multiline: 0,
           fade: 0,
@@ -41,10 +41,6 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        //成功
-        console.log("成功"+data)
-        console.log("成功"+textStatus)
-        console.log("成功"+jqXHR)
       }).fail(function( jqXHR, textStatus, errorThrown) {
         let errmsg = ''
         if(errorThrown == 'Service Unavailable'){

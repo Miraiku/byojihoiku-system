@@ -25,7 +25,7 @@ router
         current_nurseryid = current_nurseryid[0].NurseryID
         if(new_nurseryid != current_nurseryid){
           let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
-          let reservation_date = await getReservationDateByID(rsvid)
+          let reservation_date = await psgl.getReservationDateByID(rsvid)
           let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(view.getPsglTimeStampFromDayDataObj(reservation_date), new_nurseryid)
           let new_capacity = Number(reservation_num_on_day[0].count)
           console.log(nursery_capacity)
