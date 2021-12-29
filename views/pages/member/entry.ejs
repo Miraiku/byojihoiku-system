@@ -87,6 +87,9 @@
   var methods = {
     phone: function(value, element){
       return this.optional(element) || /^\d{11}$|^\d{3}-\d{4}-\d{4}$/.test(value);
+    },
+    name: function (value, element) {
+      return !!value.match(/^[ァ-ヶー　]*$/);
     }
   };
 
@@ -108,7 +111,12 @@
       required: "*名前を入力してください"
     },
     miraikuid: {
-      required: "*IDを入力してください"
+      required: "*IDを入力してください",
+      number: "*半角数字で入力してください"
+    },
+    year: {
+      required: "*半角数字を入力してください",
+      number: "*半角数字で入力してください"
     }
   };
 
