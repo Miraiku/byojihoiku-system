@@ -28,7 +28,7 @@ $(function() {
       }).done(function( data, textStatus, jqXHR ) {
         notif({
           type: "success",
-          position = "center", // left, center, right, bottom
+          position = "center",
           autohide = true,
           msg = "",
           opacity = 0.8,
