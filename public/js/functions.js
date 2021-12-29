@@ -30,7 +30,7 @@ $(function() {
           type: "success",
           position: "center",
           autohide: true,
-          msg: "変更が完了しました。",
+          msg: "変更が完了しました",
           opacity:0.8,
           multiline: 0,
           fade: 0,
@@ -44,7 +44,9 @@ $(function() {
       }).fail(function( jqXHR, textStatus, errorThrown) {
         let errmsg = ''
         if(errorThrown == 'Service Unavailable'){
-          errmsg = '申し訳ありません。変更できませんでした。'
+          errmsg = '申し訳ありません、変更できませんでした'
+        }else if(errorThrown == 'Not Acceptable'){
+          errmsg = '変更先が満員のため変更できませんでした'
         }
         notif({
           type: "error",
@@ -60,10 +62,8 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        console.log("失敗"+textStatus)
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        console.log("通信完了")
       });//end of ajax
     })//end of confirm
   });

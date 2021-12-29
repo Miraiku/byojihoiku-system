@@ -26,10 +26,11 @@ router
         if(new_nurseryid != current_nurseryid){
           let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
           let reservation_date = await psgl.getReservationDateByID(rsvid)
+          console.log(reservation_date)
           let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(view.getPsglTimeStampFromDayDataObj(reservation_date), new_nurseryid)
           let new_capacity = Number(reservation_num_on_day[0].count)
-          console.log(nursery_capacity)
-          console.log(new_capacity)
+          console.log('org'+nursery_capacity)
+          console.log('new'+new_capacity)
           if(nursery_capacity - new_capacity > 0){
             await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           }else{
