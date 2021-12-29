@@ -136,7 +136,7 @@ $(function() {
     const year = $('input[name="year"]').val()
     const month = $('[name="month"] option:selected').val()
     const day = $('[name="day"] option:selected').val()
-    const allergy = $('input[name="allergy"]').val()
+    const allergy = $('input[name="allergy"]:checked').val()
     console.log(miraikuid)
     console.log(name)
     console.log(year)
