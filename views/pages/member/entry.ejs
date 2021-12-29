@@ -51,17 +51,11 @@
           </dl>
           <dl>
             <dt>アレルギー</dt>
-            <dd><% if (Member[0].allergy) { %>
-                  <input type="radio" id="allergy1" name="allergy" value="true" checked>
-                  <label for="allergy1" class="radio">有り</label>
-                  <input type="radio" id="allergy2" name="allergy" value="false">
-                  <label for="allergy2" class="radio">無し</label>
-                <% } else { %>
-                  <input type="radio" id="allergy1" name="allergy" value="true">
-                  <label for="allergy1" class="radio">有り</label>
-                  <input type="radio" id="allergy2" name="allergy" value="false" checked>
-                  <label for="allergy2" class="radio">無し</label>
-                <% } %>
+            <dd>
+              <input type="radio" id="allergy1" name="allergy" value="true" <% if (Member[0].allergy) { %> checked<% } %> required>
+              <label for="allergy1" class="radio">有り</label>
+              <input type="radio" id="allergy2" name="allergy" value="false" <% if (!Member[0].allergy) { %> checked<% } %>>
+              <label for="allergy2" class="radio">無し</label>
             </dd>
           </dl>
         </div>
