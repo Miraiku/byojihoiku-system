@@ -1,5 +1,3 @@
-
-
 $(function() {
   $defaultsConfirmModal = {
     confirmButton: 'はい',
@@ -10,9 +8,13 @@ $(function() {
   };
 
   $(".btn_status_update").on('click', function(e) {
+    console.log(e);
+    console.log($(this).val());
+    console.log($(this).name());
     e.preventDefault();              
-    $.confirmModal('変更してよろしいですか？', function(el) {
-      alert('OK was clicked!');
+    $.confirmModal('「'+$(this).name()+'」に変更してよろしいですか？', function(el) {
+      
+    console.log(el);
       //do something...
     });         
   });
