@@ -72,6 +72,6 @@ $(function() {
   $('select').on('change', function() {
     $('option:selected').removeAttr("selected");
 
-    console.log(nurseryid)
+    console.log($(`[name=row_nursery_${rsvid}]`).val())
   });
 });//end of jquery
