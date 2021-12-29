@@ -494,8 +494,8 @@ exports.isValidNum = function (s){
     console.log(s)
     console.log(Number.isNaN(s))
     console.log(Number.isNaN(view.zenkaku2Hankaku(s)))
-  if(Number.isNaN(s)){
-    if(Number.isNaN(view.zenkaku2Hankaku(s))){
+  if(Number.isNaN(Number(s))){
+    if(Number.isNaN(Number(view.zenkaku2Hankaku(s)))){
       return false
     }else{
       return true
