@@ -183,9 +183,7 @@ exports.getMembersPage = async function (req, res){
 exports.getEntryPage = async function (req, res){
   try {
     let memberid = req.params.memberid
-    console.log('getEntryPage'+memberid)
     memberid = view.zenkaku2Hankaku(memberid)
-    console.log('getEntryPage'+memberid)
     if(!view.isValidNum(memberid)){
       throw new Error('invalid num')
     }
@@ -312,10 +310,9 @@ exports.getCalendarPage = async function (req, res){
 //reservation view
 exports.getReservationPage = async function (req, res){
   try {
-    const nurseryid = req.params.nurseryid
-    console.log(typeof nurseryid)
+    let nurseryid = req.params.nurseryid
+    nurseryid = view.zenkaku2Hankaku(nurseryid)
     if(!view.isValidNum(nurseryid)){
-      console.log('invalid num')
       throw new Error('invalid num')
     }
 
