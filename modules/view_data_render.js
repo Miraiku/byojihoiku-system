@@ -545,7 +545,18 @@ exports.getReservationConfirmPage = async function (req, res){
     const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
     const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
     const nursery = await psgl.getNurseryNameByID(rsv[0].NurseryID)
-    const status = rsv[0].ReservationStatus
+    let status
+    if(rsv[0].ReservationStatus == 'Reserved'){
+      status = '予約確定'
+    }else if(rsv[0].ReservationStatus == 'Waiting'){
+      status = 'キャンセル待ち'
+    }else if(rsv[0].ReservationStatus == 'Rejected'){
+      status = '対応不可'
+    }else if(rsv[0].ReservationStatus == 'Cancelled'){
+      status = 'キャンセル'
+    }else if(rsv[0].ReservationStatus == 'Unread'){
+      status = '看護師の最終確認待ち'
+    }
     const parent_name = rsv_details[0].ParentName
     const parent_tel = rsv_details[0].ParentTel
     let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
