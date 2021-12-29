@@ -363,7 +363,7 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day1_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day1_reserved.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
     if(day1_waitinglist.length > 0){
@@ -390,7 +390,7 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day1_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day1_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
 
@@ -422,7 +422,7 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day2_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day2_reserved.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
     if(day2_waitinglist.length > 0){
@@ -449,7 +449,7 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day2_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day2_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
 
@@ -481,7 +481,7 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day3_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day3_reserved.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
     if(day3_waitinglist.length > 0){
@@ -508,14 +508,10 @@ exports.getReservationPage = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        day3_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        day3_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
-    console.log(status3days)
-    console.log(nursery_list)
-    console.log(day3_reserved)
-    console.log(day3_waiting)
     res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list, Day1Rsv:day1_reserved, Day2Rsv:day2_reserved, Day3Rsv:day3_reserved, Day1Wait:day1_waiting, Day2Wait:day2_waiting,Day3Wait:day3_waiting})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
@@ -530,6 +526,7 @@ exports.getReservationConfirmPage = async function (req, res){
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
     }
+    //reservationid から予約情報と会員情報をとる
     res.render("pages/reservation/confirm")
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
@@ -541,7 +538,11 @@ exports.getReservationConfirmPage = async function (req, res){
 //reservation/entry view
 exports.getReservationEntryPage = async function (req, res){
   try {
-    res.render("pages/reservation/entry",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+    const reservationid = req.params.reservationid
+    if(!view.isValidNum(reservationid)){
+      throw new Error('invalid num')
+    }
+    res.render("pages/reservation/entry")
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)
     res.redirect('/reservation/')
