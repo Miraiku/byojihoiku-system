@@ -10,7 +10,7 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">会員編集</h2>
-      <form action="#" id="memberInfo">
+      <form action="" id="memberInfo">
         <div class="form-panel is-entry l-container is-md">
           <dl>
             <dt>会員ID</dt>
@@ -73,14 +73,42 @@
     </section>
   </main>
 
+        
   <script>
-    $("#memberInfo").validate({
-      rules: {
-        field: {
-          required: true,
-          number: true
-        }
-      }
+    $(function(){
+      $('#memberInfo').validate({
+        rules: {
+          formTitle: {
+            required: true,
+            maxlength: 10,
+          },
+          field: {
+            required: true,
+            number: true
+          }
+        },
+        messages: {
+          formTitle: {
+            required: 'タイトルを入力してください。',
+            maxlength: 'タイトルは10字以内でご入力ください。',
+          }
+        },
+        errorPlacement: function(error, element){
+          var errorKey = $(element).attr('id') + 'Error';
+          $('#error_' + errorKey).remove();
+          element.addClass('is-invalid');
+          const errorP = $('<p>').text(error[0].innerText);
+          const errorDiv = $('<div class="invalid-feedback" id="error_' + errorKey + '">').append(errorP);
+          element.parent().append(errorDiv);
+        },
+        success: function(error, element) {
+          var errorKey = $(element).attr('id') + 'Error';
+          $('#error_' + errorKey).remove();
+          $(error).remove();
+          $(element).removeClass('is-invalid');
+          $(element).removeClass('error');
+        },
+      });
     });
   </script>
   <%- include ("../../partials/footer.ejs") %>
