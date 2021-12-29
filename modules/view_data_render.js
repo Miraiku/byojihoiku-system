@@ -400,10 +400,191 @@ exports.getReservationPage = async function (req, res){
       dayaftertomorrow_data = {date:MonthDayToJPFromDateObj(dayaftertomorrow_JST),day:WeekDayToJPFromDateObj(dayaftertomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
     }
     status3days.push({id:nurseryid, name:nursery_name[0].NurseryName, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
+    
+    
+    /*　予約確定・キャンセル待ち */
+    let day1_reserved = []
+    let day1_waiting = []
+    const day1_reservedlist = await psgl.ReservedInfoTodayByNursery(nurseryid) 
+    const day1_waitinglist = await psgl.WaitingInfoTodayByNursery(nurseryid) 
+    if(day1_reservedlist.length > 0){
+      for (const member of day1_reservedlist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day1_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+    if(day1_waitinglist.length > 0){
+      for (const member of day1_waitinglist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day1_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+
+    let day2_reserved = []
+    let day2_waiting = []
+    const day2_reservedlist = await psgl.ReservedInfoTomorrowByNursery(nurseryid) 
+    const day2_waitinglist = await psgl.WaitingInfoTomorrowByNursery(nurseryid) 
+    if(day2_reservedlist.length > 0){
+      for (const member of day2_reservedlist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day2_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+    if(day2_waitinglist.length > 0){
+      for (const member of day2_waitinglist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day2_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+
+    let day3_reserved = []
+    let day3_waiting = []
+    const day3_reservedlist = await psgl.ReservedInfoTomorrowByNursery(nurseryid) 
+    const day3_waitinglist = await psgl.WaitingInfoTomorrowByNursery(nurseryid) 
+    if(day3_reservedlist.length > 0){
+      for (const member of day3_reservedlist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day3_reserved.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
+    if(day3_waitinglist.length > 0){
+      for (const member of day3_waitinglist) {
+        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
+        let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
+        birthday = view.getAgeMonth(birthday[0].BirthDay)
+        const disease = await psgl.getDiseaseNameFromUniqueID(member[0].DiseaseID)
+        const first = await psgl.getNurseryNameByID(member[0].firstNursery)
+        let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
+        let second,third
+        try {
+          second = await psgl.getNurseryNameByID(member[0].secondNursery)
+          second = second[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          second = 'なし'
+        }
+        try {
+          third = await psgl.getNurseryNameByID(member[0].thirdNursery)
+          third = third[0].NurseryName
+        } catch (error) {
+          //NurseryID = 0
+          third = 'なし'
+        }
+        day3_waiting.push({memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+      }
+    }
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     console.log(status3days)
     console.log(nursery_list)
-    res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list})
+    console.log(day3_reserved)
+    console.log(day3_waiting)
+    res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list, Day1Rsv:day1_reserved, Day2Rsv:day2_reserved, Day3Rsv:day3_reserved, Day1Wait:day1_waiting, Day2Wait:day2_waiting,Day3Wait:day3_waiting})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
     res.redirect('/home/')

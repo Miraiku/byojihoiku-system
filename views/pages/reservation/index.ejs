@@ -45,6 +45,29 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
+                    <% for (var i = 0; i < Day1Rsv.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day1Rsv[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day1Rsv[i].id%></td>
+                        <td><%=Day1Rsv[i].name%></td>
+                        <td><%=Day1Rsv[i].birthday%></td>
+                        <td><%=Day1Rsv[i].date%></td>
+                        <td class="is-left">
+                          <%=Day1Rsv[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-yellow">キャンセル待ち</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                     <tr data-href="/reservation/confirm">
                       <td>1</td>
                       <td>21001</td>
@@ -107,6 +130,30 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
+
+                    <% for (var i = 0; i < Day1Wait.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day1Wait[i].memberid%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day1Wait[i].id%></td>
+                        <td><%=Day1Wait[i].name%></td>
+                        <td><%=Day1Wait[i].birthday%></td>
+                        <td><%=Day1Wait[i].date%></td>
+                        <td class="is-left">
+                          <%=Day1Wait[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="is-sm">
+                            <% for (var n = 0; n < Status3Days.length; n++) { %>
+                              <option value="<%=Status3Days[n].id%>"><%=Status3Days[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue">園変更</button>
+                          <button type="button" class="is-green">予約確定</button>
+                          <button type="button" class="is-red">対応不可</button>
+                          <button type="button" class="is-violet">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
                     <tr>
                       <td>1</td>
                       <td>21001</td>
@@ -323,6 +370,7 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
+                    
                     <tr data-href="/reservation/confirm">
                       <td>1</td>
                       <td>21001</td>

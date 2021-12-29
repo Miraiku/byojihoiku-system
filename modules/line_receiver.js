@@ -86,7 +86,7 @@ router
               }//end if null
             }//end memberids normal
             for (const member of memberids) {
-              let waiting_reservations = await psgl.getReservationStatusWaitingByMemberIDGraterThanToday(member.ID)
+              let waiting_reservations = await psgl.getReservationStatusUnreadAndWaitingByMemberIDGraterThanToday(member.ID)
               if(waiting_reservations.length != 0){
                 for (const rsv of waiting_reservations) {
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
