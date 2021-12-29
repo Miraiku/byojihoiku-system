@@ -987,7 +987,7 @@ function isValidNum(s){
     }else{
       return true
     }
-  }{
+  }else{
     return true
   }
 }

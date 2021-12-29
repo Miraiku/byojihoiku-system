@@ -491,17 +491,18 @@ return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr
 
 exports.isValidNum = function (s){
   //半角と全角どちらでも受け付ける
+    console.log(s)
     console.log(typeof Number(s))
     console.log(typeof s)
-    console.log(Number(s) == NaN)
-    console.log(Number(view.zenkaku2Hankaku(s)) == NaN)
-  if(Number(s) == NaN){
-    if(Number(view.zenkaku2Hankaku(s)) == NaN){
+    console.log(Number.isNaN(s))
+    console.log(Number.isNaN(view.zenkaku2Hankaku(s)))
+  if(Number.isNaN(s)){
+    if(Number.isNaN(view.zenkaku2Hankaku(s))){
       return false
     }else{
       return true
     }
-  }{
+  }else{
     return true
   }
 }
