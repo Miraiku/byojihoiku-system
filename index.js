@@ -32,7 +32,7 @@ express()
   .get('/reservation/entry/:reservationid', views.getReservationEntryPage)
   .get('/reservation/update', (req, res) => res.render('pages/index'))
   .use('/webhook', webhook)
-  .get('/updater', ajax)
+  .use('/updater', ajax)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 /*
