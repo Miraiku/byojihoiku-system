@@ -89,7 +89,7 @@
       return this.optional(element) || /^\d{11}$|^\d{3}-\d{4}-\d{4}$/.test(value);
     },
     name: function (value, element) {
-      return !!value.match(/^[ァ-ヶー　]*$/);
+      return this.optional(element) || !!value.match(/^[ァ-ヶー　]*$/);
     }
   };
 
