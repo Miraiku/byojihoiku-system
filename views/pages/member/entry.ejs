@@ -76,65 +76,74 @@
         
   <script>
     (function(){
-  //標準エラーメッセージの変更
-  $.extend($.validator.messages, {
-    miraikuid: '*半角数字で入力してください',
-    year: '*半角数字で入力してください',
-    required: '*入力必須です'
-  });
+      //標準エラーメッセージの変更
+      $.extend($.validator.messages, {
+        miraikuid: '*半角数字で入力してください',
+        year: '*半角数字で入力してください',
+        required: '*入力必須です'
+      });
 
-　//追加ルールの定義
-  var methods = {
-    phone: function(value, element){
-      return this.optional(element) || /^\d{11}$|^\d{3}-\d{4}-\d{4}$/.test(value);
-    }
-  };
-
-  //メソッドの追加
-  $.each(methods, function(key) {
-    $.validator.addMethod(key, this);
-  });
-
-  //入力項目の検証ルール定義
-  var rules = {
-    miraikuid: {required:true, number: true},
-    year: {required:true, number: true},
-    name: {required: true}
-  };
-
-  //入力項目ごとのエラーメッセージ定義
-  var messages = {
-    name: {
-      required: "*名前を入力してください"
-    },
-    miraikuid: {
-      required: "*IDを入力してください",
-      number: "*半角数字で入力してください"
-    },
-    year: {
-      required: "*半角数字を入力してください",
-      number: "*半角数字で入力してください"
-    }
-  };
-
-  $(function(){
-    $('#memberInfo').validate({
-      rules: rules,
-      messages: messages,
-
-      //エラーメッセージ出力箇所調整
-      errorPlacement: function(error, element){
-        error.css('color','#F16B6D');
-        if (element.is(':radio')) {
-          error.appendTo(element.parent());
-        }else {
-          error.insertAfter(element);
+    　//追加ルールの定義
+      var methods = {
+        phone: function(value, element){
+          return this.optional(element) || /^\d{11}$|^\d{3}-\d{4}-\d{4}$/.test(value);
+        },
+        name: function(value, element){
+          if ( this.optional( element ) ) {
+            return true;
+          }
+          if (!!value.match(/^[ァ-ヶー　]*$/)) {
+              return true;
+          }
+          return false;
         }
-      }
-    });
-  });
+      };
 
-})();
+      //メソッドの追加
+      $.each(methods, function(key) {
+        $.validator.addMethod(key, this);
+      });
+
+      //入力項目の検証ルール定義
+      var rules = {
+        miraikuid: {required:true, number: true},
+        year: {required:true, number: true},
+        name: {required: true}
+      };
+
+      //入力項目ごとのエラーメッセージ定義
+      var messages = {
+        name: {
+          required: "*名前を入力してください"
+        },
+        miraikuid: {
+          required: "*IDを入力してください",
+          number: "*半角数字で入力してください"
+        },
+        year: {
+          required: "*半角数字を入力してください",
+          number: "*半角数字で入力してください"
+        }
+      };
+
+      $(function(){
+        $('#memberInfo').validate({
+          rules: rules,
+          messages: messages,
+
+          //エラーメッセージ出力箇所調整
+          errorPlacement: function(error, element){
+            error.css('color','#F16B6D');
+            if (element.is(':radio')) {
+              error.appendTo(element.parent());
+            }else {
+              error.insertAfter(element);
+            }
+          }
+        });
+      });
+
+    })();
   </script>
   <%- include ("../../partials/footer.ejs") %>
 
