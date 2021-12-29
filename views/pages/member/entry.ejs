@@ -13,7 +13,7 @@
       <div class="form-panel is-entry l-container is-md">
         <dl>
           <dt>会員ID</dt>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>"></dd>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>" name="miraikuid"></dd>
         </dl>
         <!--dl>
           <dt>LINE識別番号</dt>
@@ -25,22 +25,22 @@
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="<%=Member[0].name%>" value="<%=Member[0].name%>">
+            <input type="text" class="is-md" placeholder="ニシザワミライ" value="<%=Member[0].name%>" name="name">
             <span>全角カタカナで入力してください</span>
           </dd>
         </dl>
         <dl>
           <dt>生年月日</dt>
           <dd>
-            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>">
+            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>" name="year">
             年
-            <select class="is-select-ss" name="">月
+            <select class="is-select-ss" name="month">月
               <% for (var i = 0; i < 12; i++) { %>
                 <option value="<%=i+1%>" <% if (Number(Member[0].bMonth)==(i+1)) { %>selected<% } %>><%=i+1%></option>
               <% } %>
             </select>
             月
-            <select class="is-select-ss" name="">
+            <select class="is-select-ss" name="day">
               <% for (var i = 0; i < 31; i++) { %>
                 <option value="<%=i+1%>" <% if (Number(Member[0].bDay)==(i+1)) { %>selected<% } %>><%=i+1%></option>
               <% } %>
@@ -66,7 +66,7 @@
       </div>
       <div class="btns">
         <button class="btn-l is-border" onclick="location.href='/member/'">戻る</button>
-        <button class="btn-l">変更</button>
+        <button class="btn-l btn_update_member">変更</button>
       </div>
     </section>
   </main>
