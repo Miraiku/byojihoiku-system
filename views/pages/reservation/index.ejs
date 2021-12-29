@@ -24,11 +24,11 @@
     <section>
       <div class="tabs l-container">
         <input id="tab1" type="radio" name="tab_item" checked>
-        <label class="tab_item" for="tab1"><%=Status3Days[0].today.date%><span>(月)</span></label>
+        <label class="tab_item" for="tab1"><%=Status3Days[0].today.date%><span><%=Status3Days[0].today.day%></span></label>
         <input id="tab2" type="radio" name="tab_item">
-        <label class="tab_item" for="tab2"><%=Status3Days[0].tomorrow.date%><span>(火)</span></label>
+        <label class="tab_item" for="tab2"><%=Status3Days[0].tomorrow.date%><span><%=Status3Days[0].tomorrow.day%></span></label>
         <input id="tab3" type="radio" name="tab_item">
-        <label class="tab_item" for="tab3"><%=Status3Days[0].dayaftertomorrow.date%><span>(水)</span></label>
+        <label class="tab_item" for="tab3"><%=Status3Days[0].dayaftertomorrow.date%><span><%=Status3Days[0].dayaftertomorrow.day%></span></label>
         <div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>
