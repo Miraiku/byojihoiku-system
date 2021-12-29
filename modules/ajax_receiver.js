@@ -21,7 +21,7 @@ router
         const new_nurseryid = req.body.nurseryid
         const rsvid = req.body.rsvid
 
-        let current_nurseryid = await psgl.getNurseryIDByResevationID(new_nurseryid)
+        let current_nurseryid = await psgl.getNurseryIDByResevationID(rsvid)
         current_nurseryid = current_nurseryid[0].NurseryID
         if(new_nurseryid != current_nurseryid){
           let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)

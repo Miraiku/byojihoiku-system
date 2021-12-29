@@ -46,10 +46,14 @@ $(function() {
         console.log("成功"+textStatus)
         console.log("成功"+jqXHR)
       }).fail(function( jqXHR, textStatus, errorThrown) {
+        let errmsg = ''
+        if(errorThrown == 'Service Unavailable'){
+          errmsg = '申し訳ありません。変更できませんでした。'
+        }
         notif({
           type: "error",
           position: "center",
-          msg: "",
+          msg: errmsg,
           opacity: 0.8,
           multiline: 0,
           fade: 0,
@@ -63,7 +67,6 @@ $(function() {
         console.log("失敗"+textStatus)
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        //通信完了
         console.log("通信完了")
       });//end of ajax
     })//end of confirm
