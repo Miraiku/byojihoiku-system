@@ -121,9 +121,9 @@
           <dl>
             <dt>アレルギー</dt>
             <dd>
-              <input type="radio" id="allergy1" name="allergy" <% if (Info[0].allergy_bool == 'true') { %> checked<% } %> required>
+              <input type="radio" id="allergy1" name="allergy" <% if (Info[0].allergy_bool == true) { %> checked<% } %> required>
               <label for="allergy1" class="radio">有り</label>
-              <input type="radio" id="allergy2" name="allergy"<% if (Info[0].allergy_bool == 'false') { %> checked<% } %>>
+              <input type="radio" id="allergy2" name="allergy"<% if (Info[0].allergy_bool == false) { %> checked<% } %>>
               <label for="allergy2" class="radio">無し</label>
             <input type="text" value="<%=Info[0].allergy%>" />
             </dd>
