@@ -10,7 +10,7 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">会員編集</h2>
-      <form action="" id="memberInfo">
+      <form action="." id="memberInfo" method="post">
         <div class="form-panel is-entry l-container is-md">
           <dl>
             <dt>会員ID</dt>
@@ -78,19 +78,9 @@
     $(function(){
       $('#memberInfo').validate({
         rules: {
-          formTitle: {
-            required: true,
-            maxlength: 10,
-          },
           field: {
             required: true,
             number: true
-          }
-        },
-        messages: {
-          formTitle: {
-            required: 'タイトルを入力してください。',
-            maxlength: 'タイトルは10字以内でご入力ください。',
           }
         },
         errorPlacement: function(error, element){
