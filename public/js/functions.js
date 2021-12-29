@@ -256,17 +256,125 @@ $(function() {
         }
       });
     });//validation function scope
-
   })();
 
   //update from /reservation/entry
-  $(".btn_update_reservation").on('click', function(e) {
-    const btn_value = $(this).val()
-    const status = btn_value.substr(0, btn_value.indexOf('_'))
-    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
-    const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
+  (function(){
+    $.extend($.validator.messages, {
+      required: '*入力必須です'
+    });
+    var rules = {
+      parent_name: {required:true},
+      parent_tel: {required:true},
+      meal_details: {required:true},
+      cramps: {required:true},
+      allergy_details: {required: true}
+    };
 
-  });
+    $(function(){
+      const rsvInfo = $('#rsvInfo')
+      rsvInfo.validate({
+        rules: rules,
+        errorPlacement: function(error, element){
+          error.css('color','#F16B6D');
+          if (element.is(':radio')) {
+            error.appendTo(element.parent());
+          }else {
+            error.insertAfter(element);
+          }
+        }
+      });
+      //update from /reservation/entry
+      $(".btn_update_reservation").on('click', function(e) {
+        if (rsvInfo.validate().form()) {
+          const status = $('[name="status"] option:selected').val()
+          const disease = $('[name="disease"] option:selected').val()
+          const intime_hour = $('[name="intime_hour"] option:selected').val()
+          const intime_mins = $('[name="intime_mins"] option:selected').val()
+          const outtime_hour = $('[name="outtime_hour"] option:selected').val()
+          const outtime_mins = $('[name="outtime_mins"] option:selected').val()
+          const nursery = $('[name="nursery"] option:selected').val()
+          const parent_name = $('input[name="parent_name"]').val()
+          const parent_tel = $('input[name="parent_tel"]').val()
+          const meal_details = $('input[name="meal_details"]').val()
+          const cramps = $('input[name="cramps"]').val()
+          const allergy_details = $('input[name="allergy_details"]').val()
+          const allergy = $('input[name="allergy"]:checked').val()
+          console.log(status)
+          console.log(disease)
+          console.log(intime_hour)
+          console.log(intime_mins)
+          console.log(outtime_hour)
+          console.log(outtime_mins)   
+          console.log(nursery)
+          console.log(parent_name)
+          console.log(parent_tel)
+          console.log(meal_details)
+          console.log(cramps)
+          console.log(allergy_details)       
+          console.log(allergy)    
+          e.preventDefault(); 
+          $.confirmModal('内容を変更しますか？', function(el) {
+            /*$.ajax({
+              url: '/updater',
+              type: 'POST',
+              data: {
+                'action': 'update_member_from_member_entry',
+                'miraikuid':miraikuid,
+                'name':name,
+                'year':year,
+                'month':month,
+                'day':day,
+                'allergy':allergy
+              },
+              dataType: 'text'
+            }).done(function( data, textStatus, jqXHR ) {
+              notif({
+                type: "success",
+                position: "center",
+                autohide: true,
+                msg: "変更が完了しました",
+                opacity:0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+            }).fail(function( jqXHR, textStatus, errorThrown) {
+              let errmsg = ''
+              if(errorThrown == 'Service Unavailable'){
+                errmsg = '申し訳ありません、変更できませんでした'
+              }else if(errorThrown == 'Not Acceptable'){
+                errmsg = '変更先が満員のため変更できませんでした'
+              }
+              notif({
+                type: "error",
+                position: "center",
+                msg: errmsg,
+                opacity: 0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+              console.log("失敗"+errorThrown)
+            }).always(function( jqXHR, textStatus) {
+            });//end of ajax*/
+          })//end of confirm
+        } else {
+            return false
+        }
+      });
+    });//validation function scope
+  })();
 
   $('select').on('change', function() {
     $("option:selected", this).removeAttr("selected");

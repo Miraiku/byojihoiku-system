@@ -10,7 +10,7 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">予約確認</h2>
-      <form action="/reservation/update">
+      <form action="javascript:void(0);" id="rsvInfo">
         <div class="form-panel is-entry l-container is-md">
           <dl>
             <dt>会員ID</dt>
@@ -19,10 +19,10 @@
           <dl>
             <dt>ステータス</dt>
             <dd>
-              <select class="is-sm" name="">
-                <option value=""<% if (Info[0].status == '予約確定') { %> checked<% } %>>予約確定</option>
-                <option value=""<% if (Info[0].status == '対応不可') { %> checked<% } %>>対応不可</option>
-                <option value=""<% if (Info[0].status == 'キャンセル待ち') { %> checked<% } %>>キャンセル待ち</option>
+              <select class="is-sm" name="status">
+                <option value="Reserved" <% if (Info[0].status == '予約確定') { %> checked<% } %>>予約確定</option>
+                <option value="Rejected" <% if (Info[0].status == '対応不可') { %> checked<% } %>>対応不可</option>
+                <option value="Waitng" <% if (Info[0].status == 'キャンセル待ち') { %> checked<% } %>>キャンセル待ち</option>
               </select>
             </dd>
           </dl>
@@ -37,7 +37,7 @@
           <dl>
             <dt>病名</dt>
             <dd>
-              <select class="is-md" name="">
+              <select class="is-md" name="disease">
                 <% for (var i = 0; i < Info[0].disease_list.length; i++) { %>
                   <option value="<%=Info[0].disease_list[i].id%>" <% if (Info[0].disease==Info[0].disease_list[i].name) { %>selected<% } %>><%=Info[0].disease_list[i].name%></option>
                 <% } %>
@@ -67,25 +67,25 @@
           <dl>
             <dt>利用時間</dt>
             <dd>
-              <select class="is-select-ss" name="">
+              <select class="is-select-ss" name="intime_hour">
                 <% for (var i = 0; i < 24; i++) { %>
                   <option value="<%=i%>" <% if (Number(Info[0].intime_hour)==i) { %>selected<% } %>><%=( '00' + i ).slice( -2 )%></option>
                 <% } %>
               </select>
               :
-              <select class="is-select-ss" name="">
+              <select class="is-select-ss" name="intime_mins">
                 <% for (var i = 0; i <= 59; i++) { %>
                   <option value="<%=i%>" <% if (Number(Info[0].intime_mins)==i) { %>selected<% } %>><%=( '00' + i ).slice( -2 )%></option>
                 <% } %>
               </select>
               -
-              <select class="is-select-ss" name="">
+              <select class="is-select-ss" name="outtime_hour">
                 <% for (var i = 0; i < 24; i++) { %>
                   <option value="<%=i%>" <% if (Number(Info[0].outtime_hour)==i) { %>selected<% } %>><%=( '00' + i ).slice( -2 )%></option>
                 <% } %>
               </select>
               :
-              <select class="is-select-ss" name="">
+              <select class="is-select-ss" name="outtime_mins">
                 <% for (var i = 0; i <= 59; i++) { %>
                   <option value="<%=i%>" <% if (Number(Info[0].outtime_mins)==i) { %>selected<% } %>><%=( '00' + i ).slice( -2 )%></option>
                 <% } %>
@@ -95,7 +95,7 @@
           <dl>
             <dt>利用園</dt>
             <dd>
-              <select name="" class="is-md">
+              <select name="nursery" class="is-md">
                 <% for (var n = 0; n < Info[0].nursery_list.length; n++) { %>
                   <option value="<%=Info[0].nursery_list[n].id%>"><%=Info[0].nursery_list[n].name%></option>
                 <% } %>
@@ -104,11 +104,11 @@
           </dl>
           <dl>
             <dt>保護者名</dt>
-            <dd><input type="text" class="is-md" value="<%=Info[0].parent_name%>" /></dd>
+            <dd><input type="text" class="is-md" value="<%=Info[0].parent_name%>" name="parent_name" required/></dd>
           </dl>
           <dl>
             <dt>連絡先</dt>
-            <dd><input type="text" class="is-md" value="<%=Info[0].parent_tel%>" /></dd>
+            <dd><input type="text" class="is-md" value="<%=Info[0].parent_tel%>" name="parent_tel" required /></dd>
           </dl>
           <dl>
             <dt>兄妹利用の有無</dt>
@@ -135,12 +135,12 @@
               <!--select name="">
                 <option value="">おなかに優しい食事（おう吐・下痢）</option>
               </select-->
-              <input type="text" class="is-md" value="<%=Info[0].meal_details%>" />
+              <input type="text" class="is-md" value="<%=Info[0].meal_details%>" name="meal_details"  required/>
             </dd>
           </dl>
           <dl>
             <dt>熱性けいれん</dt>
-            <dd><input type="text" value="<%=Info[0].cramps%>" required/></dd>
+            <dd><input type="text" value="<%=Info[0].cramps%>" required name="cramps"/></dd>
           </dl>
           <dl>
             <dt>アレルギー</dt>
@@ -149,13 +149,13 @@
               <label for="allergy1" class="radio">有り</label>
               <input type="radio" id="allergy2" name="allergy"<% if (Info[0].allergy_bool == false) { %> checked<% } %>>
               <label for="allergy2" class="radio">無し</label>
-            <input type="text" value="<%=Info[0].allergy%>" />
+            <input type="text" value="<%=Info[0].allergy%>" name="allergy_details" required/>
             </dd>
           </dl>
         </div>
         <div class="btns">
           <button class="btn-l is-border" onclick="location.href='/reservation/confirm/<%=Info[0].rsvid%>?nursery=<%=Info[0].prev%>'" type="button">戻る</button>
-          <button class="btn-l btn_update_reservation">登録</button>
+          <button type="submit" class="btn-l btn_update_reservation">登録</button>
         </div>
       </form>
     </section>
