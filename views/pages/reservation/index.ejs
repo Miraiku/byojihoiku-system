@@ -58,7 +58,7 @@
                         <td class="is-left">
                           <select name="">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day1Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
@@ -100,7 +100,7 @@
                         <td class="is-left">
                           <select name="is-sm">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day1Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
@@ -167,7 +167,7 @@
                         <td class="is-left">
                           <select name="">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day2Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
@@ -208,7 +208,7 @@
                         <td class="is-left">
                           <select name="is-sm">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day2Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
@@ -253,7 +253,7 @@
                         <td class="is-left">
                           <select name="">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day3Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
@@ -294,7 +294,7 @@
                         <td class="is-left">
                           <select name="is-sm">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
-                              <option value="<%=Nurserys[n].id%>"><%=Nurserys[n].name%></option>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day3Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
                           <button type="button" class="is-blue">園変更</button>
