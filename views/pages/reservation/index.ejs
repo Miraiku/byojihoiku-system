@@ -56,15 +56,15 @@
                           <%=Day1Rsv[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="">
+                          <select name="row_nursery_<%=Day1Rsv[i].rsvid%>">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day1Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-yellow">キャンセル待ち</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day1Rsv[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-yellow btn_status_update_rsv" value="Waiting_<%=Day1Rsv[i].rsvid%>">キャンセル待ち</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day1Rsv[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Waiting_<%=Day1Rsv[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>
@@ -98,15 +98,15 @@
                           <%=Day1Wait[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="is-sm">
+                          <select name="row_nursery_<%=Day1Wait[i].rsvid%>"><!-- name is-sm -->
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day1Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-green">予約確定</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day1Wait[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Reserved_<%=Day1Wait[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day1Wait[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Cancelled_<%=Day1Wait[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>
@@ -165,15 +165,15 @@
                           <%=Day2Rsv[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="">
+                          <select name="row_nursery_<%=Day2Rsv[i].rsvid%>">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day2Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-yellow">キャンセル待ち</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day2Rsv[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Waiting_<%=Day2Rsv[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day2Rsv[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Waiting_<%=Day2Rsv[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>
@@ -206,15 +206,15 @@
                           <%=Day2Wait[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="is-sm">
+                          <select name="row_nursery_<%=Day2Wait[i].rsvid%>">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day2Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-green">予約確定</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day2Wait[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Reserved_<%=Day2Wait[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day2Wait[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Cancelled_<%=Day2Wait[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>
@@ -251,15 +251,15 @@
                           <%=Day3Rsv[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="">
+                          <select name="row_nursery_<%=Day3Rsv[i].rsvid%>">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day3Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-yellow">キャンセル待ち</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day3Rsv[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Waiting_<%=Day3Rsv[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day3Rsv[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Waiting_<%=Day3Rsv[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>
@@ -292,15 +292,15 @@
                           <%=Day3Wait[i].disease%>
                         </td>
                         <td class="is-left">
-                          <select name="is-sm">
+                          <select name="row_nursery_<%=Day3Wait[i].rsvid%>">
                             <% for (var n = 0; n < Nurserys.length; n++) { %>
                               <option value="<%=Nurserys[n].id%>"<% if (Day3Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
                             <% } %>
                           </select>
-                          <button type="button" class="is-blue">園変更</button>
-                          <button type="button" class="is-green">予約確定</button>
-                          <button type="button" class="is-red">対応不可</button>
-                          <button type="button" class="is-violet">キャンセル</button>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day3Wait[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Reserved_<%=Day3Wait[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day3Wait[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Cancelled_<%=Day3Wait[i].rsvid%>">キャンセル</button>
                         </td>
                       </tr>
                     <% } %>

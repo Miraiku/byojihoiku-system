@@ -16,7 +16,7 @@ router
     try {
       const action = req.body.action
 
-      if (action == 'update_status_from_home') {
+      if (action == 'update_status_from_home' || action == 'update_status_from_rsv') {
         const status = req.body.status
         const new_nurseryid = req.body.nurseryid
         const rsvid = req.body.rsvid
@@ -31,8 +31,6 @@ router
           console.log(reservation_date)
           let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(view.getPsglTimeStampFromDayDataObj(reservation_date), new_nurseryid)
           let new_capacity = Number(reservation_num_on_day[0].count)
-          console.log('org'+nursery_capacity)
-          console.log('new'+new_capacity)
           if((nursery_capacity - new_capacity) > 0){
             await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
             res.status(200).send('Success');
