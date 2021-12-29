@@ -70,6 +70,6 @@ $(function() {
   });
 
   $('select').on('change', function() {
-    $('option:selected').removeAttr("selected");
+    $("option:selected", this).removeAttr("selected");
   });
 });//end of jquery
