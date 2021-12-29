@@ -684,7 +684,7 @@ exports.getReservationEntryPage = async function (req, res){
     const disease_list = await psgl.getDiseaseList()
     const meal_list = await psgl.getMealList()
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
-    info.push({allergy_bool:allergy_bool, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
     res.render("pages/reservation/entry",{Info:info})
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)
