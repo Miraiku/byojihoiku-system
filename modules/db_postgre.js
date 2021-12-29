@@ -351,6 +351,13 @@ exports.getMiraikuIDByMemberID = async function (id){
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
+
+exports.getMemberAllergyByMemberID = async function (id){
+  let sql = `SELECT "Allergy" FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
+
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
 /* View */
 
 

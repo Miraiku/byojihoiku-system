@@ -20,9 +20,9 @@
             <dt>ステータス</dt>
             <dd>
               <select class="is-sm" name="">
-                <option value="">予約確定</option>
-                <option value="">対応不可</option>
-                <option value="">キャンセル待ち</option>
+                <option value=""<% if (Info[0].status == '予約確定') { %> checked<% } %>>予約確定</option>
+                <option value=""<% if (Info[0].status == '対応不可') { %> checked<% } %>>対応不可</option>
+                <option value=""<% if (Info[0].status == 'キャンセル待ち') { %> checked<% } %>>キャンセル待ち</option>
               </select>
             </dd>
           </dl>
@@ -38,9 +38,9 @@
             <dt>病名</dt>
             <dd>
               <select class="is-md" name="">
-                <option value="">選択してください</option>
-                <option value="">急性上気道炎</option>
-                <option value="">喘息</option>
+                <% for (var i = 0; i < Info[0].disease_list.length; i++) { %>
+                  <option value="<%=Info[0].disease_list[i].id%>" <% if (Info[0].disease==Info[0].disease_list[i].name) { %>selected<% } %>><%=Info[0].disease_list[i].name%></option>
+                <% } %>
               </select><br>
               <!--select class="is-md" name="">
                 <option value="">選択してください</option>
@@ -72,9 +72,9 @@
             <dt>利用園</dt>
             <dd>
               <select name="" class="is-md">
-                <option value="sanaecho">早苗町</option>
-                <option value="takada">高田</option>
-                <option value="obuse">小布施</option>
+                <% for (var n = 0; n < nursery_list.length; n++) { %>
+                  <option value="<%=nursery_list[n].id%>"><%=nursery_list[n].name%></option>
+                <% } %>
               </select>
             </dd>
           </dl>
@@ -89,9 +89,9 @@
           <dl>
             <dt>兄妹利用の有無</dt>
             <dd>
-              <input type="radio" id="family1" name="family" checked>
+              <input type="radio" id="family1" name="family"<% if (Info[0].brothers == '有り') { %> checked<% } %>>
               <label for="family1" class="radio">有り</label>
-              <input type="radio" id="family2" name="family">
+              <input type="radio" id="family2" name="family"<% if (Info[0].brothers == '無し') { %> checked<% } %>>
               <label for="family2" class="radio">無し</label>
             </dd>
           </dl>
@@ -99,17 +99,19 @@
             <dt>食事の種類</dt>
             <dd>
               <select class="is-sm" name="">
-                <option value="">幼児食</option>
-                <option value="">離乳食</option>
+                <% for (var i = 0; i < Info[0].meal_list.length; i++) { %>
+                  <option value="<%=Info[0].meal_list[i].id%>" <% if (Info[0].meal==Info[0].meal_list[i].name) { %>selected<% } %>><%=Info[0].meal_list[i].name%></option>
+                <% } %>
               </select>
             </dd>
           </dl>
           <dl>
             <dt>食事の追加事項</dt>
             <dd>
-              <select name="">
+              <!--select name="">
                 <option value="">おなかに優しい食事（おう吐・下痢）</option>
-              </select>
+              </select-->
+              <input type="text" class="is-md" value="<%=Info[0].meal_details%>" />
             </dd>
           </dl>
           <dl>
@@ -119,9 +121,9 @@
           <dl>
             <dt>アレルギー</dt>
             <dd>
-              <input type="radio" id="allergy1" name="allergy" checked required>
+              <input type="radio" id="allergy1" name="allergy" <% if (Info[0].allergy_bool == 'true') { %> checked<% } %> required>
               <label for="allergy1" class="radio">有り</label>
-              <input type="radio" id="allergy2" name="allergy">
+              <input type="radio" id="allergy2" name="allergy"<% if (Info[0].allergy_bool == 'false') { %> checked<% } %>>
               <label for="allergy2" class="radio">無し</label>
             <input type="text" value="<%=Info[0].allergy%>" />
             </dd>
