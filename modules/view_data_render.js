@@ -399,9 +399,11 @@ exports.getReservationPage = async function (req, res){
     }else{
       dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
     }
-    status3days.push({id:nurseryid, name:nursery_name[0].Name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
+    status3days.push({id:nurseryid, name:nursery_name[0].NurseryName, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
+    const nursery_list = await psgl.getNurseryID_Name_Capacity()
     console.log(status3days)
-    res.render("pages/reservation/index", {Status3Days: status3days})
+    console.log(nursery_list[0])
+    res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list[0]})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
     res.redirect('/home/')
