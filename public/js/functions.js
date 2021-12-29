@@ -9,20 +9,20 @@ $(function() {
 
   $(".btn_status_update").on('click', function(e) {
     const btn_value = $(this).val()
-    const status = btn_value.substr(0, btn_value.indexOf('_'));
-    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1);
+    const status = btn_value.substr(0, btn_value.indexOf('_'))
+    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
+    const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
     e.preventDefault();            
     //checkd trueにするのをわすれない  
     $.confirmModal('「'+$(this).text()+'」でよろしいですか？', function(el) {
-      console.log(btn_value)
-      console.log(status)
-      console.log(rsvid)
-      console.log($(`[name=row_nursery_${rsvid}]`).val())
-      /*$.ajax({
+      $.ajax({
         url: '/updater',
         type: 'POST',
         data: {
-          'status': status
+          'action': 'update_status_from_home',
+          'status': status,
+          'nurseryid': nurseryid,
+          'rsvid': rsvid
         },
         dataType: 'text'
       }).done(function( data, textStatus, jqXHR ) {
@@ -34,7 +34,7 @@ $(function() {
       }).always(function( jqXHR, textStatus) {
         //通信完了
         console.log("通信完了")
-      });//end of ajax*/
+      });//end of ajax
     })//end of confirm
   });
 
