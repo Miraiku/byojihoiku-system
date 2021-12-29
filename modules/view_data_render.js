@@ -309,12 +309,12 @@ exports.getCalendarPage = async function (req, res){
 //reservation view
 exports.getReservationPage = async function (req, res){
   try {
-    const reservationid = req.params.nurseryid
-    console.log(reservationid)
-    if(!view.isValidNum(reservationid)){
+    const nurseryid = req.params.nurseryid
+    console.log(nurseryid)
+    if(!view.isValidNum(nurseryid)){
       throw new Error('invalid num')
     }
-    res.render("pages/reservation/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+    res.render("pages/reservation/index")
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
     res.redirect('/home/')
@@ -328,7 +328,7 @@ exports.getReservationConfirmPage = async function (req, res){
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
     }
-    res.render("pages/reservation/confirm",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay})
+    res.render("pages/reservation/confirm")
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
     res.redirect('/reservation/')
