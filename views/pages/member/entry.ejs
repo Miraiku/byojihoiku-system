@@ -75,30 +75,28 @@
 
         
   <script>
-    $(function(){
-      $('#memberInfo').validate({
-        rules: {
-          field: {
-            required: true,
-            number: true
-          }
-        },
-        errorPlacement: function(error, element){
-          var errorKey = $(element).attr('id') + 'Error';
-          $('#error_' + errorKey).remove();
-          element.addClass('is-invalid');
-          const errorP = $('<p>').text(error[0].innerText);
-          const errorDiv = $('<div class="invalid-feedback" id="error_' + errorKey + '">').append(errorP);
-          element.parent().append(errorDiv);
-        },
-        success: function(error, element) {
-          var errorKey = $(element).attr('id') + 'Error';
-          $('#error_' + errorKey).remove();
-          $(error).remove();
-          $(element).removeClass('is-invalid');
-          $(element).removeClass('error');
-        },
-      });
+    $('#memberInfo').validate({
+      rules: {
+        field: {
+          required: true,
+          number: true
+        }
+      },
+      errorPlacement: function(error, element){
+        var errorKey = $(element).attr('id') + 'Error';
+        $('#error_' + errorKey).remove();
+        element.addClass('is-invalid');
+        const errorP = $('<p>').text(error[0].innerText);
+        const errorDiv = $('<div class="invalid-feedback" id="error_' + errorKey + '">').append(errorP);
+        element.parent().append(errorDiv);
+      },
+      success: function(error, element) {
+        var errorKey = $(element).attr('id') + 'Error';
+        $('#error_' + errorKey).remove();
+        $(error).remove();
+        $(element).removeClass('is-invalid');
+        $(element).removeClass('error');
+      },
     });
   </script>
   <%- include ("../../partials/footer.ejs") %>
