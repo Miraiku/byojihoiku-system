@@ -28,10 +28,10 @@ $(function() {
       }).done(function( data, textStatus, jqXHR ) {
         notif({
           type: "success",
-          position = "center",
-          autohide = true,
-          msg = "",
-          opacity = 0.8,
+          position: "center",
+          autohide: true,
+          msg: "",
+          opacity:0.8,
           multiline: 0,
           fade: 0,
           bgcolor: "",
@@ -48,9 +48,9 @@ $(function() {
       }).fail(function( jqXHR, textStatus, errorThrown) {
         notif({
           type: "error",
-          position = "center",
-          msg = "",
-          opacity = 0.8,
+          position: "center",
+          msg: "",
+          opacity: 0.8,
           multiline: 0,
           fade: 0,
           bgcolor: "",
