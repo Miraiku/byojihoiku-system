@@ -309,7 +309,14 @@ exports.getCalendarPage = async function (req, res){
 //reservation view
 exports.getReservationPage = async function (req, res){
   try {
-    let nurseryid = req.params.nurseryid
+    let nurseryid
+    if(req.params.nurseryid != undefined){
+      nurseryid = req.params.nurseryid
+    }else if(req.query.nursery != undefined){
+      nurseryid = req.query.nursery
+    }else{
+      throw new Error('no page')
+    }
     nurseryid = view.zenkaku2Hankaku(nurseryid)
     if(!view.isValidNum(nurseryid)){
       throw new Error('invalid num')
@@ -521,7 +528,9 @@ exports.getReservationPage = async function (req, res){
 
 //reservation/confirm view
 exports.getReservationConfirmPage = async function (req, res){
+  let prev
   try {
+    prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
@@ -589,7 +598,11 @@ exports.getReservationConfirmPage = async function (req, res){
     res.render("pages/reservation/confirm",{Rsv:rsv, Details:rsv_details})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
-    res.redirect('/reservation/')
+    if(prev != null){
+      res.redirect('/reservation/?nursery='+prev)
+    }else{
+      res.redirect('/home')
+    }
   }
 }
 

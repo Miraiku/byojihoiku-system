@@ -300,8 +300,8 @@ router
                   try {
                     //Get all information
                     let info = await redis.hgetAll(userId)
-                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy") VALUES(
-                      '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`')`;
+                    let queryString = `INSERT INTO public."Member" ("LINEID","BirthDay","Name","Allergy","CreatedAt") VALUES(
+                      '`+userId+`', '`+info['BirthDay']+`', '`+info['Name']+`', '`+convertAllergyBoolean(info['Allergy'])+`','${getTimeStampFromDayDataObj(today)}')`;
                     const result = await psgl.sqlToPostgre(queryString)
                     console.log(result);
                   } catch (err) {

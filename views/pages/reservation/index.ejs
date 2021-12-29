@@ -46,7 +46,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day1Rsv.length; i++) { %>
-                      <tr data-href="/reservation/confirm/<%=Day1Rsv[i].rsvid%>">
+                      <tr data-href="/reservation/confirm/<%=Day1Rsv[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day1Rsv[i].id%></td>
                         <td><%=Day1Rsv[i].name%></td>
