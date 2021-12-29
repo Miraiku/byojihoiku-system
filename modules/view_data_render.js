@@ -492,7 +492,9 @@ return Number(s.substr( 0, 4 ))+'/'+Number(s.substr( 4, 2 ))+'/'+Number(s.substr
 exports.isValidNum = function (s){
   //半角と全角どちらでも受け付ける
   if(Number(s) == NaN){
+    console.log(Number(s) == NaN)
     if(Number(view.zenkaku2Hankaku(s)) == NaN){
+      console.log(Number(view.zenkaku2Hankaku(s)) == NaN)
       return false
     }else{
       return true
