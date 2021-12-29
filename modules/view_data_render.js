@@ -611,15 +611,85 @@ exports.getReservationConfirmPage = async function (req, res){
 
 //reservation/entry view
 exports.getReservationEntryPage = async function (req, res){
+  let prev
   try {
+    prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){
       throw new Error('invalid num')
     }
-    res.render("pages/reservation/entry")
+    let info = []
+    const rsv = await psgl.getReservationInfoByReservationID(reservationid)
+    const rsv_details = await psgl.getReservationDetailsByReservationID(reservationid)
+    const name = await psgl.getMemberNameByMemberID(rsv[0].MemberID)
+    const miraikuid = await psgl.getMiraikuIDByMemberID(rsv[0].MemberID)
+    let age = await psgl.getMemberBirthDayByID(rsv[0].MemberID)
+    age = view.getAgeMonth(age[0].BirthDay)
+    const disease = await psgl.getDiseaseNameFromUniqueID(rsv_details[0].DiseaseID)
+    let rsvdate = view.getDateformatFromPsglTimeStamp(rsv[0].ReservationDate)
+    const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
+    const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
+    const nursery = await psgl.getNurseryNameByID(rsv[0].NurseryID)
+    let status
+    if(rsv[0].ReservationStatus == 'Reserved'){
+      status = '予約確定'
+    }else if(rsv[0].ReservationStatus == 'Waiting'){
+      status = 'キャンセル待ち'
+    }else if(rsv[0].ReservationStatus == 'Rejected'){
+      status = '対応不可'
+    }else if(rsv[0].ReservationStatus == 'Cancelled'){
+      status = 'キャンセル'
+    }else if(rsv[0].ReservationStatus == 'Unread'){
+      status = '看護師の最終確認待ち'
+    }
+    const parent_name = rsv_details[0].ParentName
+    const parent_tel = rsv_details[0].ParentTel
+    let lineid = await psgl.getLINEIDByMemberID(rsv[0].MemberID)
+    const sameday_members = await psgl.getReservedMemberIDOnTheDay(view.getPsglTimeStampFromDayDataObj(rsv[0].ReservationDate))
+
+    let bros_num = 0
+    if(sameday_members.length > 0){
+      for (const m of sameday_members) {
+        let mem = await psgl.getLINEIDByMemberID(m.MemberID)
+        if(mem.length > 0 && mem[0].LINEID == lineid[0].LINEID){
+          bros_num += 1
+        }
+      }
+    }
+    if(bros_num > 0){
+      brothers = '有り'
+    }else{
+      brothers = '無し'
+    }
+    const meal = await psgl.getMealNameFromID(rsv_details[0].MealType)
+    let meal_details
+    if(rsv_details[0].MealDetails == 'false'){
+      meal_details = '無し'
+    }else{
+      meal_details = rsv_details[0].MealDetails
+    }
+    let cramps
+    if(rsv_details[0].Cramps == 'false'){
+      cramps = '無し'
+    }else{
+      cramps = rsv_details[0].Cramps
+    }
+    let allergy
+    if(rsv_details[0].Allergy == 'false'){
+      allergy = '無し'
+    }else{
+      allergy = rsv_details[0].Allergy
+    }
+
+    info.push({rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    res.render("pages/reservation/entry",{Info:info})
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)
-    res.redirect('/reservation/')
+    if(prev != null){
+      res.redirect('/reservation/?nursery='+prev)
+    }else{
+      res.redirect('/home')
+    }
   }
 }
 
