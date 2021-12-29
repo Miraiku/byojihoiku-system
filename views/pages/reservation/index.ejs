@@ -11,24 +11,24 @@
       <div class="l-container">
         <nav class="page-navi">
           <ul>
-            <li><a href="#">早苗町</a></li>
-            <li><a href="#">高田</a></li>
-            <li><a href="#">小布施</a></li>
+            <% for (var i = 0; i < Nurserys.length; i++) { %>
+              <li><a href="/reservation/<%=Nurserys[i].id%>"><%=Nurserys[i].name%></a></li>
+            <% } %>
           </ul>
         </nav>
       </div>
     </section>
     <section class="l-container">
-      <h2>早苗町</h2>
+      <h2><%=Status3Days.name%></h2>
     </section>
     <section>
       <div class="tabs l-container">
         <input id="tab1" type="radio" name="tab_item" checked>
-        <label class="tab_item" for="tab1">2021/11/1<span>(月)</span></label>
+        <label class="tab_item" for="tab1"><%=Status3Days.today.date%><span>(月)</span></label>
         <input id="tab2" type="radio" name="tab_item">
-        <label class="tab_item" for="tab2">2021/11/2<span>(火)</span></label>
+        <label class="tab_item" for="tab2"><%=Status3Days.tomorrow.date%><span>(火)</span></label>
         <input id="tab3" type="radio" name="tab_item">
-        <label class="tab_item" for="tab3">2021/11/3<span>(水)</span></label>
+        <label class="tab_item" for="tab3"><%=Status3Days.dayaftertomorrow.date%><span>(水)</span></label>
         <div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>
