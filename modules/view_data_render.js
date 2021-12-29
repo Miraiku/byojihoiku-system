@@ -203,7 +203,6 @@ exports.getEntryPage = async function (req, res){
     let age = view.getAgeMonth(info[0].BirthDay)
     let allergy = info[0].Allergy
     mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
-    console.log(mem)
     res.render("pages/member/entry",{Member:mem})
   } catch (error) {
     console.log("ERR @getEntryPage: "+ error)
@@ -340,7 +339,6 @@ exports.getReservationPage = async function (req, res){
     const day1_waitinglist = await psgl.WaitingInfoTodayByNursery(nurseryid) 
     if(day1_reservedlist.length > 0){
       for (const member of day1_reservedlist) {
-        console.log(member)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
@@ -527,7 +525,11 @@ exports.getReservationConfirmPage = async function (req, res){
       throw new Error('invalid num')
     }
     //reservationid から予約情報と会員情報をとる
-    res.render("pages/reservation/confirm")
+    const rsv = await psgl.getReservationDetailsByReservationID(reservationid)
+    const rsv_details = await psgl.getReservationStatusByReservationID(reservationid)
+    console.log(rsv)
+    console.log(rsv_details)
+    res.render("pages/reservation/confirm",{Rsv:rsv, Details:rsv_details})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
     res.redirect('/reservation/')
