@@ -511,6 +511,7 @@ exports.getReservationPage = async function (req, res){
     }
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     console.log(status3days)
+    console.log(Day1Rsv)
     res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list, Day1Rsv:day1_reserved, Day2Rsv:day2_reserved, Day3Rsv:day3_reserved, Day1Wait:day1_waiting, Day2Wait:day2_waiting,Day3Wait:day3_waiting})
   } catch (error) {
     console.log("ERR @getReservationPage: "+ error)
