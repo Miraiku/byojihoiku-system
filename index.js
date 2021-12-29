@@ -5,6 +5,7 @@ const path = require('path');
 const https = require("https");
 const request = require('request');
 const webhook = require('./modules/line_receiver')
+const ajax = require('./modules/ajax_receiver')
 const cron = require('node-cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
@@ -31,6 +32,7 @@ express()
   .get('/reservation/entry/:reservationid', views.getReservationEntryPage)
   .get('/reservation/update', (req, res) => res.render('pages/index'))
   .use('/webhook', webhook)
+  .get('/updater', ajax)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 /*

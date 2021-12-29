@@ -108,30 +108,30 @@
               <th>&nbsp;</th>
             </tr>
             <% for (var i = 0; i < AllUnread.length; i++) { %>
-              <tr>
-                <td><%=i+1%></td>
-                <td><%=AllUnread[i].id%></td>
-                <td><%=AllUnread[i].name%></td>
-                <td><%=AllUnread[i].birthday%></td>
-                <td><%=AllUnread[i].date%></td>
-                <td class="is-left">
-                  <%=AllUnread[i].disease%>
-                </td>
-                <td><%=AllUnread[i].first%></td>
-                <td><%=AllUnread[i].second%></td>
-                <td><%=AllUnread[i].third%></td>
-                <td>
-                  <select name="">
-                    <% for (var n = 0; n < Status3Days.length; n++) { %>
-                      <option value="<%=Status3Days[n].id%>"<% if (AllUnread[i].first==Status3Days[n].name) { %>selected<% } %>><%=Status3Days[n].name%></option>
-                    <% } %>
-                  </select>
-                  <button type="button" class="is-green btn_status_update" value="Reserved">予約確定</button>
-                  <button type="button" class="is-yellow btn_status_update" value="Waiting">キャンセル待ち</button>
-                  <button type="button" class="is-red btn_status_update" value="Rejected">対応不可</button>
-                  <button type="button" class="is-violet btn_status_update" value="Cancelled">キャンセル</button>
-                </td>
-              </tr>
+                <tr class="row_<%=AllUnread[i].rsvid%>">
+                  <td><%=i+1%></td>
+                  <td><%=AllUnread[i].id%></td>
+                  <td><%=AllUnread[i].name%></td>
+                  <td><%=AllUnread[i].birthday%></td>
+                  <td><%=AllUnread[i].date%></td>
+                  <td class="is-left">
+                    <%=AllUnread[i].disease%>
+                  </td>
+                  <td><%=AllUnread[i].first%></td>
+                  <td><%=AllUnread[i].second%></td>
+                  <td><%=AllUnread[i].third%></td>
+                  <td>
+                    <select name="row_nursery_<%=AllUnread[i].rsvid%>">
+                      <% for (var n = 0; n < Status3Days.length; n++) { %>
+                        <option value="<%=Status3Days[n].id%>"<% if (AllUnread[i].first==Status3Days[n].name) { %>selected<% } %>><%=Status3Days[n].name%></option>
+                      <% } %>
+                    </select>
+                    <button type="button" class="is-green btn_status_update" value="Reserved_<%=AllUnread[i].rsvid%>">予約確定</button>
+                    <button type="button" class="is-yellow btn_status_update" value="Waiting_<%=AllUnread[i].rsvid%>">キャンセル待ち</button>
+                    <button type="button" class="is-red btn_status_update" value="Rejected_<%=AllUnread[i].rsvid%>">対応不可</button>
+                    <button type="button" class="is-violet btn_status_update" value="Cancelled_<%=AllUnread[i].rsvid%>">キャンセル</button>
+                  </td>
+                </tr>
             <% } %>
           </table>
         </div>

@@ -468,7 +468,7 @@ exports.getReservationConfirmationFalseGraterThanToday = async function (){
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
-    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery",  "thirdNursery", "ID" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
     res.push(await psgl.sqlToPostgre(sql))
   }
   return res
