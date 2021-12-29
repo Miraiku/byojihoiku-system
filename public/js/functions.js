@@ -60,7 +60,10 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        console.log("失敗"+jqXHR)
+        for (const i of jqXHR) {
+          
+        console.log("失敗"+i)
+        }
         console.log("失敗"+textStatus)
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
