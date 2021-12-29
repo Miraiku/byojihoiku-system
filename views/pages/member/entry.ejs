@@ -91,7 +91,7 @@
             return true;
           }
           return !!value.match(/^[ァ-ヶー　]*$/)
-        },'全角カナで入力してください');
+        },'*全角カナで入力してください');
 
       //入力項目の検証ルール定義
       var rules = {
@@ -115,8 +115,9 @@
         }
       };
 
+      const memberInfo = $('#memberInfo')
       $(function(){
-        $('#memberInfo').validate({
+        memberInfo.validate({
           rules: rules,
           messages: messages,
 
