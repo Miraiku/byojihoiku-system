@@ -10,10 +10,10 @@
   <main class="l-main">
     <section>
       <h2 class="is-center">会員編集</h2>
-      <div class="form-panel is-entry l-container is-md">
+      <div class="form-panel is-entry l-container is-md" id="memberInfo">
         <dl>
           <dt>会員ID</dt>
-          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>" name="miraikuid"></dd>
+          <dd><input type="text" class="is-sm" placeholder="000000" value="<%=Member[0].miraikuid%>" name="miraikuid" required></dd>
         </dl>
         <!--dl>
           <dt>LINE識別番号</dt>
@@ -25,14 +25,14 @@
         <dl>
           <dt>児童名</dt>
           <dd>
-            <input type="text" class="is-md" placeholder="ニシザワミライ" value="<%=Member[0].name%>" name="name">
+            <input type="text" class="is-md" placeholder="ニシザワミライ" value="<%=Member[0].name%>" name="name" required>
             <span>全角カタカナで入力してください</span>
           </dd>
         </dl>
         <dl>
           <dt>生年月日</dt>
           <dd>
-            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>" name="year">
+            <input type="text" class="is-text-ss" placeholder="2022" value="<%=Member[0].bYear%>" name="year" required>
             年
             <select class="is-select-ss" name="month">月
               <% for (var i = 0; i < 12; i++) { %>
@@ -71,6 +71,16 @@
     </section>
   </main>
 
+  <script>
+    $("#memberInfo").validate({
+      rules: {
+        field: {
+          required: true,
+          number: true
+        }
+      }
+    });
+  </script>
   <%- include ("../../partials/footer.ejs") %>
 
 </body>
