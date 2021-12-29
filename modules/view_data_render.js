@@ -542,8 +542,10 @@ exports.getReservationEntryPage = async function (req, res){
     age = view.getAgeMonth(age[0].BirthDay)
     const disease = await psgl.getDiseaseNameFromUniqueID(rsv_details[0].DiseaseID)
     let rsvdate = view.getDateformatFromPsglTimeStamp(rsv[0].ReservationDate)
-    const intime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].InTime)
-    const outtime = view.getHoursJPFormattedFromDayDataObj(rsv_details[0].OutTime)
+    const intime_hour = view.getHourJPFormattedFromDayDataObj(rsv_details[0].InTime)
+    const outtime_hour = view.getHourJPFormattedFromDayDataObj(rsv_details[0].OutTime)
+    const intime_mins = view.getMinsJPFormattedFromDayDataObj(rsv_details[0].InTime)
+    const outtime_mins = view.getMinsJPFormattedFromDayDataObj(rsv_details[0].OutTime)
     const nursery = await psgl.getNurseryNameByID(rsv[0].NurseryID)
     let status
     if(rsv[0].ReservationStatus == 'Reserved'){
@@ -599,7 +601,7 @@ exports.getReservationEntryPage = async function (req, res){
     const disease_list = await psgl.getDiseaseList()
     const meal_list = await psgl.getMealList()
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
-    info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime_hour:intime_hour, intime_mins:intime_mins, outtime_hour:outtime_hour, outtime_mins:outtime_mins, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
     res.render("pages/reservation/entry",{Info:info})
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)
@@ -697,6 +699,16 @@ exports.getHoursJPFormattedFromDayDataObj = function (dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11:41
   let date = new Date(dataobj);
   return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
+}
+exports.getHourJPFormattedFromDayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11
+  let date = new Date(dataobj);
+  return ('0' + date.getHours()).slice(-2) 
+}
+exports.getMinsJPFormattedFromDayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 41
+  let date = new Date(dataobj);
+  return ('0' + date.getMinutes()).slice(-2)
 }
 
 exports.getPsglTimeStampFromDayDataObj = function (dataobj){
