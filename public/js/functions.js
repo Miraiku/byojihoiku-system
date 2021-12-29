@@ -71,11 +71,5 @@ $(function() {
 
   $('select').on('change', function() {
     $('option:selected').removeAttr("selected");
-
-    const btn_value = 'Reserved_33'
-    const status = btn_value.substr(0, btn_value.indexOf('_'))
-    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
-    const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
-    console.log(nurseryid)
   });
 });//end of jquery
