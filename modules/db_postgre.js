@@ -55,6 +55,11 @@ exports.getNurseryCapacityByName = async function (name){
   return await psgl.sqlToPostgre(sql)
 }
 
+exports.getNurseryCapacityByID = async function (name){
+  let sql = `SELECT "Capacity" FROM public."Nursery" WHERE "ID" = '`+name+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
 exports.getNurseryIdByName = async function (name){
   let sql = `SELECT "ID" FROM public."Nursery" WHERE "NurseryName" = '`+name+`';`
   return await psgl.sqlToPostgre(sql)
@@ -358,8 +363,12 @@ exports.getMemberAllergyByMemberID = async function (id){
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
-/* View */
 
+exports.getReservationDateByID = async function (id){
+  let sql = `SELECT "ReservationDate" FROM public."Reservation" WHERE "ID" = '${id}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
 
 exports.ReservationStatusTodayByNursery = async function (id){
   let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today';`
@@ -445,6 +454,12 @@ exports.ReservedInfoDayAfterTomorrowByNursery = async function (id){
   return res//[{}]
 }
 
+exports.getNurseryIDByResevationID = async function (id){
+  let sql = `SELECT "NurseryID" FROM public."Reservation" WHERE  "ID" = '${id}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
 exports.ReservedTodayByNursery = async function (id){
   let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
@@ -478,4 +493,14 @@ exports.getReservedMemberIDOnTheDay = async function (date){
   let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE '${date}';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
+}
+
+exports.updateStatusNurseryConfirmationByReservationID = async function (rsvid, status, nurseryid){
+  let sql = `BEGIN;
+  UPDATE public."Reservation" SET "Confirmation"= 'true', "ReservationStatus" = '${status}', "NurseryID" = '${nurseryid}'  WHERE "ID"= '${rsvid}';
+  UPDATE public."ReservationDetails" SET "firstNursery"= '${nurseryid}' WHERE "ID"= '${rsvid}';
+COMMIT;`
+  let res = await psgl.sqlToPostgre(sql)
+  console.log('updates:'+res)
+  return res
 }
