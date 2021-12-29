@@ -349,7 +349,7 @@ exports.getReservationPage = async function (req, res){
         today_data = {date:DayToJPFromDateObj(today_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
       }
     }else{
-      today_data = {date:DayToJPFromDateObj(today_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
+      today_data = {date:MonthDayToJPFromDateObj(today_JST),day:WeekDayToJPFromDateObj(today_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
     }
     let tomorrowStatus = await psgl.ReservationStatusTomorrowByNursery(nurseryid)
     if(tomorrowStatus.length > 0){
@@ -373,7 +373,7 @@ exports.getReservationPage = async function (req, res){
         tomorrow_data = {date:DayToJPFromDateObj(tomorrow_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
       }
     }else{
-      tomorrow_data = {date:DayToJPFromDateObj(tomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
+      tomorrow_data = {date:MonthDayToJPFromDateObj(tomorrow_JST),day:WeekDayToJPFromDateObj(tomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
     }
     let dayaftertomorrowStatus = await psgl.ReservationStatusDayAfterTomorrowByNursery(nurseryid)
     if(dayaftertomorrowStatus.length > 0){
@@ -397,7 +397,7 @@ exports.getReservationPage = async function (req, res){
         dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
       }
     }else{
-      dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
+      dayaftertomorrow_data = {date:MonthDayToJPFromDateObj(dayaftertomorrow_JST),day:WeekDayToJPFromDateObj(dayaftertomorrow_JST), unread:0, cancelled:0, waiting:0, rejected:0, reserved:0}
     }
     status3days.push({id:nurseryid, name:nursery_name[0].NurseryName, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
