@@ -3,9 +3,6 @@ const router = express.Router()
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const psgl = require('./db_postgre')
-const e = require('connect-flash')
-const { off } = require('process')
-const { all } = require('./line_receiver')
 
 //https://gist.github.com/laurenfazah/f9343ae8577999d301334fc68179b485
 
