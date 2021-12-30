@@ -22,6 +22,7 @@ express()
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
+  .post('/', login.signin)
   .get('/calendar', views.getCalendarPage)
   .get('/home', views.getNurseryStatus3Days)
   .get('/member', views.getMembersPage)
@@ -34,6 +35,7 @@ express()
   .use('/webhook', webhook)
   .use('/updater', ajax)
   .get('/secret/regsiter', (req, res) => res.render('pages/function/register'))
+  .post('/secret/regsiter', login.signup)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 /*

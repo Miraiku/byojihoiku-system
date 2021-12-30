@@ -406,7 +406,7 @@ $(function() {
           console.log(name)
           console.log(password)
           $.ajax({
-            url: '/updater',
+            url: '/secret/regsiter',
             type: 'POST',
             data: {
               'action': 'login_check',
@@ -477,7 +477,7 @@ $(function() {
           const name = $('input[name="name"]').val()
           const password = $('input[name="password"]').val()
           $.ajax({
-            url: '/updater',
+            url: '/secret/regsiter',
             type: 'POST',
             data: {
               'action': 'login_register',

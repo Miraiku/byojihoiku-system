@@ -43,11 +43,6 @@ router
           await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success');
         }
-      }else if(action == 'login_check'){
-        const authed =login.signin(req,res)
-        console.log(`${action}: ${authed}`)
-      }else if(action == 'login_register'){
-        const authed =login.signup(req,res)
       }else{
         console.error("Ajax Receiver： Nothing Happend");
         res.status(503).send('エラーが発生しました');
