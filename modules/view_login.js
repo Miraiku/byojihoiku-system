@@ -122,32 +122,31 @@ const signup = (request, response) => {
   }
   if (!isLogined) {
     response.status(404).send()
-    return false
+    /* ログイン確認終了 */
+  }else{
+    const user = request.body
+    let created
+    hashPassword(user.Password)
+      .then((hashedPassword) => {
+        delete user.Password
+        user.Password = hashedPassword
+      })
+      .then(() => createToken())
+      .then(token => user.Token = token)
+      .then(async () => { 
+        created = await createUser(user)
+        if(created){
+          delete created.Password
+          response.status(201).json({ user })
+        }else{
+          response.status(406).send()
+        }
+      })
+      .catch((err) => {
+        response.status(503).send()
+        console.error(err)}
+      )
   }
-  /* ログイン確認終了 */
-  const user = request.body
-  let created
-  hashPassword(user.Password)
-    .then((hashedPassword) => {
-      delete user.Password
-      user.Password = hashedPassword
-    })
-    .then(() => createToken())
-    .then(token => user.Token = token)
-    .then(async () => { 
-      created = await createUser(user)
-      console.log(created)
-      if(created){
-        delete created.Password
-        response.status(201).json({ user })
-      }else{
-        response.status(406).send()
-      }
-    })
-    .catch((err) => {
-      response.status(503).send()
-      console.error(err)}
-    )
 }
 
 module.exports = {
