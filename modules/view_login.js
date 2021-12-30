@@ -139,8 +139,8 @@ const signup = (request, response) => {
       let created = await createUser(user)
       if(!created){
         response.status(406).send()
+        return false
       }
-      return false
     }
     )
     .then(user => {
