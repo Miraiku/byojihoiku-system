@@ -405,14 +405,14 @@ $(function() {
         if (loginForm.validate().form()) {
           const id = $('input[name="id"]').val()
           const password = $('input[name="password"]').val()
-          console.log(id)
+          console.log(name)
           console.log(password)
           $.ajax({
             url: '/updater',
             type: 'POST',
             data: {
               'action': 'login_register',
-              'ID':id,
+              'Name':name,
               'Password':password
             },
             dataType: 'text'
