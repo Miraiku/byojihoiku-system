@@ -19,6 +19,15 @@ express()
   .use(express.static(path.join(__dirname, 'public')))
   .use(express.json())
   .use(express.urlencoded({extended: true}))
+  .use(session({
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+      httpOnly: true,
+      secure: true,
+      maxage: 86400000 * 5
+    }
+  }))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
@@ -37,39 +46,6 @@ express()
   .get('/secret/regsiter', (req, res) => res.render('pages/function/register'))
   .post('/secret/regsiter', login.signup)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
-/*
-  .use(flash())
-  .use(session({
-    secret: 'YOUR-SECRET-STRING',
-    resave: true,
-    saveUninitialized: true
-  }))
-  .use(passport.initialize())
-  .use(passport.session())
-  .get('/', (req, res) => {
-  const errorMessage = req.flash('error').join('<br>');
-  res.render('/form', {
-    errorMessage: errorMessage
-  })})
-  .post('/',
-  passport.authenticate('local', {
-    successRedirect: '/home',
-    failureRedirect: '/',
-    failureFlash: true,
-    badRequestMessage: '「ID」と「パスワード」は必須入力です。'
-  }))
-  get('/home', authMiddleware, (req, res) => {
-    const user = req.user;
-    res.send('ログイン完了！');
-  }) */  
-  const authMiddleware = (req, res, next) => {
-    if(req.isAuthenticated()) { // ログインしてるかチェック
-      next();
-    } else {
-      res.redirect(302, '/home');
-    }
-  };
 
 //20分以上操作がないRedisの一時クエリを削除
 cron.schedule('*/20 * * * *', async () =>  {

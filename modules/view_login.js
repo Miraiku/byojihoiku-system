@@ -23,6 +23,14 @@ const signin = (request, response) => {
       .then(token => updateUserToken(token, user))
       .then(() => {
         delete user.Password
+        if (!request.session.token) {
+          console.log(token)
+          request.session.token = token;
+        }
+        if (!request.session.name) {
+          console.log(userReq.Name)
+          request.session.name = userReq.Name;
+        }
         response.status(200).send()
       })
       .catch((err) => {
@@ -84,9 +92,9 @@ const updateUserToken = async (token, user) => {
 
 
 const authenticate = (userReq) => {
-  findByToken(userReq.Token)
+  findByToken(userReq.token)
     .then((user) => {
-      if (user.Name == userReq.Name) {
+      if (user.Name == userReq.name) {
         return true
       } else {
         return false
@@ -116,5 +124,5 @@ const signup = (request, response) => {
 }
 
 module.exports = {
-  signin, signup
+  signin, signup, authenticate
 }

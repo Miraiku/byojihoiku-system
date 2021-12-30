@@ -403,8 +403,6 @@ $(function() {
         if (loginForm.validate().form()) {
           const name = $('input[name="name"]').val()
           const password = $('input[name="password"]').val()
-          console.log(name)
-          console.log(password)
           $.ajax({
             url: '/',
             type: 'POST',

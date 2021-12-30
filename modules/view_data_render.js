@@ -10,6 +10,7 @@ const pool = new Pool({
 const https = require("https");
 const psgl = require('./db_postgre');
 const view = require('./view_data_render');
+const login = require('./view_login')
 const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
@@ -26,6 +27,13 @@ holiday.setHoliday('01-03', 'miraiku-holiday')
 //home view
 exports.getNurseryStatus3Days = async function (req, res){
   try {
+    const userSession = {token: req.session.token, name: req.session.token}
+    console.log(userSession)
+    if (login.authenticate(userSession)) {
+        // handler logic goes here
+     } else {
+        res.status(404)
+     }
     /*　未処理の予約 */
     let all_unread_list = []
     const list = await psgl.getReservationConfirmationFalseGraterThanToday() 
