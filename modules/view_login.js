@@ -16,8 +16,8 @@ const signin = (request, response) => {
       })
       .then((res) => createToken())
       .then(token => {
-        token_created = token
-        updateUserToken(token, user)
+        let updated_token = updateUserToken(token, user)
+        token_created = updated_token.Token
       })
       .then(() => {
         delete user.Password
