@@ -139,7 +139,7 @@ const signup = (request, response) => {
       console.log(created)
       if(!created){
         response.status(406).send()
-        reject(new Error('Alread Registerd'))
+        new Error('Alread Registerd')
       }
     })
     .then(user => {
@@ -149,7 +149,7 @@ const signup = (request, response) => {
     .catch((err) => {
       response.status(503).send()
       console.error(err)}
-      )
+    )
 }
 
 module.exports = {
