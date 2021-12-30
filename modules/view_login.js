@@ -102,19 +102,18 @@ const findByToken = async (token) => {
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = ${token}`)
     .then((data) => data.rows[0])
 }
-
 const signup = (request, response) => {
   const user = request.body
   hashPassword(user.Password)
     .then((hashedPassword) => {
       delete user.Password
-      user.Password_digest = hashedPassword
+      user.password_digest = hashedPassword
     })
     .then(() => createToken())
     .then(token => user.Token = token)
-    .then(() => createToken(user))
+    .then(() => createUser(user))
     .then(user => {
-      delete user.Password_digest
+      delete user.password_digest
       response.status(201).json({ user })
     })
     .catch((err) => console.error(err))
