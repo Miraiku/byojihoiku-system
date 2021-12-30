@@ -16,7 +16,7 @@ const signin = (request, response) => {
       })
       .then((res) => createToken())
       .then(token => {
-        let updated_token = updateUserToken(token, user)
+        let updated_token = await updateUserToken(token, user)
         console.log(updated_token)
         token_created = updated_token.Token
       })
