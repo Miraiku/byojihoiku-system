@@ -44,7 +44,7 @@ router
           res.status(200).send('Success');
         }
       }else if(action == 'login_check'){
-        const authed =login.getLoginPage(req)
+        const authed =login.signin(req)
         console.log(`${action}: ${authed}`)
         //res.status(406).send('ろぐい');
       }else{

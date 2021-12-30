@@ -8,15 +8,6 @@ const { off } = require('process')
 const { all } = require('./line_receiver')
 const login = require('./view_login')
 
-// / top page
-exports.getLoginPage = async function(req, res){
-  try {
-    login.signin(req, res)
-  } catch (error) {
-    res.status(503) 
-  }
-}
-
 const signin = (request, response) => {
   const userReq = request.body
   let user
