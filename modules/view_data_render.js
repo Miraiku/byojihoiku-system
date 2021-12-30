@@ -44,7 +44,17 @@ exports.getLoginPage = async function (req, res){
 //register page
 exports.getRegisterPage = async function (req, res){
   try {
-      res.render("pages/function/register")
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+    res.render("pages/function/register")
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
     res.render("pages/index")
