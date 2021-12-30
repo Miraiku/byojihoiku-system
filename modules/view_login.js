@@ -137,12 +137,12 @@ const signup = (request, response) => {
     .then(token => user.Token = token)
     .then(async () => { 
       created = await createUser(user)
-      if(!created){
-        response.status(406).send()
-        new Error('Alread Registerd')
-      }else{
+      console.log(created)
+      if(created){
         delete created.Password
         response.status(201).json({ user })
+      }else{
+        response.status(406).send()
       }
     })
     .catch((err) => {
