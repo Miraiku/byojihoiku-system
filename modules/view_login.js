@@ -21,12 +21,8 @@ const signin = (request, response) => {
       })
       .then(() => {
         delete user.Password
-        if (!request.session.token) {
-          request.session.token = token_created;
-        }
-        if (!request.session.name) {
-          request.session.name = userReq.Name;
-        }
+        request.session.token = token_created
+        request.session.name = userReq.Name
         response.status(200).send()
       })
       .catch((err) => {
