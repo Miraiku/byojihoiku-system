@@ -23,7 +23,7 @@ const signin = (request, response) => {
       .then(token => updateUserToken(token, user))
       .then(() => {
         delete user.Password
-        response.redirect('/home')
+        response.redirect('/home').send()
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);
