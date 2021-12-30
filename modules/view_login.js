@@ -92,7 +92,7 @@ const authenticate = (userReq) => {
     .then((user) => {
       console.log(userReq.token)
       console.log(userReq.name)
-      console.log(user.Name)
+      console.log(user)
       if (user.Name == userReq.name) {
         return true
       } else {
