@@ -11,7 +11,7 @@ const login = require('./view_login')
 const signin = (request, response) => {
   const userReq = request.body
   let user
-
+  console.log(userReq)
   findUser(userReq)
     .then(foundUser => {
       user = foundUser
@@ -31,8 +31,7 @@ const signin = (request, response) => {
 }
 
 const findUser = async (userReq) => {
-  console.log(userReq.Name)
-  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = ?;` [userReq.Name])
+  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = ${userReq.Name};`)
     .then((data) => console.log(data[0]))
 }
 
