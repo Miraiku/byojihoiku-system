@@ -11,11 +11,9 @@ const login = require('./view_login')
 //https://gist.github.com/laurenfazah/f9343ae8577999d301334fc68179b485
 
 const signin = (request, response) => {
-  console.log(response)
   try {
     const userReq = request.body
     let user
-    console.log(userReq)
     findUser(userReq)
       .then(foundUser => {
         user = foundUser
@@ -51,7 +49,6 @@ const checkPassword = (reqPassword, foundUser) => {
         }else if (response) {
           resolve(response)
         } else {
-          console.log(reqPassword +', '+ foundUser.Password)
           reject(new Error('Passwords do not match.'))
         }
     })
@@ -76,7 +73,6 @@ const hashPassword = (password) => {
 }
 
 const createUser = async (user) => {
-  console.log(user)
   return await psgl.sqlToPostgre(
     `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ( '${user.Name}','${user.Password}', '${user.Token}') RETURNING "ID", "Name", "CreatedAt", "Token"`)
   .then((data) => data[0])
