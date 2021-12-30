@@ -102,7 +102,7 @@ const findByToken = async (token) => {
 }
 const signup = (request, response) => {
 
-  /* ログイン確認 */
+  /* ログイン確認
   let isLogined = false
   if(request.session.token && request.session.name){
     const userSession = {token: request.session.token, name: request.session.name}
@@ -113,7 +113,7 @@ const signup = (request, response) => {
   }else{
     response.status(200).send()
   }
-  /* ログイン確認終了 */
+  ログイン確認終了 */
   const user = request.body
   hashPassword(user.Password)
     .then((hashedPassword) => {

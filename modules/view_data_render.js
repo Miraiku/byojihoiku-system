@@ -41,6 +41,17 @@ exports.getLoginPage = async function (req, res){
   }
 }
 
+//register page
+exports.getRegisterPage = async function (req, res){
+  try {
+      res.render("pages/function/register")
+  } catch (error) {
+    console.log("ERR @getLoginPage: "+ error)
+    res.render("pages/index")
+  }
+}
+
+
 //logout page
 exports.getLogout = async function (req, res){
   try {
