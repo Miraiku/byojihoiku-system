@@ -32,6 +32,8 @@ exports.getLoginPage = async function (req, res){
     }
     if (isLogined) {
       res.redirect('/home')
+    }else{
+      res.render("pages/index")
     }
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
