@@ -9,30 +9,34 @@ const { all } = require('./line_receiver')
 const login = require('./view_login')
 
 const signin = (request, response) => {
-  const userReq = request.body
-  let user
-  console.log(userReq)
-  findUser(userReq)
-    .then(foundUser => {
-      user = foundUser
-      return checkPassword(userReq.Password, foundUser)
-    })
-    .then((res) => createToken())
-    .then(token => updateUserToken(token, user))
-    .then(() => {
-      delete user.Password
-      //response.status(200).json(user)
-      response.render('pages/home/index')
-    })
-    .catch((err) => {
-      console.error(err)
-      response.status(403)
-    })
+  try {
+    const userReq = request.body
+    let user
+    console.log(userReq)
+    findUser(userReq)
+      .then(foundUser => {
+        user = foundUser
+        return checkPassword(userReq.Password, foundUser)
+      })
+      .then((res) => createToken())
+      .then(token => updateUserToken(token, user))
+      .then(() => {
+        delete user.Password
+        //response.status(200).json(user)
+        response.render('pages/home/index')
+      })
+      .catch((err) => {
+        console.error(err)
+        response.status(403)
+      })
+  } catch (error) {
+    response.status(401)
+  }
 }
 
 const findUser = async (userReq) => {
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = '${userReq.ID}';`)
-    .then((data) => console.log(data[0]))
+    .then((data) => data[0])
 }
 
 const checkPassword = (reqPassword, foundUser) => {
