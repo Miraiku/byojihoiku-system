@@ -28,7 +28,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     if(req.session.token && req.session.name){
       const userSession = {token: req.session.token, name: req.session.name}
       console.log(userSession)
-      isLogined = login.authenticate(userSession)
+      isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
       res.redirect('/')

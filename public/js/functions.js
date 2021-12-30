@@ -500,6 +500,10 @@ $(function() {
               animation: 'slide'
             });
           }).fail(function( jqXHR, textStatus, errorThrown) {
+            if(errorThrown == 'Not Found'){
+              window.location.href = '/'
+              return false
+            }
             notif({
               type: "error",
               position: "center",

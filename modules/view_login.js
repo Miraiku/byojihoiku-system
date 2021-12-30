@@ -103,13 +103,15 @@ const findByToken = async (token) => {
 }
 const signup = (request, response) => {
   let isLogined = false
-  if(request.session.token && req.session.name){
-    const userSession = {token: req.session.token, name: req.session.name}
+  if(request.session.token && request.session.name){
+    const userSession = {token: request.session.token, name: request.session.name}
     console.log(userSession)
     isLogined = login.authenticate(userSession)
   }
   if (!isLogined) {
-    request.redirect('/')
+    response.status(404).send()
+  }else{
+    response.status(200).send()
   }
   const user = request.body
   hashPassword(user.Password)
