@@ -27,11 +27,11 @@ const signin = (request, response) => {
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);
-        response.status(403)
+        response.status(403).send('エラーが発生しました')
       })
   } catch (error) {
     console.error("ERROR @signin： "+error);
-    response.status(401)
+    response.status(401).send('エラーが発生しました')
   }
 }
 
