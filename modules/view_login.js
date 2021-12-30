@@ -104,7 +104,7 @@ const alreadyRegisterd = async (name) => {
   let membered = await psgl.sqlToPostgre(`SELECT COUNT("ID") FROM public."Admin" WHERE "Name" = '${name}'`)
     .then((data) => data[0])
   console.log(membered)
-  if(membered.length > 0){
+  if(membered.count > 0){
     return false
   }else{
     return true
