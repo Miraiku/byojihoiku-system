@@ -1,5 +1,4 @@
 process.env.TZ = "Asia/Tokyo";
-const cool = require('cool-ascii-faces');
 const express = require('express');
 const path = require('path');
 const https = require("https");
@@ -10,8 +9,7 @@ const cron = require('node-cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
 const views = require('./modules/view_data_render')
-const session = require('express-session');
-const flash = require('connect-flash');
+const session = require('cookie-session');
 const PORT = process.env.PORT || 5555;
 const login = require('./modules/view_login')
 
@@ -20,12 +18,13 @@ express()
   .use(express.json())
   .use(express.urlencoded({extended: true}))
   .use(session({
-    resave: false,
-    saveUninitialized: false,
-    cookie:{
-      httpOnly: true,
+    name: 'session',
+    keys: ['key1', 'key2'],
+    cookie: {
       secure: true,
-      maxage: 86400000 * 5
+      httpOnly: true,
+      domain: 'byojihoiku.chiikihoiku.net',
+      expires: 86400000 * 5
     }
   }))
   .set('views', path.join(__dirname, 'views'))
