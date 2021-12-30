@@ -22,11 +22,9 @@ const signin = (request, response) => {
       .then(() => {
         delete user.Password
         if (!request.session.token) {
-          console.log(token_created)
           request.session.token = token_created;
         }
         if (!request.session.name) {
-          console.log(userReq.Name)
           request.session.name = userReq.Name;
         }
         response.status(200).send()
@@ -92,6 +90,9 @@ const updateUserToken = async (token, user) => {
 const authenticate = (userReq) => {
   findByToken(userReq.token)
     .then((user) => {
+      console.log(userReq.token)
+      console.log(userReq.name)
+      console.log(user.Name)
       if (user.Name == userReq.name) {
         return true
       } else {
