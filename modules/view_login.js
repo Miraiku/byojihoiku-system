@@ -26,10 +26,11 @@ const signin = (request, response) => {
         response.render('pages/home/index')
       })
       .catch((err) => {
-        console.error(err)
+        console.error("ERROR scope@signin： "+err);
         response.status(403)
       })
   } catch (error) {
+    console.error("ERROR @signin： "+error);
     response.status(401)
   }
 }
@@ -44,11 +45,13 @@ const checkPassword = (reqPassword, foundUser) => {
     bcrypt.compare(reqPassword, foundUser.Password, (err, response) => {
         if (err) {
           reject(err)
+          response.status(403)
         }
         else if (response) {
           resolve(response)
         } else {
           reject(new Error('Passwords do not match.'))
+          response.status(403)
         }
     })
   )
