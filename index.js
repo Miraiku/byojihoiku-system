@@ -33,6 +33,7 @@ express()
   .get('/reservation/update', (req, res) => res.render('pages/index'))
   .use('/webhook', webhook)
   .use('/updater', ajax)
+  .get('/secret/regsiter', (req, res) => res.render('pages/function/register'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 /*

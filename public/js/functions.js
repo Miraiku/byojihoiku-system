@@ -376,7 +376,6 @@ $(function() {
     });//validation function scope
   })();
 
-
   //update from / with validation
   (function(){
     $.extend($.validator.messages, {
@@ -400,7 +399,6 @@ $(function() {
           }
         }
       });
-      //update from /reservation/entry
       $(".btn_login_check").on('click', function(e) {
         if (loginForm.validate().form()) {
           const name = $('input[name="name"]').val()
@@ -447,7 +445,88 @@ $(function() {
         }
       });
     });//validation function scope
-  })();
+  });
+
+  //register from /secret/register
+  (function(){
+    $.extend($.validator.messages, {
+      required: '*入力必須です'
+    });
+    var rules = {
+      id: {required:true, },
+      password: {required:true}
+    };
+
+    $(function(){
+      const registerForm = $('#registerForm')
+      registerForm.validate({
+        rules: rules,
+        errorPlacement: function(error, element){
+          error.css('color','#F16B6D');
+          if (element.is(':radio')) {
+            error.appendTo(element.parent());
+          }else {
+            error.insertAfter(element);
+          }
+        }
+      });
+      $(".btn_login_register").on('click', function(e) {
+        if (registerForm.validate().form()) {
+          const name = $('input[name="name"]').val()
+          const password = $('input[name="password"]').val()
+          console.log(name)
+          console.log(password)
+          $.ajax({
+            url: '/updater',
+            type: 'POST',
+            data: {
+              'action': 'login_register',
+              'Name':name,
+              'Password':password
+            },
+            dataType: 'text'
+          }).done(function( data, textStatus, jqXHR ) {
+            notif({
+              type: "success",
+              position: "center",
+              autohide: true,
+              msg: "登録が完了しました",
+              opacity:0.8,
+              multiline: 0,
+              fade: 0,
+              bgcolor: "",
+              color: "",
+              timeout: 5000,
+              zindex: null,
+              offset: 0,
+              animation: 'slide'
+            });
+          }).fail(function( jqXHR, textStatus, errorThrown) {
+            notif({
+              type: "error",
+              position: "center",
+              msg: "登録に失敗しました",
+              opacity: 0.8,
+              multiline: 0,
+              fade: 0,
+              bgcolor: "",
+              color: "",
+              timeout: 5000,
+              zindex: null,
+              offset: 0,
+              animation: 'slide'
+            });
+            console.log("失敗"+errorThrown)
+          }).always(function( jqXHR, textStatus) {
+          });//end of ajax
+        } else {
+            return false
+        }
+      });
+    });//validation function scope
+  });
+
+})();
 
   $('select').on('change', function() {
     $("option:selected", this).removeAttr("selected");
