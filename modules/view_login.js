@@ -49,6 +49,7 @@ const checkPassword = (reqPassword, foundUser) => {
         else if (response) {
           resolve(response)
         } else {
+          console.log(reqPassword +', '+ foundUser.Password)
           reject(new Error('Passwords do not match.'))
         }
     })
