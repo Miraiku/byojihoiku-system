@@ -25,7 +25,8 @@ const signin = (request, response) => {
       .then(token => updateUserToken(token, user))
       .then(() => {
         delete user.Password
-        response.redirect('https://byojihoiku.chiikihoiku.net/home/')
+        response.status(200)
+        window.location.href = "/home"
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);
