@@ -406,7 +406,7 @@ $(function() {
           console.log(name)
           console.log(password)
           $.ajax({
-            url: '/secret/regsiter',
+            url: '/',
             type: 'POST',
             data: {
               'action': 'login_check',
