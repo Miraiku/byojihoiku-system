@@ -45,13 +45,11 @@ const checkPassword = (reqPassword, foundUser) => {
     bcrypt.compare(reqPassword, foundUser.Password, (err, response) => {
         if (err) {
           reject(err)
-          response.status(403)
         }
         else if (response) {
           resolve(response)
         } else {
           reject(new Error('Passwords do not match.'))
-          response.status(403)
         }
     })
   )
