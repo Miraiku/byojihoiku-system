@@ -122,8 +122,7 @@ const signup = (request, response) => {
   }
   if (!isLogined) {
     response.status(404).send()
-  }else{
-    response.status(200).send()
+    return false
   }
   /* ログイン確認終了 */
   const user = request.body
