@@ -27,10 +27,11 @@ exports.getNurseryStatus3Days = async function (req, res){
     let isLogined = false
     if(request.session.token && req.session.name){
       const userSession = {token: req.session.token, name: req.session.name}
+      console.log(userSession)
       isLogined = login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.status(404)
+      res.redirect('/')
     }
     /*　未処理の予約 */
     let all_unread_list = []
