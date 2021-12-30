@@ -17,7 +17,6 @@ const signin = (request, response) => {
       .then((res) => createToken())
       .then(async token => {
         let updated_token = await updateUserToken(token, user)
-        console.log(updated_token)
         token_created = updated_token.Token
       })
       .then(() => {
@@ -87,9 +86,6 @@ const updateUserToken = async (token, user) => {
 const authenticate = async (userReq) => {
   await findByToken(userReq.token)
     .then((user) => {
-      console.log(userReq.token)
-      console.log(userReq.name)
-      console.log(user)
       if (user.Name == userReq.name) {
         return true
       } else {
