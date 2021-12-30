@@ -24,13 +24,16 @@ holiday.setHoliday('01-03', 'miraiku-holiday')
 //home view
 exports.getNurseryStatus3Days = async function (req, res){
   try {
+    /*if(!request.session.token && !req.session.name && !login.authenticate(userSession)){
+
+    }
     const userSession = {token: req.session.token, name: req.session.name}
     console.log(userSession)
-    if (login.authenticate(userSession)) {
-        // handler logic goes here
+    if () {
+        handler logic goes here
      } else {
         res.status(404)
-     }
+     }*/
     /*　未処理の予約 */
     let all_unread_list = []
     const list = await psgl.getReservationConfirmationFalseGraterThanToday() 
