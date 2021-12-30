@@ -31,8 +31,9 @@ const signin = (request, response) => {
 }
 
 const findUser = async (userReq) => {
+  console.log(userReq.Name)
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = ?;` [userReq.Name])
-    .then((data) => data[0])
+    .then((data) => console.log(data[0]))
 }
 
 const checkPassword = (reqPassword, foundUser) => {
