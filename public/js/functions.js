@@ -504,10 +504,15 @@ $(function() {
               window.location.href = '/'
               return false
             }
+
+            let errmsg = "登録に失敗しました"
+            if(errorThrown == 'Not Acceptable'){
+              errmsg = 'すでに登録されています'
+            }
             notif({
               type: "error",
               position: "center",
-              msg: "登録に失敗しました",
+              msg: errmsg,
               opacity: 0.8,
               multiline: 0,
               fade: 0,
