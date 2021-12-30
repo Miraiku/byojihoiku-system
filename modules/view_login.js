@@ -10,7 +10,8 @@ const login = require('./view_login')
 
 //https://gist.github.com/laurenfazah/f9343ae8577999d301334fc68179b485
 
-exports.signin = async function (request, response){
+const signin = (request, response) => {
+  console.log(response)
   try {
     const userReq = request.body
     let user
@@ -102,8 +103,7 @@ const findByToken = async (token) => {
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = '${token}'`)
     .then((data) => data.rows[0])
 }
-
-exports.signin = async function (request, response){
+const signup = (request, response) => {
   const user = request.body
   hashPassword(user.Password)
     .then((hashedPassword) => {
@@ -118,4 +118,8 @@ exports.signin = async function (request, response){
       response.status(201).json({ user })
     })
     .catch((err) => console.error(err))
+}
+
+module.exports = {
+  signin, signup
 }
