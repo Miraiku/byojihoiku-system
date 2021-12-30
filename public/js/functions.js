@@ -403,7 +403,7 @@ $(function() {
       //update from /reservation/entry
       $(".btn_login_check").on('click', function(e) {
         if (loginForm.validate().form()) {
-          const id = $('input[name="id"]').val()
+          const name = $('input[name="name"]').val()
           const password = $('input[name="password"]').val()
           console.log(name)
           console.log(password)
