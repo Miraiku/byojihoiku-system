@@ -26,7 +26,7 @@ const signin = (request, response) => {
       .then(() => {
         delete user.Password
         //response.status(200).json(user)
-        response.render('pages/home/index')
+        response.redirect('/home/')
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);

@@ -422,6 +422,8 @@ $(function() {
               errmsg = 'ログイン情報が間違っています'
             }else if(errorThrown == 'Service Unavailable'){
               errmsg = 'エラーが発生しました'
+            }else if(errorThrown == 'Internal Server Error'){
+              errmsg = 'エラーが発生しました'
             }
             notif({
               type: "error",
