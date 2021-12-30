@@ -10,7 +10,6 @@ const cron = require('node-cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
 const views = require('./modules/view_data_render')
-const passport = require('./modules/db_login');
 const session = require('express-session');
 const flash = require('connect-flash');
 const PORT = process.env.PORT || 5555;
