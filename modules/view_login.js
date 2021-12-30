@@ -65,8 +65,6 @@ const createToken = () => {
   })
 }
 
-
-// check out bcrypt's docs for more info on their hashing function
 const hashPassword = (password) => {
   return new Promise((resolve, reject) =>
     bcrypt.hash(password, 10, (err, hash) => {
@@ -75,11 +73,10 @@ const hashPassword = (password) => {
   )
 }
 
-// user will be saved to db - we're explicitly asking postgres to return back helpful info from the row created
 const createUser = async (user) => {
   console.log(user)
   return await psgl.sqlToPostgre(
-    `INSERT INTO users (Name, Password, Token) VALUES (${user.Name},${user.Password}, ${user.Token}) RETURNING ID, Name, CreatedAt, Token`)
+    `INSERT INTO users (Name, Password, Token) VALUES (${user.ID},${user.Password}, ${user.Token}) RETURNING ID, Name, CreatedAt, Token`)
   .then((data) => data.rows[0])
 }
 
@@ -109,13 +106,13 @@ const signup = (request, response) => {
   hashPassword(user.Password)
     .then((hashedPassword) => {
       delete user.Password
-      user.password_digest = hashedPassword
+      user.Password = hashedPassword
     })
     .then(() => createToken())
     .then(token => user.Token = token)
     .then(() => createUser(user))
     .then(user => {
-      delete user.password_digest
+      delete user.Password
       response.status(201).json({ user })
     })
     .catch((err) => console.error(err))
