@@ -72,8 +72,8 @@ const hashPassword = (password) => {
 }
 
 const createUser = async (user) => {
-  console.log(alreadyRegisterd(user.Name))
-  if(alreadyRegisterd(user.Name)){
+  console.log(await alreadyRegisterd(user.Name))
+  if(await alreadyRegisterd(user.Name)){
     return false
   }else{
     return await psgl.sqlToPostgre(
@@ -141,8 +141,7 @@ const signup = (request, response) => {
         response.status(406).send()
         return false
       }
-    }
-    )
+    })
     .then(user => {
       delete user.Password
       response.status(201).json({ user })
