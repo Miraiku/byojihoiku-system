@@ -382,7 +382,7 @@ $(function() {
       required: '*入力必須です'
     });
     var rules = {
-      id: {required:true, },
+      name: {required:true, },
       password: {required:true}
     };
 
@@ -453,7 +453,7 @@ $(function() {
       required: '*入力必須です'
     });
     var rules = {
-      id: {required:true, },
+      name: {required:true, },
       password: {required:true}
     };
 
@@ -474,8 +474,6 @@ $(function() {
         if (registerForm.validate().form()) {
           const name = $('input[name="name"]').val()
           const password = $('input[name="password"]').val()
-          console.log(name)
-          console.log(password)
           $.ajax({
             url: '/updater',
             type: 'POST',
