@@ -415,7 +415,7 @@ $(function() {
             },
             dataType: 'text'
           }).done(function( data, textStatus, jqXHR ) {
-            console.log("成功")
+            window.location.href = '/home'
           }).fail(function( jqXHR, textStatus, errorThrown) {
             let errmsg = ''
             if(errorThrown == 'Not Acceptable'){
