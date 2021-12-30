@@ -26,12 +26,12 @@ const signin = (request, response) => {
     })
     .catch((err) => {
       console.error(err)
-      response.status(503)
+      response.status(403)
     })
 }
 
 const findUser = async (userReq) => {
-  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = ${userReq.ID};`)
+  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = '${userReq.ID}';`)
     .then((data) => console.log(data[0]))
 }
 
