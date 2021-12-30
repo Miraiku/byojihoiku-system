@@ -15,7 +15,7 @@ const signin = (request, response) => {
         return checkPassword(userReq.Password, foundUser)
       })
       .then((res) => createToken())
-      .then(token => {
+      .then(async token => {
         let updated_token = await updateUserToken(token, user)
         console.log(updated_token)
         token_created = updated_token.Token
