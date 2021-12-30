@@ -23,15 +23,15 @@ const signin = (request, response) => {
       .then(token => updateUserToken(token, user))
       .then(() => {
         delete user.Password
-        response.reject('/home')
+        response.redirect('/home')
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);
-        response.status(403).send('エラーが発生しました')
+        response.status(406).send('エラーが発生しました')
       })
   } catch (error) {
     console.error("ERROR @signin： "+error);
-    response.status(401).send('エラーが発生しました')
+    response.status(406).send('エラーが発生しました')
   }
 }
 
