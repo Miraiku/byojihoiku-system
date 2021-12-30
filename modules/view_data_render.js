@@ -21,18 +21,36 @@ holiday.setHoliday('01-01', 'miraiku-holiday')
 holiday.setHoliday('01-02', 'miraiku-holiday')
 holiday.setHoliday('01-03', 'miraiku-holiday')
 
-//home view
-exports.getNurseryStatus3Days = async function (req, res){
+//login page
+exports.getLoginPage = async function (req, res){
   try {
+    /* トップ専用ログイン確認 */
     let isLogined = false
     if(req.session.token && req.session.name){
       const userSession = {token: req.session.token, name: req.session.name}
       isLogined = await login.authenticate(userSession)
     }
-    console.log(isLogined)
+    if (isLogined) {
+      res.redirect('/home')
+    }
+  } catch (error) {
+    console.log("ERR @getLoginPage: "+ error)
+    res.render("pages/index")
+  }
+}
+//home view
+exports.getNurseryStatus3Days = async function (req, res){
+  try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
     if (!isLogined) {
       res.redirect('/')
     }
+    /* ログイン確認終了 */
     /*　未処理の予約 */
     let all_unread_list = []
     const list = await psgl.getReservationConfirmationFalseGraterThanToday() 
@@ -159,6 +177,17 @@ exports.getNurseryStatus3Days = async function (req, res){
 //member view
 exports.getMembersPage = async function (req, res){
   try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+
     let mem =[]
     let members = await psgl.getMembers()
     for (const m of members) {
@@ -189,6 +218,17 @@ exports.getMembersPage = async function (req, res){
 //member/entry view
 exports.getEntryPage = async function (req, res){
   try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+
     let memberid = req.params.memberid
     memberid = view.zenkaku2Hankaku(memberid)
     if(!view.isValidNum(memberid)){
@@ -316,6 +356,17 @@ exports.getCalendarPage = async function (req, res){
 //reservation view
 exports.getReservationPage = async function (req, res){
   try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+    
     let nurseryid
     if(req.params.nurseryid != undefined){
       nurseryid = req.params.nurseryid
@@ -450,6 +501,17 @@ exports.getReservationPage = async function (req, res){
 exports.getReservationConfirmPage = async function (req, res){
   let prev
   try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+    
     prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){
@@ -535,6 +597,17 @@ exports.getReservationConfirmPage = async function (req, res){
 exports.getReservationEntryPage = async function (req, res){
   let prev
   try {
+    /* ログイン確認 */
+    let isLogined = false
+    if(req.session.token && req.session.name){
+      const userSession = {token: req.session.token, name: req.session.name}
+      isLogined = await login.authenticate(userSession)
+    }
+    if (!isLogined) {
+      res.redirect('/')
+    }
+    /* ログイン確認終了 */
+    
     prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){

@@ -101,10 +101,11 @@ const findByToken = async (token) => {
     .then((data) => data[0])
 }
 const signup = (request, response) => {
+
+  /* ログイン確認 */
   let isLogined = false
   if(request.session.token && request.session.name){
     const userSession = {token: request.session.token, name: request.session.name}
-    console.log(userSession)
     isLogined = login.authenticate(userSession)
   }
   if (!isLogined) {
@@ -112,6 +113,7 @@ const signup = (request, response) => {
   }else{
     response.status(200).send()
   }
+  /* ログイン確認終了 */
   const user = request.body
   hashPassword(user.Password)
     .then((hashedPassword) => {
