@@ -72,6 +72,7 @@ const hashPassword = (password) => {
 }
 
 const createUser = async (user) => {
+  console.log(alreadyRegisterd(user.Name))
   if(alreadyRegisterd(user.Name)){
     return false
   }else{
@@ -103,7 +104,6 @@ const authenticate = async (userReq) => {
 const alreadyRegisterd = async (name) => {
   let membered = await psgl.sqlToPostgre(`SELECT COUNT("ID") FROM public."Admin" WHERE "Name" = '${name}'`)
     .then((data) => data[0])
-  console.log(membered)
   if(membered.count > 0){
     return false
   }else{
@@ -135,13 +135,19 @@ const signup = (request, response) => {
     })
     .then(() => createToken())
     .then(token => user.Token = token)
-    .then(() => createUser(user))
+    .then(() => { 
+      let created = createUser(user)
+      if(!created){
+        response.status(406).send()
+      }
+    }
+    )
     .then(user => {
       delete user.Password
       response.status(201).json({ user })
     })
     .catch((err) => {
-      response.status(406).send()
+      response.status(503).send()
       console.error(err)}
       )
 }
