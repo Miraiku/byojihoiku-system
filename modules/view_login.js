@@ -140,6 +140,7 @@ const signup = (request, response) => {
       if(!created){
         response.status(406).send()
       }
+      return false
     }
     )
     .then(user => {
