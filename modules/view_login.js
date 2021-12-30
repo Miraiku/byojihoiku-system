@@ -127,6 +127,7 @@ const signup = (request, response) => {
   }
   /* ログイン確認終了 */
   const user = request.body
+  let created
   hashPassword(user.Password)
     .then((hashedPassword) => {
       delete user.Password
@@ -135,16 +136,14 @@ const signup = (request, response) => {
     .then(() => createToken())
     .then(token => user.Token = token)
     .then(async () => { 
-      let created = await createUser(user)
-      console.log(created)
+      created = await createUser(user)
       if(!created){
         response.status(406).send()
         new Error('Alread Registerd')
+      }else{
+        delete created.Password
+        response.status(201).json({ user })
       }
-    })
-    .then(user => {
-      delete user.Password
-      response.status(201).json({ user })
     })
     .catch((err) => {
       response.status(503).send()
