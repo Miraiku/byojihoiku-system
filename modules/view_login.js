@@ -85,8 +85,8 @@ const createUser = (user) => {
   .then((data) => data.rows[0])
 }
 
-const updateUserToken = (token, user) => {
-  return database.raw(`UPDATE public."Admin" SET "Token" = ? WHERE "ID" = ? RETURNING "ID", "Name", "Token" `, [token, user.id])
+const updateUserToken = async (token, user) => {
+  return await psgl.sqlToPostgre(`UPDATE public."Admin" SET "Token" = ${token} WHERE "ID" = ${user.id} RETURNING "ID", "Name", "Token" `)
     .then((data) => data.rows[0])
 }
 
@@ -102,8 +102,8 @@ const authenticate = (userReq) => {
     })
 }
 
-const findByToken = (token) => {
-  return database.raw(`SELECT * FROM public."Admin" WHERE "Token" = ?`, [token])
+const findByToken = async (token) => {
+  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = ${token}`)
     .then((data) => data.rows[0])
 }
 
