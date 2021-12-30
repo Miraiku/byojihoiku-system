@@ -445,7 +445,7 @@ $(function() {
         }
       });
     });//validation function scope
-  });
+  })();
 
   //register from /secret/register
   (function(){
@@ -524,9 +524,7 @@ $(function() {
         }
       });
     });//validation function scope
-  });
-
-})();
+  })();
 
   $('select').on('change', function() {
     $("option:selected", this).removeAttr("selected");
