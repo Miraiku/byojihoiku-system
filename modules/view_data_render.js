@@ -52,9 +52,10 @@ exports.getRegisterPage = async function (req, res){
     }
     if (!isLogined) {
       res.redirect('/')
+    }else{
+      res.render("pages/function/register")
     }
     /* ログイン確認終了 */
-    res.render("pages/function/register")
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
     res.redirect('/')
