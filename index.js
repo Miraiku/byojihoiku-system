@@ -20,11 +20,11 @@ express()
   .use(session({
     name: 'session',
     keys: ['key1', 'key2'],
+    maxAge: 24 * 60 * 60 * 1000 * 5,
     cookie: {
       secure: true,
       httpOnly: true,
-      domain: 'byojihoiku.chiikihoiku.net',
-      expires: 86400000 * 5
+      domain: 'byojihoiku.chiikihoiku.net'
     }
   }))
   .set('views', path.join(__dirname, 'views'))
