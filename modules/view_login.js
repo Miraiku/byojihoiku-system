@@ -72,7 +72,6 @@ const hashPassword = (password) => {
 }
 
 const createUser = async (user) => {
-  console.log(await alreadyRegisterd(user.Name))
   if(await alreadyRegisterd(user.Name)){
     return false
   }else{
@@ -137,9 +136,10 @@ const signup = (request, response) => {
     .then(token => user.Token = token)
     .then(async () => { 
       let created = await createUser(user)
+      console.log(created)
       if(!created){
         response.status(406).send()
-        return false
+        reject(new Error('Alread Registerd'))
       }
     })
     .then(user => {
