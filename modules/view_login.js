@@ -72,9 +72,13 @@ const hashPassword = (password) => {
 }
 
 const createUser = async (user) => {
-  return await psgl.sqlToPostgre(
-    `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ( '${user.Name}','${user.Password}', '${user.Token}') RETURNING "ID", "Name", "CreatedAt", "Token"`)
-  .then((data) => data[0])
+  if(alreadyRegisterd(user.Name)){
+    return false
+  }else{
+    return await psgl.sqlToPostgre(
+      `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ( '${user.Name}','${user.Password}', '${user.Token}') RETURNING "ID", "Name", "CreatedAt", "Token"`)
+    .then((data) => data[0])
+  }
 }
 
 const updateUserToken = async (token, user) => {
@@ -96,6 +100,15 @@ const authenticate = async (userReq) => {
   return auth
 }
 
+const alreadyRegisterd = async (name) => {
+  let membered = await psgl.sqlToPostgre(`SELECT COUNT("ID") FROM public."Admin" WHERE "Name" = '${name}'`)
+    .then((data) => data[0])
+  if(membered.length > 0){
+    return false
+  }else{
+    return true
+  }
+}
 const findByToken = async (token) => {
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = '${token}'`)
     .then((data) => data[0])
@@ -126,7 +139,10 @@ const signup = (request, response) => {
       delete user.Password
       response.status(201).json({ user })
     })
-    .catch((err) => console.error(err))
+    .catch((err) => {
+      response.status(406).send()
+      console.error(err)}
+      )
 }
 
 module.exports = {
