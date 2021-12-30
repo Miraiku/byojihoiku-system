@@ -4,24 +4,26 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const psgl = require('./db_postgre')
 
-//https://gist.github.com/laurenfazah/f9343ae8577999d301334fc68179b485
-
 const signin = (request, response) => {
   try {
     const userReq = request.body
     let user
+    let token_created
     findUser(userReq)
       .then(foundUser => {
         user = foundUser
         return checkPassword(userReq.Password, foundUser)
       })
       .then((res) => createToken())
-      .then(token => updateUserToken(token, user))
+      .then(token => {
+        token_created = token
+        updateUserToken(token, user)
+      })
       .then(() => {
         delete user.Password
         if (!request.session.token) {
-          console.log(token)
-          request.session.token = token;
+          console.log(token_created)
+          request.session.token = token_created;
         }
         if (!request.session.name) {
           console.log(userReq.Name)
