@@ -8,6 +8,7 @@ const { off } = require('process')
 const { all } = require('./line_receiver')
 const login = require('./view_login')
 
+//https://gist.github.com/laurenfazah/f9343ae8577999d301334fc68179b485
 const signin = (request, response) => {
   try {
     const userReq = request.body
@@ -76,6 +77,7 @@ const hashPassword = (password) => {
 
 // user will be saved to db - we're explicitly asking postgres to return back helpful info from the row created
 const createUser = async (user) => {
+  console.log(user)
   return await psgl.sqlToPostgre(
     `INSERT INTO users (Name, Password, Token) VALUES (${user.Name},${user.Password}, ${user.Token}) RETURNING ID, Name, CreatedAt, Token`)
   .then((data) => data.rows[0])
