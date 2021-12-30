@@ -13,6 +13,7 @@ const view = require('./view_data_render');
 const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
+const Login = require('./modules/login.js')
 const Holidays = require('date-holidays');
 const holiday = new Holidays('JP')
 holiday.setTimezone(process.env.TZ)
@@ -611,6 +612,16 @@ exports.getReservationEntryPage = async function (req, res){
       res.redirect('/home')
     }
   }
+}
+
+// / top page
+exports.getLoginPage = async function(req, res){
+  try {
+    response.render('pages/home/index')
+  } catch (error) {
+    
+  }
+  //const Login.signin
 }
 
 

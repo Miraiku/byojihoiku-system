@@ -8,76 +8,26 @@
   <main class="l-main">
 
     <section class="login l-container">
-      
       <h1>
         <img src="/img/top-logo.svg"><br>
         みらいく病児予約システム
       </h1>
-      <div class="login-panel">
-        <dl>
-          <dt>ID</dt>
-          <dd><input type="text" class="is-lg" /></dd>
-        </dl>
-        <dl>
-          <dt>パスワード</dt>
-          <dd><input type="text" class="is-lg" /></dd>
-        </dl>
-        <div class="btns">
-          <button class="btn-l">ログイン</a>
+      <form action="javascript:void(0);" method="post" id="loginForm">
+        <div class="login-panel">
+          <dl>
+            <dt>ID</dt>
+            <dd><input type="text" class="is-lg" name="id"/></dd>
+          </dl>
+          <dl>
+            <dt>パスワード</dt>
+            <dd><input type="text" class="is-lg" name="password"/></dd>
+          </dl>
+          <div class="btns">
+            <button class="btn-l btn_login_check" type="submit">ログイン</a>
+          </div>
         </div>
-      </div>
+      </form>
     </section>
-    <!--form method="POST" action="/">
-      <div class="form-group row">
-          <label for="email" class="col-md-4 col-form-label text-md-right">ID</label>
-          <div class="col-md-6">
-              <input id="email" type="text" class="form-control" name="email" autofocus>
-              {{ #errorMessage }}
-              <div class="alert alert-danger">
-                  {{ errorMessage }}
-              </div>
-              {{ /errorMessage }}
-          </div>
-      </div>
-      <div class="form-group row">
-          <label for="password" class="col-md-4 col-form-label text-md-right">パスワード</label>
-          <div class="col-md-6">
-              <input id="password" type="password" class="form-control" name="password">
-          </div>
-      </div>
-      <div class="form-group row mb-0">
-          <div class="col-md-8 offset-md-4">
-              <button type="submit" class="btn btn-primary">ログイン</button>
-          </div>
-      </div>
-  </form-->
-  <form class="cmxform" id="commentForm" method="get" action="">
-    <fieldset>
-      <legend>Please provide your name, email address (won't be published) and a comment</legend>
-      <p>
-        <label for="cname">Name (required, at least 2 characters)</label>
-        <input id="cname" name="name" minlength="2" type="text" required>
-      </p>
-      <p>
-        <label for="cemail">E-Mail (required)</label>
-        <input id="cemail" type="email" name="email" required>
-      </p>
-      <p>
-        <label for="curl">URL (optional)</label>
-        <input id="curl" type="url" name="url">
-      </p>
-      <p>
-        <label for="ccomment">Your comment (required)</label>
-        <textarea id="ccomment" name="comment" required></textarea>
-      </p>
-      <p>
-        <input class="submit" type="submit" value="Submit">
-      </p>
-    </fieldset>
-  </form>
-  <script>
-  $("#commentForm").validate();
-  </script>
 
 <%- include ("../partials/footer.ejs") %>
 

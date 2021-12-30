@@ -14,7 +14,6 @@ const passport = require('./modules/db_login');
 const session = require('express-session');
 const flash = require('connect-flash');
 const PORT = process.env.PORT || 5555;
-const Login = require('./modules/login.js')
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -22,7 +21,7 @@ express()
   .use(express.urlencoded({extended: true}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/',  Login.signin)
+  .get('/',  views.getLoginPage)
   .get('/calendar', views.getCalendarPage)
   .get('/home', views.getNurseryStatus3Days)
   .get('/member', views.getMembersPage)

@@ -129,7 +129,7 @@ $(function() {
     })//end of confirm
   });
 
-  // /member/entry validation
+  //update /member/entry with validation
   (function(){
     $.extend($.validator.messages, {
       miraikuid: '*半角数字で入力してください',
@@ -258,7 +258,7 @@ $(function() {
     });//validation function scope
   })();
 
-  //update from /reservation/entry
+  //update from /reservation/entry with validation
   (function(){
     $.extend($.validator.messages, {
       required: '*入力必須です'
@@ -369,6 +369,97 @@ $(function() {
             }).always(function( jqXHR, textStatus) {
             });//end of ajax*/
           })//end of confirm
+        } else {
+            return false
+        }
+      });
+    });//validation function scope
+  })();
+
+
+  //update from / with validation
+  (function(){
+    $.extend($.validator.messages, {
+      required: '*入力必須です'
+    });
+    var rules = {
+      id: {required:true, },
+      password: {required:true}
+    };
+
+    $(function(){
+      const loginForm = $('#loginForm')
+      loginForm.validate({
+        rules: rules,
+        errorPlacement: function(error, element){
+          error.css('color','#F16B6D');
+          if (element.is(':radio')) {
+            error.appendTo(element.parent());
+          }else {
+            error.insertAfter(element);
+          }
+        }
+      });
+      //update from /reservation/entry
+      $(".btn_login_check").on('click', function(e) {
+        if (loginForm.validate().form()) {
+          const id = $('input[name="id"]').val()
+          const password = $('input[name="password"]').val()
+          console.log(id)
+          console.log(password)
+            /*$.ajax({
+              url: '/updater',
+              type: 'POST',
+              data: {
+                'action': 'update_member_from_member_entry',
+                'miraikuid':miraikuid,
+                'name':name,
+                'year':year,
+                'month':month,
+                'day':day,
+                'allergy':allergy
+              },
+              dataType: 'text'
+            }).done(function( data, textStatus, jqXHR ) {
+              notif({
+                type: "success",
+                position: "center",
+                autohide: true,
+                msg: "変更が完了しました",
+                opacity:0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+            }).fail(function( jqXHR, textStatus, errorThrown) {
+              let errmsg = ''
+              if(errorThrown == 'Service Unavailable'){
+                errmsg = '申し訳ありません、変更できませんでした'
+              }else if(errorThrown == 'Not Acceptable'){
+                errmsg = '変更先が満員のため変更できませんでした'
+              }
+              notif({
+                type: "error",
+                position: "center",
+                msg: errmsg,
+                opacity: 0.8,
+                multiline: 0,
+                fade: 0,
+                bgcolor: "",
+                color: "",
+                timeout: 5000,
+                zindex: null,
+                offset: 0,
+                animation: 'slide'
+              });
+              console.log("失敗"+errorThrown)
+            }).always(function( jqXHR, textStatus) {
+            });//end of ajax*/
         } else {
             return false
         }
