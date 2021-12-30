@@ -617,7 +617,7 @@ exports.getReservationEntryPage = async function (req, res){
 // / top page
 exports.getLoginPage = async function(req, res){
   try {
-    res.render('pages/home/index')
+    res.render('pages/index')
   } catch (error) {
     
   }
