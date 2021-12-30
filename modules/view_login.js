@@ -1,9 +1,21 @@
-const express = require('express');
+const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const psgl = require('./db_postgre')
+const e = require('connect-flash')
+const { off } = require('process')
+const { all } = require('./line_receiver')
+const login = require('./view_login')
 
+// / top page
+exports.getLoginPage = async function(req, res){
+  try {
+    login.signin(req, res)
+  } catch (error) {
+    res.status(503) 
+  }
+}
 
 const signin = (request, response) => {
   const userReq = request.body
@@ -21,7 +33,10 @@ const signin = (request, response) => {
       //response.status(200).json(user)
       response.render('pages/home/index')
     })
-    .catch((err) => console.error(err))
+    .catch((err) => {
+      console.error(err)
+      response.status(503)
+    })
 }
 
 const findUser = async (userReq) => {

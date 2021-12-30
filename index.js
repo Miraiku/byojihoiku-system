@@ -13,6 +13,7 @@ const views = require('./modules/view_data_render')
 const session = require('express-session');
 const flash = require('connect-flash');
 const PORT = process.env.PORT || 5555;
+const login = require('./modules/view_login')
 
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -20,7 +21,7 @@ express()
   .use(express.urlencoded({extended: true}))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
-  .get('/',  views.getLoginPage)
+  .get('/', (req, res) => res.render('pages/index'))
   .get('/calendar', views.getCalendarPage)
   .get('/home', views.getNurseryStatus3Days)
   .get('/member', views.getMembersPage)

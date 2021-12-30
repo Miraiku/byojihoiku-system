@@ -7,6 +7,7 @@ const view = require('./view_data_render');
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
+const login = require('./view_login')
 
 router
   .post('/', async (req, res) => {
@@ -42,10 +43,17 @@ router
           await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success');
         }
+      }else if(action == 'login_check'){
+        const authed =login.getLoginPage(req)
+        console.log(`${action}: ${authed}`)
+        //res.status(406).send('ろぐい');
+      }else{
+        console.error("Ajax Receiver： Nothing Happend");
+        res.status(503).send('エラーが発生しました');
       }
     } catch (err) {
       console.error("Ajax Receiver： "+err);
-      res.status(503).send('申し訳ありません。変更できませんでした。');
+      res.status(503).send('エラーが発生しました');
     }
 
   })

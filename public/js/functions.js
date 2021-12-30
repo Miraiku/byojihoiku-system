@@ -407,59 +407,41 @@ $(function() {
           const password = $('input[name="password"]').val()
           console.log(id)
           console.log(password)
-            /*$.ajax({
-              url: '/updater',
-              type: 'POST',
-              data: {
-                'action': 'update_member_from_member_entry',
-                'miraikuid':miraikuid,
-                'name':name,
-                'year':year,
-                'month':month,
-                'day':day,
-                'allergy':allergy
-              },
-              dataType: 'text'
-            }).done(function( data, textStatus, jqXHR ) {
-              notif({
-                type: "success",
-                position: "center",
-                autohide: true,
-                msg: "変更が完了しました",
-                opacity:0.8,
-                multiline: 0,
-                fade: 0,
-                bgcolor: "",
-                color: "",
-                timeout: 5000,
-                zindex: null,
-                offset: 0,
-                animation: 'slide'
-              });
-            }).fail(function( jqXHR, textStatus, errorThrown) {
-              let errmsg = ''
-              if(errorThrown == 'Service Unavailable'){
-                errmsg = '申し訳ありません、変更できませんでした'
-              }else if(errorThrown == 'Not Acceptable'){
-                errmsg = '変更先が満員のため変更できませんでした'
-              }
-              notif({
-                type: "error",
-                position: "center",
-                msg: errmsg,
-                opacity: 0.8,
-                multiline: 0,
-                fade: 0,
-                bgcolor: "",
-                color: "",
-                timeout: 5000,
-                zindex: null,
-                offset: 0,
-                animation: 'slide'
-              });
-              console.log("失敗"+errorThrown)
-            }).always(function( jqXHR, textStatus) {
-            });//end of ajax*/
+          $.ajax({
+            url: '/updater',
+            type: 'POST',
+            data: {
+              'action': 'login_check',
+              'ID':id,
+              'Password':password
+            },
+            dataType: 'text'
+          }).done(function( data, textStatus, jqXHR ) {
+            console.log("成功")
+          }).fail(function( jqXHR, textStatus, errorThrown) {
+            let errmsg = ''
+            if(errorThrown == 'Not Acceptable'){
+              errmsg = 'ログイン情報が間違っています'
+            }else if(errorThrown == 'Service Unavailable'){
+              errmsg = 'エラーが発生しました'
+            }
+            notif({
+              type: "error",
+              position: "center",
+              msg: errmsg,
+              opacity: 0.8,
+              multiline: 0,
+              fade: 0,
+              bgcolor: "",
+              color: "",
+              timeout: 5000,
+              zindex: null,
+              offset: 0,
+              animation: 'slide'
+            });
+            console.log("失敗"+errorThrown)
+          }).always(function( jqXHR, textStatus) {
+          });//end of ajax
         } else {
             return false
         }
