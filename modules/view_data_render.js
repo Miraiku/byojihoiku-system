@@ -33,11 +33,11 @@ exports.getLoginPage = async function (req, res){
     if (isLogined) {
       res.redirect('/home')
     }else{
-      res.render("pages/index")
+      res.redirect('/')
     }
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
-    res.render("pages/index")
+    res.redirect('/')
   }
 }
 
@@ -57,7 +57,7 @@ exports.getRegisterPage = async function (req, res){
     res.render("pages/function/register")
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
-    res.render("pages/index")
+    res.redirect('/')
   }
 }
 
@@ -68,10 +68,10 @@ exports.getLogout = async function (req, res){
     if(req.session){
       req.session = null
     }
-    res.render("pages/index")
+    res.redirect('/')
   } catch (error) {
     console.log("ERR @getLogout: "+ error)
-    res.render("pages/index")
+    res.redirect('/')
   }
 }
 
@@ -207,7 +207,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list})
   } catch (error) {
     console.log("ERR @getNurseryStatus3Days: "+ error)
-    res.render("pages/index")
+    res.redirect('/')
   }
 }
 
