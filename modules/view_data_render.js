@@ -25,7 +25,7 @@ holiday.setHoliday('01-03', 'miraiku-holiday')
 exports.getNurseryStatus3Days = async function (req, res){
   try {
     let isLogined = false
-    if(request.session.token && req.session.name){
+    if(req.session.token && req.session.name){
       const userSession = {token: req.session.token, name: req.session.name}
       console.log(userSession)
       isLogined = login.authenticate(userSession)
