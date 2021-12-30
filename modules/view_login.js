@@ -45,8 +45,7 @@ const checkPassword = (reqPassword, foundUser) => {
     bcrypt.compare(reqPassword, foundUser.Password, (err, response) => {
         if (err) {
           reject(err)
-        }
-        else if (response) {
+        }else if (response) {
           resolve(response)
         } else {
           console.log(reqPassword +', '+ foundUser.Password)
@@ -76,11 +75,9 @@ const hashPassword = (password) => {
 }
 
 // user will be saved to db - we're explicitly asking postgres to return back helpful info from the row created
-const createUser = (user) => {
-  return database.raw(
-    "INSERT INTO users (username, password_digest, token, created_at) VALUES (?, ?, ?, ?) RETURNING id, username, created_at, token",
-    [user.Name, user.Password, user.Token, new Date()]
-  )
+const createUser = async (user) => {
+  return await psgl.sqlToPostgre(
+    `INSERT INTO users (Name, Password, Token) VALUES (${user.Name},${user.Password}, ${user.Token}) RETURNING ID, Name, CreatedAt, Token`)
   .then((data) => data.rows[0])
 }
 
@@ -91,9 +88,9 @@ const updateUserToken = async (token, user) => {
 
 
 const authenticate = (userReq) => {
-  findByToken(userReq.token)
+  findByToken(userReq.Token)
     .then((user) => {
-      if (user.username == userReq.username) {
+      if (user.Name == userReq.Name) {
         return true
       } else {
         return false
@@ -106,23 +103,23 @@ const findByToken = async (token) => {
     .then((data) => data.rows[0])
 }
 
-/*const signup = (request, response) => {
+const signup = (request, response) => {
   const user = request.body
-  hashPassword(user.password)
+  hashPassword(user.Password)
     .then((hashedPassword) => {
-      delete user.password
-      user.password_digest = hashedPassword
+      delete user.Password
+      user.Password_digest = hashedPassword
     })
     .then(() => createToken())
-    .then(token => user.token = token)
+    .then(token => user.Token = token)
     .then(() => createToken(user))
     .then(user => {
-      delete user.password_digest
+      delete user.Password_digest
       response.status(201).json({ user })
     })
     .catch((err) => console.error(err))
-}*/
+}
 
 module.exports = {
-  signin
+  signin, signup
 }

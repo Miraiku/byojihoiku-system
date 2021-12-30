@@ -411,7 +411,7 @@ $(function() {
             url: '/updater',
             type: 'POST',
             data: {
-              'action': 'login_check',
+              'action': 'login_register',
               'ID':id,
               'Password':password
             },
