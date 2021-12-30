@@ -44,11 +44,11 @@ router
           res.status(200).send('Success');
         }
       }else if(action == 'login_check'){
-        const authed =login.signin
+        const authed =login.signin(req,res)
         console.log(`${action}: ${authed}`)
         //res.status(406).send('ろぐい');
       }else if(action == 'login_register'){
-        const authed =login.signup
+        const authed =login.signup(req,res)
         console.log(`${action}: ${authed}`)
         //res.status(406).send('ろぐい');
       }else{
