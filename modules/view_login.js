@@ -105,7 +105,7 @@ const signup = (request, response) => {
   let isLogined = false
   if(request.session.token && request.session.name){
     const userSession = {token: request.session.token, name: request.session.name}
-    isLogined = login.authenticate(userSession)
+    isLogined = authenticate(userSession)
   }
   if (!isLogined) {
     response.status(404).send()
