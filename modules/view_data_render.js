@@ -11,9 +11,6 @@ const https = require("https");
 const psgl = require('./db_postgre');
 const view = require('./view_data_render');
 const login = require('./view_login')
-const e = require('connect-flash');
-const { off } = require('process');
-const { all } = require('./line_receiver');
 const Holidays = require('date-holidays');
 const holiday = new Holidays('JP')
 holiday.setTimezone(process.env.TZ)
