@@ -24,7 +24,6 @@ const signin = (request, response) => {
       .then(() => {
         delete user.Password
         response.status(200)
-        window.location.href = "/home"
       })
       .catch((err) => {
         console.error("ERROR scope@signin： "+err);
