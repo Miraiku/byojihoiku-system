@@ -135,7 +135,7 @@ const signup = (request, response) => {
     })
     .then(() => createToken())
     .then(token => user.Token = token)
-    .then(() => { 
+    .then(async () => { 
       let created = await createUser(user)
       if(!created){
         response.status(406).send()
