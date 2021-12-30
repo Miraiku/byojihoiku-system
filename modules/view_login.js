@@ -83,8 +83,8 @@ const updateUserToken = async (token, user) => {
 }
 
 
-const authenticate = (userReq) => {
-  findByToken(userReq.token)
+const authenticate = async (userReq) => {
+  await findByToken(userReq.token)
     .then((user) => {
       console.log(userReq.token)
       console.log(userReq.name)
