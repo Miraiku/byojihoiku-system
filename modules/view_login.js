@@ -76,7 +76,7 @@ const hashPassword = (password) => {
 const createUser = async (user) => {
   console.log(user)
   return await psgl.sqlToPostgre(
-    `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ('${user.Name}','${user.Password}', '${user.Token}') RETURNING ID, Name, CreatedAt, Token`)
+    `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ('${user.Name}','${user.Password}', '${user.Token}') RETURNING "ID", "Name", "CreatedAt", "Token"`)
   .then((data) => data.rows[0])
 }
 
