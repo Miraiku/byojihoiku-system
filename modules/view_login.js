@@ -105,7 +105,7 @@ const alreadyRegisterd = async (name) => {
     .then((data) => data[0])
     console.log(typeof membered.count)
     console.log(membered.count)
-  if(membered.count > 0){
+  if(Number(membered.count) > 0){
     return false
   }else{
     return true
