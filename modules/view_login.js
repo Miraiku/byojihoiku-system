@@ -37,7 +37,7 @@ const signin = (request, response) => {
 }
 
 const findUser = async (userReq) => {
-  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = '${userReq.ID}';`)
+  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Name" = '${userReq.Name}';`)
     .then((data) => data[0])
 }
 
@@ -76,12 +76,12 @@ const hashPassword = (password) => {
 const createUser = async (user) => {
   console.log(user)
   return await psgl.sqlToPostgre(
-    `INSERT INTO users (Name, Password, Token) VALUES ('${user.ID}','${user.Password}', '${user.Token}') RETURNING ID, Name, CreatedAt, Token`)
+    `INSERT INTO users (Name, Password, Token) VALUES ('${user.Name}','${user.Password}', '${user.Token}') RETURNING ID, Name, CreatedAt, Token`)
   .then((data) => data.rows[0])
 }
 
 const updateUserToken = async (token, user) => {
-  return await psgl.sqlToPostgre(`UPDATE public."Admin" SET "Token" = ${token} WHERE "ID" = ${user.id} RETURNING "ID", "Name", "Token" `)
+  return await psgl.sqlToPostgre(`UPDATE public."Admin" SET "Token" = '${token}' WHERE "Name" = '${user.Name}' RETURNING "ID", "Name", "Token" `)
     .then((data) => data.rows[0])
 }
 
@@ -98,7 +98,7 @@ const authenticate = (userReq) => {
 }
 
 const findByToken = async (token) => {
-  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = ${token}`)
+  return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = '${token}'`)
     .then((data) => data.rows[0])
 }
 const signup = (request, response) => {
