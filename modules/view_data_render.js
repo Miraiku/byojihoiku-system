@@ -40,6 +40,20 @@ exports.getLoginPage = async function (req, res){
     res.render("pages/index")
   }
 }
+
+//logout page
+exports.getLogout = async function (req, res){
+  try {
+    if(req.session){
+      req.session = null
+    }
+    res.render("pages/index")
+  } catch (error) {
+    console.log("ERR @getLogout: "+ error)
+    res.render("pages/index")
+  }
+}
+
 //home view
 exports.getNurseryStatus3Days = async function (req, res){
   try {

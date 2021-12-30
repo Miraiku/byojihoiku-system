@@ -40,10 +40,11 @@ express()
   .get('/reservation/confirm/:reservationid', views.getReservationConfirmPage)
   .get('/reservation/entry/:reservationid', views.getReservationEntryPage)
   .get('/reservation/update', (req, res) => res.render('pages/index'))
-  .use('/webhook', webhook)
-  .use('/updater', ajax)
+  .get('/logout', views.getLogout)
   .get('/secret/regsiter', (req, res) => res.render('pages/function/register'))
   .post('/secret/regsiter', login.signup)
+  .use('/webhook', webhook)
+  .use('/updater', ajax)
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 //20分以上操作がないRedisの一時クエリを削除
