@@ -13,7 +13,7 @@ const view = require('./view_data_render');
 const e = require('connect-flash');
 const { off } = require('process');
 const { all } = require('./line_receiver');
-const Login = require('./modules/login.js')
+const Login = require('./modules/db_login.js')
 const Holidays = require('date-holidays');
 const holiday = new Holidays('JP')
 holiday.setTimezone(process.env.TZ)
