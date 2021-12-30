@@ -79,12 +79,12 @@ const createUser = async (user) => {
   console.log(user)
   return await psgl.sqlToPostgre(
     `INSERT INTO public."Admin" ("Name", "Password", "Token") VALUES ( '${user.Name}','${user.Password}', '${user.Token}') RETURNING "ID", "Name", "CreatedAt", "Token"`)
-  .then((data) => {console.log(data);data.rows[0]})
+  .then((data) => data[0])
 }
 
 const updateUserToken = async (token, user) => {
   return await psgl.sqlToPostgre(`UPDATE public."Admin" SET "Token" = '${token}' WHERE "Name" = '${user.Name}' RETURNING "ID", "Name", "Token" `)
-    .then((data) => data.rows[0])
+    .then((data) => data[0])
 }
 
 
@@ -101,7 +101,7 @@ const authenticate = (userReq) => {
 
 const findByToken = async (token) => {
   return await psgl.sqlToPostgre(`SELECT * FROM public."Admin" WHERE "Token" = '${token}'`)
-    .then((data) => data.rows[0])
+    .then((data) => data[0])
 }
 const signup = (request, response) => {
   const user = request.body
