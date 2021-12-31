@@ -1,12 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <%  const sub = SubTitle || null  %>
-  <% if (sub != null ) { %>
-    <%- include ("../../partials/head.ejs", SubTitle) %>
-  <% } else { %>
-  <%- include ("../../partials/head.ejs") %>
-  <% } %>
+  <%- include ("../../partials/head.ejs", SubTitle) %>
 </head>
 
 <body class="home page">

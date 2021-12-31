@@ -34,7 +34,7 @@ exports.getLoginPage = async function (req, res){
     if (isLogined) {
       res.redirect('/home')
     }else{
-      res.render("pages/index")
+      res.render("pages/index",{SubTitle:''})
     }
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
@@ -54,7 +54,7 @@ exports.getRegisterPage = async function (req, res){
     if (!isLogined) {
       res.redirect('/')
     }else{
-      res.render("pages/function/register")
+      res.render("pages/function/register",{SubTitle:'会員登録　｜　'})
     }
     /* ログイン確認終了 */
   } catch (error) {
@@ -206,7 +206,7 @@ exports.getNurseryStatus3Days = async function (req, res){
       }
       status3days.push({id:nursery_list[i].id, name:nursery_list[i].name, today:today_data, tomorrow:tomorrow_data, dayaftertomorrow:dayaftertomorrow_data})
     }// end for nursery list
-    res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list})
+    res.render("pages/home/index", {Status3Days: status3days, AllUnread: all_unread_list, SubTitle:'予約情報　｜　'})
   } catch (error) {
     console.log("ERR @getNurseryStatus3Days: "+ error)
     res.redirect('/')
@@ -227,7 +227,7 @@ exports.getMembersPage = async function (req, res){
     }
     /* ログイン確認終了 */
 
-    const sub_title = '会員情報'
+    const sub_title = '会員情報　｜　'
     let mem =[]
     let members = await psgl.getMembers()
     for (const m of members) {
@@ -288,7 +288,7 @@ exports.getEntryPage = async function (req, res){
     let bDay = String(info[0].BirthDay).substr( 6, 2 )
     let age = view.getAgeMonth(info[0].BirthDay)
     let allergy = info[0].Allergy
-    const sub_title = name +'さま　会員情報の変更'
+    const sub_title = name +'さま　会員情報の変更　｜　'
     mem.push({miraikuid:id, name:name, birthday:birthday, bYear:bYear, bMonth:bMonth, bDay:bDay, age:age, allergy:allergy, memberid:info[0].ID})
     res.render("pages/member/entry",{Member:mem,SubTitle:sub_title})
   } catch (error) {
@@ -386,7 +386,7 @@ exports.getCalendarPage = async function (req, res){
       }
       calendarData.push({id:nursery_list[i].id, name:nursery_list[i].name, day1:day1, day2:day2, day3:day3, day4:day4, day5:day5, day6:day6, day7:day7})
     }
-    const sub_title = '空き状況カレンダー'
+    const sub_title = '空き状況カレンダー　｜　'
     res.render("pages/calendar/index",{calendarData:calendarData,formattedWeek:formattedWeek,formattedWeekDay:formattedWeekDay,SubTitle:sub_title})
   } catch (error) {
     console.log("ERR @getCalendarPage: "+ error)
@@ -530,7 +530,7 @@ exports.getReservationPage = async function (req, res){
         day3_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
       }
     }
-    const sub_title = nursery_name[0].NurseryName +'園　予約情報'
+    const sub_title = nursery_name[0].NurseryName +'園　予約情報　｜　'
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list, Day1Rsv:day1_reserved, Day2Rsv:day2_reserved, Day3Rsv:day3_reserved, Day1Wait:day1_waiting, Day2Wait:day2_waiting,Day3Wait:day3_waiting,SubTitle:sub_title})
   } catch (error) {
@@ -621,7 +621,7 @@ exports.getReservationConfirmPage = async function (req, res){
     }else{
       allergy = rsv_details[0].Allergy
     }
-    const sub_title = name[0].Name +'さま　予約情報'
+    const sub_title = name[0].Name +'さま　予約情報　｜　'
     info.push({rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy,SubTitle:sub_title})
     res.render("pages/reservation/confirm",{Info:info})
   } catch (error) {
@@ -722,7 +722,7 @@ exports.getReservationEntryPage = async function (req, res){
     const disease_list = await psgl.getDiseaseList()
     const meal_list = await psgl.getMealList()
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
-    const sub_title = name[0].Name +'さま　予約情報の変更'
+    const sub_title = name[0].Name +'さま　予約情報の変更　｜　'
     info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime_hour:intime_hour, intime_mins:intime_mins, outtime_hour:outtime_hour, outtime_mins:outtime_mins, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy,SubTitle:sub_title})
     res.render("pages/reservation/entry",{Info:info})
   } catch (error) {
