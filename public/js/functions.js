@@ -148,7 +148,7 @@ $(function() {
 
     var rules = {
       miraikuid: {required:true, number: true},
-      year: {required:true, number: true},
+      year: {required:true, number: true, maxlength: 4, minlength: 4},
       name: {required: true, zenkana:true}
     };
 
@@ -162,7 +162,9 @@ $(function() {
       },
       year: {
         required: "*半角数字を入力してください",
-        number: "*半角数字で入力してください"
+        number: "*半角数字で入力してください",
+        maxlength: '*数字は4桁で入力してください',
+        minlength: '*数字は4桁で入力してください'
       }
     };
 
