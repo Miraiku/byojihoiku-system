@@ -85,6 +85,7 @@
             </div>
         `;
         console.log(`$currentModalTarget ${$currentModalTarget}`)
+        console.log(`$targetElement ${targetElement}`)
         if ($.isEmptyObject($currentModalTarget)) {
             console.log(`$isEmptyObject ${targetElement}`)
             $currentModalTarget = targetElement;
