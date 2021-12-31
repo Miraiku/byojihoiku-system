@@ -23,12 +23,6 @@ button {
   outline: none;
 }
 
-select{
-  &.is-select-ss{
-    width: $form-select-ss;
-  }
-}
-
 input[type=text] ,
 input[type=password],
 .form-panel select {
@@ -43,6 +37,38 @@ input[type=password],
   border-radius: 5px;
   line-height: 32px;
   width: 100%;
+  box-sizing: border-box;
+  @include pc() {
+    &.is-select-ss {
+      width: $form-select-ss;
+    }
+    &.is-text-ss {
+      width: $form-text-ss;
+    }
+    &.is-sm {
+      width: $form-sm;
+    }
+    &.is-md {
+      width: $form-md;
+    }
+    &.is-lg {
+      width: $form-lg;
+    }
+  }
+}
+
+.form-panel select.time {
+  padding: 0 6px;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background: none;
+  height: 34px;
+  background: #fff;
+  border: solid 1px #DDDDDD;
+  border-radius: 5px;
+  line-height: 32px;
+  width: $form-select-ss;
   box-sizing: border-box;
   @include pc() {
     &.is-select-ss {
