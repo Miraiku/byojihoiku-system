@@ -10,6 +10,9 @@ $(function() {
   //update from /home
   $(".btn_status_update").on('click', function(e) {
     let btn_value = $(this).val()
+    console.log($(this).val())
+    console.log($(e).val())
+    console.log($(e))
     let status = btn_value.substr(0, btn_value.indexOf('_'))
     let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
