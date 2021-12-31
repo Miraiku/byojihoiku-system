@@ -645,7 +645,7 @@ exports.getReservationEntryPage = async function (req, res){
       res.redirect('/')
     }
     /* ログイン確認終了 */
-    
+    console.log(req.baseUrl)
     prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){

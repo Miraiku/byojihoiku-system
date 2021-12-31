@@ -298,6 +298,7 @@ $(function() {
           const cramps = $('input[name="cramps"]').val()
           const allergy_details = $('input[name="allergy_details"]').val()
           const allergy = $('input[name="allergy"]:checked').val()
+          const rsvid = $('input[name="rsvid"]').val()
           console.log(status)
           console.log(disease)
           console.log(intime_hour)
@@ -309,8 +310,9 @@ $(function() {
           console.log(parent_tel)
           console.log(meal_details)
           console.log(cramps)
-          console.log(allergy_details)       
-          console.log(allergy)    
+          console.log(allergy_details)      
+          console.log(allergy)          
+          console.log(rsvid)    
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
             /*$.ajax({
