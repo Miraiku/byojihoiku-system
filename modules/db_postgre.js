@@ -130,8 +130,8 @@ exports.updateMemberInfo = async function (info){
     console.log(`Postgles sql: `+ sql)
     psgl_client.release();
     console.log(results)
-    console.log(results.rows)
-    console.log(results.rowCount)
+    console.log(results[1].rows)
+    console.log(results[1].rowCount)//function はresult2つくる
     return results.rows
     //{k: index, v:{sql result}}
   }
