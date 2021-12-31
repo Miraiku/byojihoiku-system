@@ -330,7 +330,7 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
-                if(isValidRegisterdDay(text, userId)){
+                if(isValidRegisterdDay(text, user)){
                   if(!isBeforeToday8AM(text)){
                     replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
                     await redis.resetAllStatus(userId)
@@ -1051,7 +1051,7 @@ function DayToJPFromDateObj(dt){
 
 function DayToJP(s){
   if(isValidDate(s)){
-    return Number(s.substr( 0, 4 ))+'年'+('00' + Number(s.substr( 4, 2 ))).slice(-2)+'月'+('00' + Number(s.substr( 6, 2 ))).slice(-2)+'日'
+    return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
   }else{
     return s
   }
@@ -1105,7 +1105,7 @@ function timenumberToDayJP(s){
   //秒数から○年○月○日と表記
   let JST = new Date(s).toLocaleString({ timeZone: 'Asia/Tokyo' })
   let day = new Date(JST)
-  return DayToJP(String(day.getFullYear())+String((day.getMonth() + 1))+String(day.getDate()))
+  return DayToJP(String(day.getFullYear())+('00' + String(day.getMonth() + 1)).slice(-2)+('00' + String(day.getDate())).slice(-2))
 }
 
 function isBeforeToday8AM(s){
