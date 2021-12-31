@@ -525,6 +525,7 @@ exports.getReservationPage = async function (req, res){
       for (const member of day3_waitinglist) {
         let status = await psgl.getReservationStatusByID(member[0].MemberID)
         status = status[0].ReservationStatus
+        console.log(status)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
