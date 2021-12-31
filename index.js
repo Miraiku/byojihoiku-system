@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/1 * * * *', async () =>  {
+cron.schedule('0 0 7 * * *', async () => {
   try {
     //7:10 頃開始？園ごとに設定する
     //今日のキャパ空いてる且つWaitingがいる園
@@ -90,12 +90,13 @@ cron.schedule('*/1 * * * *', async () =>  {
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const n of today_capacity) {
       for (let l = 0; l < Number(n.capacity); l++) {
-        let nursery = await redis.hgetStatus(waiting_nurseryid_table,l)
+        let nursery = await redis.hgetStatus(waiting_nurseryid_table,l+1)
         console.log(nursery)
+        console.log(l+1)
         //発火　by lineis where l = nuid
       }
     }
-    /*
+    
     const sendWaitingUser = function(lineid, rsvid){
       request.post(
         { headers: {'content-type' : 'application/json'},
@@ -105,15 +106,14 @@ cron.schedule('*/1 * * * *', async () =>  {
           "id": lineid,
           })
         },
-        async function(error, response, body){
-          if(response.statusCode == '200' && body != null){
-            await psgl.updateTodayWaitingMemberToReservedMemberByReservationID(rsvid)
+        function(error, response, body){
+          if(error){
+            console.log('error@sendWaitingUser' + error)
           }
-          console.log("cron schedule error:"+ error); 
         }//capaいっぱいになったら送らない
       ); 
     };
-   
+   /*
     for (let i = 0; i < list.length; i++) {
       let args = [list[i][0].lineid,list[i][0].rsvid];
       const fifteen_interval = setInterval(sendWaitingUser, 900000,...args);
