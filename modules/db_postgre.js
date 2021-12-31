@@ -346,7 +346,7 @@ exports.delMemberByIDName = async function (id, name){
     await psgl.sqlToPostgre(sql)
     sql = `SELECT deleteMember(${id},'${name}');`
     let res1 = await psgl.sqlToPostgre(sql)
-    return res1[0].updatereservation
+    return res1[0].deletemember
   } catch (error) {
     console.log("ERR @delMemberByIDName: "+error)
     return null
