@@ -189,7 +189,7 @@ $(function() {
           const month = $('[name="month"] option:selected').val()
           const day = $('[name="day"] option:selected').val()
           const allergy = $('input[name="allergy"]:checked').val()       
-          const memberid = $('input[name="id"]:checked').val()        
+          const memberid = $('input[name="id"]').val()        
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
             $.ajax({
