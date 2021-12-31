@@ -12,20 +12,10 @@ const psgl = require('./db_postgre')
 
 exports.sqlToPostgre = async function (queryString){
   try {
-    let results
     const psgl_client = await pool.connect(); 
-    await psgl_client.query(
-      queryString,
-      (err, res) => {
-       if (err) return next(err);
-       results = res
-      }
-     );
-    //const results = await psgl_client.query(queryString);
+    const results = await psgl_client.query(queryString);
     console.log(`Postgles sql: `+ queryString)
     psgl_client.release();
-    console.log(results)
-    console.log(results.rows)
     return results.rows
     //{k: index, v:{sql result}}
   }
