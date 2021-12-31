@@ -1,5 +1,3 @@
-const { is } = require("express/lib/request");
-
 $(function() {
   $defaultsConfirmModal = {
     confirmButton: 'はい',
