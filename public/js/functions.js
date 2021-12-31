@@ -1,3 +1,5 @@
+const { is } = require("express/lib/request");
+
 $(function() {
   $defaultsConfirmModal = {
     confirmButton: 'はい',
@@ -588,6 +590,13 @@ $(function() {
     }
   })
 
-
+  /* change title */
+  $(document).ready(function() {
+      let org_title = document.title
+      let sub_title = $('h2').val()
+      if(sub_title){
+        document.title = h2 + ' ｜ '+ org_title
+      }
+  });
   
 });//end of jquery
