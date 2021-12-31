@@ -189,7 +189,8 @@ $(function() {
           const month = $('[name="month"] option:selected').val()
           const day = $('[name="day"] option:selected').val()
           const allergy = $('input[name="allergy"]:checked').val()       
-          const memberid = $('input[name="id"]').val()        
+          const memberid = $('input[name="id"]').val()      
+          const birthday = year+month+day 
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
             $.ajax({
@@ -199,9 +200,7 @@ $(function() {
                 'action': 'update_member_from_member_entry',
                 'miraikuid':miraikuid,
                 'name':name,
-                'year':year,
-                'month':month,
-                'day':day,
+                'birthday':birthday,
                 'allergy':allergy,
                 'memberid':memberid
               },
