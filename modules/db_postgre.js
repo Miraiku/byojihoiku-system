@@ -429,6 +429,7 @@ exports.updateReservationInfo = async function (info, intime, outime){
     console.log(res1[0])
     return res1[0].updatereservation
   } catch (error) {
+    console.log("ERR @updateReservationInfo: "+error)
     return null
   }
 }
