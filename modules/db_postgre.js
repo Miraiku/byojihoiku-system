@@ -111,24 +111,25 @@ exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthda
 }
 
 exports.updateMemberInfo = async function (info){
-  //function,sqlだとresult2つ返ってきて返り値とれないので1つずつ実行する
-  let sql = `CREATE OR REPLACE FUNCTION updateMember(miraikuid integer, birthday integer, name text, allergy boolean, id integer) RETURNS integer AS $$
-  DECLARE
-    rows_affected integer;
-  BEGIN 
-  UPDATE public."Member" SET "MiraikuID"=miraikuid, "BirthDay"=birthday, "Name"=name, "Allergy"='false' WHERE "ID" = id;
-    GET DIAGNOSTICS rows_affected = ROW_COUNT;
-    RETURN rows_affected;
-  END;
-  $$ LANGUAGE plpgsql;`
-  await psgl.sqlToPostgre(sql)
-  sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
-  let res1 = await psgl.sqlToPostgre(sql)
-  console.log(res1[0].updatemember)
-  sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
-  res1 = await psgl.sqlToPostgre(sql)
-  console.log(res1[0].updatemember)
-  return null//await psgl.sqlToPostgre(sql)
+  try {
+    //function,sqlだとresult2つ返ってきて返り値とれないので1つずつ実行する
+    let sql = `CREATE OR REPLACE FUNCTION updateMember(miraikuid integer, birthday integer, name text, allergy boolean, id integer) RETURNS integer AS $$
+    DECLARE
+      rows_affected integer;
+    BEGIN 
+    UPDATE public."Member" SET "MiraikuID"=miraikuid, "BirthDay"=birthday, "Name"=name, "Allergy"='false' WHERE "ID" = id;
+      GET DIAGNOSTICS rows_affected = ROW_COUNT;
+      RETURN rows_affected;
+    END;
+    $$ LANGUAGE plpgsql;`
+    await psgl.sqlToPostgre(sql)
+    sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
+    let res1 = await psgl.sqlToPostgre(sql)
+    console.log(typeof updatemember)
+    return res1[0].updatemember
+  } catch (error) {
+    return null
+  }
 }
 
 exports.getMemberBirthDayByID = async function (id){
