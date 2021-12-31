@@ -587,14 +587,5 @@ $(function() {
       $(this).addClass( "is-active" )
     }
   })
-
-  /* change title */
-  $(document).ready(function() {
-      let org_title = document.title
-      let sub_title = $('h2').text()
-      if(sub_title){
-        document.title = h2 + ' ｜ '+ org_title
-      }
-  });
   
 });//end of jquery
