@@ -294,7 +294,7 @@ $(function() {
           const nursery = $('[name="nursery"] option:selected').val()
           const parent_name = $('input[name="parent_name"]').val()
           const parent_tel = $('input[name="parent_tel"]').val()
-          const meal = $('input[name="meal"]').val()
+          const meal = $('[name="meal"] option:selected').val()
           const meal_details = $('input[name="meal_details"]').val()
           const cramps = $('input[name="cramps"]').val()
           const allergy_details = $('input[name="allergy_details"]').val()
