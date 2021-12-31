@@ -25,7 +25,7 @@ router
 
         let current_nurseryid = await psgl.getNurseryIDByResevationID(rsvid)
         current_nurseryid = current_nurseryid[0].NurseryID
-        if(new_nurseryid != current_nurseryid){
+        if(new_nurseryid != current_nurseryid && status == "Reserved"){
           let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
           nursery_capacity = nursery_capacity[0].Capacity
           let reservation_date = await psgl.getReservationDateByID(rsvid)
