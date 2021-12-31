@@ -121,7 +121,7 @@ exports.updateMemberInfo = async function (info){
   END;
   $$ LANGUAGE plpgsql;
   
-  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
+  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},15);`
   //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
   console.log(sql)
   try {
@@ -130,6 +130,8 @@ exports.updateMemberInfo = async function (info){
     console.log(`Postgles sql: `+ sql)
     psgl_client.release();
     console.log(results)
+    console.log(results.rows)
+    console.log(results.rowCount)
     return results.rows
     //{k: index, v:{sql result}}
   }
