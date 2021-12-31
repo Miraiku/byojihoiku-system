@@ -34,7 +34,7 @@ exports.getLoginPage = async function (req, res){
     if (isLogined) {
       res.redirect('/home')
     }else{
-      res.render('/logout')
+      res.redirect('/logout')
     }
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
@@ -58,7 +58,7 @@ exports.getRegisterPage = async function (req, res){
     }
     /* ログイン確認終了 */
   } catch (error) {
-    console.log("ERR @getLoginPage: "+ error)
+    console.log("ERR @getRegisterPage: "+ error)
     res.redirect('/')
   }
 }
