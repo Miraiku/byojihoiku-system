@@ -457,7 +457,7 @@ exports.getReservationPage = async function (req, res){
     }
     if(day1_waitinglist.length > 0){
       for (const member of day1_waitinglist) {
-        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        let status = await psgl.getReservationStatusByID(member[0].ID)
         status = status[0].ReservationStatus
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
@@ -490,7 +490,7 @@ exports.getReservationPage = async function (req, res){
     }
     if(day2_waitinglist.length > 0){
       for (const member of day2_waitinglist) {
-        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        let status = await psgl.getReservationStatusByID(member[0].ID)
         status = status[0].ReservationStatus
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
@@ -510,7 +510,7 @@ exports.getReservationPage = async function (req, res){
     const day3_waitinglist = await psgl.WaitingInfoDayAfterTomorrowByNursery(nurseryid) 
     if(day3_reservedlist.length > 0){
       for (const member of day3_reservedlist) {
-        const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
+        const name = await psgl.getMemberNameByMemberID(member[0].ID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
         birthday = view.getAgeMonth(birthday[0].BirthDay)
@@ -523,7 +523,7 @@ exports.getReservationPage = async function (req, res){
     }
     if(day3_waitinglist.length > 0){
       for (const member of day3_waitinglist) {
-        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        let status = await psgl.getReservationStatusByID(member[0].ID)
         status = status[0].ReservationStatus
         console.log(status)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
