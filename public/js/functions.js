@@ -226,7 +226,7 @@ $(function() {
               if(errorThrown == 'Service Unavailable'){
                 errmsg = '申し訳ありません、変更できませんでした'
               }else if(errorThrown == 'Not Acceptable'){
-                errmsg = '変更先が満員のため変更できませんでした'
+                errmsg = '申し訳ありません、変更できませんでした'
               }
               notif({
                 type: "error",

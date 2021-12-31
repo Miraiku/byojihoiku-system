@@ -123,7 +123,7 @@ exports.updateMemberInfo = async function (info){
     END;
     $$ LANGUAGE plpgsql;`
     await psgl.sqlToPostgre(sql)
-    sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
+    sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
     let res1 = await psgl.sqlToPostgre(sql)
     return res1[0].updatemember
   } catch (error) {
