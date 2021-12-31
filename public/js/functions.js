@@ -159,7 +159,7 @@ $(function() {
       miraikuid: {
         required: "*IDを入力してください",
         number: "*半角数字で入力してください",
-        min: "*有効な数字を入力してください"
+        min: "*有効なIDを数字で入力してください"
       },
       year: {
         required: "*半角数字を入力してください",

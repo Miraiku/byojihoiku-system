@@ -22,6 +22,13 @@ _:lang(x)::-ms-backdrop, .selector {
 button {
   outline: none;
 }
+
+select{
+  &.is-select-ss{
+    width: $form-select-ss;
+  }
+}
+
 input[type=text] ,
 input[type=password],
 .form-panel select {
