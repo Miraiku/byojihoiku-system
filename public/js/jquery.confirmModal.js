@@ -8,57 +8,57 @@
     $currentModalTarget = {};
     $defaultsConfirmModal = {};
     jQuery.confirmModal = function(message, options, callback) {
-        var targetElement = document.activeElement;
-
-        var settings = $.extend({}, $defaultsConfirmModal, options);
-
+        let targetElement = document.activeElement;
+        let settings = $.extend({}, $defaultsConfirmModal, options);
+        let modalBoxWidth,modalVerticalCenter,fadeAnimation,confirmButton,cancelButton
         if (settings === undefined) {
-            var modalBoxWidth = 'auto';
-            var modalVerticalCenter = '';
-            var fadeAnimation = '';
-            var confirmButton = 'OK';
-            var cancelButton = 'Cancel';
+            modalBoxWidth = 'auto';
+            modalVerticalCenter = '';
+            fadeAnimation = '';
+            confirmButton = 'OK';
+            cancelButton = 'Cancel';
         } else {
             if ($defaultsConfirmModal.confirmButton === undefined) {
-                var confirmButton = 'OK';
+                confirmButton = 'OK';
             } else {
-                var confirmButton = $defaultsConfirmModal.confirmButton;
+                confirmButton = $defaultsConfirmModal.confirmButton;
             }
             if ($defaultsConfirmModal.cancelButton === undefined) {
-                var cancelButton = 'Cancel'; 
+                cancelButton = 'Cancel'; 
             } else {
-                var cancelButton = $defaultsConfirmModal.cancelButton;
+                cancelButton = $defaultsConfirmModal.cancelButton;
             }
             if (settings.modalBoxWidth === undefined) {
-                var modalBoxWidth = 'auto';
+                modalBoxWidth = 'auto';
             } else {
-                var modalBoxWidth = settings.modalBoxWidth;
+                modalBoxWidth = settings.modalBoxWidth;
             }
             if (settings.modalVerticalCenter === undefined || settings.modalVerticalCenter === false) {
-                var modalVerticalCenter = '';
+                modalVerticalCenter = '';
             } else {
-                var modalVerticalCenter = 'modal-dialog-centered';
+                modalVerticalCenter = 'modal-dialog-centered';
             }
             if (settings.messageHeader === undefined || settings.messageHeader === '') {
-                var messageHeader = '&nbsp;';
+                messageHeader = '&nbsp;';
             } else {
-                var messageHeader = settings.messageHeader;
+                messageHeader = settings.messageHeader;
             }
             if (settings.fadeAnimation === undefined || settings.fadeAnimation === false) {
-                var fadeAnimation = '';
+                fadeAnimation = '';
             } else {
-                var fadeAnimation = 'fade';
+                fadeAnimation = 'fade';
             }
             if (settings.backgroundBlur === true) {
                 $('.container').attr('style', '-webkit-filter: blur(0.1rem); -moz-filter: blur(0.1rem);	-o-filter: blur(0.1rem); -ms-filter: blur(0.1rem); filter: blur(0.1rem);');
                 $(document).one('hide.bs.modal', '.modalConfirm', function () { $('.container').removeAttr('style'); });
             } else if (typeof(settings.backgroundBlur) === 'object') {
+                let blurSize
                 if (settings.backgroundBlur.length === 2) {
-                    var blurSize = settings.backgroundBlur[1];
+                    blurSize = settings.backgroundBlur[1];
                 } else {
-                    var blurSize = '0.1rem';
+                    blurSize = '0.1rem';
                 }
-                var elements = settings.backgroundBlur[0];                
+                let elements = settings.backgroundBlur[0];                
                 $(elements).attr('style', '-webkit-filter: blur(' + blurSize + '); -moz-filter: blur(' + blurSize + '); -o-filter: blur(' + blurSize + '); -ms-filter: blur(' + blurSize + '); filter: blur(' + blurSize + ');');
                 $(document).one('hide.bs.modal', '.modalConfirm', function () { $(elements).removeAttr('style'); });
             }
@@ -67,7 +67,7 @@
             }
         }
         
-        var html = `
+        let html = `
             <div style="z-index: 5000;" class="modal ` + fadeAnimation + ` modalConfirm" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
                 <div style="max-width: ` + modalBoxWidth + `;" class="modal-dialog ` + modalVerticalCenter + `" role="document">
                     <div class="modal-content">

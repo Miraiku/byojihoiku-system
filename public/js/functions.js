@@ -67,7 +67,6 @@ $(function() {
       }).always(function( jqXHR, textStatus) {
       });//end of ajax
     })//end of confirm
-    $('.modalConfirm').remove()
   });
 
   //update from /reservation
