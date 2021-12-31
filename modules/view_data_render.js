@@ -134,12 +134,12 @@ exports.getNurseryStatus3Days = async function (req, res){
     for(let i = 0; i < nursery_list.length; i++){
       let todayStatus = await psgl.ReservationStatusTodayByNursery(nursery_list[i].id)
       if(todayStatus.length > 0){
+        let Unread = 0
+        let Cancelled = 0
+        let Waiting = 0
+        let Rejected = 0
+        let Reserved = 0
         for (const status of todayStatus) {
-          let Unread = 0
-          let Cancelled = 0
-          let Waiting = 0
-          let Rejected = 0
-          let Reserved = 0
           if(status.ReservationStatus == 'Unread'){
             Unread += 1
           }else if(status.ReservationStatus == 'Cancelled'){
@@ -158,12 +158,12 @@ exports.getNurseryStatus3Days = async function (req, res){
       }
       let tomorrowStatus = await psgl.ReservationStatusTomorrowByNursery(nursery_list[i].id)
       if(tomorrowStatus.length > 0){
+        let Unread = 0
+        let Cancelled = 0
+        let Waiting = 0
+        let Rejected = 0
+        let Reserved = 0
         for (const status of await psgl.ReservationStatusTomorrowByNursery(nursery_list[i].id)) {
-          let Unread = 0
-          let Cancelled = 0
-          let Waiting = 0
-          let Rejected = 0
-          let Reserved = 0
           if(status.ReservationStatus == 'Unread'){
             Unread += 1
           }else if(status.ReservationStatus == 'Cancelled'){
@@ -182,12 +182,12 @@ exports.getNurseryStatus3Days = async function (req, res){
       }
       let dayaftertomorrowStatus = await psgl.ReservationStatusDayAfterTomorrowByNursery(nursery_list[i].id)
       if(dayaftertomorrowStatus.length > 0){
+        let Unread = 0
+        let Cancelled = 0
+        let Waiting = 0
+        let Rejected = 0
+        let Reserved = 0
         for (const status of await psgl.ReservationStatusDayAfterTomorrowByNursery(nursery_list[i].id)) {
-          let Unread = 0
-          let Cancelled = 0
-          let Waiting = 0
-          let Rejected = 0
-          let Reserved = 0
           if(status.ReservationStatus == 'Unread'){
             Unread += 1
           }else if(status.ReservationStatus == 'Cancelled'){
