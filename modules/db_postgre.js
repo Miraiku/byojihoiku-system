@@ -121,27 +121,13 @@ exports.updateMemberInfo = async function (info){
     RETURN rows_affected;
   END;
   $$ LANGUAGE plpgsql;`
-  let res1 = await psgl.sqlToPostgre(sql)
-  console.log(res1)
+  await psgl.sqlToPostgre(sql)
   sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
+  let res1 = await psgl.sqlToPostgre(sql)
+  console.log(res1.updatemember)
   //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
-  try {
-    const psgl_client = await pool.connect(); 
-    const results = await psgl_client.query(sql);
-    console.log(`Postgles sql: `+ sql)
-    psgl_client.release();
-    console.log(results)
-    console.log(results.rows)
-    console.log(results.rowCount)//function はresult2つくる
-    return results.rows
-    //{k: index, v:{sql result}}
-  }
-  catch (err) {
-    console.log(`Postgles sql: `+ sql)
-    console.log(`PSGL ERR: ${err}`)
-    return null
-  }
-  return await psgl.sqlToPostgre(sql)
+  
+  return null//await psgl.sqlToPostgre(sql)
 }
 
 exports.getMemberBirthDayByID = async function (id){
