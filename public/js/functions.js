@@ -65,6 +65,7 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
+        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
