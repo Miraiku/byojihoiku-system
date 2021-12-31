@@ -76,7 +76,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     console.log(today_capacity)
     for (const n of today_capacity) {
       console.log('today_capacity'+n)
-      for (let l = 0; l < Number(n[0].capacity); l++) {
+      for (let l = 0; l < Number(n.capacity); l++) {
         let nursery = await redis.hgetStatus(waiting_nurseryid_table,l)
         console.log(nursery)
       }
