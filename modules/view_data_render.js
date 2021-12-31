@@ -230,7 +230,7 @@ exports.getMembersPage = async function (req, res){
     let members = await psgl.getMembers()
     for (const m of members) {
       let id
-      if(m.MiraikuID == undefined){
+      if(m.MiraikuID == 99999999){
         id = '未付与'
       }else{
         id = m.MiraikuID
