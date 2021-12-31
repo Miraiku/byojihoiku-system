@@ -414,15 +414,15 @@ exports.updateReservationInfo = async function (info, intime, outime){
     DECLARE
       rows_affected integer;
     BEGIN 
-      UPDATE public."Reservation" SET "NurseryID"=nursery, "ReservationStatus"='status', "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0), "Confirmation"='true' WHERE "ID"=rsvid;
-      UPDATE public."ReservationDetails" SET "DiseaseID"=disease,  "firstNursery"=nursery, "ParentName"='parent_name', "MealType"=meal, "MealDetails"='meal_details', "Allergy"='allergy_details', "ParentTel"='parent_tel', "Cramps"='cramps', "InTime"='intime', "OutTime"='outtime' WHERE "ID"=rsvid;
+      UPDATE public."Reservation" SET "NurseryID"=nursery, "ReservationStatus"=status, "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0), "Confirmation"='true' WHERE "ID"=rsvid;
+      UPDATE public."ReservationDetails" SET "DiseaseID"=disease,  "firstNursery"=nursery, "ParentName"=parent_name, "MealType"=meal, "MealDetails"=meal_details, "Allergy"=allergy_details, "ParentTel"=parent_tel, "Cramps"=cramps, "InTime"=intime, "OutTime"=outtime WHERE "ID"=rsvid;
       GET DIAGNOSTICS rows_affected = ROW_COUNT;
       RETURN rows_affected;
     END;
     $$ LANGUAGE plpgsql;`
     await psgl.sqlToPostgre(sql)
     sql = `BEGIN;
-    SELECT updateMember(${info.status},${info.disease},'${info.nursery}',${info.parent_name},${info.parent_tel},${info.meal_details},${info.cramps},${info.allergy_details},${info.rsvid},${info.meal});
+    SELECT updateReservation('${info.status}',${info.disease},${info.nursery},'${info.parent_name}','${info.parent_tel}','${info.meal_details}','${info.cramps}','${info.allergy_details}',${info.rsvid},${info.meal},${intime},${outime});
     COMMIT;`
     let res1 = await psgl.sqlToPostgre(sql)
     return res1[0].updatemember
