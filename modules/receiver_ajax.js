@@ -45,9 +45,8 @@ router
           res.status(200).send('Success');
         }
       }else if(action == 'update_member_from_member_entry'){
-        let sql = await psgl.updateMemberInfo(req.body)
-        console.log(sql)
-        if(sql > 0 && sql != null){
+        let updated = await psgl.updateMemberInfo(req.body)
+        if(updated > 0 && updated != null){
           res.status(200).send('Success');
         }else{
           res.status(406);

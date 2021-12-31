@@ -125,7 +125,6 @@ exports.updateMemberInfo = async function (info){
     await psgl.sqlToPostgre(sql)
     sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
     let res1 = await psgl.sqlToPostgre(sql)
-    console.log(typeof res1[0].updatemember)
     return res1[0].updatemember
   } catch (error) {
     return null
