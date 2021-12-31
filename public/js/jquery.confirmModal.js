@@ -86,7 +86,7 @@
         `;
         console.log(`$currentModalTarget ${$currentModalTarget}`)
         if ($.isEmptyObject($currentModalTarget)) {
-            console.log(`$isEmptyObject ${$targetElement}`)
+            console.log(`$isEmptyObject ${targetElement}`)
             $currentModalTarget = targetElement;
             $('body').prepend(html);
             $('.modalConfirm').modal('show');
