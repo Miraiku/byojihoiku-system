@@ -60,7 +60,7 @@ cron.schedule('*/20 * * * *', async () =>  {
     //7:10 頃開始？園ごとに設定する
     //今日のキャパ空いてる且つWaitingがいる
     //予約時刻が早い順番にIDとりだす
-    //Lineid 
+    //現在時刻から　start time end timeを設定しておく 
   } catch (error) {
     console.log('')
   }
