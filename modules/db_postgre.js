@@ -550,7 +550,7 @@ exports.getTodayWaitingRsvIDLineIDListSortByCreatedAt = async function (){
     let lineid = await psgl.sqlToPostgre(sql)
     res.push({rsvid:i.ID, memberid:memberid[0].MemberID, lineid:lineid[0].LineID, nurseryid:i.NurseryID})
   }
-  return res[0]//[{}]
+  return res//[{}]
 }
 
 exports.getNurseryIDByResevationID = async function (id){

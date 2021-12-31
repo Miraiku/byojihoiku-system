@@ -71,19 +71,6 @@ cron.schedule('*/1 * * * *', async () =>  {
     //waitinglist -> waiting_starttime, waiting_endtime, lasttime
     //waiting_starttime line
     //wairing_endtime line 
-    const waiting_userid_table = 'waiting_userid_table'
-    const waiting_lineid_table = 'waiting_lineid_table'
-    const waiting_rsvid_table = 'waiting_rsvid_table'
-    const waiting_nurseryid_table = 'waiting_nurseryid_table'
-    const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
-    let l = list[0].length
-    for (const user of list) {
-      console.log('list'+user)
-      await redis.hsetStatus(waiting_lineid_table,l,user[0].lineid)
-      await redis.hsetStatus(waiting_userid_table,l,user[0].userid)
-      await redis.hsetStatus(waiting_rsvid_table,l,user[0].rsvid) 
-      await redis.hsetStatus(waiting_nurseryid_table,user[0].nurseryid,l) 
-    }
 
     let today_capacity = await getAvailableNurseryOnToday()
     console.log(today_capacity)
@@ -94,6 +81,21 @@ cron.schedule('*/1 * * * *', async () =>  {
         console.log(nursery)
       }
     }
+    
+    const waiting_userid_table = 'waiting_userid_table'
+    const waiting_lineid_table = 'waiting_lineid_table'
+    const waiting_rsvid_table = 'waiting_rsvid_table'
+    const waiting_nurseryid_table = 'waiting_nurseryid_table'
+    const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
+    let l = list.length
+    for (const user of list) {
+      console.log('list'+user)
+      await redis.hsetStatus(waiting_lineid_table,l,user[0].lineid)
+      await redis.hsetStatus(waiting_userid_table,l,user[0].userid)
+      await redis.hsetStatus(waiting_rsvid_table,l,user[0].rsvid) 
+      await redis.hsetStatus(waiting_nurseryid_table,user[0].nurseryid,l) 
+    }
+
     /*
     const sendWaitingUser = function(lineid, rsvid){
       request.post(
