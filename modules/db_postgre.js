@@ -410,7 +410,7 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
 
 exports.updateReservationInfo = async function (info, intime, outime){
   try {
-    let sql = `CREATE OR REPLACE FUNCTION updateReservation(status text, disease integer, nursery integer, parent_name text, parent_tel text, meal_details text, cramps text, allergy_details text, rsvid integer, meal integer, intime timestamp without time zone, outtime timestamp without time zone) RETURNS integer AS $$
+    let sql = `CREATE OR REPLACE FUNCTION updateReservation(status text, disease integer, nursery integer, parent_name text, parent_tel text, meal_details text, cramps text, allergy_details text, rsvid integer, meal integer, intime text, outtime text) RETURNS integer AS $$
     DECLARE
       rows_affected integer;
     BEGIN 
