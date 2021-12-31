@@ -89,7 +89,7 @@ exports.flushALLNoUpdate20mins = async function(){
     });
     Object.entries(result).forEach(async ([k, v]) => { 
       if(k == 'waitinglist'){ //waitingリストは手動で削除する
-        continue
+        return
       }
       let now = Date.now()
       let diff_time = now - v;
