@@ -16,6 +16,7 @@ exports.sqlToPostgre = async function (queryString){
     const results = await psgl_client.query(queryString);
     console.log(`Postgles sql: `+ queryString)
     psgl_client.release();
+    console.log(results)
     console.log(results.rows[0])
     return results.rows
     //{k: index, v:{sql result}}
