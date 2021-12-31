@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% if (SubTitle != undefined) { %>
+  <% if (SubTitle !== null ) { %>
     <%- include ("../partials/head.ejs", SubTitle) %>
   <% } else { %>
   <%- include ("../partials/head.ejs") %>
