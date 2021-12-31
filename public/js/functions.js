@@ -10,14 +10,15 @@ $(function() {
   //update from /home
   $(".btn_status_update").on('click', function(e) {
     let btn_value = $(this).val()
-    console.log($(this).val())
-    console.log($(e))
-    console.log(e)
     let status = btn_value.substr(0, btn_value.indexOf('_'))
     let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
+    console.log(btn_value)
+    console.log(let)
+    console.log(rsvid)
+    console.log(nurseryid)
     e.preventDefault();            
-    $.confirmModal('「'+$(this).text()+'」でよろしいですか？', function(el) {
+    $.confirmModal('「'+btn_value+'」でよろしいですか？', function(el) {
       $.ajax({
         url: '/updater',
         type: 'POST',
