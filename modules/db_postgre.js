@@ -415,7 +415,7 @@ exports.updateReservationInfo = async function (info, intime, outime){
       rows_affected integer;
     BEGIN 
       UPDATE public."Reservation" SET "NurseryID"=nursery, "ReservationStatus"=status, "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0), "Confirmation"='true' WHERE "ID"=rsvid;
-      UPDATE public."ReservationDetails" SET "DiseaseID"=disease,  "firstNursery"=nursery, "ParentName"=parent_name, "MealType"=meal, "MealDetails"=meal_details, "Allergy"=allergy_details, "ParentTel"=parent_tel, "Cramps"=cramps, "InTime"=to_timestamp(intime), "OutTime"=to_timestamp(outtime) WHERE "ID"=rsvid;
+      UPDATE public."ReservationDetails" SET "DiseaseID"=disease,  "firstNursery"=nursery, "ParentName"=parent_name, "MealType"=meal, "MealDetails"=meal_details, "Allergy"=allergy_details, "ParentTel"=parent_tel, "Cramps"=cramps, "InTime"=to_timestamp,YYY-MM-DD HH24:MI:00), "OutTime"=to_timestamp(outtime,YYY-MM-DD HH24:MI:00) WHERE "ID"=rsvid;
       GET DIAGNOSTICS rows_affected = ROW_COUNT;
       RETURN rows_affected;
     END;
