@@ -77,12 +77,13 @@ cron.schedule('*/1 * * * *', async () =>  {
     const waiting_nurseryid_table = 'waiting_nurseryid_table'
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     console.log(list)
-    for (let i = 0; i < list.length; i++) {
-      console.log(list[i])
-      await redis.hsetStatus(waiting_lineid_table,i,list[i].user[0].lineid)
-      await redis.hsetStatus(waiting_userid_table,i,list[i].user[0].userid)
-      await redis.hsetStatus(waiting_rsvid_table,i,list[i].user[0].rsvid) 
-      await redis.hsetStatus(waiting_nurseryid_table,list[i].user[0].nurseryid,i) 
+    let l = list[0].length
+    for (const user of list) {
+      console.log(user)
+      await redis.hsetStatus(waiting_lineid_table,l,user[0].lineid)
+      await redis.hsetStatus(waiting_userid_table,l,user[0].userid)
+      await redis.hsetStatus(waiting_rsvid_table,l,user[0].rsvid) 
+      await redis.hsetStatus(waiting_nurseryid_table,user[0].nurseryid,l) 
     }
 
     let today_capacity = await getAvailableNurseryOnToday()
