@@ -344,7 +344,7 @@ exports.delMemberByIDName = async function (id, name){
     END;
     $$ LANGUAGE plpgsql;`
     await psgl.sqlToPostgre(sql)
-    sql = `SELECT deleteMember(${id},'${name});`
+    sql = `SELECT deleteMember(${id},'${name}');`
     let res1 = await psgl.sqlToPostgre(sql)
     return res1[0].updatereservation
   } catch (error) {
