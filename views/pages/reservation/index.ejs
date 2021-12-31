@@ -260,6 +260,7 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
+                    <% for (var i = 0; i < Day3Wait.length; i++) { %>
                       <tr data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day3Wait[i].id%></td>
