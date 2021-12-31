@@ -72,7 +72,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     //waiting_starttime line
     //wairing_endtime line 
 
-    let today_capacity = await getAvailableNurseryOnToday()
+    let today_capacity = await psgl.getAvailableNurseryOnToday()
     console.log(today_capacity)
     for (const n of today_capacity) {
       console.log('today_capacity'+n)
