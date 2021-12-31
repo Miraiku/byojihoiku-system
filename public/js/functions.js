@@ -14,7 +14,7 @@ $(function() {
     let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
     console.log(btn_value)
-    console.log(let)
+    console.log(status)
     console.log(rsvid)
     console.log(nurseryid)
     e.preventDefault();            

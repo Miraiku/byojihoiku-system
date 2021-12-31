@@ -55,30 +55,13 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('0 0 7 * * *', async () => {
+//cron.schedule('0 0 7 * * *', async () => {
   try {
-    let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
-    for (const id of lineids) {
-      console.log(id[0].LINEID)
-      request.post(
-        { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku-system.herokuapp.com/webhook',
-        body: JSON.stringify({
-          "line_push_from_cron": "today7am",
-          "id": id[0].LINEID
-          })
-        },
-        function(error, response, body){
-          console.log("cron schedule 7am:"+ error); 
-          console.log("cron schedule 7am:"+ response && response.statusCode); 
-          console.log("cron schedule 7am:"+ body); 
-        }
-      );
-    }
+    //今日のキャパ空いてる且つ
   } catch (error) {
-    console.log('7am error:'+ error)
+    console.log('')
   }
-});
+//});
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 cron.schedule('0 0 7 * * *', async () => {
