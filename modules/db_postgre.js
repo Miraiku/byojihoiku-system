@@ -14,7 +14,7 @@ exports.sqlToPostgre = async function (queryString){
   try {
     let results
     const psgl_client = await pool.connect(); 
-    await psgl_query.query(
+    await psgl_client.query(
       queryString,
       (err, res) => {
        if (err) return next(err);
