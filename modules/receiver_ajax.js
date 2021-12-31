@@ -49,7 +49,7 @@ router
         if(updated > 0 && updated != null){
           res.status(200).send('Success');
         }else{
-          res.status(406);
+          res.status(406).send();
         }
       }else{
         console.error("Ajax Receiver： Nothing Happend");
