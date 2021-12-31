@@ -55,20 +55,95 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-//cron.schedule('0 0 7 * * *', async () => {
+cron.schedule('*/1 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
-    //今日のキャパ空いてる且つWaitingがいる
+    //今日のキャパ空いてる且つWaitingがいる園
+
+    
     //予約時刻が早い順番にIDとりだす
     //現在時刻から　start time end timeを設定しておく
     // startになったらメッセージ発火
     //返信きて　lineIDかつendtime以内なら　Reserved、次はいかない
     //返信きて　lineIDかつendtime外なら　エラーメッセージ
     //最後のendtimeになったら本日分のwaitingroutingを削除する 
+    //waitinglist userid 
+    //waitinglist -> waiting_starttime, waiting_endtime, lasttime
+    //waiting_starttime line
+    //wairing_endtime line 
+    const waiting_userid_table = 'waiting_userid_table'
+    const waiting_lineid_table = 'waiting_lineid_table'
+    const waiting_rsvid_table = 'waiting_rsvid_table'
+    const waiting_nurseryid_table = 'waiting_nurseryid_table'
+    const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
+    for (let i = 0; i < list.length; i++) {
+      console.log(list[i])
+      await redis.hsetStatus(waiting_lineid_table,i,list[i].user[0].lineid)
+      await redis.hsetStatus(waiting_userid_table,i,list[i].user[0].userid)
+      await redis.hsetStatus(waiting_rsvid_table,i,list[i].user[0].rsvid) 
+      await redis.hsetStatus(waiting_nurseryid_table,list[i].user[0].nurseryid,i) 
+    }
+
+    let today_capacity = await getAvailableNurseryOnToday()
+    for (const n of today_capacity) {
+      console.log(n)
+      for (let l = 0; l < Number(n[0].capacity); l++) {
+        let nursery = await redis.hgetStatus(waiting_nurseryid_table,l)
+        console.log(nursery)
+      }
+    }
+    /*
+    const sendWaitingUser = function(lineid, rsvid){
+      request.post(
+        { headers: {'content-type' : 'application/json'},
+        url: 'https://byojihoiku.chiikihoiku.net/webhook',
+        body: JSON.stringify({
+          "line_push_from_cron": "7amwaiting",
+          "id": lineid,
+          })
+        },
+        async function(error, response, body){
+          if(response.statusCode == '200' && body != null){
+            await psgl.updateTodayWaitingMemberToReservedMemberByReservationID(rsvid)
+          }
+          console.log("cron schedule error:"+ error); 
+        }//capaいっぱいになったら送らない
+      ); 
+    };
+   
+    for (let i = 0; i < list.length; i++) {
+      let args = [list[i][0].lineid,list[i][0].rsvid];
+      const fifteen_interval = setInterval(sendWaitingUser, 900000,...args);
+      fifteen_interval()
+      await redis_client.hdel(waiting_userid_table, user[0].lineid, (err, reply) => {
+        if (err) throw err;
+        console.log('REDIS DEL: waiting_userid_table' + k + ' ,' + reply)
+      })
+      await redis_client.hdel(waiting_rsvid_table, user[0].lineid, (err, reply) => {
+        if (err) throw err;
+        console.log('REDIS DEL: waiting_rsvid_table' + k + ' ,' + reply)
+      })
+      
+    }*/
+
+    /* Exit Job */
+    /*
+    clearInterval(fifteen_interval);
+    await redis.resetAllStatus(waiting_userid_table)
+    await redis.resetAllStatus(waiting_rsvid_table)
+    await redis_client.hdel('update_time', waiting_userid_table, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS DEL: update_time' + k + ' ,' + reply)
+    })
+    await redis_client.hdel('update_time', waiting_rsvid_table, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS DEL: update_time' + k + ' ,' + reply)
+    })
+    */
   } catch (error) {
     console.log('')
   }
-//});
+});
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 cron.schedule('0 0 7 * * *', async () => {
@@ -78,7 +153,7 @@ cron.schedule('0 0 7 * * *', async () => {
       console.log(id[0].LINEID)
       request.post(
         { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku-system.herokuapp.com/webhook',
+        url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           "line_push_from_cron": "today7am",
           "id": id[0].LINEID
@@ -103,7 +178,7 @@ cron.schedule('0 0 20 * * *', async () => {
     for (const id of ids) {
       request.post(
         { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku-system.herokuapp.com/webhook',
+        url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           "line_push_from_cron": "20pm",
           "id": id[0].LINEID,

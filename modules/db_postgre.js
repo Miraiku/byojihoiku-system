@@ -84,6 +84,20 @@ exports.getAvailableNurseryOnThatDay = async function (date){
   return available
 }
 
+exports.getAvailableNurseryOnToday = async function (){
+  let available = []
+  let nursery = await psgl.getNurseryTable()
+  for await (const v of nursery) {
+    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate" >= DATE 'today' and "NurseryID" = '`+v['ID']+`';`
+    let c = await psgl.sqlToPostgre(sql)
+    let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
+    if(current_capacity > 0){
+      available.push({id:v['ID'], name:v['NurseryName'], capacity:current_capacity})
+    }
+  }
+  return available
+}
+
 exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
   let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`';`
   return await psgl.sqlToPostgre(sql)
@@ -318,6 +332,12 @@ exports.updateTodayReservedReminderStatusByLineID = async function (lineid, stat
 }
 
 
+exports.updateTodayWaitingMemberToReservedMemberByReservationID = async function (rsvid){
+  let sql = `UPDATE public."Reservation" SET "ReservationStatus"= 'Reserved' , "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0) WHERE "MemberID"= '${rsvid}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result
+}
+
 exports.getReservationDetailsByMemberIDGraterThanToday = async function (id){
   let sql = `SELECT * FROM public."ReservationDetails" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today';`
 
@@ -515,6 +535,20 @@ exports.ReservedInfoDayAfterTomorrowByNursery = async function (id){
   for (const i of result) {
     let sql = `SELECT "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "ID",  "thirdNursery" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
     res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
+}
+
+exports.getTodayWaitingRsvIDLineIDListSortByCreatedAt = async function (){
+  let sql = `SELECT "ID", "NurseryID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting' ORDER BY "CreatedAt";`
+  let result = await psgl.sqlToPostgre(sql)
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "MemberID" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    let memberid = await psgl.sqlToPostgre(sql)
+    sql = `SELECT "LINEID" FROM public."ReservationDetails" WHERE "ID" = '${memberid[0].ID}';`
+    let lineid = await psgl.sqlToPostgre(sql)
+    res.push({rsvid:i.ID, memberid:memberid, lineid:lineid, nurseryid:i.NurseryID})
   }
   return res//[{}]
 }

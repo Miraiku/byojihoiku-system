@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router()
-const https = require("https");
 const psgl = require('./db_postgre')
-const redis = require('./db_redis')
 const view = require('./view_data_render');
-const Holidays = require('date-holidays');
-const { is } = require('express/lib/request');
-const TOKEN = process.env.LINE_ACCESS_TOKEN
-const login = require('./view_login');
-const { off } = require('process');
 
 router
   .post('/', async (req, res) => {
