@@ -548,7 +548,7 @@ exports.getTodayWaitingRsvIDLineIDListSortByCreatedAt = async function (){
     let memberid = await psgl.sqlToPostgre(sql)
     sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${memberid[0].MemberID}';`
     let lineid = await psgl.sqlToPostgre(sql)
-    res.push({rsvid:i.ID, memberid:memberid[0].MemberID, lineid:lineid, nurseryid:i.NurseryID})
+    res.push({rsvid:i.ID, memberid:memberid[0].MemberID, lineid:lineid[0].LineID, nurseryid:i.NurseryID})
   }
   return res//[{}]
 }
