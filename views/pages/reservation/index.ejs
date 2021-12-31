@@ -89,8 +89,8 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day1Wait.length; i++) { %>
-                      <tr  <% if(Day1Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
-                        <td><%=i+1%></td>
+                      <tr data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                        <td><%=i+1%> <%= Day1Wait[i].status %> </td>
                         <td><%=Day1Wait[i].id%></td>
                         <td><%=Day1Wait[i].name%></td>
                         <td><%=Day1Wait[i].birthday%></td>
@@ -175,7 +175,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day2Wait.length; i++) { %>
-                      <tr <% if(Day2Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day2Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                      <tr data-href="/reservation/confirm/<%=Day2Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day2Wait[i].id%></td>
                         <td><%=Day2Wait[i].name%></td>
@@ -260,7 +260,7 @@
                       <th>病名</th>
                       <th>&nbsp;</th>
                     </tr>
-                      <tr <% if(Day3Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                      <tr data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day3Wait[i].id%></td>
                         <td><%=Day3Wait[i].name%></td>
