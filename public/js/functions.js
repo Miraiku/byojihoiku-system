@@ -18,7 +18,7 @@ $(function() {
     console.log(status)
     console.log(rsvid)
     console.log(nurseryid)
-    e.preventDefault();            
+    //e.preventDefault();            
     $.confirmModal('「'+btn_text+'」でよろしいですか？', function(el) {
       $.ajax({
         url: '/updater',
