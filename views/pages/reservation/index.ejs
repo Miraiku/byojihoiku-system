@@ -30,6 +30,93 @@
         <label class="tab_item" for="tab2"><%=Status3Days[0].tomorrow.date%><span><%=Status3Days[0].tomorrow.day%></span></label>
         <input id="tab3" type="radio" name="tab_item">
         <label class="tab_item" for="tab3"><%=Status3Days[0].dayaftertomorrow.date%><span><%=Status3Days[0].dayaftertomorrow.day%></span></label>
+        <div class="tab_content" id="tab1_content">
+          <div class="tab_content_description">
+            <section>
+              <div>
+                <h3>予約確定</h3>
+                <div class="table-wrap">
+                  <table class="table">
+                    <tr>
+                      <th>&nbsp;</th>
+                      <th>会員ID</th>
+                      <th>名前</th>
+                      <th>年齢</th>
+                      <th>利用希望日</th>
+                      <th>病名</th>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <% for (var i = 0; i < Day1Rsv.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day1Rsv[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                        <td><%=i+1%></td>
+                        <td><%=Day1Rsv[i].id%></td>
+                        <td><%=Day1Rsv[i].name%></td>
+                        <td><%=Day1Rsv[i].birthday%></td>
+                        <td><%=Day1Rsv[i].date%></td>
+                        <td class="is-left">
+                          <%=Day1Rsv[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="row_nursery_<%=Day1Rsv[i].rsvid%>">
+                            <% for (var n = 0; n < Nurserys.length; n++) { %>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day1Rsv[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day1Rsv[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-yellow btn_status_update_rsv" value="Waiting_<%=Day1Rsv[i].rsvid%>">キャンセル待ち</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day1Rsv[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Waiting_<%=Day1Rsv[i].rsvid%>">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
+                  </table>
+                </div>
+              </div>
+            </section>
+            <section>
+              <div>
+                <!-- //TODO予約はいってないときの処理 -->
+                <h3>キャンセル待ち</h3>
+                <div class="table-wrap">
+                  <table class="table">
+                    <tr>
+                      <th>&nbsp;</th>
+                      <th>会員ID</th>
+                      <th>名前</th>
+                      <th>年齢</th>
+                      <th>利用希望日</th>
+                      <th>病名</th>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <% for (var i = 0; i < Day1Wait.length; i++) { %>
+                      <tr data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                        <td><%=i+1%> <%= Day1Wait[i].status %> </td>
+                        <td><%=Day1Wait[i].id%></td>
+                        <td><%=Day1Wait[i].name%></td>
+                        <td><%=Day1Wait[i].birthday%></td>
+                        <td><%=Day1Wait[i].date%></td>
+                        <td class="is-left">
+                          <%=Day1Wait[i].disease%>
+                        </td>
+                        <td class="is-left">
+                          <select name="row_nursery_<%=Day1Wait[i].rsvid%>"><!-- name is-sm -->
+                            <% for (var n = 0; n < Nurserys.length; n++) { %>
+                              <option value="<%=Nurserys[n].id%>"<% if (Day1Wait[i].first==Nurserys[n].name) { %>selected<% } %>><%=Nurserys[n].name%></option>
+                            <% } %>
+                          </select>
+                          <button type="button" class="is-blue btn_status_update_rsv" value="Reserved_<%=Day1Wait[i].rsvid%>">園変更</button>
+                          <button type="button" class="is-green btn_status_update_rsv" value="Reserved_<%=Day1Wait[i].rsvid%>">予約確定</button>
+                          <button type="button" class="is-red btn_status_update_rsv" value="Rejected_<%=Day1Wait[i].rsvid%>">対応不可</button>
+                          <button type="button" class="is-violet btn_status_update_rsv" value="Cancelled_<%=Day1Wait[i].rsvid%>">キャンセル</button>
+                        </td>
+                      </tr>
+                    <% } %>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
       </div>
     </section>
   </main>
