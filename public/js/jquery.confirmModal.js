@@ -84,9 +84,9 @@
                 </div>
             </div>
         `;
-        console.log(`$currentModalTarget ${$currentModalTarget}`)
-        console.log(`$targetElement ${targetElement}`)
-        console.log(`$isEmptyObject ${targetElement}`)
+        if($('.modalConfirm').length > 0){
+            $('.modalConfirm').remove()
+        }
         $currentModalTarget = targetElement;
         $('body').prepend(html);
         $('.modalConfirm').modal('show');

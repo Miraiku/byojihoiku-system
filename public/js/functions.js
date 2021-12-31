@@ -65,7 +65,6 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
@@ -123,7 +122,6 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
@@ -185,7 +183,6 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
@@ -308,7 +305,6 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
-              $currentModalTarget = {}; //reset confirmModal
             });//end of ajax
           })//end of confirm
         } else {
@@ -432,7 +428,6 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
-              $currentModalTarget = {}; //reset confirmModal
             });//end of ajax
           })//end of confirm
         } else {
@@ -505,7 +500,6 @@ $(function() {
             });
             console.log("失敗"+errorThrown)
           }).always(function( jqXHR, textStatus) {
-            $currentModalTarget = {}; //reset confirmModal
           });//end of ajax
         } else {
             return false
@@ -592,7 +586,6 @@ $(function() {
             });
             console.log("失敗"+errorThrown)
           }).always(function( jqXHR, textStatus) {
-            $currentModalTarget = {}; //reset confirmModal
           });//end of ajax
         } else {
             return false
