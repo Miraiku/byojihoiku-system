@@ -81,7 +81,7 @@ cron.schedule('*/1 * * * *', async () =>  {
         console.log(nursery)
       }
     }
-    
+
     const waiting_userid_table = 'waiting_userid_table'
     const waiting_lineid_table = 'waiting_lineid_table'
     const waiting_rsvid_table = 'waiting_rsvid_table'
@@ -145,7 +145,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     })
     */
   } catch (error) {
-    console.log('')
+    console.log('ERROR: @ waitinglist : '+error)
   }
 });
 
