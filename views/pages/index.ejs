@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <%- if(SubTitle){ include ("../partials/head.ejs", SubTitle) }else{ include ("../partials/head.ejs") }%>
+  <% if (SubTitle != undefined) { %>
+    <%- include ("../partials/head.ejs", SubTitle) %>
+  <% } else { %}
+  <%- include ("../partials/head.ejs") %>
+  <% } %>
 </head>
 
 <body class="login page">
