@@ -295,10 +295,19 @@ $(function() {
           const parent_name = $('input[name="parent_name"]').val()
           const parent_tel = $('input[name="parent_tel"]').val()
           const meal = $('[name="meal"] option:selected').val()
-          const meal_details = $('input[name="meal_details"]').val()
-          const cramps = $('input[name="cramps"]').val()
-          const allergy_details = $('input[name="allergy_details"]').val()
+          let meal_details = $('input[name="meal_details"]').val()
+          let cramps = $('input[name="cramps"]').val()
+          let allergy_details = $('input[name="allergy_details"]').val()
           const rsvid = $('input[name="rsvid"]').val() 
+          if(meal_details == '無し'){
+            meal_details = false
+          }
+          if(cramps == '無し'){
+            cramps = false
+          }
+          if(allergy_details == '無し'){
+            allergy_details = false
+          }
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
             $.ajax({
