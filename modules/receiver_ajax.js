@@ -7,7 +7,8 @@ const view = require('./view_data_render');
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
-const login = require('./view_login')
+const login = require('./view_login');
+const { off } = require('process');
 
 router
   .post('/', async (req, res) => {
@@ -42,6 +43,14 @@ router
         }else{
           await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success');
+        }
+      }else if(action == 'update_member_from_member_entry'){
+        let sql = await psgl.updateMemberInfo(req.body)
+        console.log(sql)
+        if(sql){
+          res.status(200).send('Success');
+        }else{
+          res.status(406);
         }
       }else{
         console.error("Ajax Receiver： Nothing Happend");

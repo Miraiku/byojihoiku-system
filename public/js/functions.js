@@ -188,16 +188,11 @@ $(function() {
           const year = $('input[name="year"]').val()
           const month = $('[name="month"] option:selected').val()
           const day = $('[name="day"] option:selected').val()
-          const allergy = $('input[name="allergy"]:checked').val()
-          console.log(miraikuid)
-          console.log(name)
-          console.log(year)
-          console.log(month)
-          console.log(day)
-          console.log(allergy)         
+          const allergy = $('input[name="allergy"]:checked').val()       
+          const memberid = $('input[name="id"]:checked').val()        
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
-            /*$.ajax({
+            $.ajax({
               url: '/updater',
               type: 'POST',
               data: {
@@ -207,7 +202,8 @@ $(function() {
                 'year':year,
                 'month':month,
                 'day':day,
-                'allergy':allergy
+                'allergy':allergy,
+                'memberid':memberid
               },
               dataType: 'text'
             }).done(function( data, textStatus, jqXHR ) {
@@ -249,7 +245,7 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
-            });//end of ajax*/
+            });//end of ajax
           })//end of confirm
         } else {
             return false

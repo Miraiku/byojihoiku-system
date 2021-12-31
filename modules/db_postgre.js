@@ -110,6 +110,22 @@ exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthda
   return await psgl.sqlToPostgre(sql)
 }
 
+exports.updateMemberInfo = async function (info){
+  let sql = `CREATE OR REPLACE FUNCTION updateMember(miraikuid integer, birthday integer, name text, allergy boolean, id integer) RETURNS integer AS $$
+  DECLARE
+    rows_affected integer;
+  BEGIN 
+  UPDATE public."Member" SET "MiraikuID"=miraikuid, "BirthDay"=birthday, "Name"=name, "Allergy"='false' WHERE "ID" = id;
+    GET DIAGNOSTICS rows_affected = ROW_COUNT;
+    RETURN rows_affected;
+  END;
+  $$ LANGUAGE plpgsql;
+  
+  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
+  console.log(sql)
+  return await psgl.sqlToPostgre(sql)
+}
+
 exports.getMemberBirthDayByID = async function (id){
   let sql = `SELECT "BirthDay" FROM public."Member" WHERE "ID" = '`+id+`' and "MiraikuID" IS NOT NULL and "Disabled" = 'false';`
   return await psgl.sqlToPostgre(sql)
