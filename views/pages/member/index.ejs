@@ -74,7 +74,7 @@
                         <td><%=Members[i].birthday%></td>
                         <td><%=Members[i].age%></td>
                         <td><%=Members[i].allergy%></td>
-                        <td><button type="button" class="is-red"> 削除 </button></td>
+                        <td><button type="button" class="is-red btn_disable_member" value="<%=`${Members[i].memberid}_${Members[i].name}`%>"> 削除 </button></td>
                       </tr>
                     <% } %>
                   </table>

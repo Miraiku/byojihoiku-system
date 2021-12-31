@@ -331,6 +331,29 @@ exports.getReservationDetailsByReservationID = async function (id){
   return result
 }
 
+
+exports.delMemberByIDName = async function (id, name){
+  try {
+    let sql = `CREATE OR REPLACE FUNCTION deleteMember(id integer, name text) RETURNS integer AS $$
+    DECLARE
+      rows_affected integer;
+    BEGIN 
+      DELETE FROM public."Member" WHERE "ID" = id and "Name" = name;
+      GET DIAGNOSTICS rows_affected = ROW_COUNT;
+      RETURN rows_affected;
+    END;
+    $$ LANGUAGE plpgsql;`
+    await psgl.sqlToPostgre(sql)
+    sql = `SELECT deleteMember(${id},'${name});`
+    let res1 = await psgl.sqlToPostgre(sql)
+    return res1[0].updatereservation
+  } catch (error) {
+    console.log("ERR @delMemberByIDName: "+error)
+    return null
+  }
+}
+
+
 exports.getMembers = async function (){
   let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false' ORDER BY "MiraikuID";`
   let result = await psgl.sqlToPostgre(sql)

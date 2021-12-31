@@ -63,6 +63,14 @@ router
         }else{
           res.status(406).send();
         }
+      }else if(action == 'delete_member'){
+        let deleted =  await psgl.delMemberByIDName(req.body.memberid, req.body.name)
+
+        if(deleted > 0 && deleted != null){
+          res.status(200).send('Success');
+        }else{
+          res.status(406).send();
+        }
       }else{
         console.error("Ajax Receiver： Nothing Happend");
         res.status(503).send('エラーが発生しました');
