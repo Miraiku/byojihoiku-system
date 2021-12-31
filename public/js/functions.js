@@ -65,10 +65,10 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
-        $currentModalTarget = {}; //reset confirmModal
-        $('.modalConfirm').remove()
       });//end of ajax
     })//end of confirm
+    $currentModalTarget = {}; //reset confirmModal
+    $('.modalConfirm').remove()
   });
 
   //update from /reservation
