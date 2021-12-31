@@ -54,8 +54,8 @@ router
         let reservation_date = await psgl.getReservationDateByID(req.body.rsvid)
         reservation_date = reservation_date[0].ReservationDate
         reservation_date_formatted_psgl = view.getPsglTimeStampYMDFromDayDataObj(reservation_date)
-        let intime = reservation_date_formatted_psgl + ' ' + req.body.intime_hour + ':' + req.body.intime_mins
-        let outtime = reservation_date_formatted_psgl + ' ' + req.body.outtime_hour + ':' + req.body.outtime_mins
+        let intime = reservation_date_formatted_psgl + ' ' + ('00' + req.body.intime_hour).slice(-2) + ':' + ('00' + req.body.intime_mins).slice(-2)
+        let outtime = reservation_date_formatted_psgl + ' ' + ('00' + req.body.outtime_hour).slice(-2) + ':' + ('00' + req.body.outtime_mins).slice(-2)
         let updated = await psgl.updateReservationInfo(req.body, intime, outtime)
 
         if(updated > 0 && updated != null){
