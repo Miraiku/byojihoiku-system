@@ -86,6 +86,20 @@
         `;
         console.log(`$currentModalTarget ${$currentModalTarget}`)
         console.log(`$targetElement ${targetElement}`)
+        console.log(`$isEmptyObject ${targetElement}`)
+        $currentModalTarget = targetElement;
+        $('body').prepend(html);
+        $('.modalConfirm').modal('show');
+        $('.confirmButton').on('click', function(e) {
+            e.preventDefault();
+            $('.modalConfirm').modal('hide');
+            if (typeof(callback) === 'function') {
+                callback(targetElement);
+            } else {
+                options(targetElement)
+            }
+        });
+        /*
         if ($.isEmptyObject($currentModalTarget)) {
             console.log(`$isEmptyObject ${targetElement}`)
             $currentModalTarget = targetElement;
@@ -132,6 +146,6 @@
             });
         } else {
             $('.modalConfirm').modal('show');
-        }
+        }*/
     };
 }(jQuery));
