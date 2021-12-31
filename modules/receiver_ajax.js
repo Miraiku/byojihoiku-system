@@ -65,6 +65,7 @@ router
         }
       }else if(action == 'delete_member'){
         let can_delete = await psgl.getReservationStatusByMemberIDGraterThanToday(req.body.memberid)
+        console.log(can_delete)
         if(can_delete == null){
           let deleted =  await psgl.delMemberByIDName(req.body.memberid, req.body.name)
           if(deleted > 0 && deleted != null){
