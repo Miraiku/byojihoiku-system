@@ -201,17 +201,10 @@ exports.getReservationStatusByMemberIDGraterThanToday = async function (id){
 }
 
 exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation');`
   let result = await psgl.sqlToPostgre(sql)
   return result
 }
-
-exports.getReservationStatusReservedByMemberIDGraterThanToday = async function (id){
-  let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Reserved';`
-  let result = await psgl.sqlToPostgre(sql)
-  return result
-}
-
 
 exports.getReservationStatusUnreadByMemberIDGraterThanToday = async function (id){
   let sql = `SELECT * FROM public."Reservation" WHERE "MemberID" = ${id} and "ReservationDate" >= DATE 'today' and "ReservationStatus" = 'Unread';`
