@@ -66,16 +66,15 @@ router
       }else if(action == 'delete_member'){
         let can_delete = await psgl.getReservationStatusByMemberIDGraterThanToday(req.body.memberid)
         if(can_delete.length > 0){
-          res.status(409).send();
+          res.status(200).send();
         }else{
-          let deleted =  await psgl.delMemberByIDName(req.body.memberid, req.body.name)
+          let deleted = await psgl.delMemberByIDName(req.body.memberid, req.body.name)
           if(deleted > 0 && deleted != null){
             res.status(200).send('Success');
           }else{
             res.status(406).send();
           }
         }
-
       }else{
         console.error("Ajax Receiver： Nothing Happend");
         res.status(503).send('エラーが発生しました');
