@@ -1,7 +1,11 @@
 <!doctype html>
 <html>
 <head>
-  <%- include ("../../partials/head.ejs") %>
+  <% if (SubTitle != undefined) { %>
+    <%- include ("../partials/head.ejs", SubTitle) %>
+  <% } else { %}
+  <%- include ("../partials/head.ejs") %>
+  <% } %>
 </head>
 <!--  新規登録ボタン見え消し、　全員表示ボタン、　編集ボタン-->
 <body class="member page">
