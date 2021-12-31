@@ -299,7 +299,7 @@ exports.updateTomorrowReservedReminderStatusByLineID = async function (lineid, s
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
-    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' , "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0) WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved' ;`
     console.log(sql)
     res.push(await psgl.sqlToPostgre(sql))
   }
@@ -311,7 +311,7 @@ exports.updateTodayReservedReminderStatusByLineID = async function (lineid, stat
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const r of result) {
-    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}' WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
+    let sql = `UPDATE public."Reservation" SET "Reminder"= '${status}', "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0)  WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
     res.push(await psgl.sqlToPostgre(sql))
   }
   return res
@@ -562,7 +562,7 @@ exports.getReservedMemberIDOnTheDay = async function (date){
 
 exports.updateStatusNurseryConfirmationByReservationID = async function (rsvid, status, nurseryid){
   let sql = `BEGIN;
-  UPDATE public."Reservation" SET "Confirmation"= 'true', "ReservationStatus" = '${status}', "NurseryID" = '${nurseryid}'  WHERE "ID"= '${rsvid}';
+  UPDATE public."Reservation" SET "Confirmation"= 'true', "ReservationStatus" = '${status}', "NurseryID" = '${nurseryid}', "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0)   WHERE "ID"= '${rsvid}';
   UPDATE public."ReservationDetails" SET "firstNursery"= '${nurseryid}' WHERE "ID"= '${rsvid}';
 COMMIT;`
   let res = await psgl.sqlToPostgre(sql)
