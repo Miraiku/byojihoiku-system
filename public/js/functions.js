@@ -575,5 +575,17 @@ $(function() {
       return true
     }
   }
+
+  /* menu is-active change */
+  $('nav ul li').each(function() {
+    $(this).removeClass( "is-active" )
+    let ahref = $(this).find('a').attr('href')
+    let path = window.location.pathname
+    if(path.includes(ahref)){
+      $(this).addClass( "is-active" )
+    }
+  })
+
+
   
 });//end of jquery
