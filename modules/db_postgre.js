@@ -111,7 +111,7 @@ exports.getMemberedIDFromNameAndBirthDay = async function (lineid, name, birthda
 }
 
 exports.updateMemberInfo = async function (info){
-  //function,sqlだとresult2つ返ってきて返り値とれないので分割する
+  //function,sqlだとresult2つ返ってきて返り値とれないので1つずつ実行する
   let sql = `CREATE OR REPLACE FUNCTION updateMember(miraikuid integer, birthday integer, name text, allergy boolean, id integer) RETURNS integer AS $$
   DECLARE
     rows_affected integer;
@@ -125,6 +125,7 @@ exports.updateMemberInfo = async function (info){
   sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
   let res1 = await psgl.sqlToPostgre(sql)
   console.log(res1.updatemember)
+  console.log(res1)
   //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
   
   return null//await psgl.sqlToPostgre(sql)
