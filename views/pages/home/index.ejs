@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <% const sub = SubTitle %>
+  <%  const sub = SubTitle || null  %>
   <% if (sub != null ) { %>
     <%- include ("../../partials/head.ejs", SubTitle) %>
   <% } else { %>
