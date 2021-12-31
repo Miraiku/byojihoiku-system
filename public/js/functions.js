@@ -10,6 +10,7 @@ $(function() {
   //update from /home
   $(".btn_status_update").on('click', function(e) {
     let btn_value = $(this).val()
+    let btn_text = $(this).text()
     let status = btn_value.substr(0, btn_value.indexOf('_'))
     let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
@@ -18,7 +19,7 @@ $(function() {
     console.log(rsvid)
     console.log(nurseryid)
     e.preventDefault();            
-    $.confirmModal('「'+btn_value+'」でよろしいですか？', function(el) {
+    $.confirmModal('「'+btn_text+'」でよろしいですか？', function(el) {
       $.ajax({
         url: '/updater',
         type: 'POST',

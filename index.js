@@ -57,7 +57,10 @@ cron.schedule('*/20 * * * *', async () =>  {
 //キャンセル待ちユーザーに回答を問い合わせ
 //cron.schedule('0 0 7 * * *', async () => {
   try {
-    //今日のキャパ空いてる且つ
+    //園ごとに設定する
+    //今日のキャパ空いてる且つWaitingがいる
+    //予約時刻が早い順番にIDとりだす
+    //Lineid 
   } catch (error) {
     console.log('')
   }
