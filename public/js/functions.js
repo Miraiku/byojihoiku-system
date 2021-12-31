@@ -18,7 +18,7 @@ $(function() {
     console.log(status)
     console.log(rsvid)
     console.log(nurseryid)
-    //e.preventDefault();            
+    e.preventDefault();            
     $.confirmModal('「'+btn_text+'」でよろしいですか？', function(el) {
       $.ajax({
         url: '/updater',
@@ -71,6 +71,7 @@ $(function() {
       }).always(function( jqXHR, textStatus) {
       });//end of ajax
     })//end of confirm
+    $.confirmModal();
   });
 
   //update from /reservation
