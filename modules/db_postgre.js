@@ -338,7 +338,8 @@ exports.delMemberByIDName = async function (id, name){
     DECLARE
       rows_affected integer;
     BEGIN 
-      DELETE FROM public."Member" WHERE "ID" = id and "Name" = name;
+    UPDATE public."Member"
+    	SET "Disabled"=true WHERE "ID" = id and "Name" = name;
       GET DIAGNOSTICS rows_affected = ROW_COUNT;
       RETURN rows_affected;
     END;
