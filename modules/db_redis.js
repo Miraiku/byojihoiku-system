@@ -88,7 +88,7 @@ exports.flushALLNoUpdate20mins = async function(){
       result = reply
     });
     Object.entries(result).forEach(async ([k, v]) => { 
-      if(k == 'waitinglist'){ //waitingリストは手動で削除する
+      if(k.includes('waiting_')){ //waitingリストは手動で削除する
         return
       }
       let now = Date.now()
