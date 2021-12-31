@@ -9,10 +9,10 @@ $(function() {
 
   //update from /home
   $(".btn_status_update").on('click', function(e) {
-    const btn_value = $(this).val()
-    const status = btn_value.substr(0, btn_value.indexOf('_'))
-    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
-    const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
+    let btn_value = $(this).val()
+    let status = btn_value.substr(0, btn_value.indexOf('_'))
+    let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
+    let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
     e.preventDefault();            
     $.confirmModal('「'+$(this).text()+'」でよろしいですか？', function(el) {
       $.ajax({
@@ -70,9 +70,9 @@ $(function() {
 
   //update from /reservation
   $(".btn_disable_member").on('click', function(e) {
-    const del_memberid_name = $(this).val()
-    const memberid = del_memberid_name.substr(0, del_memberid_name.indexOf('_'))
-    const name = del_memberid_name.substr(del_memberid_name.indexOf('_') + 1)
+    let del_memberid_name = $(this).val()
+    let memberid = del_memberid_name.substr(0, del_memberid_name.indexOf('_'))
+    let name = del_memberid_name.substr(del_memberid_name.indexOf('_') + 1)
     e.preventDefault();            
     $.confirmModal(`${name}さんの情報を削除しますか？`, function(el) {
       $.ajax({
@@ -127,10 +127,10 @@ $(function() {
 
   //delete from member/entry
   $(".btn_status_update_rsv").on('click', function(e) {
-    const btn_value = $(this).val()
-    const status = btn_value.substr(0, btn_value.indexOf('_'))
-    const rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
-    const nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
+    let btn_value = $(this).val()
+    let status = btn_value.substr(0, btn_value.indexOf('_'))
+    let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
+    let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
     e.preventDefault();            
     $.confirmModal('「'+$(this).text()+'」でよろしいですか？', function(el) {
       $.ajax({
@@ -227,7 +227,7 @@ $(function() {
     };
 
     $(function(){
-      const memberInfo = $('#memberInfo')
+      let memberInfo = $('#memberInfo')
       memberInfo.validate({
         rules: rules,
         messages: messages,
@@ -243,14 +243,14 @@ $(function() {
       //update from /member/entry
       $(".btn_update_member").on('click', function(e) {
         if (memberInfo.validate().form()) {
-          const miraikuid = $('input[name="miraikuid"]').val()
-          const name = $('input[name="name"]').val()
-          const year = $('input[name="year"]').val()
-          const month = $('[name="month"] option:selected').val()
-          const day = $('[name="day"] option:selected').val()
-          const allergy = $('input[name="allergy"]:checked').val()       
-          const memberid = $('input[name="id"]').val()      
-          const birthday = year+month+day 
+          let miraikuid = $('input[name="miraikuid"]').val()
+          let name = $('input[name="name"]').val()
+          let year = $('input[name="year"]').val()
+          let month = $('[name="month"] option:selected').val()
+          let day = $('[name="day"] option:selected').val()
+          let allergy = $('input[name="allergy"]:checked').val()       
+          let memberid = $('input[name="id"]').val()      
+          let birthday = year+month+day 
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
             $.ajax({
@@ -327,7 +327,7 @@ $(function() {
     };
 
     $(function(){
-      const rsvInfo = $('#rsvInfo')
+      let rsvInfo = $('#rsvInfo')
       rsvInfo.validate({
         rules: rules,
         errorPlacement: function(error, element){
@@ -342,20 +342,20 @@ $(function() {
       //update from /reservation/entry
       $(".btn_update_reservation").on('click', function(e) {
         if (rsvInfo.validate().form()) {
-          const status = $('[name="status"] option:selected').val()
-          const disease = $('[name="disease"] option:selected').val()
-          const intime_hour = $('[name="intime_hour"] option:selected').val()
-          const intime_mins = $('[name="intime_mins"] option:selected').val()
-          const outtime_hour = $('[name="outtime_hour"] option:selected').val()
-          const outtime_mins = $('[name="outtime_mins"] option:selected').val()
-          const nursery = $('[name="nursery"] option:selected').val()
-          const parent_name = $('input[name="parent_name"]').val()
-          const parent_tel = $('input[name="parent_tel"]').val()
-          const meal = $('[name="meal"] option:selected').val()
+          let status = $('[name="status"] option:selected').val()
+          let disease = $('[name="disease"] option:selected').val()
+          let intime_hour = $('[name="intime_hour"] option:selected').val()
+          let intime_mins = $('[name="intime_mins"] option:selected').val()
+          let outtime_hour = $('[name="outtime_hour"] option:selected').val()
+          let outtime_mins = $('[name="outtime_mins"] option:selected').val()
+          let nursery = $('[name="nursery"] option:selected').val()
+          let parent_name = $('input[name="parent_name"]').val()
+          let parent_tel = $('input[name="parent_tel"]').val()
+          let meal = $('[name="meal"] option:selected').val()
           let meal_details = $('input[name="meal_details"]').val()
           let cramps = $('input[name="cramps"]').val()
           let allergy_details = $('input[name="allergy_details"]').val()
-          const rsvid = $('input[name="rsvid"]').val() 
+          let rsvid = $('input[name="rsvid"]').val() 
           if(meal_details == '無し'){
             meal_details = false
           }
@@ -447,7 +447,7 @@ $(function() {
     };
 
     $(function(){
-      const loginForm = $('#loginForm')
+      let loginForm = $('#loginForm')
       loginForm.validate({
         rules: rules,
         errorPlacement: function(error, element){
@@ -461,8 +461,8 @@ $(function() {
       });
       $(".btn_login_check").on('click', function(e) {
         if (loginForm.validate().form()) {
-          const name = $('input[name="name"]').val()
-          const password = $('input[name="password"]').val()
+          let name = $('input[name="name"]').val()
+          let password = $('input[name="password"]').val()
           $.ajax({
             url: '/',
             type: 'POST',
@@ -518,7 +518,7 @@ $(function() {
     };
 
     $(function(){
-      const registerForm = $('#registerForm')
+      let registerForm = $('#registerForm')
       registerForm.validate({
         rules: rules,
         errorPlacement: function(error, element){
@@ -532,8 +532,8 @@ $(function() {
       });
       $(".btn_login_register").on('click', function(e) {
         if (registerForm.validate().form()) {
-          const name = $('input[name="name"]').val()
-          const password = $('input[name="password"]').val()
+          let name = $('input[name="name"]').val()
+          let password = $('input[name="password"]').val()
           $.ajax({
             url: '/secret/regsiter',
             type: 'POST',
