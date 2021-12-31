@@ -124,10 +124,10 @@ exports.updateMemberInfo = async function (info){
   await psgl.sqlToPostgre(sql)
   sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
   let res1 = await psgl.sqlToPostgre(sql)
-  console.log(res1.updatemember)
-  console.log(res1)
-  //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
-  
+  console.log(res1[0].updatemember)
+  sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
+  res1 = await psgl.sqlToPostgre(sql)
+  console.log(res1[0].updatemember)
   return null//await psgl.sqlToPostgre(sql)
 }
 
