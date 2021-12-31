@@ -330,7 +330,7 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
-                if(isValidRegisterdDay(text, user)){
+                if(isValidRegisterdDay(text, userId)){
                   if(!isBeforeToday8AM(text)){
                     replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
                     await redis.resetAllStatus(userId)
@@ -1144,7 +1144,7 @@ function isValidRegisterdDay(s, lineid){
     let milltime_of_reservationday = reservationday_formatted.getTime()
     let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
     //TODO テスト用なのでLINEID消す
-    if(lineid != 'Ucd4cd000eb62d24fe5ff3b355f94d45b' && (holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6)){
+    if((lineid != 'Ucd4cd000eb62d24fe5ff3b355f94d45b' || lineid != 'U8e7088dec021bf6cd421a68176e43f53') && (holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6)){
       return false
     }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){
       return false
