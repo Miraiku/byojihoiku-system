@@ -425,6 +425,7 @@ exports.updateReservationInfo = async function (info, intime, outime){
     SELECT updateReservation('${info.status}',${info.disease},${info.nursery},'${info.parent_name}','${info.parent_tel}','${info.meal_details}','${info.cramps}','${info.allergy_details}',${info.rsvid},${info.meal},'${intime}','${outime}');
     COMMIT;`
     let res1 = await psgl.sqlToPostgre(sql)
+    console.log(res1)
     console.log(res1[0])
     return res1[0].updatereservation
   } catch (error) {
