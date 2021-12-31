@@ -996,7 +996,7 @@ function isValidNum(s){
 function getTimeStampDayFrom8Number(s){
   //20221122 -> 2022-11-22
   if(isValidDate(s)){
-    return Number(s.substr( 0, 4 ))+'-'+Number(s.substr( 4, 2 ))+'-'+Number(s.substr( 6, 2 ))
+    return Number(s.substr( 0, 4 ))+'-'+('00' + Number(s.substr( 4, 2 ))).slice(-2)+'-'+('00' + Number(s.substr( 6, 2 ))).slice(-2)
   }else{
     return s
   } 
@@ -1005,7 +1005,7 @@ function getTimeStampDayFrom8Number(s){
 function getTimeStampWithTimeDayFrom8Number(s){
   //20221122 -> 2022-11-22 0:00
   if(isValidDate(s)){
-    return Number(s.substr( 0, 4 ))+'-'+Number(s.substr( 4, 2 ))+'-'+Number(s.substr( 6, 2 ))+' 0:00'
+    return Number(s.substr( 0, 4 ))+'-'+('00' + Number(s.substr( 4, 2 ))).slice(-2)+'-'+('00' + Number(s.substr( 6, 2 ))).slice(-2)+' 0:00'
   }else{
     return s
   } 
@@ -1015,20 +1015,20 @@ function getTimeStampWithTimeDayFrom8Number(s){
 function getTimeStampFromDayDataObj(dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19 11:41:53
   let date = new Date(dataobj);
-  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2)
+  return date.getFullYear() + '-' + ('00' + (date.getMonth() + 1)).slice(-2) + '-' +('00' + date.getDate()).slice(-2) + ' ' +  ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2)
 }
 
 
 function getTimeJPFormattedFromDayDataObj(dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 11:41
   let date = new Date(dataobj);
-  return ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
+  return ('0' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2)
 }
 
 function getTimeStampFromDay8NumberAndTime4Number(day, time){
   //20221122,1500 -> 2022-11-22 15:00
   if(isValidDate(day) && isValidTime(time)){
-    return Number(day.substr( 0, 4 ))+'-'+Number(day.substr( 4, 2 ))+'-'+Number(day.substr( 6, 2 ))+' '+Number(time.substr( 0, 2 ))+':'+Number(time.substr( 2, 4 ))
+    return Number(day.substr( 0, 4 ))+'-'+('00' + Number(day.substr( 4, 2 ))).slice(-2)+'-'+('00' + Number(day.substr( 6, 2 ))).slice(-2)+' '+Number(time.substr( 0, 2 ))+':'+Number(time.substr( 2, 4 ))
   }else{
     return day
   } 
