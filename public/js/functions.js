@@ -101,10 +101,14 @@ $(function() {
           animation: 'slide'
         });
       }).fail(function( jqXHR, textStatus, errorThrown) {
+        let errmsg = '削除できませんでした'
+        if(errorThrown == 'Conflict'){
+          errmsg = '3日以内にご予約が入っているため削除できません'
+        }
         notif({
           type: "error",
           position: "center",
-          msg: '削除できませんでした',
+          msg: errmsg,
           opacity: 0.8,
           multiline: 0,
           fade: 0,
