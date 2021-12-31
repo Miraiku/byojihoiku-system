@@ -117,7 +117,7 @@ exports.updateMemberInfo = async function (info){
     DECLARE
       rows_affected integer;
     BEGIN 
-    UPDATE public."Member" SET "MiraikuID"=miraikuid, "BirthDay"=birthday, "Name"=name, "Allergy"='false' WHERE "ID" = id;
+    UPDATE public."Member" SET "MiraikuID"=miraikuid, "BirthDay"=birthday, "Name"=name, "Allergy"='false', "UpdatedAt" = to_timestamp(${Date.now()} / 1000.0) WHERE "ID" = id;
       GET DIAGNOSTICS rows_affected = ROW_COUNT;
       RETURN rows_affected;
     END;
