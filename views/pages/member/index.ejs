@@ -11,7 +11,7 @@
     <section class="l-container">
       <h2>
         会員管理
-        <button class="btn-s">新規登録</button>
+        <!--button class="btn-s">新規登録</button-->
       </h2>
     </section>
     <section>
@@ -65,10 +65,10 @@
                     </tr>
                     <% for (var i = 0; i < Members.length; i++) { %>
                       <tr data-href="<%= `/member/entry/${Members[i].memberid}` %>">
-                        <td>
+                        <!--td>
                           <input type="checkbox" id="check1" name="<%=`${Members[i].memberid}`%>">
                           <label for="check1" class="checkbox"></label>
-                        </td>
+                        </td-->
                         <td><%=Members[i].miraikuid%></td>
                         <td><%=Members[i].name%></td>
                         <td><%=Members[i].birthday%></td>
