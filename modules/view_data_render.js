@@ -34,7 +34,7 @@ exports.getLoginPage = async function (req, res){
     if (isLogined) {
       res.redirect('/home')
     }else{
-      res.render("pages/index",{SubTitle:''})
+      res.render('/logout')
     }
   } catch (error) {
     console.log("ERR @getLoginPage: "+ error)
@@ -52,7 +52,7 @@ exports.getRegisterPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }else{
       res.render("pages/function/register",{SubTitle:'会員登録　｜　'})
     }
@@ -87,7 +87,7 @@ exports.getNurseryStatus3Days = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
     /*　未処理の予約 */
@@ -223,7 +223,7 @@ exports.getMembersPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
 
@@ -265,7 +265,7 @@ exports.getEntryPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
     let memberid = req.params.memberid
@@ -404,7 +404,7 @@ exports.getReservationPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
     
@@ -557,7 +557,7 @@ exports.getReservationConfirmPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
     
@@ -653,7 +653,7 @@ exports.getReservationEntryPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.redirect('/')
+      res.render('/logout')
     }
     /* ログイン確認終了 */
     prev = req.query.nursery
