@@ -1051,7 +1051,7 @@ function DayToJPFromDateObj(dt){
 
 function DayToJP(s){
   if(isValidDate(s)){
-    return Number(s.substr( 0, 4 ))+'年'+Number(s.substr( 4, 2 ))+'月'+Number(s.substr( 6, 2 ))+'日'
+    return Number(s.substr( 0, 4 ))+'年'+('00' + Number(s.substr( 4, 2 ))).slice(-2)+'月'+('00' + Number(s.substr( 6, 2 ))).slice(-2)+'日'
   }else{
     return s
   }
