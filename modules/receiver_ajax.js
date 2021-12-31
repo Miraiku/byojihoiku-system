@@ -51,6 +51,13 @@ router
         }else{
           res.status(406).send();
         }
+      }else if(action == 'update_member_from_reservation_entry'){
+        let updated = await psgl.updateMemberInfo(req.body)
+        if(updated > 0 && updated != null){
+          res.status(200).send('Success');
+        }else{
+          res.status(406).send();
+        }
       }else{
         console.error("Ajax Receiver： Nothing Happend");
         res.status(503).send('エラーが発生しました');

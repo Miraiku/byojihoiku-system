@@ -319,7 +319,7 @@ $(function() {
               url: '/updater',
               type: 'POST',
               data: {
-                'action': 'update_member_from_member_entry',
+                'action': 'update_member_from_reservation_entry',
                 'miraikuid':miraikuid,
                 'name':name,
                 'year':year,
