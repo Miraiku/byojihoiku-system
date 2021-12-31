@@ -123,7 +123,7 @@ exports.updateMemberInfo = async function (info){
   $$ LANGUAGE plpgsql;`
   let res1 = await psgl.sqlToPostgre(sql)
   console.log(res1)
-  sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},15);`
+  sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
   //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
   try {
     const psgl_client = await pool.connect(); 
