@@ -119,9 +119,10 @@ exports.updateMemberInfo = async function (info){
     GET DIAGNOSTICS rows_affected = ROW_COUNT;
     RETURN rows_affected;
   END;
-  $$ LANGUAGE plpgsql;
-  
-  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},15);`
+  $$ LANGUAGE plpgsql;`
+  let res1 = await psgl.sqlToPostgre(sql)
+  console.log(res1)
+  let sql = `SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},15);`
   //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
   console.log(sql)
   try {
@@ -130,8 +131,8 @@ exports.updateMemberInfo = async function (info){
     console.log(`Postgles sql: `+ sql)
     psgl_client.release();
     console.log(results)
-    console.log(results[1].rows)
-    console.log(results[1].rowCount)//function はresult2つくる
+    console.log(results.rows)
+    console.log(results.rowCount)//function はresult2つくる
     return results.rows
     //{k: index, v:{sql result}}
   }
