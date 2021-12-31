@@ -71,7 +71,6 @@ $(function() {
   //update from /reservation
   $(".btn_disable_member").on('click', function(e) {
     const del_memberid_name = $(this).val()
-    const del_memberid_name = $(this).val()
     const memberid = btn_value.substr(0, del_memberid_name.indexOf('_'))
     const name = btn_value.substr(del_memberid_name.indexOf('_') + 1)
     e.preventDefault();            
