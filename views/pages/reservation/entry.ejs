@@ -40,7 +40,7 @@
             <dd>
               <select class="is-md" name="disease">
                 <% for (var i = 0; i < Info[0].disease_list.length; i++) { %>
-                  <option value="<%=Info[0].disease_list[i].id%>" <% if (Info[0].disease==Info[0].disease_list[i].name) { %>selected<% } %>><%=Info[0].disease_list[i].name%></option>
+                  <option value="<%=Info[0].disease_list[i].uniqueid%>" <% if (Info[0].disease==Info[0].disease_list[i].name) { %>selected<% } %>><%=Info[0].disease_list[i].name%></option>
                 <% } %>
               </select><br>
               <!--select class="is-md" name="">
@@ -113,17 +113,13 @@
           </dl>
           <dl>
             <dt>兄妹利用の有無</dt>
-            <dd>
-              <input type="radio" id="family1" name="family"<% if (Info[0].brothers == '有り') { %> checked<% } %>>
-              <label for="family1" class="radio">有り</label>
-              <input type="radio" id="family2" name="family"<% if (Info[0].brothers == '無し') { %> checked<% } %>>
-              <label for="family2" class="radio">無し</label>
+            <dd><%=Info[0].brothers%>
             </dd>
           </dl>
           <dl>
             <dt>食事の種類</dt>
             <dd>
-              <select class="is-sm" name="">
+              <select class="is-sm" name="meal">
                 <% for (var i = 0; i < Info[0].meal_list.length; i++) { %>
                   <option value="<%=Info[0].meal_list[i].id%>" <% if (Info[0].meal==Info[0].meal_list[i].name) { %>selected<% } %>><%=Info[0].meal_list[i].name%></option>
                 <% } %>
@@ -145,13 +141,8 @@
           </dl>
           <dl>
             <dt>アレルギー</dt>
-            <dd>
-              <input type="radio" id="allergy1" name="allergy" value="true" <% if (Info[0].allergy_bool == true) { %> checked<% } %> required>
-              <label for="allergy1" class="radio">有り</label>
-              <input type="radio" id="allergy2" name="allergy" value="false" <% if (Info[0].allergy_bool == false) { %> checked<% } %>>
-              <label for="allergy2" class="radio">無し</label>
-            <input type="text" value="<%=Info[0].allergy%>" name="allergy_details" required/>
-            </dd>
+            <dd><% if (Info[0].allergy_bool == true) { %> 有り<% } %><% if (Info[0].allergy_bool == false) { %> 無し<% } %></dd>
+            <dd><input type="text" value="<%=Info[0].allergy%>" name="allergy_details" required/></dd>
           </dl>
         </div>
         <div class="btns">

@@ -164,10 +164,10 @@ exports.isValidDiseaseInDiseaseTable = async function (id){
 
 exports.getDiseaseList = async function (date){
   let results = []
-  let sql = `SELECT "DiseaseID", "DiseaseName" FROM public."Disease";`
+  let sql = `SELECT * FROM public."Disease";`
   let r = await psgl.sqlToPostgre(sql)
   for await (const v of r) {
-    results.push({id:v['DiseaseID'], name:v['DiseaseName']})
+    results.push({id:v['DiseaseID'], name:v['DiseaseName'], uniqueid:v['ID']})
   }
   return results
 }
@@ -406,6 +406,29 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
   let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
+}
+
+exports.updateReservationInfo = async function (info, intime, outime){
+  try {
+    let sql = `CREATE OR REPLACE FUNCTION updateReservation(status text, disease integer, nursery integer, parent_name text, parent_tel text, meal_details text, cramps text, allergy_details text, rsvid integer, meal integer) RETURNS integer AS $$
+    DECLARE
+      rows_affected integer;
+    BEGIN 
+      UPDATE public."Reservation" SET "NurseryID"=nursery, "ReservationStatus"='status', "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0), "Confirmation"='true' WHERE "ID"=rsvid;
+      UPDATE public."ReservationDetails" SET "DiseaseID"=disease,  "firstNursery"=nursery, "ParentName"='parent_name', "MealType"=meal, "MealDetails"='meal_details', "Allergy"='allergy_details', "ParentTel"='parent_tel', "Cramps"='cramps', "InTime"='intime', "OutTime"='outtime' WHERE "ID"=rsvid;
+      GET DIAGNOSTICS rows_affected = ROW_COUNT;
+      RETURN rows_affected;
+    END;
+    $$ LANGUAGE plpgsql;`
+    await psgl.sqlToPostgre(sql)
+    sql = `BEGIN;
+    SELECT updateMember(${info.status},${info.disease},'${info.nursery}',${info.parent_name},${info.parent_tel},${info.meal_details},${info.cramps},${info.allergy_details},${info.rsvid},${info.meal});
+    COMMIT;`
+    let res1 = await psgl.sqlToPostgre(sql)
+    return res1[0].updatemember
+  } catch (error) {
+    return null
+  }
 }
 
 exports.WaitingInfoTodayByNursery = async function (id){

@@ -294,38 +294,32 @@ $(function() {
           const nursery = $('[name="nursery"] option:selected').val()
           const parent_name = $('input[name="parent_name"]').val()
           const parent_tel = $('input[name="parent_tel"]').val()
+          const meal = $('input[name="meal"]').val()
           const meal_details = $('input[name="meal_details"]').val()
           const cramps = $('input[name="cramps"]').val()
           const allergy_details = $('input[name="allergy_details"]').val()
-          const allergy = $('input[name="allergy"]:checked').val()
-          const rsvid = $('input[name="rsvid"]').val()
-          console.log(status)
-          console.log(disease)
-          console.log(intime_hour)
-          console.log(intime_mins)
-          console.log(outtime_hour)
-          console.log(outtime_mins)   
-          console.log(nursery)
-          console.log(parent_name)
-          console.log(parent_tel)
-          console.log(meal_details)
-          console.log(cramps)
-          console.log(allergy_details)      
-          console.log(allergy)          
-          console.log(rsvid)    
+          const rsvid = $('input[name="rsvid"]').val() 
           e.preventDefault(); 
           $.confirmModal('内容を変更しますか？', function(el) {
-            /*$.ajax({
+            $.ajax({
               url: '/updater',
               type: 'POST',
               data: {
                 'action': 'update_member_from_reservation_entry',
-                'miraikuid':miraikuid,
-                'name':name,
-                'year':year,
-                'month':month,
-                'day':day,
-                'allergy':allergy
+                'status': status,
+                'disease': disease,
+                'intime_hour': intime_hour,
+                'intime_mins': intime_mins,
+                'outtime_hour': outtime_hour,
+                'outtime_mins': outtime_mins ,
+                'nursery': nursery,
+                'parent_name': parent_name,
+                'parent_tel': parent_tel,
+                'meal': meal,
+                'meal_details': meal_details,
+                'cramps': cramps,
+                'allergy_details': allergy_details,
+                'rsvid': rsvid
               },
               dataType: 'text'
             }).done(function( data, textStatus, jqXHR ) {
@@ -347,9 +341,9 @@ $(function() {
             }).fail(function( jqXHR, textStatus, errorThrown) {
               let errmsg = ''
               if(errorThrown == 'Service Unavailable'){
-                errmsg = '申し訳ありません、変更できませんでした'
+                errmsg = '変更できませんでした'
               }else if(errorThrown == 'Not Acceptable'){
-                errmsg = '変更先が満員のため変更できませんでした'
+                errmsg = '変更できませんでした'
               }
               notif({
                 type: "error",
@@ -367,7 +361,7 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
-            });//end of ajax*/
+            });//end of ajax
           })//end of confirm
         } else {
             return false

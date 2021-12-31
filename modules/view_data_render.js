@@ -645,9 +645,6 @@ exports.getReservationEntryPage = async function (req, res){
       res.redirect('/')
     }
     /* ログイン確認終了 */
-    console.log('req.baseUrl'+req.baseUrl)
-    console.log('req.baseUrl'+req.path)
-    console.log(req.baseUrl, req.url);
     prev = req.query.nursery
     const reservationid = req.params.reservationid
     if(!view.isValidNum(reservationid)){
@@ -835,4 +832,10 @@ exports.getPsglTimeStampFromDayDataObj = function (dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19 11:41:53
   let date = new Date(dataobj);
   return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2) + ' ' +  ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2)
+}
+
+exports.getPsglTimeStampYMDFromDayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19
+  let date = new Date(dataobj);
+  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2)
 }
