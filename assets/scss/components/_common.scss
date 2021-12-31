@@ -179,6 +179,9 @@ footer {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  a {
+    color: #fff;
+  }
   button {
     margin-top: 10px;
   }
