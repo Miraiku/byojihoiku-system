@@ -14,10 +14,6 @@ $(function() {
     let status = btn_value.substr(0, btn_value.indexOf('_'))
     let rsvid = btn_value.substr(btn_value.indexOf('_') + 1)
     let nurseryid = $(`[name=row_nursery_${rsvid}]`).val()
-    console.log(btn_value)
-    console.log(status)
-    console.log(rsvid)
-    console.log(nurseryid)
     e.preventDefault();            
     $.confirmModal('「'+btn_text+'」でよろしいですか？', function(el) {
       $.ajax({
@@ -69,9 +65,9 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
+        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
-    $.confirmModal();
   });
 
   //update from /reservation
@@ -127,6 +123,7 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
+        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
@@ -188,6 +185,7 @@ $(function() {
         });
         console.log("失敗"+errorThrown)
       }).always(function( jqXHR, textStatus) {
+        $currentModalTarget = {}; //reset confirmModal
       });//end of ajax
     })//end of confirm
   });
@@ -310,6 +308,7 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
+              $currentModalTarget = {}; //reset confirmModal
             });//end of ajax
           })//end of confirm
         } else {
@@ -433,6 +432,7 @@ $(function() {
               });
               console.log("失敗"+errorThrown)
             }).always(function( jqXHR, textStatus) {
+              $currentModalTarget = {}; //reset confirmModal
             });//end of ajax
           })//end of confirm
         } else {
@@ -505,6 +505,7 @@ $(function() {
             });
             console.log("失敗"+errorThrown)
           }).always(function( jqXHR, textStatus) {
+            $currentModalTarget = {}; //reset confirmModal
           });//end of ajax
         } else {
             return false
@@ -591,6 +592,7 @@ $(function() {
             });
             console.log("失敗"+errorThrown)
           }).always(function( jqXHR, textStatus) {
+            $currentModalTarget = {}; //reset confirmModal
           });//end of ajax
         } else {
             return false
