@@ -383,6 +383,12 @@ exports.getReservationDateByID = async function (id){
   return result//[{}]
 }
 
+exports.getReservationStatusByID = async function (id){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "ID" = '${id}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{}]
+}
+
 exports.ReservationStatusTodayByNursery = async function (id){
   let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today';`
   let result = await psgl.sqlToPostgre(sql)
@@ -424,7 +430,7 @@ exports.updateReservationInfo = async function (info, intime, outime){
 }
 
 exports.WaitingInfoTodayByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
@@ -435,7 +441,7 @@ exports.WaitingInfoTodayByNursery = async function (id){
 }
 
 exports.WaitingInfoTomorrowByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
@@ -446,7 +452,7 @@ exports.WaitingInfoTomorrowByNursery = async function (id){
 }
 
 exports.WaitingInfoDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Waiting';`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {

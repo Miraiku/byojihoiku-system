@@ -457,6 +457,8 @@ exports.getReservationPage = async function (req, res){
     }
     if(day1_waitinglist.length > 0){
       for (const member of day1_waitinglist) {
+        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        status = status[0].ReservationStatus
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
@@ -465,7 +467,7 @@ exports.getReservationPage = async function (req, res){
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
         
-        day1_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
+        day1_waiting.push({status:status, rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
       }
     }
 
@@ -488,6 +490,8 @@ exports.getReservationPage = async function (req, res){
     }
     if(day2_waitinglist.length > 0){
       for (const member of day2_waitinglist) {
+        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        status = status[0].ReservationStatus
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
@@ -496,7 +500,7 @@ exports.getReservationPage = async function (req, res){
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
         
-        day2_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
+        day2_waiting.push({status:status,rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
       }
     }
 
@@ -519,6 +523,8 @@ exports.getReservationPage = async function (req, res){
     }
     if(day3_waitinglist.length > 0){
       for (const member of day3_waitinglist) {
+        let status = await psgl.getReservationStatusByID(member[0].MemberID)
+        status = status[0].ReservationStatus
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
@@ -527,7 +533,7 @@ exports.getReservationPage = async function (req, res){
         const first = await psgl.getNurseryNameByID(member[0].firstNursery)
         let rsvdate = view.getDateformatFromPsglTimeStamp(member[0].ReservationDate)
         
-        day3_waiting.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
+        day3_waiting.push({status:status, rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
       }
     }
     const sub_title = nursery_name[0].NurseryName +'園　予約情報　｜　'
