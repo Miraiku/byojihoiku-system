@@ -121,8 +121,23 @@ exports.updateMemberInfo = async function (info){
   END;
   $$ LANGUAGE plpgsql;
   
-  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
+  SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},0);`
+  //SELECT updateMember(${info.miraikuid},${info.birthday},'${info.name}',${info.allergy},${info.memberid});`
   console.log(sql)
+  try {
+    const psgl_client = await pool.connect(); 
+    const results = await psgl_client.query(sql);
+    console.log(`Postgles sql: `+ sql)
+    psgl_client.release();
+    console.log(results)
+    return results.rows
+    //{k: index, v:{sql result}}
+  }
+  catch (err) {
+    console.log(`Postgles sql: `+ sql)
+    console.log(`PSGL ERR: ${err}`)
+    return null
+  }
   return await psgl.sqlToPostgre(sql)
 }
 
