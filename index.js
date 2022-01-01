@@ -96,7 +96,7 @@ cron.schedule('*/1  * * * *', async () =>  {
       await redis.hDel(table, lineid)
     };
 
-    const delLineIdFromWaitingRedisList = async function(){
+    const delAllWaitingRegisRecords = async function(){
       console.log("end waiting list job...")
       await redis.resetAllStatus(waiting_redisid_fromlineid_table)
       await redis.resetAllStatus(waiting_nuseryid_table)
