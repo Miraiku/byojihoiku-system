@@ -75,7 +75,6 @@ cron.schedule('*/2  * * * *', async () =>  {
           if(error){
             console.log('error@sendWaitingUser' + error)
           }
-          console.log(response.statusCode)
           if(response.statusCode == 200){
             is_send = true
           }else{
@@ -114,13 +113,8 @@ cron.schedule('*/2  * * * *', async () =>  {
               if(redisid != null){
                 console.log('hello')
                 let promise = new Promise(async (resolve, reject) => {
-                  let is_send = sendWaitingUser(user_waiting.lineid)
-                  console.log(is_send)
-                  if(is_send){
-                    resolve(user_waiting.lineid)
-                  }{
-                    throw new Error('invalid sending')
-                  }
+                  sendWaitingUser(user_waiting.lineid)
+                  resolve(user_waiting.lineid)
                 })
                 promise.then((lineid) => {
                   return new Promise((resolve, reject) => {
