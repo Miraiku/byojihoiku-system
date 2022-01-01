@@ -12,13 +12,11 @@ const views = require('./modules/view_data_render')
 const session = require('cookie-session');
 const PORT = process.env.PORT || 5555;
 const login = require('./modules/view_login')
-const enforce = require('express-sslify')
  
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .use(express.json())
   .use(express.urlencoded({extended: true}))
-  .use(enforce.HTTPS())
   .use(session({
     name: 'session',
     keys: ['key1', 'key2'],

@@ -19,7 +19,6 @@
     "date-holidays": "^3.12.2",
     "ejs": "^3.1.5",
     "express": "^4.15.2",
-    "express-sslify": "^1.2.0",
     "https": "^1.0.0",
     "ioredis": "^4.28.2",
     "jquery-validation": "^1.19.3",
