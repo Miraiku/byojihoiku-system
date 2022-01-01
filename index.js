@@ -59,7 +59,7 @@ cron.schedule('*/10 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
 
-    const sendWaitingUser = async function(lineid){
+    const sendWaitingUser = function(lineid){
       console.log("sendWaitingUser!!!!!")
       request.post(
         { headers: {'content-type' : 'application/json'},
@@ -85,6 +85,15 @@ cron.schedule('*/10 * * * *', async () =>  {
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
+    const fifteen_interval = setInterval(async () => {
+      console.log('fifteen_intervalstart');
+      const promise = new Promise((resolve) => {
+         setTimeout(sendWaitingUser, 180000);
+         console.log('res'+resolve)
+      });
+      await promise;
+      console.log('fifteen_intervalend');
+    }, 1000);
     for (const user of list) {
       await redis.hsetStatus(waiting_lineid_table,l, user.lineid)
       await redis.hsetStatus(waiting_nuseryid_table,l,user.nurseryid) 
@@ -105,7 +114,7 @@ cron.schedule('*/10 * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
               if(lineid != null){
-                const fifteen_interval = setInterval(async () => sendWaitingUser, 180000, lineid);//900000
+                fifteen_interval
                 await redis.hDel(waiting_lineid_table, user.redisuserid)
               }
             } //end if2
