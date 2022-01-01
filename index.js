@@ -90,9 +90,12 @@ cron.schedule('*/1 * * * *', async () =>  {
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const n of today_capacity) {
       for (let li = 0; li < Number(n.capacity); li++) {
-        let nursery = await redis.hgetStatus(waiting_nurseryid_table,(li+1))
+        let waiting_nursery = await redis.hgetStatus(waiting_nurseryid_table,(li+1+'a'))
         console.log(nursery)
-        console.log(li+1)
+        if(n.id == waiting_nursery){
+          console.log(n.id)
+          console.log(waiting_nursery)
+        }
         console.log(`Number(n.name) ${n.name})`)
         console.log(`Number(n.capacity) ${Number(n.capacity)}`)
         //発火　by lineis where l = nuid
