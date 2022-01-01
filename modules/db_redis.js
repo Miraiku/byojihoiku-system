@@ -82,13 +82,18 @@ exports.flushALL = async function(){
 
 
 exports.hDel = async function(key, field){
-  let res
-  await redis_client.hdel(key, field, (err, reply) => {
-    if (err) throw err;
-    console.log(`REDIS DELETED: ${key} , ${field}` + reply)
-    res = reply
-  })
-  return res
+  try {
+    let res
+    await redis_client.hdel(key, field, (err, reply) => {
+      if (err) throw err;
+      console.log(`REDIS DELETED: ${key} , ${field}` + reply)
+      res = reply
+    })
+    return res
+  } catch (error) {
+    console.log("ERROR @hDel :" + error)
+    return null
+  }
 }
 
 
