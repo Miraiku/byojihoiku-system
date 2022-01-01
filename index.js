@@ -80,7 +80,7 @@ cron.schedule('*/5 * * * *', async () =>  {
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           "line_push_from_cron": "7amwaiting",
-          "id": 'Ucd4cd000eb62d24fe5ff3b355f94d45b'
+          "id": lineid
           })
         },
         function(error, response, body){
@@ -114,7 +114,7 @@ cron.schedule('*/5 * * * *', async () =>  {
           console.log(nursery.id == user.nursereyid)
           console.log(nursery.id, user.nursereyid)
           if(nursery.id == user.nursereyid){
-            //Line発信後のCapacity
+            //Line発信後のCapacity更新があるか確認
             let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
             if(new_capacity !=null && Number(new_capacity) <= 0){
               return
@@ -123,21 +123,20 @@ cron.schedule('*/5 * * * *', async () =>  {
               if(lineid != null){
                 const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
                 fifteen_interval
-                let r = await redis.hDel(waiting_lineid_table, user.redisuserid)
-                //if(r > 0) deleted
-            }
+              }
             } //end if2
           }//end if 
         }// end for of waitinguser_nurseryid
       }//for of capa
     }
     /* Exit Job */
-    /*clearInterval(fifteen_interval);
+    clearInterval(fifteen_interval);
     await redis.resetAllStatus(waiting_lineid_table)
-    await redis_client.hdel('update_time', waiting_lineid_table, (err, reply) => {
-      if (err) throw err;
-      console.log('REDIS DEL: update_time' + k + ' ,' + reply)
-    })*/
+    await redis.resetAllStatus(waiting_nuseryid_table)
+    await redis.resetAllStatus(waiting_current_capacity)
+    await redis.Del(waiting_lineid_table)
+    await redis.Del(waiting_nuseryid_table)
+    await redis.Del(waiting_current_capacity)
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }

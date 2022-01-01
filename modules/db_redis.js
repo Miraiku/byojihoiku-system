@@ -97,6 +97,21 @@ exports.hDel = async function(key, field){
 }
 
 
+exports.Del = async function(key){
+  try {
+    let res
+    await redis_client.del(key, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS DELETED ID: ' + id + ' ,' + reply)
+      res = reply
+    });
+    return res //return deleted row number
+  } catch (error) {
+    console.log("ERROR @Del :" + error)
+    return null
+  }
+}
+
 exports.flushALLNoUpdate20mins = async function(){
   try {
     let result
