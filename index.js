@@ -72,6 +72,23 @@ cron.schedule('*/1 * * * *', async () =>  {
     //waiting_starttime line
     //wairing_endtime line 
 
+    
+    const sendWaitingUser = function(lineid, rsvid){
+      request.post(
+        { headers: {'content-type' : 'application/json'},
+        url: 'https://byojihoiku.chiikihoiku.net/webhook',
+        body: JSON.stringify({
+          "line_push_from_cron": "7amwaiting",
+          "id": lineid,
+          })
+        },
+        function(error, response, body){
+          if(error){
+            console.log('error@sendWaitingUser' + error)
+          }
+        }//capaいっぱいになったら送らない
+      ); 
+    };
 
     const waiting_userid_table = 'waiting_userid_table'
     const waiting_lineid_table = 'waiting_lineid_table'
@@ -93,44 +110,14 @@ cron.schedule('*/1 * * * *', async () =>  {
       console.log(`Number(n.capacity) ${Number(n.capacity)}`)
       for (let li = 0; li < Number(n.capacity); li++) {
         let waiting_user_bynursery = await redis.hgetStatus(waiting_nurseryid_table,n.id)
+        console.log(waiting_user_bynursery)
         if(waiting_user_bynursery != null){
-          //
         //発火　by lineis where l = nuid
+        
         }
       }
     }
-    
-    const sendWaitingUser = function(lineid, rsvid){
-      request.post(
-        { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku.chiikihoiku.net/webhook',
-        body: JSON.stringify({
-          "line_push_from_cron": "7amwaiting",
-          "id": lineid,
-          })
-        },
-        function(error, response, body){
-          if(error){
-            console.log('error@sendWaitingUser' + error)
-          }
-        }//capaいっぱいになったら送らない
-      ); 
-    };
-   /*
-    for (let i = 0; i < list.length; i++) {
-      let args = [list[i][0].lineid,list[i][0].rsvid];
-      const fifteen_interval = setInterval(sendWaitingUser, 900000,...args);
-      fifteen_interval()
-      await redis_client.hdel(waiting_userid_table, user[0].lineid, (err, reply) => {
-        if (err) throw err;
-        console.log('REDIS DEL: waiting_userid_table' + k + ' ,' + reply)
-      })
-      await redis_client.hdel(waiting_rsvid_table, user[0].lineid, (err, reply) => {
-        if (err) throw err;
-        console.log('REDIS DEL: waiting_rsvid_table' + k + ' ,' + reply)
-      })
       
-    }*/
 
     /* Exit Job */
     /*
