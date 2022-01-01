@@ -58,7 +58,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
-const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
+const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   for (const n of today_capacity) {
     let current_rsvid = await redis.LPOP(n.id)
     let current_lineid = getLineIDByReservationID(current_rsvid)
@@ -100,7 +100,7 @@ cron.schedule('*/10  * * * *', async () =>  {
 
 
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('*/4  * * * *', async () =>  {
+cron.schedule('*/2  * * * *', async () =>  {
   try {
     sendWaitingUser.start();
     //7:10 頃開始？園ごとに設定する  
@@ -117,6 +117,7 @@ cron.schedule('*/4  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       for (const user of today_waiting_user_list_withoutsameLINEID) {
+        console.log(nursery.id, user.rsvid)
         await redis.RPUSH(nursery.id, user.rsvid)
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
       }
