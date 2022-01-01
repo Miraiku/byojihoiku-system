@@ -58,7 +58,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
-const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
+const sendWaitingUser = cron.schedule('*/3 * * * *',async () => {
   for (const n of today_capacity) {
     let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
@@ -88,7 +88,8 @@ const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
   }
 });
 
-cron.schedule('0 0 9 * * *', async () => {
+//朝9時にウェイティングリストの巡回を停止する
+cron.schedule('47 21 * * *', async () => {
   console.log("end waiting list job...")
   await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
   await redis.Del('waiting_current_lineid_bynurseryid')
@@ -98,12 +99,10 @@ cron.schedule('0 0 9 * * *', async () => {
 })
 
 
-//キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('41 21 * * *', async () =>  {
-  try {
-    //7:10 頃開始？園ごとに設定する  
+//当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
+cron.schedule('0 0 7 * * *', async () =>  {
+  try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
-    console.log(original_list)
     for (let i = 0; i < original_list.length; i++) {
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(original_list[i])
