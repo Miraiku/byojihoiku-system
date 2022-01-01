@@ -60,9 +60,7 @@ let today_waiting_user_list_withoutsameLINEID = []
 
 const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   for (const n of today_capacity) {
-    let current_rsvid = await redis.LPOP(n.id)
-    let current_lineid = getLineIDByReservationID(current_rsvid)
-    current_lineid = current_lineid[0].LINEID
+    let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     if(Number(current_capacity) > 0){
       request.post(
@@ -124,8 +122,8 @@ cron.schedule('*/2  * * * *', async () =>  {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         console.log(user)
-        console.log(nursery.id, user.rsvid)
-        await redis.RPUSH(nursery.id, user.rsvid)
+        console.log(nursery.id,user.lineid)
+        await redis.RPUSH(nursery.id, user.lineid)
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
       }
     }
