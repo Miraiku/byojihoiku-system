@@ -55,8 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
   await redis.flushALLNoUpdate20mins()
 });
 
-//キャンセル待ちユーザーに回答を問い合わせ
-
+//キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 cron.schedule('*/1  * * * *', async () =>  {
   try {
     console.log(new Date())
@@ -135,7 +134,7 @@ cron.schedule('*/1  * * * *', async () =>  {
       }//for of capa
     }
     /* Exit Job */
-    let del_alljob = new CronJob(`*/${1*l}  * * * *`, delAllWaitingRegisRecords(), null, true);     
+    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords(), null, true);     
     del_alljob.start();  
     
   } catch (error) {
