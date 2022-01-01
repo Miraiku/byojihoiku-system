@@ -235,13 +235,32 @@ router
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
           }
         }else if(text === "戻る"){
+          replyMessage = ''
           try {
-            if(register_status!=null || reservation_status!=null){
+            if(register_status==null && reservation_status==null){
+              replyMessage = '進行中のお手続きはございません。'
+            }else if(register_status!=null || reservation_status!=null){
+              replyMessage = '複数の手続きが進行しています。「登録」または「予約」と返信して始めからやり直してください。'
+            }else if(register_status!=null && reservation_status==null){//登録
+              let new_register_status = Number(register_status) - 1
+              let new_register_reply_status = Number(register_reply_status) - 10
+              await redis.hsetStatus(userId,'register_status',new_register_status)
+              await redis.hsetStatus(userId,'register_reply_status',new_register_reply_status)
               
+            }else if(reservation_status!=null && register_status==null){//予約
+              if(reservation_status == 70){//複数人例外用
+                await redis.hsetStatus(userId,'reservation_status',13)
+                await redis.hsetStatus(userId,'reservation_reply_status',130)
+              }else{
+                let new_reservation_status = Number(reservation_status) - 1
+                let new_reservation_reply_status = Number(reservation_reply_status) - 10
+                await redis.hsetStatus(userId,'reservation_status',new_reservation_status)
+                await redis.hsetStatus(userId,'reservation_reply_status',new_reservation_reply_status)
+              }
             }
           } catch (error) {
             console.log('戻る: '+error)
-            replyMessage = 'エラーが発生しました。恐れ入りますが始めからやり直してください。'
+            replyMessage = 'エラーが発生しました。恐れ入りますが、「登録」または「予約」と返信して始めからやり直してください。'
           }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)

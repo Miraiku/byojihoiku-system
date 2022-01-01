@@ -12,7 +12,6 @@ const views = require('./modules/view_data_render')
 const session = require('cookie-session');
 const PORT = process.env.PORT || 5555;
 const login = require('./modules/view_login')
-const { setTimeout } = require("timers/promises");
  
 express()
   .use(express.static(path.join(__dirname, 'public')))
@@ -110,7 +109,7 @@ cron.schedule('*/5  * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                setTimeout(120000).then( sendWaitingUser(lineid) )
+                //setTimeout(120000).then( sendWaitingUser(lineid) )
                 await redis.hDel(waiting_lineid_table, user_waiting.lineid)
               }
             } //end if2
