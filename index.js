@@ -57,8 +57,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 //キャンセル待ちユーザーに回答を問い合わせ
 cron.schedule('*/2  * * * *', async () =>  {
   try {
-    //7:10 頃開始？園ごとに設定する
-    
+    //7:10 頃開始？園ごとに設定する  
     const sendWaitingUser = async function(lineid){
       let is_send 
       console.log("sendWaitingUser!!!!!"+lineid)
@@ -92,6 +91,8 @@ cron.schedule('*/2  * * * *', async () =>  {
     let l = 1
     let waitinguser_nurseryid = []
     for (const user_inlist of list) {
+
+      console.log(user_inlist)
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
       waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
