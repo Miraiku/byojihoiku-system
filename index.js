@@ -68,7 +68,7 @@ cron.schedule('*/1  * * * *', async () =>  {
 
     const sendWaitingUser = function(lineid){
       let is_send 
-      console.log("sendWaitingUser!!!!!"+lineid)
+      console.log("waiting user reply..."+lineid)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -92,7 +92,8 @@ cron.schedule('*/1  * * * *', async () =>  {
       return is_send
     };
     const delLineIdFromWaitingRedisList = async function(table, lineid){
-      await redis.hDel(table, nursery.id, lineid)
+      console.log("timeover: waiting user..."+lineid)
+      await redis.hDel(table, lineid)
     };
     
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
