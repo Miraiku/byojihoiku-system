@@ -64,30 +64,28 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     console.log(`current_lineid ${current_lineid}`)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
-      if(current_lineid == user.lineid){
-        if(Number(current_capacity) > 0 && current_lineid != null){
-          await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
-          request.post(
-            { headers: {'content-type' : 'application/json'},
-            url: 'https://byojihoiku.chiikihoiku.net/webhook',
-            body: JSON.stringify({
-              message: {'text': 'cron'},
-              "line_push_from_cron": "7amwaiting",
-              "id": current_lineid
-              })
-            },
-            function(error, response, body){
-              if(error){
-                console.log('error@sendWaitingUser' + error)
-              }
-              if(response.statusCode == 200){
-                is_send = true
-              }else{
-                is_send = false
-              }
+      if(current_lineid == user.lineid && Number(current_capacity) > 0 && current_lineid != null){
+        await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
+        request.post(
+          { headers: {'content-type' : 'application/json'},
+          url: 'https://byojihoiku.chiikihoiku.net/webhook',
+          body: JSON.stringify({
+            message: {'text': 'cron'},
+            "line_push_from_cron": "7amwaiting",
+            "id": current_lineid
+            })
+          },
+          function(error, response, body){
+            if(error){
+              console.log('error@sendWaitingUser' + error)
             }
-          );
-        }
+            if(response.statusCode == 200){
+              is_send = true
+            }else{
+              is_send = false
+            }
+          }
+        );
       }
     }
   }
