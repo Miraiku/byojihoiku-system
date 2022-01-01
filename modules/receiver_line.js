@@ -244,6 +244,7 @@ router
                 body: JSON.stringify({
                   events:[
                     {
+                      replyToken: req.body.events[0].replyToken,
                       type: 'message',
                       message: {
                         'text': 'prevaction',
