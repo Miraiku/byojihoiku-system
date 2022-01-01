@@ -83,14 +83,14 @@ cron.schedule('*/3  * * * *', async () =>  {
       ); 
     };
 
-    const waiting_lineid_table = 'waiting_lineid_table'
+    const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
     const waiting_nuseryid_table = 'waiting_nurseryid_table'
     const waiting_current_capacity = 'waiting_current_capacity'
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
     for (const user_inlist of list) {
-      await redis.hsetStatus(waiting_lineid_table, user_inlist.lineid, l)
+      await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
       waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
       l += 1
@@ -107,8 +107,8 @@ cron.schedule('*/3  * * * *', async () =>  {
             if(new_capacity !=null && Number(new_capacity) <= 0){
               return
             }else{
-              let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
-              if(lineid != null){
+              let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
+              if(redisid != null){
                 console.log('hello')
                 let promise = new Promise(async (resolve, reject) => {
                   console.log(user_waiting.lineid)
@@ -123,7 +123,7 @@ cron.schedule('*/3  * * * *', async () =>  {
                     }, 60000)
                   })
                 }).then(async (lineid) => {
-                  await redis.hDel(waiting_lineid_table, lineid)
+                  await redis.hDel(waiting_redisid_fromlineid_table, lineid)
                 })
                 .catch((err) => {
                   console.error('ERROR @ primise waiting routing :' + err)
@@ -135,10 +135,10 @@ cron.schedule('*/3  * * * *', async () =>  {
       }//for of capa
     }
     /* Exit Job */
-    await redis.resetAllStatus(waiting_lineid_table)
+    await redis.resetAllStatus(waiting_redisid_fromlineid_table)
     await redis.resetAllStatus(waiting_nuseryid_table)
     await redis.resetAllStatus(waiting_current_capacity)
-    await redis.Del(waiting_lineid_table)
+    await redis.Del(waiting_redisid_fromlineid_table)
     await redis.Del(waiting_nuseryid_table)
     await redis.Del(waiting_current_capacity)
   } catch (error) {
