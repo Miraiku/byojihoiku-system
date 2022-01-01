@@ -91,8 +91,6 @@ cron.schedule('*/2  * * * *', async () =>  {
     let l = 1
     let waitinguser_nurseryid = []
     for (const user_inlist of list) {
-
-      console.log(user_inlist)
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
       waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
@@ -103,7 +101,6 @@ cron.schedule('*/2  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
-        console.log(user_waiting)
         if(nursery.id == user_waiting.nursereyid){
           //Line発信後のCapacity更新があるか確認
           let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
@@ -122,7 +119,7 @@ cron.schedule('*/2  * * * *', async () =>  {
                   setTimeout(() => {
                     console.log('waiting.. user reply:' + lineid)
                     resolve(lineid)
-                  }, 3000)
+                  }, 60000)
                 })
               }).then(async (lineid) => {
                 console.log('time over: waiting.. user reply')
