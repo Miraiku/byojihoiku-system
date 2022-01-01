@@ -55,25 +55,11 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/2 * * * *', async () =>  {
+cron.schedule('*/10 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
-    //今日のキャパ空いてる且つWaitingがいる園
 
-    
-    //予約時刻が早い順番にIDとりだす
-    //現在時刻から　start time end timeを設定しておく
-    // startになったらメッセージ発火
-    //返信きて　lineIDかつendtime以内なら　Reserved、次はいかない
-    //返信きて　lineIDかつendtime外なら　エラーメッセージ
-    //最後のendtimeになったら本日分のwaitingroutingを削除する 
-    //waitinglist userid 
-    //waitinglist -> waiting_starttime, waiting_endtime, lasttime
-    //waiting_starttime line
-    //wairing_endtime line 
-
-    
-    const sendWaitingUser = function(lineid){
+    const sendWaitingUser = async function(lineid){
       console.log("sendWaitingUser!!!!!")
       request.post(
         { headers: {'content-type' : 'application/json'},
@@ -111,8 +97,6 @@ cron.schedule('*/2 * * * *', async () =>  {
       await redis.hgetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (let li = 0; li < Number(nursery.capacity); li++) {
         for (const user of waitinguser_nurseryid) {
-          console.log(nursery.id == user.nursereyid)
-          console.log(nursery.id, user.nursereyid)
           if(nursery.id == user.nursereyid){
             //Line発信後のCapacity更新があるか確認
             let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
@@ -121,7 +105,8 @@ cron.schedule('*/2 * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
               if(lineid != null){
-                const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
+                const fifteen_interval = setInterval(async () => sendWaitingUser, 180000, lineid);//900000
+                await redis.hDel(waiting_lineid_table, user.redisuserid)
               }
             } //end if2
           }//end if 
