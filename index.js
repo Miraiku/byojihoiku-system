@@ -113,10 +113,10 @@ cron.schedule('*/2  * * * *', async () =>  {
       }
     }
     today_capacity = await psgl.getAvailableNurseryOnToday()
-    console.log(today_waiting_user_list_withoutsameLINEID)
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       for (const user of today_waiting_user_list_withoutsameLINEID) {
+        console.log(user)
         console.log(nursery.id, user.rsvid)
         await redis.RPUSH(nursery.id, user.rsvid)
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
