@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/1 * * * *', async () =>  {
+cron.schedule('*/5 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     //今日のキャパ空いてる且つWaitingがいる園
