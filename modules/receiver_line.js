@@ -224,21 +224,14 @@ router
                 if(updated !=null){
                   await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
                   replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
-                  console.log('current capa'+current_capa)
-                  console.log('new capa'+Number(current_capa)-1)
                 }else{
                   replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
                 }
+              }else{
+                replyMessage = '本日ご利用いただける予約枠はございません。'
               }
             }
-            
-            if(redisid == null){
-              replyMessage = '本日ご利用いただける予約枠はございません。'
-            }else{
-              let nurseryid = await redis.hgetStatus(waiting_nuseryid_table,redisid)
-              let currrent_capa = await redis.hgetStatus(waiting_current_capacity, nurseryid)
-              
-            }
+
           } catch (error) {
             console.log('空き登録: '+error)
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
