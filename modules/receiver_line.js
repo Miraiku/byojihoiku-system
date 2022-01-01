@@ -237,24 +237,37 @@ router
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
           }
         }else if(text === "戻る"){
-          let action
-          /*
-          request.post(
-            { headers: {'content-type' : 'application/json'},
-            url: 'https://byojihoiku.chiikihoiku.net/webhook',
-            body: JSON.stringify({
-              events:[
-                'message':{
-                  'text': action,
-                },
-                'source':{
-                  'userId': userId
-                },
-              ]})eq.body.events[0].type === "message"
-            },
-          */
-      
+          const action_prev = function (){
+            {request.post(
+              { headers: {'content-type' : 'application/json'},
+                url: 'https://byojihoiku.chiikihoiku.net/webhook',
+                body: JSON.stringify({
+                  events:[
+                    {
+                      type: 'message',
+                      message: {
+                        'text': '',
+                      },
+                      source: {
+                        'userId': userId
+                      }
+                    }
+                ]})
+              },
+              function(error, response, body){
+                if(error){
+                  console.log('error@戻る' + error)
+                }
+                if(response.statusCode == 200){
+                  return true
+                }else{
+                  return false
+                }
+              }); 
+            };
+          }
           replyMessage = ''
+          replyMessageErr =  'エラーが発生しました。恐れ入りますが、「登録」または「予約」と返信して始めからやり直してください。'
           try {
             if(register_status==null && reservation_status==null){
               replyMessage = '進行中のお手続きはございません。'
@@ -265,6 +278,9 @@ router
               let new_register_reply_status = Number(register_reply_status) - 10
               await redis.hsetStatus(userId,'register_status',new_register_status)
               await redis.hsetStatus(userId,'register_reply_status',new_register_reply_status)
+              if(!action_prev){
+                replyMessage = replyMessageErr
+              }
             }else if(reservation_status!=null && register_status==null){//予約
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
@@ -275,10 +291,16 @@ router
                 await redis.hsetStatus(userId,'reservation_status',new_reservation_status)
                 await redis.hsetStatus(userId,'reservation_reply_status',new_reservation_reply_status)
               }
+              if(!action_prev){
+                replyMessage = replyMessageErr
+              }
+            }
+            if(replyMessage = ''){
+              replyMessage = replyMessageErr
             }
           } catch (error) {
             console.log('戻る: '+error)
-            replyMessage = 'エラーが発生しました。恐れ入りますが、「登録」または「予約」と返信して始めからやり直してください。'
+            replyMessage = replyMessageErr
           }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
