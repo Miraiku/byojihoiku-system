@@ -104,10 +104,11 @@ cron.schedule('*/2  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する  
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
+    console.log(original_list)
     for (const u of original_list) {
+      today_waiting_user_list_withoutsameLINEID.push(original_list)
       for (const unique of today_waiting_user_list_withoutsameLINEID) {
         if(u.lineid != unique.lineid){
-          today_waiting_user_list_withoutsameLINEID.push(original_list)
         }
       }
     }
