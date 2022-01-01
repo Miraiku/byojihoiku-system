@@ -61,6 +61,7 @@ let today_waiting_user_list_withoutsameLINEID = []
 const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   for (const n of today_capacity) {
     let current_lineid = await redis.LPOP(n.id)
+    console.log(current_lineid)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     if(Number(current_capacity) > 0){
       await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
@@ -116,6 +117,7 @@ cron.schedule('*/2  * * * *', async () =>  {
           }
         }
       }
+      console.log(original_list[i])
     }
     console.log(today_waiting_user_list_withoutsameLINEID)
     today_capacity = await psgl.getAvailableNurseryOnToday()
@@ -125,8 +127,8 @@ cron.schedule('*/2  * * * *', async () =>  {
         console.log(user)
         console.log(nursery.id,user.lineid)
         await redis.RPUSH(nursery.id, user.lineid)
-        await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
       }
+      await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
     }
     sendWaitingUser.start();
   } catch (error) {
