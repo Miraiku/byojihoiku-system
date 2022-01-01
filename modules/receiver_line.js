@@ -238,7 +238,7 @@ router
         }else if(text === "戻る"){
           console.log('戻る１')
           const action_prev = function (){
-            {request.post(
+            request.post(
               { headers: {'content-type' : 'application/json'},
                 url: 'https://byojihoiku.chiikihoiku.net/webhook',
                 body: JSON.stringify({
@@ -265,7 +265,6 @@ router
                   return false
                 }
               }); 
-            };
           }
           replyMessage = ''
           replyMessageErr =  'エラーが発生しました。恐れ入りますが、「登録」または「予約」と返信して始めからやり直してください。'
