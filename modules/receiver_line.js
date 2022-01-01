@@ -210,7 +210,7 @@ router
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
           }
 
-        }}else if(text === "空き登録"){
+        }else if(text === "空き登録"){
           try {
             replyMessage = ''
             const waiting_lineid_table = 'waiting_lineid_table'
