@@ -511,7 +511,7 @@ router
                     redis.hsetStatus(userId,'reservation_reply_status',30)
                   }
                 }else{
-                  replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。"
+                  replyMessage = "利用したい病児室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください"
                 }//isValidNursery
               }
               break;//CASE2
@@ -530,7 +530,7 @@ router
                   redis.hsetStatus(userId,'reservation_status',4)
                   redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
+                replyMessage = "利用したい病児室を返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE3
             case 4:
@@ -551,7 +551,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
+                replyMessage = "利用したい病児室を返信してください。\\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE4
             case 5:
@@ -561,7 +561,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',6)
                 redis.hsetStatus(userId,'reservation_reply_status',60)
               }else{
-                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」"+optionmsg
+                replyMessage = "登園時間を返信してください。\n例）8時登園の場合は「0800」"+optionmsg
               }
               break;//CASE3
             case 6:
@@ -571,7 +571,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',7)
                 redis.hsetStatus(userId,'reservation_reply_status',70)
               }else{
-                replyMessage = "降園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」"+optionmsg
+                replyMessage = "降園時間を返信してください。\n例）16時退園の場合は「1600」"+optionmsg
               }
               break;//CASE4
             case 7:
