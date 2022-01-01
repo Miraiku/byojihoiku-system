@@ -109,7 +109,7 @@ cron.schedule('*/2  * * * *', async () =>  {
         today_waiting_user_list_withoutsameLINEID.push(original_list[i])
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
-          if(n.LINEID == original_list[i].lineid){
+          if(n.lineid == original_list[i].lineid){
             continue
           }else{
             today_waiting_user_list_withoutsameLINEID.push(original_list[i])
