@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/10 * * * *', async () =>  {
+cron.schedule('*/2  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
 
@@ -88,7 +88,7 @@ cron.schedule('*/10 * * * *', async () =>  {
     const fifteen_interval = setInterval(async () => {
       console.log('fifteen_intervalstart');
       const promise = new Promise((resolve) => {
-         setTimeout(sendWaitingUser, 180000);
+         setTimeout(sendWaitingUser, 120000);
          console.log('res'+resolve)
       });
       await promise;
