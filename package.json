@@ -16,6 +16,7 @@
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
+    "cron": "^1.8.2",
     "date-holidays": "^3.12.2",
     "ejs": "^3.1.5",
     "express": "^4.15.2",

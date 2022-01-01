@@ -6,6 +6,7 @@ const request = require('request');
 const webhook = require('./modules/receiver_line')
 const ajax = require('./modules/receiver_ajax')
 const cron = require('node-cron');
+const cron_o = require('cron');
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
 const views = require('./modules/view_data_render')
@@ -95,8 +96,7 @@ cron.schedule('*/3  * * * *', async () =>  {
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/1 * * * *`})
-      //waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/${15*l}  * * * *`})
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/${1*l}  * * * *`})
       l += 1
     }
 
@@ -112,6 +112,7 @@ cron.schedule('*/3  * * * *', async () =>  {
           }else{
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
+              let CronJob = cron_o.CronJob;
               let job = new CronJob(schedule, sendWaitingUser(user_waiting.crontime), null, true);     
               job.start();     
             }
