@@ -18,7 +18,7 @@ router
     応答Message
     */
     try {
-      if(!req.body.events[0]){
+      if(!req.body.events){
         return
       }
       const text = req.body.events[0].message.text
