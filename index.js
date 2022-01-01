@@ -60,6 +60,7 @@ cron.schedule('*/3  * * * *', async () =>  {
     //7:10 頃開始？園ごとに設定する
     
     const sendWaitingUser = function(lineid){
+      let is_send
       console.log("sendWaitingUser!!!!!"+lineid)
       request.post(
         { headers: {'content-type' : 'application/json'},
@@ -75,12 +76,13 @@ cron.schedule('*/3  * * * *', async () =>  {
             console.log('error@sendWaitingUser' + error)
           }
           if(response.statusCode == 200){
-            return true
+            is_send = true
           }else{
-            return false
+            is_send = false
           }
         }
       ); 
+      return is_send
     };
 
     const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
@@ -111,18 +113,22 @@ cron.schedule('*/3  * * * *', async () =>  {
               if(redisid != null){
                 console.log('hello')
                 let promise = new Promise(async (resolve, reject) => {
-                  console.log(user_waiting.lineid)
-                  resolve(user_waiting.lineid)
+                  let is_send = sendWaitingUser(user_waiting.lineid)
+                  if(is_send){
+                    resolve(user_waiting.lineid)
+                  }{
+                    throw new Error('invalid sending')
+                  }
                 })
                 promise.then((lineid) => {
                   return new Promise((resolve, reject) => {
                     setTimeout(() => {
-                      console.log(lineid)
-                      sendWaitingUser(lineid)
+                      console.log('waiting.. user reply:' + lineid)
                       resolve(lineid)
                     }, 60000)
                   })
                 }).then(async (lineid) => {
+                  console.log('time over: waiting.. user reply')
                   await redis.hDel(waiting_redisid_fromlineid_table, lineid)
                 })
                 .catch((err) => {

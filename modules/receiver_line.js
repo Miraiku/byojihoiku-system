@@ -989,7 +989,6 @@ router
       }
       const push_message = req.body.line_push_from_cron
       const lineid = req.body.id
-      console.log(req.body.line_push_from_cron +' '+req.body.id)
       if(push_message != undefined){
         if(push_message == '20pm'){
           res.send(lineid)
