@@ -65,7 +65,7 @@ cron.schedule('*/1  * * * *', async () =>  {
     const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
     const waiting_nuseryid_table = 'waiting_nurseryid_table'
     const waiting_current_capacity = 'waiting_current_capacity'
-
+    let CronJob = cron_o.CronJob;
     const sendWaitingUser = function(lineid){
       let is_send 
       console.log("waiting user reply..."+lineid)
@@ -95,7 +95,16 @@ cron.schedule('*/1  * * * *', async () =>  {
       console.log("timeover: waiting user..."+lineid)
       await redis.hDel(table, lineid)
     };
-    
+
+    const delLineIdFromWaitingRedisList = async function(){
+      console.log("end waiting list job...")
+      await redis.resetAllStatus(waiting_redisid_fromlineid_table)
+      await redis.resetAllStatus(waiting_nuseryid_table)
+      await redis.resetAllStatus(waiting_current_capacity)
+      await redis.Del(waiting_redisid_fromlineid_table)
+      await redis.Del(waiting_nuseryid_table)
+      await redis.Del(waiting_current_capacity)
+    };
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
@@ -110,6 +119,7 @@ cron.schedule('*/1  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
+        console.log(user_waiting)
         if(nursery.id == user_waiting.nursereyid){
           //Line発信後のCapacity更新があるか確認
           let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
@@ -118,7 +128,6 @@ cron.schedule('*/1  * * * *', async () =>  {
           }else{
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
-              let CronJob = cron_o.CronJob;
               let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid), null, true);     
               job.start();     
               let del_job = new CronJob(user_waiting.crontime_del, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,user_waiting.lineid), null, true);     
@@ -129,12 +138,9 @@ cron.schedule('*/1  * * * *', async () =>  {
       }//for of capa
     }
     /* Exit Job */
-    await redis.resetAllStatus(waiting_redisid_fromlineid_table)
-    await redis.resetAllStatus(waiting_nuseryid_table)
-    await redis.resetAllStatus(waiting_current_capacity)
-    await redis.Del(waiting_redisid_fromlineid_table)
-    await redis.Del(waiting_nuseryid_table)
-    await redis.Del(waiting_current_capacity)
+    let del_alljob = new CronJob(`*/${1*l}  * * * *`, delAllWaitingRegisRecords(), null, true);     
+    del_alljob.start();  
+    
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
