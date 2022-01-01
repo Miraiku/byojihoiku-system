@@ -225,7 +225,7 @@ router
               let currrent_capa = await redis.hgetStatus(waiting_current_capacity, nurseryid)
               let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
               if(updated !=null){
-                await redis.hsetStatus(waiting_current_capacity, nursery.id, Number(currrent_capa)-1)
+                await redis.hsetStatus(waiting_current_capacity, nurseryid, Number(currrent_capa)-1)
                 replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
               }else{
                 replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
