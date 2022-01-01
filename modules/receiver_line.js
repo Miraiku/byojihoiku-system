@@ -295,7 +295,7 @@ router
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
                 await redis.hsetStatus(userId,'reservation_reply_status',130)
-              }else if(Number(register_status) <= 1){
+              }else if(Number(reservation_status) <= 1){
                 await redis.hsetStatus(userId,'reservation_status',1)
                 await redis.hsetStatus(userId,'reservation_reply_status',10)
               }else{
