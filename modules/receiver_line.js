@@ -18,7 +18,6 @@ router
     応答Message
     */
     try {
-      console.log(req.body)
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
       let dataString = null
@@ -237,6 +236,7 @@ router
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
           }
         }else if(text === "戻る"){
+          console.log('戻る１')
           const action_prev = function (){
             {request.post(
               { headers: {'content-type' : 'application/json'},
@@ -272,9 +272,12 @@ router
           try {
             if(register_status==null && reservation_status==null){
               replyMessage = '進行中のお手続きはございません。'
+              console.log('戻る２')
             }else if(register_status!=null || reservation_status!=null){
               replyMessage = '複数の手続きが進行しています。「登録」または「予約」と返信して始めからやり直してください。'
+              console.log('戻る３')
             }else if(register_status!=null && reservation_status==null){//登録
+              console.log('戻る４')
               let new_register_status = Number(register_status) - 1
               let new_register_reply_status = Number(register_reply_status) - 10
               await redis.hsetStatus(userId,'register_status',new_register_status)
@@ -287,6 +290,7 @@ router
                 return
               }
             }else if(reservation_status!=null && register_status==null){//予約
+              console.log('戻る５')
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
                 await redis.hsetStatus(userId,'reservation_reply_status',130)
@@ -304,6 +308,7 @@ router
                 return
               }
             }
+            console.log('戻る６')
             if(replyMessage = ''){
               replyMessage = replyMessageErr
             }
