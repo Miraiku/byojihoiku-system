@@ -74,6 +74,7 @@ cron.schedule('*/1 * * * *', async () =>  {
 
     
     const sendWaitingUser = function(lineid){
+      console.log("sendWaitingUser!!!!!")
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -83,6 +84,8 @@ cron.schedule('*/1 * * * *', async () =>  {
           })
         },
         function(error, response, body){
+          console.log(response)
+          console.log(body)
           if(error){
             console.log('error@sendWaitingUser' + error)
           }
@@ -105,8 +108,6 @@ cron.schedule('*/1 * * * *', async () =>  {
 
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
-      console.log(`Number(n.name) ${nursery.name}`)
-      console.log(`Number(n.capacity) ${Number(nursery.capacity)}`)
       await redis.hgetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (let li = 0; li < Number(nursery.capacity); li++) {
         for (const user of waitinguser_nurseryid) {
@@ -119,8 +120,7 @@ cron.schedule('*/1 * * * *', async () =>  {
               let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
               let rsvid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
               if(lineid != null && rsvid !== null){
-                let args = [lineid];
-                const fifteen_interval = setInterval(sendWaitingUser, 180000,...args);//900000
+                const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
                 fifteen_interval()
                 await redis_client.hdel(waiting_lineid_table, user.redisuserid, (err, reply) => {
                   if (err) throw err;
