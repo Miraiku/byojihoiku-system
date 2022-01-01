@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/3  * * * *', async () =>  {
+cron.schedule('*/1  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     
@@ -75,6 +75,7 @@ cron.schedule('*/3  * * * *', async () =>  {
           if(error){
             console.log('error@sendWaitingUser' + error)
           }
+          console.log(response.statusCode)
           if(response.statusCode == 200){
             is_send = true
           }else{
@@ -125,7 +126,7 @@ cron.schedule('*/3  * * * *', async () =>  {
                     setTimeout(() => {
                       console.log('waiting.. user reply:' + lineid)
                       resolve(lineid)
-                    }, 60000)
+                    }, 3000)
                   })
                 }).then(async (lineid) => {
                   console.log('time over: waiting.. user reply')
@@ -133,6 +134,7 @@ cron.schedule('*/3  * * * *', async () =>  {
                 })
                 .catch((err) => {
                   console.error('ERROR @ primise waiting routing :' + err)
+                  await redis.hDel(waiting_redisid_fromlineid_table, lineid)
                 })            
               }
             } //end if2
