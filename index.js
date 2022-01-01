@@ -58,32 +58,6 @@ cron.schedule('*/20 * * * *', async () =>  {
 
 cron.schedule('*/3  * * * *', async () =>  {
   try {
-    const sendWaitingUser = async function(lineid){
-      let is_send 
-      console.log("sendWaitingUser!!!!!"+lineid)
-      request.post(
-        { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku.chiikihoiku.net/webhook',
-        body: JSON.stringify({
-          message: {'text': 'cron'},
-          "line_push_from_cron": "7amwaiting",
-          "id": lineid
-          })
-        },
-        function(error, response, body){
-          if(error){
-            console.log('error@sendWaitingUser' + error)
-          }
-          if(response.statusCode == 200){
-            is_send = true
-          }else{
-            is_send = false
-          }
-        }
-      ); 
-      return is_send
-    };
-
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
     const sendWaitingUser = function(lineid){
