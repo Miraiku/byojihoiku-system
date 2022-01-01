@@ -84,7 +84,7 @@ cron.schedule('*/1 * * * *', async () =>  {
           })
         },
         function(error, response, body){
-          console.log(response)
+          console.log(response.statusCode)
           console.log(body)
           if(error){
             console.log('error@sendWaitingUser' + error)
@@ -121,10 +121,8 @@ cron.schedule('*/1 * * * *', async () =>  {
               if(lineid != null){
                 const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
                 fifteen_interval
-                await redis_client.hdel(waiting_lineid_table, user.redisuserid, (err, reply) => {
-                  if (err) throw err;
-                  console.log('REDIS DEL: waiting_lineid_table' + k + ' ,' + reply)
-                })
+                let r = await redis.hDel(waiting_lineid_table, user.redisuserid)
+                console('redis res' + r)
             }
             } //end if2
           }//end if 
