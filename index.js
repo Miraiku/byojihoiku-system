@@ -132,7 +132,7 @@ cron.schedule('*/1  * * * *', async () =>  {
                   console.log('time over: waiting.. user reply')
                   await redis.hDel(waiting_redisid_fromlineid_table, lineid)
                 })
-                .catch((err) => {
+                .catch(async (err) => {
                   console.error('ERROR @ primise waiting routing :' + err)
                   await redis.hDel(waiting_redisid_fromlineid_table, lineid)
                 })            
