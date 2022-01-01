@@ -58,7 +58,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
-const sendWaitingUser = cron.schedule('*/3 * * * *',async () => {
+const sendWaitingUser = cron.schedule('*/15 * * * *',async () => {
   for (const n of today_capacity) {
     let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
@@ -96,11 +96,12 @@ cron.schedule('0 0 9 * * *', async () => {
   for (const nursery of today_capacity) {
     await redis.Del(nursery.id)
   }
+  sendWaitingUser.stop()
 })
 
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('50 21 * * *', async () =>  {
+cron.schedule('0 0 7 * * *', async () =>  {
   try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     for (let i = 0; i < original_list.length; i++) {
