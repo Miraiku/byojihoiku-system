@@ -88,7 +88,7 @@ exports.hDel = async function(key, field){
     console.log(`REDIS DELETED: ${key} , ${field}` + reply)
     res = reply
   })
-  return reply
+  return res
 }
 
 
