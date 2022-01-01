@@ -60,9 +60,9 @@ cron.schedule('*/2  * * * *', async () =>  {
     //7:10 頃開始？園ごとに設定する
     
     const sendWaitingUser = async function(lineid){
-      let is_send
+      let is_send 
       console.log("sendWaitingUser!!!!!"+lineid)
-      await request.post(
+      request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
@@ -114,7 +114,8 @@ cron.schedule('*/2  * * * *', async () =>  {
               if(redisid != null){
                 console.log('hello')
                 let promise = new Promise(async (resolve, reject) => {
-                  let is_send = await sendWaitingUser(user_waiting.lineid)
+                  let is_send = sendWaitingUser(user_waiting.lineid)
+                  console.log(is_send)
                   if(is_send){
                     resolve(user_waiting.lineid)
                   }{
