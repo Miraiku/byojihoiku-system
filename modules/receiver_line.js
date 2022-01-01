@@ -279,10 +279,15 @@ router
               console.log('戻る３')
             }else if(register_status!=null && reservation_status==null){//登録
               console.log('戻る４')
+              if(Number(register_status) <= 1){
+                await redis.hsetStatus(userId,'register_status',1)
+                await redis.hsetStatus(userId,'register_reply_status',10)
+              }else{
               let new_register_status = Number(register_status) - 1
               let new_register_reply_status = Number(register_reply_status) - 10
               await redis.hsetStatus(userId,'register_status',new_register_status)
               await redis.hsetStatus(userId,'register_reply_status',new_register_reply_status)
+              }
               let post_action = action_prev
               console.log(post_action)
               if(!post_action){
@@ -295,6 +300,9 @@ router
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
                 await redis.hsetStatus(userId,'reservation_reply_status',130)
+              }else if(Number(register_status) <= 1){
+                await redis.hsetStatus(userId,'reservation_status',1)
+                await redis.hsetStatus(userId,'reservation_reply_status',10)
               }else{
                 let new_reservation_status = Number(reservation_status) - 1
                 let new_reservation_reply_status = Number(reservation_reply_status) - 10
