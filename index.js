@@ -100,6 +100,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     let l = 1
     let waitinguser_nurseryid = []
     for (const user of list) {
+      console.log(user.lineid, user.nurseryid)
       await redis.hsetStatus(waiting_lineid_table,l, user.lineid)
       await redis.hsetStatus(waiting_nuseryid_table,l,user.nurseryid) 
       waitinguser_nurseryid.push({nursereyid:user.nurseryid , redisuserid: l})
