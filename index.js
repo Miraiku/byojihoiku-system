@@ -105,13 +105,20 @@ cron.schedule('*/2  * * * *', async () =>  {
     //7:10 頃開始？園ごとに設定する  
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     console.log(original_list)
-    for (const u of original_list) {
-      today_waiting_user_list_withoutsameLINEID.push(u)
-      for (const unique of today_waiting_user_list_withoutsameLINEID) {
-        if(u.lineid != unique.lineid){
+    for (let i = 0; i < original_list.length; i++) {
+      if(i==0){
+        today_waiting_user_list_withoutsameLINEID.push(original_list[i])
+      }else{
+        for (const n of today_waiting_user_list_withoutsameLINEID) {
+          if(n.LINEID == original_list[i].lineid){
+            continue
+          }else{
+            today_waiting_user_list_withoutsameLINEID.push(original_list[i])
+          }
         }
       }
     }
+    console.log(today_waiting_user_list_withoutsameLINEID)
     today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
