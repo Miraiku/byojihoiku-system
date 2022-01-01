@@ -89,7 +89,7 @@ exports.hDel = async function(key, field){
       console.log(`REDIS DELETED: ${key} , ${field}` + reply)
       res = reply
     })
-    return res
+    return res //return deleted row number
   } catch (error) {
     console.log("ERROR @hDel :" + error)
     return null

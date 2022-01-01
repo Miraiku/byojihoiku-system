@@ -123,7 +123,7 @@ cron.schedule('*/1 * * * *', async () =>  {
                 const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
                 fifteen_interval
                 let r = await redis.hDel(waiting_lineid_table, user.redisuserid)
-                console.log('redis res' + r)
+                //if(r > 0) deleted
             }
             } //end if2
           }//end if 
