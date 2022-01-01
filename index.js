@@ -110,7 +110,7 @@ cron.schedule('*/5  * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                let promise = new Promise((resolve, reject) => {
+                let promise = new Promise(async (resolve, reject) => {
                   let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
                   resolve(lineid)
                 })
