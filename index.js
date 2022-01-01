@@ -57,6 +57,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 //キャンセル待ちユーザーに回答を問い合わせ
 cron.schedule('*/2  * * * *', async () =>  {
   try {
+    console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
     const sendWaitingUser = async function(lineid){
       let is_send 
@@ -109,19 +110,21 @@ cron.schedule('*/2  * * * *', async () =>  {
           }else{
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
-              console.log('hello')
               let promise = new Promise(async (resolve, reject) => {
                 sendWaitingUser(user_waiting.lineid)
                 resolve(user_waiting.lineid)
+                console.log(new Date())
               })
               promise.then((lineid) => {
                 return new Promise((resolve, reject) => {
                   setTimeout(() => {
+                    console.log(new Date())
                     console.log('waiting.. user reply:' + lineid)
                     resolve(lineid)
                   }, 60000)
                 })
               }).then(async (lineid) => {
+                console.log(new Date())
                 console.log('time over: waiting.. user reply')
                 await redis.hDel(waiting_redisid_fromlineid_table, lineid)
               })
