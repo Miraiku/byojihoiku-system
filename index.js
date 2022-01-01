@@ -64,7 +64,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     console.log(`current_lineid ${current_lineid}`)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
-      if(current_lineid == user.lineid && Number(current_capacity) > 0 && current_lineid != null){
+      if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
         request.post(
           { headers: {'content-type' : 'application/json'},
