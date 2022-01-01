@@ -221,6 +221,7 @@ router
               if(current_waiting_lineid == userId){
                 let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
                 let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
+                if(updated)
                 if(updated !=null){
                   await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
                   replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'

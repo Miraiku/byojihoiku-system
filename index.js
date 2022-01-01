@@ -88,7 +88,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   }
 });
 
-cron.schedule('*/10  * * * *', async () =>  {
+cron.schedule('0 0 9 * * *', async () => {
   console.log("end waiting list job...")
   await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
   await redis.Del('waiting_current_lineid_bynurseryid')
@@ -99,7 +99,7 @@ cron.schedule('*/10  * * * *', async () =>  {
 
 
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('*/2  * * * *', async () =>  {
+cron.schedule('*/3  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する  
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
@@ -116,16 +116,12 @@ cron.schedule('*/2  * * * *', async () =>  {
           }
         }
       }
-      console.log(original_list[i])
     }
-    console.log(today_waiting_user_list_withoutsameLINEID)
     today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         if(nursery.id == user.nurseryid){
-          console.log(user)
-          console.log(nursery.id,user.lineid)
           await redis.RPUSH(nursery.id, user.lineid)
         }
       }
