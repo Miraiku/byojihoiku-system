@@ -111,9 +111,8 @@ cron.schedule('*/3  * * * *', async () =>  {
               if(lineid != null){
                 console.log('hello')
                 let promise = new Promise(async (resolve, reject) => {
-                  let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
-                  console.log(lineid)
-                  resolve(lineid)
+                  console.log(user_waiting.lineid)
+                  resolve(user_waiting.lineid)
                 })
                 promise.then((lineid) => {
                   return new Promise((resolve, reject) => {
