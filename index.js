@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 /* Waiting List Remineder */
-const today_capacity = await psgl.getAvailableNurseryOnToday()
+let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
 const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
@@ -105,7 +105,6 @@ cron.schedule('*/4  * * * *', async () =>  {
     sendWaitingUser.start();
     //7:10 頃開始？園ごとに設定する  
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
-    let l = 1
     for (const u of original_list) {
       for (const uu of original_list) {
         if(u.lineid != uu.lineid){
@@ -113,6 +112,7 @@ cron.schedule('*/4  * * * *', async () =>  {
         }
       }
     }
+    today_capacity = await psgl.getAvailableNurseryOnToday()
     console.log(today_waiting_user_list_withoutsameLINEID)
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
