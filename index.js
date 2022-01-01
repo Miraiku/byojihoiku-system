@@ -106,7 +106,7 @@ cron.schedule('*/2  * * * *', async () =>  {
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     console.log(original_list)
     for (const u of original_list) {
-      today_waiting_user_list_withoutsameLINEID.push(original_list)
+      today_waiting_user_list_withoutsameLINEID.push(u)
       for (const unique of today_waiting_user_list_withoutsameLINEID) {
         if(u.lineid != unique.lineid){
         }
