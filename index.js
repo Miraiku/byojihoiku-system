@@ -100,7 +100,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     let l = 1
     let waitinguser_nurseryid = []
     for (const user of list) {
-      await redis.hsetStatus(waiting_lineid_table,user.lineid,l)
+      await redis.hsetStatus(waiting_lineid_table,l, user.lineid)
       await redis.hsetStatus(waiting_nuseryid_table,l,user.nurseryid) 
       waitinguser_nurseryid.push({nursereyid:user.nurseryid , redisuserid: l})
       l += 1
@@ -118,10 +118,9 @@ cron.schedule('*/1 * * * *', async () =>  {
               return
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
-              let rsvid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
-              if(lineid != null && rsvid !== null){
+              if(lineid != null){
                 const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
-                fifteen_interval()
+                fifteen_interval
                 await redis_client.hdel(waiting_lineid_table, user.redisuserid, (err, reply) => {
                   if (err) throw err;
                   console.log('REDIS DEL: waiting_lineid_table' + k + ' ,' + reply)
