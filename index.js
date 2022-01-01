@@ -105,7 +105,7 @@ cron.schedule('*/2  * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                setInterval(async () => {
+                /*setInterval(async () => {
                   console.log('fifteen_intervalstart');
                   const promise = new Promise((resolve) => {
                      setTimeout(sendWaitingUser(lineid), 120000);
@@ -113,7 +113,7 @@ cron.schedule('*/2  * * * *', async () =>  {
                   });
                   await promise;
                   console.log('fifteen_intervalend');
-                }, 1000);
+                }, 1000);*/
                 await redis.hDel(waiting_lineid_table, user_waiting.lineid)
               }
             } //end if2

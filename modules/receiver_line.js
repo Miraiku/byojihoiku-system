@@ -236,7 +236,6 @@ router
           }
         }else if(text === "戻る"){
           try {
-            
           } catch (error) {
             console.log('戻る: '+error)
             replyMessage = 'エラーが発生しました。恐れ入りますが始めからやり直してください。'
