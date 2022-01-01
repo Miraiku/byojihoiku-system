@@ -279,8 +279,12 @@ router
               let new_register_reply_status = Number(register_reply_status) - 10
               await redis.hsetStatus(userId,'register_status',new_register_status)
               await redis.hsetStatus(userId,'register_reply_status',new_register_reply_status)
-              if(!action_prev){
+              let post_action = action_prev
+              console.log(post_action)
+              if(!post_action){
                 replyMessage = replyMessageErr
+              }else{
+                return
               }
             }else if(reservation_status!=null && register_status==null){//予約
               if(reservation_status == 70){//複数人例外用
@@ -292,8 +296,12 @@ router
                 await redis.hsetStatus(userId,'reservation_status',new_reservation_status)
                 await redis.hsetStatus(userId,'reservation_reply_status',new_reservation_reply_status)
               }
-              if(!action_prev){
+              let post_action = action_prev
+              console.log(post_action)
+              if(!post_action){
                 replyMessage = replyMessageErr
+              }else{
+                return
               }
             }
             if(replyMessage = ''){
