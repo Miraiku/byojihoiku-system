@@ -55,12 +55,12 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/5  * * * *', async () =>  {
+cron.schedule('*/3  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     
     const sendWaitingUser = function(lineid){
-      console.log("sendWaitingUser!!!!!")
+      console.log("sendWaitingUser!!!!!"+lineid)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -89,7 +89,6 @@ cron.schedule('*/5  * * * *', async () =>  {
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
-    let fifteen_interval = setInterval(async () => sendWaitingUser(lineid), 180000);
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_lineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
@@ -112,14 +111,16 @@ cron.schedule('*/5  * * * *', async () =>  {
               if(lineid != null){
                 let promise = new Promise(async (resolve, reject) => {
                   let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
+                  console.log(lineid)
                   resolve(lineid)
                 })
                 promise.then(
                   function(lineid) {
                     return new Promise((resolve, reject) => {
                       setTimeout(() => {
+                        console.log(lineid)
                         resolve(sendWaitingUser(lineid))
-                      }, 120000)
+                      }, 600000)
                     })
                 })
                 .catch((err) => {
