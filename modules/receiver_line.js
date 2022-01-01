@@ -214,10 +214,10 @@ router
         }else if(text === "空き登録"){
           try {
             replyMessage = ''
-            const waiting_lineid_table = 'waiting_lineid_table'
+            const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
             const waiting_nuseryid_table = 'waiting_nurseryid_table'
             const waiting_current_capacity = 'waiting_current_capacity'
-            let redisid = await redis.hgetStatus(waiting_lineid_table,userId)
+            let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table,userId)
             if(redisid == null){
               replyMessage = '本日ご利用いただける予約枠はございません。'
             }else{
