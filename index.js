@@ -112,7 +112,8 @@ cron.schedule('*/3  * * * *', async () =>  {
           }else{
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
-              new CronJob(schedule, sendWaitingUser(user_waiting.crontime), null, true);          
+              let job = new CronJob(schedule, sendWaitingUser(user_waiting.crontime), null, true);     
+              job.start();     
             }
           } //end if2
 
