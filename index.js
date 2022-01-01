@@ -100,40 +100,39 @@ cron.schedule('*/2  * * * *', async () =>  {
 
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
-      await redis.hgetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
-      for (let li = 0; li < Number(nursery.capacity); li++) {
-        for (const user_waiting of waitinguser_nurseryid) {
-          if(nursery.id == user_waiting.nursereyid){
-            //Line発信後のCapacity更新があるか確認
-            let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
-            if(new_capacity !=null && Number(new_capacity) <= 0){
-              return
-            }else{
-              let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
-              if(redisid != null){
-                console.log('hello')
-                let promise = new Promise(async (resolve, reject) => {
-                  sendWaitingUser(user_waiting.lineid)
-                  resolve(user_waiting.lineid)
+      await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
+      for (const user_waiting of waitinguser_nurseryid) {
+        if(nursery.id == user_waiting.nursereyid){
+          //Line発信後のCapacity更新があるか確認
+          let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
+          if(new_capacity !=null && Number(new_capacity) <= 0){
+            return
+          }else{
+            let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
+            if(redisid != null){
+              console.log('hello')
+              let promise = new Promise(async (resolve, reject) => {
+                sendWaitingUser(user_waiting.lineid)
+                resolve(user_waiting.lineid)
+              })
+              promise.then((lineid) => {
+                return new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    console.log('waiting.. user reply:' + lineid)
+                    resolve(lineid)
+                  }, 3000)
                 })
-                promise.then((lineid) => {
-                  return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                      console.log('waiting.. user reply:' + lineid)
-                      resolve(lineid)
-                    }, 3000)
-                  })
-                }).then(async (lineid) => {
-                  console.log('time over: waiting.. user reply')
-                  await redis.hDel(waiting_redisid_fromlineid_table, lineid)
-                })
-                .catch(async (err) => {
-                  console.error('ERROR @ primise waiting routing :' + err)
-                  await redis.hDel(waiting_redisid_fromlineid_table, lineid)
-                })            
-              }
-            } //end if2
-          }//end if 
+              }).then(async (lineid) => {
+                console.log('time over: waiting.. user reply')
+                await redis.hDel(waiting_redisid_fromlineid_table, lineid)
+              })
+              .catch(async (err) => {
+                console.error('ERROR @ primise waiting routing :' + err)
+                await redis.hDel(waiting_redisid_fromlineid_table, lineid)
+              })            
+            }
+          } //end if2
+
         }// end for of waitinguser_nurseryid
       }//for of capa
     }
