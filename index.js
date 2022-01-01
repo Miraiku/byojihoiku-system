@@ -115,15 +115,14 @@ cron.schedule('*/3  * * * *', async () =>  {
                   console.log(lineid)
                   resolve(lineid)
                 })
-                promise.then(
-                  function(lineid) {
-                    return new Promise((resolve, reject) => {
-                      setTimeout(() => {
-                        console.log(lineid)
-                        sendWaitingUser(lineid)
-                        resolve(lineid)
-                      }, 60000)
-                    })
+                promise.then((lineid) => {
+                  return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                      console.log(lineid)
+                      sendWaitingUser(lineid)
+                      resolve(lineid)
+                    }, 60000)
+                  })
                 }).then(async (lineid) => {
                   await redis.hDel(waiting_lineid_table, lineid)
                 })
