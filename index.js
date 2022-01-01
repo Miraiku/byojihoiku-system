@@ -90,7 +90,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const n of today_capacity) {
       for (let li = 0; li < Number(n.capacity); li++) {
-        let nursery = await redis.hgetStatus(waiting_nurseryid_table,li+1)
+        let nursery = await redis.hgetStatus(waiting_nurseryid_table,(li+1))
         console.log(nursery)
         console.log(li+1)
         console.log(`Number(n.name) ${n.name})`)
