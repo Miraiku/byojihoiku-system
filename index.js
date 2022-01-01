@@ -6,7 +6,7 @@ const request = require('request');
 const webhook = require('./modules/receiver_line')
 const ajax = require('./modules/receiver_ajax')
 const cron = require('node-cron');
-const cron_o = require('cron');
+const CronJob = require('cron').CronJob;
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
 const views = require('./modules/view_data_render')
@@ -64,7 +64,6 @@ cron.schedule('*/1  * * * *', async () =>  {
     const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
     const waiting_nuseryid_table = 'waiting_nurseryid_table'
     const waiting_current_capacity = 'waiting_current_capacity'
-    const CronJob = cron_o.CronJob;
     const sendWaitingUser = async function(lineid, nurseryid, deltime){
       let new_capacity = await redis.hgetStatus(waiting_current_capacity, nurseryid)
       if(new_capacity !=null && Number(new_capacity) <= 0){
@@ -93,7 +92,7 @@ cron.schedule('*/1  * * * *', async () =>  {
               }
             }
           ); 
-          let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid), null, true);     
+          let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid), null);     
           del_job.start();   
         }
       }
