@@ -258,8 +258,6 @@ router
                 ]})
               },
               function(error, response, body){
-                console.log(response.statusCode)
-                console.log(body)
                 if(error){
                   console.log('error@戻る' + error)
                 }
@@ -462,7 +460,7 @@ router
                     redis.hsetStatus(userId,'reservation_reply_status',20)
                   }
                 }else{
-                  replyMessage = timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください"+optionmsg
+                  replyMessage = timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください"
                 }
               }
             break;
@@ -987,6 +985,9 @@ router
     リマインダートリガー
     */
     try {
+      if(!req.body.line_push_from_cron){
+        return
+      }
       const push_message = req.body.line_push_from_cron
       const lineid = req.body.id
       console.log(req.body.line_push_from_cron +' '+req.body.id)

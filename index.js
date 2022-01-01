@@ -65,6 +65,7 @@ cron.schedule('*/5  * * * *', async () =>  {
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
+          message: {'text': 'cron'},
           "line_push_from_cron": "7amwaiting",
           "id": lineid
           })
@@ -139,6 +140,7 @@ cron.schedule('0 0 7 * * *', async () => {
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
+          message: {'text': 'cron'},
           "line_push_from_cron": "today7am",
           "id": id[0].LINEID
           })
@@ -164,6 +166,7 @@ cron.schedule('0 0 20 * * *', async () => {
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
+          message: {'text': 'cron'},
           "line_push_from_cron": "20pm",
           "id": id[0].LINEID,
           })
