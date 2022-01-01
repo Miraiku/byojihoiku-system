@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/1  * * * *', async () =>  {
+cron.schedule('*/2  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     
@@ -182,9 +182,7 @@ cron.schedule('0 0 7 * * *', async () => {
 });
 
 //前日リマインダー送信
-
-cron.schedule('*/1  * * * *', async () =>  {
-//cron.schedule('0 0 20 * * *', async () => {
+cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
     for (const id of ids) {
