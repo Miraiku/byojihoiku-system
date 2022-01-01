@@ -55,13 +55,13 @@ cron.schedule('*/20 * * * *', async () =>  {
   await redis.flushALLNoUpdate20mins()
 });
 
-const task = cron.schedule('*/2 * * * *', () => {
-  console.log('running a task every two hours between 8 a.m. and 5:58 p.m.');
+const task = cron.schedule('*/2 * * * *', (aaa) => {
+  console.log(aaa+ 'running a task every two hours between 8 a.m. and 5:58 p.m.');
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 cron.schedule('*/5  * * * *', async () =>  {
-  try {task.start();
+  try {task.start(aaa);
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
 
