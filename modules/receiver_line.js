@@ -273,7 +273,7 @@ router
             if(register_status==null && reservation_status==null){
               replyMessage = '進行中のお手続きはございません。'
               console.log('戻る２')
-            }else if(register_status!=null || reservation_status!=null){
+            }else if(register_status!=null &&  reservation_status!=null){
               replyMessage = '複数の手続きが進行しています。「登録」または「予約」と返信して始めからやり直してください。'
               console.log('戻る３')
             }else if(register_status!=null && reservation_status==null){//登録
