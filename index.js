@@ -88,7 +88,7 @@ cron.schedule('*/5  * * * *', async () =>  {
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
-    let fifteen_interval = setInterval(async () => sendWaitingUser, 180000, lineid);
+    let fifteen_interval = setInterval(async () => sendWaitingUser(lineid), 180000);
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_lineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 

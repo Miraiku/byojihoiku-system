@@ -18,6 +18,7 @@ router
     応答Message
     */
     try {
+      console.log(req.body)
       const text = req.body.events[0].message.text
       const userId = req.body.events[0].source.userId
       let dataString = null
