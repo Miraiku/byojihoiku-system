@@ -66,30 +66,38 @@ cron.schedule('*/1  * * * *', async () =>  {
     const waiting_nuseryid_table = 'waiting_nurseryid_table'
     const waiting_current_capacity = 'waiting_current_capacity'
     let CronJob = cron_o.CronJob;
-    const sendWaitingUser = function(lineid){
-      let is_send 
-      console.log("waiting user reply..."+lineid)
-      request.post(
-        { headers: {'content-type' : 'application/json'},
-        url: 'https://byojihoiku.chiikihoiku.net/webhook',
-        body: JSON.stringify({
-          message: {'text': 'cron'},
-          "line_push_from_cron": "7amwaiting",
-          "id": lineid
-          })
-        },
-        function(error, response, body){
-          if(error){
-            console.log('error@sendWaitingUser' + error)
-          }
-          if(response.statusCode == 200){
-            is_send = true
-          }else{
-            is_send = false
-          }
+    const sendWaitingUser = async function(lineid, nurseryid, deltime){
+      let new_capacity = await redis.hgetStatus(waiting_current_capacity, nurseryid)
+      if(new_capacity !=null && Number(new_capacity) <= 0){
+        return
+      }else{
+        let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, lineid)
+        if(redisid != null){
+          console.log("waiting user reply..."+lineid)
+          request.post(
+            { headers: {'content-type' : 'application/json'},
+            url: 'https://byojihoiku.chiikihoiku.net/webhook',
+            body: JSON.stringify({
+              message: {'text': 'cron'},
+              "line_push_from_cron": "7amwaiting",
+              "id": lineid
+              })
+            },
+            function(error, response, body){
+              if(error){
+                console.log('error@sendWaitingUser' + error)
+              }
+              if(response.statusCode == 200){
+                is_send = true
+              }else{
+                is_send = false
+              }
+            }
+          ); 
+          let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid), null, true);     
+          del_job.start();   
         }
-      ); 
-      return is_send
+      }
     };
     const delLineIdFromWaitingRedisList = async function(table, lineid){
       console.log("timeover: waiting user..."+lineid)
@@ -111,7 +119,7 @@ cron.schedule('*/1  * * * *', async () =>  {
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime_post: `*/${1*l}  * * * *`, crontime_del: `*/${2*l}  * * * *`})
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime_post: `*/${1*l} * * * *`, crontime_del: `*/${2*l} * * * *`})
       l += 1
     }
 
@@ -121,20 +129,9 @@ cron.schedule('*/1  * * * *', async () =>  {
       for (const user_waiting of waitinguser_nurseryid) {
         console.log(user_waiting)
         if(nursery.id == user_waiting.nursereyid){
-          //Line発信後のCapacity更新があるか確認
-          let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
-          if(new_capacity !=null && Number(new_capacity) <= 0){
-            return
-          }else{
-            let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
-            if(redisid != null){
-              let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid), null, true);     
-              job.start();     
-              let del_job = new CronJob(user_waiting.crontime_del, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,user_waiting.lineid), null, true);     
-              del_job.start();     
-            }
-          }
-        }// end for of waitinguser_nurseryid
+          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del), null, true);     
+          job.start();  
+        }
       }//for of capa
     }
     /* Exit Job */

@@ -227,6 +227,8 @@ router
               if(updated !=null){
                 await redis.hsetStatus(waiting_current_capacity, nurseryid, Number(currrent_capa)-1)
                 replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
+                console.log('current capa'+currrent_capa)
+                console.log('new capa'+Number(currrent_capa)-1)
               }else{
                 replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
               }
