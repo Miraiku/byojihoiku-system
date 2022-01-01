@@ -122,7 +122,7 @@ exports.LPOP = async function(key){
     });
     return res //return deleted row number
   } catch (error) {
-    console.log("ERROR @RPUSH :" + error)
+    console.log("ERROR @lpop :" + error)
     return 0
   }
 }

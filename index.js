@@ -63,6 +63,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     if(Number(current_capacity) > 0){
+      await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
