@@ -57,10 +57,15 @@ cron.schedule('*/20 * * * *', async () =>  {
 
 //キャンセル待ちユーザーに回答を問い合わせ
 
-cron.schedule('*/3  * * * *', async () =>  {
+cron.schedule('*/1  * * * *', async () =>  {
   try {
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
+
+    const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
+    const waiting_nuseryid_table = 'waiting_nurseryid_table'
+    const waiting_current_capacity = 'waiting_current_capacity'
+
     const sendWaitingUser = function(lineid){
       let is_send 
       console.log("sendWaitingUser!!!!!"+lineid)
@@ -86,17 +91,17 @@ cron.schedule('*/3  * * * *', async () =>  {
       ); 
       return is_send
     };
-
-    const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
-    const waiting_nuseryid_table = 'waiting_nurseryid_table'
-    const waiting_current_capacity = 'waiting_current_capacity'
+    const delLineIdFromWaitingRedisList = async function(table, lineid){
+      await redis.hDel(table, nursery.id, lineid)
+    };
+    
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/${1*l}  * * * *`})
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime_post: `*/${1*l}  * * * *`, crontime_del: `*/${2*l}  * * * *`})
       l += 1
     }
 
@@ -113,11 +118,12 @@ cron.schedule('*/3  * * * *', async () =>  {
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
               let CronJob = cron_o.CronJob;
-              let job = new CronJob(schedule, sendWaitingUser(user_waiting.crontime), null, true);     
+              let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.line), null, true);     
               job.start();     
+              let del_job = new CronJob(user_waiting.crontime_del, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,user_waiting.line), null, true);     
+              del_job.start();     
             }
-          } //end if2
-
+          }
         }// end for of waitinguser_nurseryid
       }//for of capa
     }
