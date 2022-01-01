@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('0 0 7 * * *', async () => {
+cron.schedule('*/1 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     //今日のキャパ空いてる且つWaitingがいる園
@@ -93,6 +93,7 @@ cron.schedule('0 0 7 * * *', async () => {
         let nursery = await redis.hgetStatus(waiting_nurseryid_table,l+1)
         console.log(nursery)
         console.log(l+1)
+        console.log(`Number(n.capacity) ${Number(n.capacity)}`)
         //発火　by lineis where l = nuid
       }
     }
