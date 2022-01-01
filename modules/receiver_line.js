@@ -246,7 +246,7 @@ router
                     {
                       type: 'message',
                       message: {
-                        'text': '',
+                        'text': 'prevaction',
                       },
                       source: {
                         'userId': userId
