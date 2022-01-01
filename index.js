@@ -6,7 +6,6 @@ const request = require('request');
 const webhook = require('./modules/receiver_line')
 const ajax = require('./modules/receiver_ajax')
 const cron = require('node-cron');
-const CronJob = require('cron').CronJob;
 const redis = require('./modules/db_redis')
 const psgl = require('./modules/db_postgre')
 const views = require('./modules/view_data_render')
@@ -56,9 +55,13 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 const task = cron.schedule('*/2 * * * *', (aaa) => {
-  console.log(aaa+ 'running a task every two hours between 8 a.m. and 5:58 p.m.');
+  console.log('aaa-> '+aaa+ '<-running a task every two hours between 8 a.m. and 5:58 p.m.');
 });
 
+/* Waiting List Remineder */
+const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
+const waiting_nuseryid_table = 'waiting_nurseryid_table'
+const waiting_current_capacity = 'waiting_current_capacity'
 const sendWaitingUser = cron.schedule('*/2 * * * *',async (lineid, nurseryid, deltime) => {
   let new_capacity = await redis.hgetStatus(waiting_current_capacity, nurseryid)
   if(new_capacity !=null && Number(new_capacity) <= 0){
@@ -98,34 +101,28 @@ const delLineIdFromWaitingRedisList = async function(table, lineid){
   await redis.hDel(table, lineid)
 };
 
+const delAllWaitingRegisRecords = async function(){
+  console.log("end waiting list job...")
+  await redis.resetAllStatus(waiting_redisid_fromlineid_table)
+  await redis.resetAllStatus(waiting_nuseryid_table)
+  await redis.resetAllStatus(waiting_current_capacity)
+  await redis.Del(waiting_redisid_fromlineid_table)
+  await redis.Del(waiting_nuseryid_table)
+  await redis.Del(waiting_current_capacity)
+};
 
 
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 cron.schedule('*/5  * * * *', async () =>  {
   try {task.start('aaa');
-    console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
-
-    const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
-    const waiting_nuseryid_table = 'waiting_nurseryid_table'
-    const waiting_current_capacity = 'waiting_current_capacity'
-    
-    const delAllWaitingRegisRecords = async function(){
-      console.log("end waiting list job...")
-      await redis.resetAllStatus(waiting_redisid_fromlineid_table)
-      await redis.resetAllStatus(waiting_nuseryid_table)
-      await redis.resetAllStatus(waiting_current_capacity)
-      await redis.Del(waiting_redisid_fromlineid_table)
-      await redis.Del(waiting_nuseryid_table)
-      await redis.Del(waiting_current_capacity)
-    };
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime_post: `*/${1*l} * * * *`, crontime_del: `*/${2*l} * * * *`})
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
       l += 1
     }
 
@@ -139,10 +136,6 @@ cron.schedule('*/5  * * * *', async () =>  {
         }
       }//for of capa
     }
-    /* Exit Job */
-    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords());     
-    del_alljob.start();  
-    
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
