@@ -102,6 +102,7 @@ cron.schedule('*/2  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
+        console.log(user_waiting)
         if(nursery.id == user_waiting.nursereyid){
           //Line発信後のCapacity更新があるか確認
           let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
