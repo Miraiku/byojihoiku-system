@@ -118,9 +118,9 @@ cron.schedule('*/1  * * * *', async () =>  {
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
               let CronJob = cron_o.CronJob;
-              let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.line), null, true);     
+              let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid), null, true);     
               job.start();     
-              let del_job = new CronJob(user_waiting.crontime_del, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,user_waiting.line), null, true);     
+              let del_job = new CronJob(user_waiting.crontime_del, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,user_waiting.lineid), null, true);     
               del_job.start();     
             }
           }
