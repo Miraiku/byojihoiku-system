@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/5 * * * *', async () =>  {
+cron.schedule('*/2 * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
     //今日のキャパ空いてる且つWaitingがいる園
@@ -122,7 +122,6 @@ cron.schedule('*/5 * * * *', async () =>  {
               let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
               if(lineid != null){
                 const fifteen_interval = setInterval(sendWaitingUser, 180000, lineid);//900000
-                fifteen_interval
               }
             } //end if2
           }//end if 
