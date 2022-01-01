@@ -55,7 +55,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-//cron.schedule('*/2  * * * *', async () =>  {
+cron.schedule('*/10  * * * *', async () =>  {
   try {
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
@@ -148,7 +148,7 @@ cron.schedule('*/20 * * * *', async () =>  {
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
-//});
+});
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 cron.schedule('0 0 7 * * *', async () => {
