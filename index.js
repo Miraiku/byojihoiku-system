@@ -86,7 +86,7 @@ cron.schedule('*/3  * * * *', async () =>  {
 
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
-    const sendWaitingUser = async function(lineid){
+    const sendWaitingUser = function(lineid){
       let is_send 
       console.log("sendWaitingUser!!!!!"+lineid)
       request.post(
@@ -121,7 +121,8 @@ cron.schedule('*/3  * * * *', async () =>  {
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/1 * * * *`})
+      //waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid, crontime: `*/${15*l}  * * * *`})
       l += 1
     }
 
@@ -137,8 +138,7 @@ cron.schedule('*/3  * * * *', async () =>  {
           }else{
             let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, user_waiting.lineid)
             if(redisid != null){
-              let schedule = '*/1  * * * *'
-              new CronJob(schedule, sendWaitingUser(lineid), null, true);          
+              new CronJob(schedule, sendWaitingUser(user_waiting.crontime), null, true);          
             }
           } //end if2
 
