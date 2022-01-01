@@ -58,7 +58,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
-const sendWaitingUser = cron.schedule('*/3 * * * *',async () => {
+const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
   for (const n of today_capacity) {
     let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
@@ -134,7 +134,7 @@ cron.schedule('41 21 * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
-cron.schedule(updateTodayWaitingUserToReservedUserByLineID, async () => {
+cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
     for (const id of lineids) {
