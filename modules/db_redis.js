@@ -102,7 +102,7 @@ exports.Del = async function(key){
     let res
     await redis_client.del(key, (err, reply) => {
       if (err) throw err;
-      console.log('REDIS DELETED ID: ' + id + ' ,' + reply)
+      console.log('REDIS DELETED ID: ' + key + ' ,' + reply)
       res = reply
     });
     return res //return deleted row number

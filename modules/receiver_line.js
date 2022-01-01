@@ -216,7 +216,7 @@ router
             const waiting_lineid_table = 'waiting_lineid_table'
             const waiting_nuseryid_table = 'waiting_nurseryid_table'
             const waiting_current_capacity = 'waiting_current_capacity'
-            let redisid = await redis.hgetStatus(waiting_lineid_table,user.lineid)
+            let redisid = await redis.hgetStatus(waiting_lineid_table,userId)
             if(redisid == null){
               replyMessage = '本日ご利用いただける予約枠はございません。'
             }else{
@@ -233,6 +233,13 @@ router
           } catch (error) {
             console.log('空き登録: '+error)
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+          }
+        }else if(text === "戻る"){
+          try {
+            
+          } catch (error) {
+            console.log('戻る: '+error)
+            replyMessage = 'エラーが発生しました。恐れ入りますが始めからやり直してください。'
           }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)

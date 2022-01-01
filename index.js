@@ -85,19 +85,10 @@ cron.schedule('*/2  * * * *', async () =>  {
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
-    const fifteen_interval = setInterval(async () => {
-      console.log('fifteen_intervalstart');
-      const promise = new Promise((resolve) => {
-         setTimeout(sendWaitingUser, 120000);
-         console.log('res'+resolve)
-      });
-      await promise;
-      console.log('fifteen_intervalend');
-    }, 1000);
-    for (const user of list) {
-      await redis.hsetStatus(waiting_lineid_table,l, user.lineid)
-      await redis.hsetStatus(waiting_nuseryid_table,l,user.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user.nurseryid , redisuserid: l})
+    for (const user_inlist of list) {
+      await redis.hsetStatus(waiting_lineid_table, user_inlist.lineid, l)
+      await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
+      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
       l += 1
     }
 
@@ -105,17 +96,25 @@ cron.schedule('*/2  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hgetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (let li = 0; li < Number(nursery.capacity); li++) {
-        for (const user of waitinguser_nurseryid) {
-          if(nursery.id == user.nursereyid){
+        for (const user_waiting of waitinguser_nurseryid) {
+          if(nursery.id == user_waiting.nursereyid){
             //Line発信後のCapacity更新があるか確認
             let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
             if(new_capacity !=null && Number(new_capacity) <= 0){
               return
             }else{
-              let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
+              let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                fifteen_interval
-                await redis.hDel(waiting_lineid_table, user.redisuserid)
+                setInterval(async () => {
+                  console.log('fifteen_intervalstart');
+                  const promise = new Promise((resolve) => {
+                     setTimeout(sendWaitingUser(lineid), 120000);
+                     console.log('res'+resolve)
+                  });
+                  await promise;
+                  console.log('fifteen_intervalend');
+                }, 1000);
+                await redis.hDel(waiting_lineid_table, user_waiting.lineid)
               }
             } //end if2
           }//end if 
@@ -123,7 +122,6 @@ cron.schedule('*/2  * * * *', async () =>  {
       }//for of capa
     }
     /* Exit Job */
-    clearInterval(fifteen_interval);
     await redis.resetAllStatus(waiting_lineid_table)
     await redis.resetAllStatus(waiting_nuseryid_table)
     await redis.resetAllStatus(waiting_current_capacity)
