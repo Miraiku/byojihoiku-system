@@ -122,9 +122,9 @@ cron.schedule('*/3  * * * *', async () =>  {
                         console.log(lineid)
                         sendWaitingUser(lineid)
                         resolve(lineid)
-                      }, 600000)
+                      }, 60000)
                     })
-                }).then((lineid) => {
+                }).then(async (lineid) => {
                   await redis.hDel(waiting_lineid_table, lineid)
                 })
                 .catch((err) => {
