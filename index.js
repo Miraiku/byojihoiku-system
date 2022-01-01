@@ -55,9 +55,13 @@ cron.schedule('*/20 * * * *', async () =>  {
   await redis.flushALLNoUpdate20mins()
 });
 
+const task = cron.schedule('*/2 * * * *', () => {
+  console.log('running a task every two hours between 8 a.m. and 5:58 p.m.');
+});
+
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('*/1  * * * *', async () =>  {
-  try {
+cron.schedule('*/5  * * * *', async () =>  {
+  try {task.start();
     console.log(new Date())
     //7:10 頃開始？園ごとに設定する  
 
@@ -126,8 +130,8 @@ cron.schedule('*/1  * * * *', async () =>  {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
         if(nursery.id == user_waiting.nursereyid){
-          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del));     
-          job.start();  
+          //let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del));     
+          //job.start();  
         }
       }//for of capa
     }
