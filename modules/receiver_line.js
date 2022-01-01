@@ -165,7 +165,6 @@ router
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "来園"){
           try {
-            //TODO キャンセル巡回機能を作成する
             replyMessage = ''
             let success_replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
             let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
@@ -211,6 +210,30 @@ router
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
           }
 
+        }}else if(text === "空き登録"){
+          try {
+            replyMessage = ''
+            const waiting_lineid_table = 'waiting_lineid_table'
+            const waiting_nuseryid_table = 'waiting_nurseryid_table'
+            const waiting_current_capacity = 'waiting_current_capacity'
+            let redisid = await redis.hgetStatus(waiting_lineid_table,user.lineid)
+            if(redisid == null){
+              replyMessage = '本日ご利用いただける予約枠はございません。'
+            }else{
+              let nurseryid = await redis.hgetStatus(waiting_nuseryid_table,redisid)
+              let currrent_capa = await redis.hgetStatus(waiting_current_capacity, nurseryid)
+              let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
+              if(updated !=null){
+                await redis.hsetStatus(waiting_current_capacity, nursery.id, Number(currrent_capa)-1)
+                replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
+              }else{
+                replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+              }
+            }
+          } catch (error) {
+            console.log('空き登録: '+error)
+            replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+          }
         }else if(text === "登録"){
           await redis.resetAllStatus(userId)
           //SET Status 1
@@ -886,8 +909,10 @@ router
           res.send(lineid)
           replyMessage = 'ご来園の返信がなかっため本日のご予約はキャンセルさせていただきました。\nご不明点がある場合はみらいくまで直接お問い合わせください。'
           
+        }else if(push_message == '7amwaiting'){
+          res.send({lineid})
+          replyMessage = '【要返信】\nキャンセル待ちに空きができました。\nこのまま予約を確定する場合は「空き登録」と返信してください。\n\n※15分以内にご返信がない場合、次にお待ちの方にキャンセル枠をお譲りいたします。ご了承ください。'
         }
-        
         // リクエストヘッダー
         dataString = JSON.stringify({
           to: lineid,

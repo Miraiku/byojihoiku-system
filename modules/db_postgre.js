@@ -320,6 +320,22 @@ exports.updateTomorrowReservedReminderStatusByLineID = async function (lineid, s
   return res
 }
 
+exports.updateTodayWaitingUserToReservedUserByLineID = async function (lineid){
+  try {
+    let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
+    let result = await psgl.sqlToPostgre(sql)
+    let res = []
+    for (const r of result) {
+      let sql = `UPDATE public."Reservation" SET "ReservationStatus" = 'Reserved' , "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0) WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
+      res.push(await psgl.sqlToPostgre(sql))
+    }
+    return res
+  } catch (error) {
+    console.log('ERROR @ updateTodayWaitingUserToReservedUserByLineID: '+ error)
+    return null
+  }
+}
+
 exports.updateTodayReservedReminderStatusByLineID = async function (lineid, status){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
   let result = await psgl.sqlToPostgre(sql)

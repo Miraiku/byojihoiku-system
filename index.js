@@ -73,66 +73,72 @@ cron.schedule('*/1 * * * *', async () =>  {
     //wairing_endtime line 
 
     
-    const sendWaitingUser = function(lineid, rsvid){
+    const sendWaitingUser = function(lineid){
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           "line_push_from_cron": "7amwaiting",
-          "id": lineid,
+          "id": 'Ucd4cd000eb62d24fe5ff3b355f94d45b'
           })
         },
         function(error, response, body){
           if(error){
             console.log('error@sendWaitingUser' + error)
           }
-        }//capaいっぱいになったら送らない
+        }
       ); 
     };
 
-    const waiting_userid_table = 'waiting_userid_table'
     const waiting_lineid_table = 'waiting_lineid_table'
-    const waiting_rsvid_table = 'waiting_rsvid_table'
-    const waiting_nurseryid_table = 'waiting_nurseryid_table'
+    const waiting_nuseryid_table = 'waiting_nurseryid_table'
+    const waiting_current_capacity = 'waiting_current_capacity'
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
+    let waitinguser_nurseryid = []
     for (const user of list) {
-      await redis.hsetStatus(waiting_lineid_table,l,user.lineid)
-      await redis.hsetStatus(waiting_userid_table,l,user.memberid)
-      await redis.hsetStatus(waiting_rsvid_table,l,user.rsvid) 
-      await redis.hsetStatus(waiting_nurseryid_table,user.nurseryid,l) 
+      await redis.hsetStatus(waiting_lineid_table,user.lineid,l)
+      await redis.hsetStatus(waiting_nuseryid_table,l,user.nurseryid) 
+      waitinguser_nurseryid.push({nursereyid:user.nurseryid , redisuserid: l})
       l += 1
     }
 
     let today_capacity = await psgl.getAvailableNurseryOnToday()
-    for (const n of today_capacity) {
-      console.log(`Number(n.name) ${n.name}`)
-      console.log(`Number(n.capacity) ${Number(n.capacity)}`)
-      for (let li = 0; li < Number(n.capacity); li++) {
-        let waiting_user_bynursery = await redis.hgetStatus(waiting_nurseryid_table,n.id)
-        console.log(waiting_user_bynursery)
-        if(waiting_user_bynursery != null){
-        //発火　by lineis where l = nuid
-        
-        }
-      }
+    for (const nursery of today_capacity) {
+      console.log(`Number(n.name) ${nursery.name}`)
+      console.log(`Number(n.capacity) ${Number(nursery.capacity)}`)
+      await redis.hgetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
+      for (let li = 0; li < Number(nursery.capacity); li++) {
+        for (const user of waitinguser_nurseryid) {
+          if(nursery.id == user.nursereyid){
+            //Line発信後のCapacity
+            let new_capacity = await redis.hgetStatus(waiting_current_capacity, nursery.id)
+            if(new_capacity !=null && Number(new_capacity) <= 0){
+              return
+            }else{
+              let lineid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
+              let rsvid = await redis.hgetStatus(waiting_lineid_table, user.redisuserid)
+              if(lineid != null && rsvid !== null){
+                let args = [lineid];
+                const fifteen_interval = setInterval(sendWaitingUser, 180000,...args);//900000
+                fifteen_interval()
+                await redis_client.hdel(waiting_lineid_table, user.redisuserid, (err, reply) => {
+                  if (err) throw err;
+                  console.log('REDIS DEL: waiting_lineid_table' + k + ' ,' + reply)
+                })
+            }
+            } //end if2
+          }//end if 
+        }// end for of waitinguser_nurseryid
+      }//for of capa
     }
-      
-
     /* Exit Job */
-    /*
-    clearInterval(fifteen_interval);
-    await redis.resetAllStatus(waiting_userid_table)
-    await redis.resetAllStatus(waiting_rsvid_table)
-    await redis_client.hdel('update_time', waiting_userid_table, (err, reply) => {
+    /*clearInterval(fifteen_interval);
+    await redis.resetAllStatus(waiting_lineid_table)
+    await redis_client.hdel('update_time', waiting_lineid_table, (err, reply) => {
       if (err) throw err;
       console.log('REDIS DEL: update_time' + k + ' ,' + reply)
-    })
-    await redis_client.hdel('update_time', waiting_rsvid_table, (err, reply) => {
-      if (err) throw err;
-      console.log('REDIS DEL: update_time' + k + ' ,' + reply)
-    })
-    */
+    })*/
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
