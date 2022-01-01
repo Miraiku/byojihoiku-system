@@ -42,7 +42,7 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        location.reload();
+        setTimeout("location.reload()",2000);
       }).fail(function( jqXHR, textStatus, errorThrown) {
         let errmsg = ''
         if(errorThrown == 'Service Unavailable'){
@@ -102,7 +102,7 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        location.reload();
+        setTimeout("location.reload()",2000);
       }).fail(function( jqXHR, textStatus, errorThrown) {
         let errmsg = '削除できませんでした'
         if(errorThrown == 'Conflict'){
@@ -162,7 +162,7 @@ $(function() {
           offset: 0,
           animation: 'slide'
         });
-        location.reload();
+        setTimeout("location.reload()",2000);
       }).fail(function( jqXHR, textStatus, errorThrown) {
         let errmsg = ''
         if(errorThrown == 'Service Unavailable'){
@@ -285,7 +285,7 @@ $(function() {
                 offset: 0,
                 animation: 'slide'
               });
-              location.reload();
+              setTimeout("location.reload()",2000);
             }).fail(function( jqXHR, textStatus, errorThrown) {
               let errmsg = ''
               if(errorThrown == 'Service Unavailable'){
@@ -409,7 +409,7 @@ $(function() {
                 offset: 0,
                 animation: 'slide'
               });
-              location.reload();
+              setTimeout("location.reload()",2000);
             }).fail(function( jqXHR, textStatus, errorThrown) {
               let errmsg = ''
               if(errorThrown == 'Service Unavailable'){
@@ -565,7 +565,7 @@ $(function() {
               offset: 0,
               animation: 'slide'
             });
-            location.reload();
+            setTimeout("location.reload()",2000);
           }).fail(function( jqXHR, textStatus, errorThrown) {
             if(errorThrown == 'Not Found'){
               window.location.href = '/'
