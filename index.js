@@ -81,7 +81,7 @@ cron.schedule('*/1 * * * *', async () =>  {
     let l = 1
     for (const user of list) {
       await redis.hsetStatus(waiting_lineid_table,l,user.lineid)
-      await redis.hsetStatus(waiting_userid_table,l,user.userid)
+      await redis.hsetStatus(waiting_userid_table,l,user.memberid)
       await redis.hsetStatus(waiting_rsvid_table,l,user.rsvid) 
       await redis.hsetStatus(waiting_nurseryid_table,user.nurseryid,l) 
       l += 1
@@ -90,8 +90,8 @@ cron.schedule('*/1 * * * *', async () =>  {
     let today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const n of today_capacity) {
       for (let li = 0; li < Number(n.capacity); li++) {
-        let waiting_nursery = await redis.hgetStatus(waiting_nurseryid_table,(li+1+'a'))
-        console.log(nursery)
+        let waiting_nursery = await redis.hgetStatus(waiting_nurseryid_table,li+1)
+        console.log(waiting_nursery)
         if(n.id == waiting_nursery){
           console.log(n.id)
           console.log(waiting_nursery)
