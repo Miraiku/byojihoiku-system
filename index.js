@@ -92,7 +92,7 @@ cron.schedule('*/1  * * * *', async () =>  {
               }
             }
           ); 
-          let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid), null);     
+          let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid));     
           del_job.start();   
         }
       }
@@ -126,13 +126,13 @@ cron.schedule('*/1  * * * *', async () =>  {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
         if(nursery.id == user_waiting.nursereyid){
-          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del), null);     
+          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del));     
           job.start();  
         }
       }//for of capa
     }
     /* Exit Job */
-    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords(), null);     
+    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords());     
     del_alljob.start();  
     
   } catch (error) {
