@@ -97,6 +97,36 @@ exports.hDel = async function(key, field){
 }
 
 
+exports.RPUSH = async function(list, value){
+  try {//リストの末尾に追加
+    let res
+    await redis_client.rpush(list, value, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS RPUSH: ' + list + ' ,' + value)
+      res = reply
+    });
+    return res //return deleted row number
+  } catch (error) {
+    console.log("ERROR @RPUSH :" + error)
+    return 0
+  }
+}
+
+exports.LPOP = async function(key){
+  try {//先出しと削除
+    let res
+    await redis_client.lpop(key, (err, reply) => {
+      if (err) throw err;
+      console.log('REDIS LPOP: ' + key)
+      res = reply
+    });
+    return res //return deleted row number
+  } catch (error) {
+    console.log("ERROR @RPUSH :" + error)
+    return 0
+  }
+}
+
 exports.Del = async function(key){
   try {
     let res

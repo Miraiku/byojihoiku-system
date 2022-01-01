@@ -214,24 +214,30 @@ router
         }else if(text === "空き登録"){
           try {
             replyMessage = ''
-            const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
-            const waiting_nuseryid_table = 'waiting_nurseryid_table'
-            const waiting_current_capacity = 'waiting_current_capacity'
-            let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table,userId)
+
+            const today_capacity = await psgl.getAvailableNurseryOnToday()
+            for (const n of today_capacity) {
+              let current_waiting_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
+              if(current_waiting_lineid == userId){
+                let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
+                let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
+                if(updated !=null){
+                  await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
+                  replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
+                  console.log('current capa'+current_capa)
+                  console.log('new capa'+Number(current_capa)-1)
+                }else{
+                  replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+                }
+              }
+            }
+            
             if(redisid == null){
               replyMessage = '本日ご利用いただける予約枠はございません。'
             }else{
               let nurseryid = await redis.hgetStatus(waiting_nuseryid_table,redisid)
               let currrent_capa = await redis.hgetStatus(waiting_current_capacity, nurseryid)
-              let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
-              if(updated !=null){
-                await redis.hsetStatus(waiting_current_capacity, nurseryid, Number(currrent_capa)-1)
-                replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
-                console.log('current capa'+currrent_capa)
-                console.log('new capa'+Number(currrent_capa)-1)
-              }else{
-                replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
-              }
+              
             }
           } catch (error) {
             console.log('空き登録: '+error)

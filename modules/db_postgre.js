@@ -410,6 +410,7 @@ exports.getLINEIDByMemberID = async function (id){
   return result//[{}]
 }
 
+
 exports.getMemberIDByLINEID = async function (id){
   let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${id}' and "Disabled" = 'false';`
 
@@ -465,6 +466,18 @@ exports.ReservationStatusDayAfterTomorrowByNursery = async function (id){
   let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
+}
+
+
+exports.getLineIDByReservationID = async function (id){
+  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ID" = '${id}');`
+  let result = await psgl.sqlToPostgre(sql)
+  let res = []
+  for (const i of result) {
+    let sql = `SELECT "LINEID" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res//[{}]
 }
 
 exports.updateReservationInfo = async function (info, intime, outime){

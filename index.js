@@ -54,29 +54,24 @@ cron.schedule('*/20 * * * *', async () =>  {
   await redis.flushALLNoUpdate20mins()
 });
 
-const task = cron.schedule('*/2 * * * *', (aaa) => {
-  console.log('aaa-> '+aaa+ '<-running a task every two hours between 8 a.m. and 5:58 p.m.');
-});
-
 /* Waiting List Remineder */
-const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
-const waiting_nuseryid_table = 'waiting_nurseryid_table'
-const waiting_current_capacity = 'waiting_current_capacity'
-const sendWaitingUser = cron.schedule('*/2 * * * *',async (lineid, nurseryid, deltime) => {
-  let new_capacity = await redis.hgetStatus(waiting_current_capacity, nurseryid)
-  if(new_capacity !=null && Number(new_capacity) <= 0){
-    return
-  }else{
-    let redisid = await redis.hgetStatus(waiting_redisid_fromlineid_table, lineid)
-    if(redisid != null){
-      console.log("waiting user reply..."+lineid)
+const today_capacity = await psgl.getAvailableNurseryOnToday()
+let today_waiting_user_list_withoutsameLINEID = []
+
+const sendWaitingUser = cron.schedule('*/2 * * * *',async () => {
+  for (const n of today_capacity) {
+    let current_rsvid = await redis.LPOP(n.id)
+    let current_lineid = getLineIDByReservationID(current_rsvid)
+    current_lineid = current_lineid[0].LINEID
+    let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
+    if(Number(current_capacity) > 0){
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           message: {'text': 'cron'},
           "line_push_from_cron": "7amwaiting",
-          "id": lineid
+          "id": current_lineid
           })
         },
         function(error, response, body){
@@ -89,52 +84,42 @@ const sendWaitingUser = cron.schedule('*/2 * * * *',async (lineid, nurseryid, de
             is_send = false
           }
         }
-      ); 
-      let del_job = new CronJob(deltime, delLineIdFromWaitingRedisList(waiting_redisid_fromlineid_table,lineid));     
-      del_job.start();   
+      );
     }
   }
 });
 
-const delLineIdFromWaitingRedisList = async function(table, lineid){
-  console.log("timeover: waiting user..."+lineid)
-  await redis.hDel(table, lineid)
-};
-
-const delAllWaitingRegisRecords = async function(){
+cron.schedule('*/10  * * * *', async () =>  {
   console.log("end waiting list job...")
-  await redis.resetAllStatus(waiting_redisid_fromlineid_table)
-  await redis.resetAllStatus(waiting_nuseryid_table)
-  await redis.resetAllStatus(waiting_current_capacity)
-  await redis.Del(waiting_redisid_fromlineid_table)
-  await redis.Del(waiting_nuseryid_table)
-  await redis.Del(waiting_current_capacity)
-};
+  await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
+  await redis.Del('waiting_current_lineid_bynurseryid')
+  for (const nursery of today_capacity) {
+    await redis.Del(nursery.id)
+  }
+})
 
 
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
-cron.schedule('*/5  * * * *', async () =>  {
-  try {task.start('aaa');
+cron.schedule('*/4  * * * *', async () =>  {
+  try {
+    sendWaitingUser.start();
     //7:10 頃開始？園ごとに設定する  
-    const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
+    const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
-    let waitinguser_nurseryid = []
-    for (const user_inlist of list) {
-      await redis.hsetStatus(waiting_redisid_fromlineid_table, user_inlist.lineid, l)
-      await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
-      waitinguser_nurseryid.push({nursereyid:user_inlist.nurseryid , lineid: user_inlist.lineid})
-      l += 1
-    }
-
-    let today_capacity = await psgl.getAvailableNurseryOnToday()
-    for (const nursery of today_capacity) {
-      await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
-      for (const user_waiting of waitinguser_nurseryid) {
-        if(nursery.id == user_waiting.nursereyid){
-          //let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del));     
-          //job.start();  
+    for (const u of original_list) {
+      for (const uu of original_list) {
+        if(u.lineid != uu.lineid){
+          today_waiting_user_list_withoutsameLINEID.push(original_list)
         }
-      }//for of capa
+      }
+    }
+    console.log(today_waiting_user_list_withoutsameLINEID)
+    for (const nursery of today_capacity) {
+      await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
+      for (const user of today_waiting_user_list_withoutsameLINEID) {
+        await redis.RPUSH(nursery.id, user.rsvid)
+        await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
+      }
     }
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
