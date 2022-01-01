@@ -5,6 +5,7 @@ const psgl = require('./db_postgre')
 const redis = require('./db_redis')
 const Holidays = require('date-holidays');
 const { is } = require('express/lib/request');
+const request = require('request');
 const TOKEN = process.env.LINE_ACCESS_TOKEN
 
 router
@@ -235,6 +236,23 @@ router
             replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
           }
         }else if(text === "戻る"){
+          let action
+          /*
+          request.post(
+            { headers: {'content-type' : 'application/json'},
+            url: 'https://byojihoiku.chiikihoiku.net/webhook',
+            body: JSON.stringify({
+              events:[
+                'message':{
+                  'text': action,
+                },
+                'source':{
+                  'userId': userId
+                },
+              ]})eq.body.events[0].type === "message"
+            },
+          */
+      
           replyMessage = ''
           try {
             if(register_status==null && reservation_status==null){
@@ -246,7 +264,6 @@ router
               let new_register_reply_status = Number(register_reply_status) - 10
               await redis.hsetStatus(userId,'register_status',new_register_status)
               await redis.hsetStatus(userId,'register_reply_status',new_register_reply_status)
-              
             }else if(reservation_status!=null && register_status==null){//予約
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
@@ -902,20 +919,20 @@ router
         }
     
         // リクエストの定義
-        const request = https.request(webhookOptions, (res) => {
+        const request_line = https.request(webhookOptions, (res) => {
           res.on("data", (d) => {
             process.stdout.write(d)
           })
         })
     
         // エラーをハンドル
-        request.on("error", (err) => {
+        request_line.on("error", (err) => {
           console.error(err)
         })
     
         // データを送信
-        request.write(dataString)
-        request.end()
+        request_line.write(dataString)
+        request_line.end()
       }
 
     } catch (err) {
@@ -966,20 +983,20 @@ router
         }
     
         // リクエストの定義
-        const request = https.request(webhookOptions, (res) => {
+        const request_line = https.request(webhookOptions, (res) => {
           res.on("data", (d) => {
             process.stdout.write(d)
           })
         })
     
         // エラーをハンドル
-        request.on("error", (err) => {
+        request_line.on("error", (err) => {
           console.error(err)
         })
     
         // データを送信
-        request.write(dataString)
-        request.end()
+        request_line.write(dataString)
+        request_line.end()
       }
     } catch (error) {
       console.error("トリガー： "+err);
