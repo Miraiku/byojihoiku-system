@@ -12,7 +12,8 @@ const views = require('./modules/view_data_render')
 const session = require('cookie-session');
 const PORT = process.env.PORT || 5555;
 const login = require('./modules/view_login')
-
+const { setTimeout } = require("timers/promises");
+ 
 express()
   .use(express.static(path.join(__dirname, 'public')))
   .use(express.json())
@@ -55,7 +56,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 });
 
 //キャンセル待ちユーザーに回答を問い合わせ
-cron.schedule('*/2  * * * *', async () =>  {
+cron.schedule('*/5  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
 
@@ -70,10 +71,13 @@ cron.schedule('*/2  * * * *', async () =>  {
           })
         },
         function(error, response, body){
-          console.log(response.statusCode)
-          console.log(body)
           if(error){
             console.log('error@sendWaitingUser' + error)
+          }
+          if(response.statusCode == 200){
+            return true
+          }else{
+            return false
           }
         }
       ); 
@@ -85,6 +89,7 @@ cron.schedule('*/2  * * * *', async () =>  {
     const list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     let l = 1
     let waitinguser_nurseryid = []
+    let fifteen_interval = setInterval(async () => sendWaitingUser, 180000, lineid);
     for (const user_inlist of list) {
       await redis.hsetStatus(waiting_lineid_table, user_inlist.lineid, l)
       await redis.hsetStatus(waiting_nuseryid_table,l,user_inlist.nurseryid) 
@@ -105,15 +110,7 @@ cron.schedule('*/2  * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                /*setInterval(async () => {
-                  console.log('fifteen_intervalstart');
-                  const promise = new Promise((resolve) => {
-                     setTimeout(sendWaitingUser(lineid), 120000);
-                     console.log('res'+resolve)
-                  });
-                  await promise;
-                  console.log('fifteen_intervalend');
-                }, 1000);*/
+                setTimeout(120000).then( sendWaitingUser(lineid) )
                 await redis.hDel(waiting_lineid_table, user_waiting.lineid)
               }
             } //end if2

@@ -236,6 +236,9 @@ router
           }
         }else if(text === "戻る"){
           try {
+            if(register_status!=null || reservation_status!=null){
+              
+            }
           } catch (error) {
             console.log('戻る: '+error)
             replyMessage = 'エラーが発生しました。恐れ入りますが始めからやり直してください。'
