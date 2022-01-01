@@ -102,12 +102,11 @@ cron.schedule('*/10  * * * *', async () =>  {
 //キャンセル待ちユーザーに回答を問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 cron.schedule('*/2  * * * *', async () =>  {
   try {
-    sendWaitingUser.start();
     //7:10 頃開始？園ごとに設定する  
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     for (const u of original_list) {
-      for (const uu of original_list) {
-        if(u.lineid != uu.lineid){
+      for (const unique of today_waiting_user_list_withoutsameLINEID) {
+        if(u.lineid != unique.lineid){
           today_waiting_user_list_withoutsameLINEID.push(original_list)
         }
       }
@@ -122,6 +121,7 @@ cron.schedule('*/2  * * * *', async () =>  {
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
       }
     }
+    sendWaitingUser.start();
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
