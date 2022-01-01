@@ -64,7 +64,7 @@ cron.schedule('*/1  * * * *', async () =>  {
     const waiting_redisid_fromlineid_table = 'waiting_redisid_table_from_lineid'
     const waiting_nuseryid_table = 'waiting_nurseryid_table'
     const waiting_current_capacity = 'waiting_current_capacity'
-    let CronJob = cron_o.CronJob;
+    const CronJob = cron_o.CronJob;
     const sendWaitingUser = async function(lineid, nurseryid, deltime){
       let new_capacity = await redis.hgetStatus(waiting_current_capacity, nurseryid)
       if(new_capacity !=null && Number(new_capacity) <= 0){
@@ -126,15 +126,14 @@ cron.schedule('*/1  * * * *', async () =>  {
     for (const nursery of today_capacity) {
       await redis.hsetStatus(waiting_current_capacity, nursery.id, nursery.capacity)
       for (const user_waiting of waitinguser_nurseryid) {
-        console.log(user_waiting)
         if(nursery.id == user_waiting.nursereyid){
-          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del), null, true);     
+          let job = new CronJob(user_waiting.crontime_post, sendWaitingUser(user_waiting.lineid, user_waiting.nursereyid, user_waiting.crontime_del), null);     
           job.start();  
         }
       }//for of capa
     }
     /* Exit Job */
-    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords(), null, true);     
+    let del_alljob = new CronJob(`*/10  * * * *`, delAllWaitingRegisRecords(), null);     
     del_alljob.start();  
     
   } catch (error) {
