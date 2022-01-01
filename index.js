@@ -111,7 +111,8 @@ cron.schedule('*/5  * * * *', async () =>  {
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
                 let promise = new Promise((resolve, reject) => {
-                  resolve(await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid))
+                  let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
+                  resolve(lineid)
                 })
                 promise.then(
                   function(lineid) {
@@ -120,7 +121,7 @@ cron.schedule('*/5  * * * *', async () =>  {
                         resolve(sendWaitingUser(lineid))
                       }, 120000)
                     })
-                  })
+                })
                 .catch((err) => {
                   console.error('ERROR @ primise waiting routing :' + err)
                 })            
