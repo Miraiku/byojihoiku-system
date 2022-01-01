@@ -325,7 +325,6 @@ router
           await redis.hsetStatus(userId,'register_status',1)
           //SET Reply Status 10
           await redis.hsetStatus(userId,'register_reply_status',10)
-
           replyMessage = "アカウント登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
         }else if(text === '空き状況'){
           dataString = JSON.stringify({
@@ -342,6 +341,7 @@ router
           replyMessage = "手続きを中止しました。"
         }else if(register_status!=null){
           //ACTION
+          let optionmsg = '\n\n・入力し直す場合は「戻る」\n・登録を中止する場合は「中止」\n・はじめからやり直す場合は「登録」\nと返信してください。'
           switch (Number(register_status)) {
             //Name
             case 1:
@@ -356,7 +356,7 @@ router
                   //SET Reply Status 20
                   await redis.hsetStatus(userId,'register_reply_status',20)
                 }else{
-                  replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n手続きを中止する場合は「中止」と返信してください。"
+                  replyMessage = "お子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"+optionmsg
                 }// close ZenkakuKana
               }
             break;//CASE1
@@ -371,7 +371,7 @@ router
                 //SET Reply Status 30
                 await redis.hsetStatus(userId,'register_reply_status',30,)
               }else{
-                replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。"+optionmsg
               }
               break;//CASE2
             //Allergy
@@ -399,7 +399,7 @@ router
                 replyMessage = "お子様の食物アレルギーは「"+text+"」ですね。\n\n以下の内容で会員情報をします。\nよろしければ「はい」を返信してください。\n登録を中止する場合は「いいえ」を返信してください。\n\n"+all_info
                 break;
               }else{
-                replyMessage = "申し訳ございません。\n再度、お子様の食物アレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」\n\n手続きを中止する場合は「中止」と返信してください。"
+                replyMessage = "お子様の食物アレルギーの有無を返信してください。\n例）ありの場合「あり」、なしの場合「なし」"+optionmsg
                 break;
               };//CASE3
             case 4:
@@ -434,13 +434,14 @@ router
           }// end of switch
         }else if(reservation_status!=null){
           //ACTION
+          let optionmsg = '\n\n・入力し直す場合は「戻る」\n・登録を中止する場合は「中止」\n・はじめからやり直す場合は「予約」\nと返信してください。'
           switch (Number(reservation_status)) {
             //Day
             case 1:
               if(reservation_reply_status==10){
                 if(isValidRegisterdDay(text, userId)){
                   if(!isBeforeToday8AM(text)){
-                    replyMessage = "申し訳ございません。\n当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
+                    replyMessage = "当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
                     await redis.resetAllStatus(userId)
                   }else{
                     //TODO: 祝日DBから長期休暇の判定を追加する。DB側ではやらない。
@@ -458,7 +459,7 @@ router
                     redis.hsetStatus(userId,'reservation_reply_status',20)
                   }
                 }else{
-                  replyMessage = "申し訳ございません。希望日は閉所日または予約の対象外です。\n\n"+timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                  replyMessage = timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)+"までの予約が可能です。\n例）2022年02月22日に予約したい場合「20220222」と返信してください"+optionmsg
                 }
               }
             break;
@@ -481,7 +482,7 @@ router
                   let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
-                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n\n・他の園名を返信してください。\n・キャンセル待ち登録をする場合は「はい」を返信してください。\n・始めからやり直す場合は「予約」を返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n\n・他の園名\n・キャンセル待ち登録をする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     }else{
                       replyMessage = "第1希望の園は「"+text+"」ですね。\n\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
@@ -526,7 +527,7 @@ router
                   redis.hsetStatus(userId,'reservation_status',4)
                   redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE3
             case 4:
@@ -547,7 +548,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "例）早苗町をご希望の場合「早苗町」と返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE4
             case 5:
@@ -557,7 +558,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',6)
                 redis.hsetStatus(userId,'reservation_reply_status',60)
               }else{
-                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "登園時間は開園時間内の時間を返信してください。\n例）8時登園の場合は「0800」"+optionmsg
               }
               break;//CASE3
             case 6:
@@ -567,14 +568,14 @@ router
                 redis.hsetStatus(userId,'reservation_status',7)
                 redis.hsetStatus(userId,'reservation_reply_status',70)
               }else{
-                replyMessage = "降園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "降園時間は開園時間内の時間を返信してください。\n例）16時退園の場合は「1600」"+optionmsg
               }
               break;//CASE4
             case 7:
                 if(isValidNum(text)){
                   let childnum = Number(text)
                   if(childnum > 2){
-                    replyMessage = '申し訳ございません。\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。'
+                    replyMessage = '利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。'+optionmsg
                   }else{
                     let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                     let reservation_date = await redis.hgetStatus(userId,'reservation_date')
@@ -584,7 +585,7 @@ router
                     console.log(Number(nursery_capacity[0].Capacity))
                     console.log(new_amount)
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                      replyMessage = "申し訳ございません。\nご利用希望日は満員です。\n他の園名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n他の園名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       await redis.hsetStatus(userId,'reservation_status',2)
                       await redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -597,7 +598,7 @@ router
                     await redis.hsetStatus(userId,'reservation_reply_status',80)
                   }
                 }else{
-                  replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                  replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。"+optionmsg
                 }
               break;//CASE7
             case 70://人数分ループ用IF
@@ -625,7 +626,7 @@ router
                 //SET Reply Status 20
                 await redis.hsetStatus(userId,'reservation_reply_status',90)
               }else{
-                replyMessage = "申し訳ございません。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」\n\n\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "お子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"+optionmsg
               }// close ZenkakuKana
               break;//CASE8
             case 9:
@@ -651,7 +652,7 @@ router
                     await redis.hsetStatus(userId,'reservation_reply_status',80)
                   }
                 }else{
-                  replyMessage = "申し訳ございません。\nお子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                  replyMessage = "お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。"+optionmsg
                 }
                 break;//CASE9  
             case 10:
@@ -672,7 +673,7 @@ router
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
               }else{
-                replyMessage = "申し訳ございません。\n医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」"+optionmsg
               }
               break;
             case 11:
@@ -686,7 +687,7 @@ router
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
-                replyMessage = "申し訳ございません。\n希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;
             case 12:
