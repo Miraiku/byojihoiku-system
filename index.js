@@ -58,7 +58,7 @@ cron.schedule('*/20 * * * *', async () =>  {
 cron.schedule('*/5  * * * *', async () =>  {
   try {
     //7:10 頃開始？園ごとに設定する
-
+    
     const sendWaitingUser = function(lineid){
       console.log("sendWaitingUser!!!!!")
       request.post(
@@ -110,7 +110,20 @@ cron.schedule('*/5  * * * *', async () =>  {
             }else{
               let lineid = await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid)
               if(lineid != null){
-                //setTimeout(120000).then( sendWaitingUser(lineid) )
+                let promise = new Promise((resolve, reject) => {
+                  resolve(await redis.hgetStatus(waiting_lineid_table, user_waiting.lineid))
+                })
+                promise.then(
+                  function(lineid) {
+                    return new Promise((resolve, reject) => {
+                      setTimeout(() => {
+                        resolve(sendWaitingUser(lineid))
+                      }, 120000)
+                    })
+                  })
+                .catch((err) => {
+                  console.error('ERROR @ primise waiting routing :' + err)
+                })            
                 await redis.hDel(waiting_lineid_table, user_waiting.lineid)
               }
             } //end if2

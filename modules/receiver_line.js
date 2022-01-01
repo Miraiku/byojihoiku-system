@@ -879,9 +879,9 @@ router
                           if(reserved){
                             await redis.resetAllStatus(userId)
                             if(cancel_status == 'true'){
-                              replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                              replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく
                             }else{
-                              replyMessage = "予約が完了しました。"//TODO注意事項をかく//TODOキャンセル待ちの返信時間フローつくる
+                              replyMessage = "予約が完了しました。"//TODO注意事項をかく
                             }
                             replyMessage += "\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
