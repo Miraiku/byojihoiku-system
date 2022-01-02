@@ -329,7 +329,6 @@ exports.getCalendarPage = async function (req, res){
         day1 = '休'
       }else{
         let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
-        console.log(today)
         today_capa = nursery_list[i].capacity - today[0].COUNT
         if(today_capa > 0){
           day1 = '○'
@@ -354,6 +353,7 @@ exports.getCalendarPage = async function (req, res){
         day3 = '休'
       }else{
         let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
+        console.log(dayaftertomorrow)
         dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
         if(dayaftertomorrow_capa > 0){
           day3 = '○'
