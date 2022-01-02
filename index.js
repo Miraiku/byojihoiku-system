@@ -62,7 +62,6 @@ const sendWaitingUser = cron.schedule('*/15 * * * *',async () => {
   for (const n of today_capacity) {
     await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,null)
     let current_lineid = await redis.LPOP(n.id)
-    console.log(`current_lineid ${current_lineid}`)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
       if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
@@ -97,6 +96,8 @@ cron.schedule('0 0 9 * * *', async () => {
   console.log("end waiting list job...")
   await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
   await redis.Del('waiting_current_lineid_bynurseryid')
+  await redis.resetAllStatus('waiting_current_capacity')
+  await redis.Del('waiting_current_capacity')
   for (const nursery of today_capacity) {
     await redis.Del(nursery.id)
   }
