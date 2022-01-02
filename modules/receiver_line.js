@@ -1257,7 +1257,9 @@ function isValidRegisterdDay(s, lineid){
     let milltime_of_reservationday = reservationday_formatted.getTime()
     let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
     //TODO テスト用なのでLINEID消す
-    if(lineid != 'Ucd4cd000eb62d24fe5ff3b355f94d45b' && (holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6)){
+    if(lineid == 'Ucd4cd000eb62d24fe5ff3b355f94d45b' || lineid =='U8e7088dec021bf6cd421a68176e43f53'){
+      return true
+    }if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){
       return false
