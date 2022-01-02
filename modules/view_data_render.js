@@ -339,7 +339,6 @@ exports.getCalendarPage = async function (req, res){
         }else{
           day1 = '○'
         }
-    
       }
 
       if(holiday.isHoliday(day2_JST) ||day2_JST.getDay() == 0 ||  day2_JST.getDay() == 6){
@@ -372,6 +371,7 @@ exports.getCalendarPage = async function (req, res){
         }else{
           day3 = '○'
         }
+      }
     
       if(holiday.isHoliday(day4_JST) ||day4_JST.getDay() == 0 ||  day4_JST.getDay() == 6){
         day4 = '休'
