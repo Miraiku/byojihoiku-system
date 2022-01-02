@@ -329,38 +329,43 @@ exports.getCalendarPage = async function (req, res){
         day1 = '休'
       }else{
         let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
-        today_capa = nursery_list[i].capacity - today[0].COUNT
-        if(today_capa > 0){
-          day1 = '○'
-        }else{
-          day1 = '✕'
-        } 
+        if(today.length > 0){
+          today_capa = nursery_list[i].capacity - today[0].COUNT
+          if(today_capa > 0){
+            day1 = '○'
+          }else{
+            day1 = '✕'
+          } 
+        }
       }
 
       if(holiday.isHoliday(day2_JST) ||day2_JST.getDay() == 0 ||  day2_JST.getDay() == 6){
         day2 = '休'
       }else{
         let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
-        tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
-        if(tomorrow_capa > 0){
-          day2 = '○'
-        }else{
-          day2 = '✕'
-        } 
+        if(tomorrow.length > 0){
+          tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
+          if(tomorrow_capa > 0){
+            day2 = '○'
+          }else{
+            day2 = '✕'
+          } 
+        }
       }
 
       if(holiday.isHoliday(day3_JST) ||day3_JST.getDay() == 0 ||  day3_JST.getDay() == 6){
         day3 = '休'
       }else{
         let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
-        console.log(dayaftertomorrow)
-        dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
-        if(dayaftertomorrow_capa > 0){
-          day3 = '○'
-        }else{
-          day3 = '✕'
-        } 
-      }
+        if(dayaftertomorrow.length > 0){
+          dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
+          if(dayaftertomorrow_capa > 0){
+            day3 = '○'
+          }else{
+            day3 = '✕'
+          } 
+          }
+        }
     
       if(holiday.isHoliday(day4_JST) ||day4_JST.getDay() == 0 ||  day4_JST.getDay() == 6){
         day4 = '休'
