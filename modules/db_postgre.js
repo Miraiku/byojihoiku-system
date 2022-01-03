@@ -589,7 +589,7 @@ exports.getNurseryIDByResevationID = async function (id){
 }
 
 exports.ReservedTodayByNursery = async function (id){
-  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting');`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
