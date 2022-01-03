@@ -99,7 +99,7 @@ exports.getAvailableNurseryOnToday = async function (){
 }
 
 exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
-  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+` and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting' or  or "ReservationStatus"::text LIKE 'Unread%');`
+  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting' or "ReservationStatus"::text LIKE 'Unread%');`
   return await psgl.sqlToPostgre(sql)
 }
 
