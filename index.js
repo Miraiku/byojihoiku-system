@@ -70,6 +70,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     for (const user of today_waiting_user_list_withoutsameLINEID) {
       if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
+        console.log('current_lineid'+current_lineid)
         request.post(
           { headers: {'content-type' : 'application/json'},
           url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -83,6 +84,8 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
             if(error){
               console.log('error@sendWaitingUser' + error)
             }
+            console.log(statusCode)
+            console.log(body)
             if(response.statusCode == 200){
               is_send = true
             }else{
