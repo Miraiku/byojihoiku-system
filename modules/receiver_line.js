@@ -1256,7 +1256,6 @@ function isValidRegisterdDay(s, lineid){
     let milltime_of_today = today
     let milltime_of_reservationday = reservationday_formatted.getTime()
     let milltime_of_dayaftertomorrow = dayaftertomorrow.getTime()
-    //TODO テスト用なのでLINEID消す
     if(holiday.isHoliday(reservationday) || reservationday_formatted.getDay() == 0 ||  reservationday_formatted.getDay() == 6){
       return false
     }else if(milltime_of_reservationday > milltime_of_dayaftertomorrow){

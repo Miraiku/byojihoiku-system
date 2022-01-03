@@ -95,7 +95,7 @@ const sendWaitingUser = cron.schedule('*/15 * * * *',async () => {
 });
 
 //朝9時にウェイティングリストの巡回を停止する
-cron.schedule('0 0 9 * * *', async () => {
+cron.schedule('0 0 10 * * *', async () => {
   console.log("end waiting list job...")
   await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
   await redis.Del('waiting_current_lineid_bynurseryid')
@@ -110,7 +110,7 @@ cron.schedule('0 0 9 * * *', async () => {
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 //7AMに選別がおわるため、7：15分に発火
-cron.schedule('0 0 7 * * *', async () =>  {
+cron.schedule('0 45 7 * * *', async () =>  {
   try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     for (let i = 0; i < original_list.length; i++) {
