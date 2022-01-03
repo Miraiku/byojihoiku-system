@@ -817,7 +817,7 @@ router
                   }else{
                     reservation_status = '予約'
                   }
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\n\n"+all_info+"\n\n\n・上記の内容でよろしければ「はい」\n・予約しない場合は「いいえ」\nと返信してください。"
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\n\n"+all_info+"\n\n・上記の内容でよろしければ「はい」\n・予約しない場合は「いいえ」\nと返信してください。"
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
