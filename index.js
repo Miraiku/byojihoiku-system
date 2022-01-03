@@ -84,7 +84,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
             if(error){
               console.log('error@sendWaitingUser' + error)
             }
-            console.log(statusCode)
+            console.log(response.statusCode)
             console.log(body)
             if(response.statusCode == 200){
               is_send = true
