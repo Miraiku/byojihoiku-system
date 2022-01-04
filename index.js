@@ -61,8 +61,8 @@ let today_waiting_user_list_withoutsameLINEID = []
 const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   for (const n of today_capacity) {
     let perv_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
-    console.log(`perv_lineid ${perv_lineid}`)
-    if(perv_lineid != null){
+    console.log(`perv_lineid ${perv_lineid} , ${perv_lineid.length}`)
+    if(perv_lineid.length > 0){
       await psgl.setodayReservationReminderStatusIsCancelled(perv_lineid)
     }
     await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,null)
