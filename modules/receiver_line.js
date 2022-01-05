@@ -1312,7 +1312,7 @@ async function isRegisterd(id){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl.sqlToPostgre(queryString)
-    
+    console.log(results)
     if(Object.keys(results).length == 0){
       return false
     }else{
