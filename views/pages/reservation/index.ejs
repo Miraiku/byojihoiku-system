@@ -93,7 +93,7 @@
                       <tr  <% if(Day1Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %>  data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day1Wait[i].id%></td>
-                        <td><% if(Day1Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day1Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day1Wait[i].status == 'Rejected'){ %>キャンセル<% } %></td>
+                        <td><% if(Day1Wait[i].status == 'Rejected'){ %>対応不可<% } else if (Day1Wait[i].status == 'Waiting')%>キャンセル待ち<% } else if (Day1Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>
                         <td><%=Day1Wait[i].name%></td>
                         <td><%=Day1Wait[i].birthday%></td>
                         <td><%=Day1Wait[i].date%></td>
@@ -181,7 +181,7 @@
                       <tr <% if(Day2Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day2Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day2Wait[i].id%></td>
-                        <td><% if(Day2Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day2Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day2Wait[i].status == 'Rejected'){ %>キャンセル<% } %></td>
+                        <td><% if(Day2Wait[i].status == 'Rejected'){ %>対応不可<% } else if (Day2Wait[i].status == 'Waiting')%>キャンセル待ち<% } else if (Day2Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>
                         <td><%=Day2Wait[i].name%></td>
                         <td><%=Day2Wait[i].birthday%></td>
                         <td><%=Day2Wait[i].date%></td>
@@ -269,7 +269,7 @@
                       <tr <% if(Day3Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day3Wait[i].id%></td>
-                        <td><% if(Day3Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day3Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day3Wait[i].status == 'Rejected'){ %>キャンセル<% } %></td>   
+                        <td><% if(Day3Wait[i].status == 'Rejected'){ %>対応不可<% } else if (Day3Wait[i].status == 'Waiting')%>キャンセル待ち<% } else if (Day3Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>
                         <td><%=Day3Wait[i].name%></td>
                         <td><%=Day3Wait[i].birthday%></td>
                         <td><%=Day3Wait[i].date%></td>
