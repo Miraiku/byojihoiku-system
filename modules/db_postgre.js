@@ -523,7 +523,7 @@ exports.updateReservationInfo = async function (info, intime, outime){
 }
 
 exports.WaitingInfoTodayByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected' or "ReservationStatus" = 'Cancelled');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
@@ -534,7 +534,7 @@ exports.WaitingInfoTodayByNursery = async function (id){
 }
 
 exports.WaitingInfoTomorrowByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected' or "ReservationStatus" = 'Cancelled');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
@@ -545,7 +545,7 @@ exports.WaitingInfoTomorrowByNursery = async function (id){
 }
 
 exports.WaitingInfoDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected');`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and  ("ReservationStatus" = 'Waiting' or "ReservationStatus" = 'Rejected' or "ReservationStatus" = 'Cancelled');`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
