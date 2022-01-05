@@ -44,8 +44,7 @@ router
           res.status(406).send();
         }
       }else if(action == 'update_member_from_reservation_entry'){
-        const status = req.body.status
-        const new_nurseryid = req.body.nurseryid
+        const new_nurseryid = req.body.nursery
         const rsvid = req.body.rsvid
         let canUpdate = false
 
