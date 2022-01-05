@@ -1326,7 +1326,7 @@ async function isRegisterd(id){
 
 async function isAvailableReservation(id){
   try {
-    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`' and "MiraikuID" IS NOT NULL;`;
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and ("MiraikuID" IS NOT NULL and "MiraikuID" > 0);`;
     const results = await psgl.sqlToPostgre(queryString)
     
     if(Object.keys(results).length == 0){
