@@ -112,7 +112,7 @@
                 <tr class="row_<%=AllUnread[i].rsvid%>">
                   <td><%=i+1%></td>
                   <td><%=AllUnread[i].id%></td>
-                  <td><%=AllUnread[i].rsvstatus%><% if(AllUnread[i].rsvstatus == 'Unread'){ %>キャンセル待ち<% } %><% if(AllUnread[i].rsvstatus == 'UnreadReservation'){ %>予約<% } %></td>
+                  <td><% if(AllUnread[i].rsvstatus == 'Unread'){ %>キャンセル待ち<% } %><% if(AllUnread[i].rsvstatus == 'UnreadReservation'){ %>予約<% } %></td>
                   <td><%=AllUnread[i].name%></td>
                   <td><%=AllUnread[i].birthday%></td>
                   <td><%=AllUnread[i].date%></td>

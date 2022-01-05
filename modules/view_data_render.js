@@ -118,7 +118,7 @@ exports.getNurseryStatus3Days = async function (req, res){
           //NurseryID = 0
           third = 'なし'
         }
-        all_unread_list.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate, rsvstatus:status,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
+        all_unread_list.push({rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate, rsvstatus:status[0].ReservationStatus,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName, second:second, third:third})
       }
     }
 
