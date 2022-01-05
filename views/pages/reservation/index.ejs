@@ -90,7 +90,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day1Wait.length; i++) { %>
-                      <tr  <% if(Day1Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %>  data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                      <tr  <% if(Day1Wait[i].status == 'Rejected' || Day1Wait[i].status == 'Cancelled' ){ %>class="is-reject" <% } %>  data-href="/reservation/confirm/<%=Day1Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day1Wait[i].id%></td>
                         <td><% if(Day1Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day1Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day1Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>
@@ -178,7 +178,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day2Wait.length; i++) { %>
-                      <tr <% if(Day2Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day2Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                      <tr <% if(Day2Wait[i].status == 'Rejected' || Day2Wait[i].status == 'Cancelled' ){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day2Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day2Wait[i].id%></td>
                         <td><% if(Day2Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day2Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day2Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>
@@ -266,7 +266,7 @@
                       <th>&nbsp;</th>
                     </tr>
                     <% for (var i = 0; i < Day3Wait.length; i++) { %>
-                      <tr <% if(Day3Wait[i].status == 'Rejected'){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
+                      <tr <% if(Day3Wait[i].status == 'Rejected' || Day3Wait[i].status == 'Cancelled' ){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day3Wait[i].id%></td>
                         <td><% if(DayWait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day3Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day3Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>   
