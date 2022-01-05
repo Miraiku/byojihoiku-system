@@ -637,6 +637,12 @@ exports.getReservationConfirmationFalseGraterThanToday = async function (){
   return res
 }
 
+exports.getReservationStatusByMemberID = async function (memberid){
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "MemberID" = ${rsvid}';`
+  let result = await psgl.sqlToPostgre(sql)
+  return result
+}
+
 exports.getReservedMemberIDOnTheDay = async function (date){
   let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE '${date}';`
   let result = await psgl.sqlToPostgre(sql)
