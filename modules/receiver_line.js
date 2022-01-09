@@ -164,7 +164,7 @@ router
           replyMessage += "\n今日曜日: " + DayToJPFromDateObj(today)
           replyMessage += "\n明後日: " +dayaftertomorrow
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
-        }else if(text === "来園"){
+        }else if(text === "利用"){
           try {
             replyMessage = ''
             let success_replyMessage = "明日のご予約を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
@@ -205,6 +205,53 @@ router
             }
           } catch (error) {
             console.log('来園: '+error)
+          }
+          //else
+          if(replyMessage == ''){
+            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+          }
+
+        }else if(text === "キャンセル"){
+          try {
+            replyMessage = ''
+            let success_replyMessage = "ご予約のキャンセルを承りました。"
+            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00 change tomorrow
+              let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
+              for (const s of reminderstatus) {
+                if(s[0] == undefined || replyMessage != ''){
+                  continue
+                }
+                if(s[0].Reminder == 'waiting'){
+                  await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'cancelled')
+                  replyMessage = success_replyMessage
+                }else if(s[0].Reminder == 'cancelled'){
+                  replyMessage = cancel_replyMessage
+                }else if(s[0].Reminder == 'replied'){
+                  replyMessage = replied_replyMessage
+                }
+              }
+              await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'cancelled')
+            }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59 change today
+              let reminderstatus = await psgl.getTodayReminderStatusByLINEID(userId)
+              for (const s of reminderstatus) {
+                if(s[0] == undefined || replyMessage != ''){
+                  continue
+                }
+                if(s[0].Reminder == 'waiting'){
+                  await psgl.updateTodayCancelledByLineID(userId)
+                  replyMessage = success_replyMessage
+                }else if(s[0].Reminder == 'cancelled'){
+                  replyMessage = cancel_replyMessage
+                }else if(s[0].Reminder == 'replied'){
+                  replyMessage = replied_replyMessage
+                }
+              }
+              await psgl.updateTodayCancelledByLineID(userId)
+            }
+          } catch (error) {
+            console.log('キャンセル: '+error)
           }
           //else
           if(replyMessage == ''){

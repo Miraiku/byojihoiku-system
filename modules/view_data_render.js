@@ -255,8 +255,9 @@ exports.getMembersPage = async function (req, res){
     */
 
     /*　新規メンバー */
-    /*
-    let members = await psgl.getMembersOrderByName()
+    
+    let members = await psgl.getNoIDMembersOrderByName()
+    let newmembers = []
     for (const m of members) {
       let id
       if(m.MiraikuID == 0){
@@ -273,7 +274,7 @@ exports.getMembersPage = async function (req, res){
       }else{
         allergy = '無し'
       }
-      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
+      newmembers.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
     }
     /* get Year for Tab */
     const today = new Date()
@@ -309,7 +310,7 @@ exports.getMembersPage = async function (req, res){
       }
       year10.push({year:today.getFullYear()-i, members:mem})
     }
-    res.render("pages/member/index", {SubTitle:sub_title,Year10:year10})//Members:mem,
+    res.render("pages/member/index", {SubTitle:sub_title,Year10:year10, NewMembers:newmembers})//Members:mem,
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
     res.redirect('/home/')

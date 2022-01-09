@@ -350,6 +350,30 @@ exports.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled = asy
   }
 }
 
+exports.updateTomorrowCancelledByLineID = async function (lineid){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
+  let result = await psgl.sqlToPostgre(sql)
+  let res = []
+  for (const r of result) {
+    let sql = `UPDATE public."Reservation" SET "ReservationStatus" = 'Cancelled', "Reminder"= 'cancelled' , "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0) WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'tomorrow';`
+    console.log(sql)
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res
+}
+
+
+exports.updateTodayCancelledByLineID = async function (lineid){
+  let sql = `SELECT "ID" FROM public."Member" WHERE "LINEID" = '${lineid}' and "Disabled" = 'false';`
+  let result = await psgl.sqlToPostgre(sql)
+  let res = []
+  for (const r of result) {
+    let sql = `UPDATE public."Reservation" SET "ReservationStatus" = 'Cancelled', "Reminder"= 'cancelled', "UpdatedTime"=to_timestamp(${Date.now()} / 1000.0)  WHERE "MemberID"= '${r.ID}' and "ReservationDate" = DATE 'today';`
+    res.push(await psgl.sqlToPostgre(sql))
+  }
+  return res
+}
+
 exports.getLINEIDByReservedTomorrow = async function (){
   let sql = `SELECT "MemberID", "NurseryID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
@@ -454,6 +478,13 @@ exports.getMembers = async function (){
 
 exports.getMembersOrderByName = async function (){
   let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false' ORDER BY "Name" ASC;`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{},{}]
+}
+
+
+exports.getNoIDMembersOrderByName = async function (){
+  let sql = `SELECT * FROM public."Member" WHERE "MiraikuID" = 0 and Disabled" = 'false' ORDER BY "Name" ASC;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
