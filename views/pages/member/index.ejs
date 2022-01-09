@@ -45,8 +45,8 @@
                       <th>年齢</th>
                       <th>アレルギー</th>
                       <th>&nbsp;</th>
-                    </tr>
-                    <% for (var i = 0; i < Members.length; i++) { %-->
+                    </tr-->
+                    <%# for (var i = 0; i < Members.length; i++) { %>
                       <!--tr data-href="<%= `/member/entry/${Members[i].memberid}` %>"-->
                         <!--td>
                           <input type="checkbox" id="check1" name="<%=`${Members[i].memberid}`%>">
@@ -59,9 +59,9 @@
                         <td><%=Members[i].age%></td>
                         <td><%=Members[i].allergy%></td>
                         <td><button type="button" class="is-red btn_disable_member" value="<%=`${Members[i].memberid}_${Members[i].name}`%>"> 削除 </button></td>
-                      </tr>
-                    <% } %>
-                  </table>
+                      </tr-->
+                    <%# } %>
+                  <!--/table>
                 </div>
               </div>
             </section>
