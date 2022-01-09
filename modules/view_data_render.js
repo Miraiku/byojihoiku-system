@@ -230,6 +230,9 @@ exports.getMembersPage = async function (req, res){
 
     const sub_title = '会員情報　｜　'
     let mem =[]
+
+    /*全員 */
+    /*
     let members = await psgl.getMembersOrderByName()
     for (const m of members) {
       let id
@@ -249,6 +252,7 @@ exports.getMembersPage = async function (req, res){
       }
       mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
     }
+    */
 
     /* get Year for Tab */
     const today = new Date()
@@ -277,7 +281,7 @@ exports.getMembersPage = async function (req, res){
       }
       year10.push({year:today.getFullYear()-i, members:mem})
     }
-    res.render("pages/member/index", {Members:mem,SubTitle:sub_title,Year10:year10})
+    res.render("pages/member/index", {SubTitle:sub_title,Year10:year10})//Members:mem,
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
     res.redirect('/home/')
