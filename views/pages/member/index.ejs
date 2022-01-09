@@ -23,29 +23,7 @@
           <input id="tab<%= i+1 %>" type="radio" name="tab_item">
           <label class="tab_item" for="tab<%= i+1 %>"><%= Year10[i].year %>年度</label>
         <% } %>
-        <input id="tab2" type="radio" name="tab_item">
-        <label class="tab_item" for="tab2">2021年度</label>
-        <input id="tab3" type="radio" name="tab_item">
-        <label class="tab_item" for="tab3">2020年度</span></label>
-        <input id="tab4" type="radio" name="tab_item">
-        <label class="tab_item" for="tab4">2019年度</label>
-        <input id="tab5" type="radio" name="tab_item">
-        <label class="tab_item" for="tab5">2018年度</label>
-        <input id="tab6" type="radio" name="tab_item">
-        <label class="tab_item" for="tab6">2017年度</span></label>
-        <input id="tab7" type="radio" name="tab_item">
-        <label class="tab_item" for="tab7">2016年度</label>
-        <input id="tab8" type="radio" name="tab_item">
-        <label class="tab_item" for="tab8">2015年度</label>
-        <input id="tab9" type="radio" name="tab_item">
-        <label class="tab_item" for="tab9">2014年度</span></label>
-        <input id="tab10" type="radio" name="tab_item">
-        <label class="tab_item" for="tab10">2013年度</label>
-        <input id="tab11" type="radio" name="tab_item">
-        <label class="tab_item" for="tab11">2012年度</label>
-        <input id="tab12" type="radio" name="tab_item">
-        <label class="tab_item" for="tab12">2010年度</span></label>
-
+        
         <div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>
@@ -104,7 +82,7 @@
                   <table class="table">
                     <tr>
                       <th>&nbsp;</th>
-                      <th>Year10[i].year</th>
+                      <th>会員ID</th>
                       <!--th>LINE識別番号</th-->
                       <th>児童氏名</th>
                       <th>生年月日</th>
@@ -131,133 +109,6 @@
           </div>
         </div>
       <% } %>
-        <div class="tab_content" id="tab2_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2021年度</h3>
-                <div class="operation">
-                  <!--button class="btn-s is-square is-red">削除</button-->
-                  <!--iinput type="text" class="is-sm" placeholder="名前で検索"-->
-                  <button class="btn-s is-square is-yellow" onclick="window.open().location.href='https://docs.google.com/spreadsheets/d/1eRhkmnmfrPMJXlfbvIONfu_7AYHwt024JP_qCCbxGbE/edit?usp=sharing'">詳細<span>ドキュメントに移動</span><img src="/img/icon-jump.svg"></button>
-                </div>
-                <div class="table-wrap">
-                  <table class="table">
-                    <tr>
-                      <th>&nbsp;</th>
-                      <th>会員ID</th>
-                      <th>LINE識別番号</th>
-                      <th>児童氏名</th>
-                      <th>生年月日</th>
-                      <th>年齢</th>
-                      <th>アレルギー</th>
-                      <th>&nbsp;</th>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab3_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2020年度</h3>
-                <div class="operation">
-                  <!--button class="btn-s is-square is-red">削除</button-->
-                  <!--iinput type="text" class="is-sm" placeholder="名前で検索"-->
-                  <button class="btn-s is-square is-yellow" onclick="window.open().location.href='https://docs.google.com/spreadsheets/d/1eRhkmnmfrPMJXlfbvIONfu_7AYHwt024JP_qCCbxGbE/edit?usp=sharing'">詳細<span>ドキュメントに移動</span><img src="/img/icon-jump.svg"></button>
-                </div>
-                <div class="table-wrap">
-                  <table class="table">
-                  </table>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab4_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2019年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab5_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2018年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab6_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2017年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab7_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2016年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab8_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2015年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab9_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2014年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab10_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2013年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab11_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2012年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
-        <div class="tab_content" id="tab12_content">
-          <div class="tab_content_description">
-            <section>
-              <div>
-                <h3>2011年度</h3>
-              </div>
-            </section>
-          </div>
-        </div>
       </div>
     </section>
   </main>
