@@ -90,7 +90,20 @@
                       <th>アレルギー</th>
                       <th>&nbsp;</th>
                     </tr>
-                    NewMembers
+                    <% if (i == 0) { %> 
+                      <% for (var x = 0; x < NewMembers.length; x++) { %>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td><%=NewMembers[i].miraikuid %></td>
+                          <td><%=NewMembers[i].name %></td>
+                          <td><%=NewMembers[i].birthday %></td>
+                          <td><%=NewMembers[i].age %></td>
+                          <td><%=NewMembers[i].allergy %></td>
+                          <td><button type="button" class="is-red btn_disable_member" value="<%=`${NewMembers[i].memberid}_${NewMembers[i].name}`%>"> 削除 </button></td>
+                        </tr>
+                      <% }%>
+                    <% } %>
+                    
                     <% for (var x = 0; x < Year10[i].members.length; x++) { %>
                       <tr>
                         <td>&nbsp;</td>
