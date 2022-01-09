@@ -48,10 +48,11 @@
                     </tr>
                     <% for (var i = 0; i < Members.length; i++) { %>
                       <tr data-href="<%= `/member/entry/${Members[i].memberid}` %>">
-                        <td>
+                        <!--td>
                           <input type="checkbox" id="check1" name="<%=`${Members[i].memberid}`%>">
                           <label for="check1" class="checkbox"></label>
-                        </td>
+                        </td-->
+                        <td>&nbsp;</td>
                         <td><%=Members[i].miraikuid%></td>
                         <td><%=Members[i].name%></td>
                         <td><%=Members[i].birthday%></td>
@@ -98,7 +99,6 @@
                         <th><%=Year10[i].members[x].age %></th>
                         <th><%=Year10[i].members[x].allergy %></th>
                         <td><button type="button" class="is-red btn_disable_member" value="<%=`${Year10[i].members[x].memberid}_${Year10[i].members[x].name}`%>"> 削除 </button></td>
-                        <th>&nbsp;</th>
                       </tr>
                     <% }%>
                   </table>
