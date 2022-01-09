@@ -531,12 +531,12 @@ section + section {
   }
 }
 
-body.member .tabs label:nth-child(n):not(:nth-child(n + 7)){
-  background-color: $tab-pink;
+body.member .tabs label:nth-child(n):nth-child(-n+14){
+  background-color: $tab-yellow;
 }
 
-body.member .tabs label:nth-child(n+8):not(:nth-child(n + 11)){
-  background-color: $tab-blue;
+body.member .tabs label:nth-child(n+16):nth-child(-n+22){
+  background-color: $tab-green;
 }
 
 .tab_item:hover {
