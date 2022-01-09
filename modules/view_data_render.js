@@ -550,7 +550,7 @@ exports.getReservationPage = async function (req, res){
         day3_waiting.push({status:status, rsvid:member[0].ID, memberid:member[0].MemberID, id:miraikuid[0].MiraikuID, name:name[0].Name, date:rsvdate,  birthday:birthday, disease:disease[0].DiseaseName, first:first[0].NurseryName})
       }
     }
-    const sub_title = nursery_name[0].NurseryName +'園　予約情報　｜　'
+    const sub_title = nursery_name[0].NurseryName +'病児保育室　予約情報　｜　'
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     res.render("pages/reservation/index", {Status3Days: status3days, Nurserys:nursery_list, Day1Rsv:day1_reserved, Day2Rsv:day2_reserved, Day3Rsv:day3_reserved, Day1Wait:day1_waiting, Day2Wait:day2_waiting,Day3Wait:day3_waiting,SubTitle:sub_title})
   } catch (error) {

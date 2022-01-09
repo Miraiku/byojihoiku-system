@@ -454,7 +454,7 @@ router
                     {
                         all_info += "・"+nursery_list[i].name+"\n";
                     }
-                    replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n\n利用したい病児室を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
+                    replyMessage = "希望日は「"+DayToJP(text)+getDayString(text)+"」ですね。\n\n利用したい病児保育室を以下から選択してください。\n\n"+all_info+"\n早苗町を希望の場合「早苗町」と返信してください。"
                     redis.hsetStatus(userId,'reservation_date',text)
                     redis.hsetStatus(userId,'reservation_status',2)
                     redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -470,7 +470,7 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
-                  replyMessage = "キャンセル待ち登録をされたい園を返信してください。\n早苗町を希望の場合「早苗町」"
+                  replyMessage = "キャンセル待ち登録をする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」"
                 }else if(await isValidNurseryName(text)){
                   if(cancel == 'maybe'){//true以外は初期化
                     await redis.hsetStatus(userId,'reservation_status_cancel', '')
@@ -483,18 +483,18 @@ router
                   let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
-                      replyMessage = "ご利用希望日は満員です。\n\n・他の園名\n・キャンセル待ち登録をする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n\n・他の病児保育室名\n・キャンセル待ち登録をする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     }else{
-                      replyMessage = "第1希望の園は「"+text+"」ですね。\n\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                      replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }
                   }else{
                     if(cancel == 'true'){
-                      replyMessage = "キャンセル登録第1希望の園は「"+text+"」ですね。\n\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                      replyMessage = "キャンセル登録第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }else{
-                      replyMessage = "第1希望の園は「"+text+"」ですね。\n\n第2希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                      replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }
                   }
@@ -509,14 +509,14 @@ router
                     redis.hsetStatus(userId,'reservation_reply_status',30)
                   }
                 }else{
-                  replyMessage = "利用したい病児室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください"
+                  replyMessage = "利用したい病児保育室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください"
                 }//isValidNursery
               }
               break;//CASE2
             case 3:
               //第2希望
               if(await isValidNurseryName(text) || text == 'なし'){
-                  replyMessage = "第2希望の園は「"+text+"」ですね。\n\n第3希望の園名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                  replyMessage = "第2希望の病児保育室は「"+text+"」ですね。\n\n第3希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                   let nursery_id = await getNurseryIdByName(text)
                   if( text == 'なし'){
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',0)
@@ -528,7 +528,7 @@ router
                   redis.hsetStatus(userId,'reservation_status',4)
                   redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
-                replyMessage = "利用したい病児室を返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
+                replyMessage = "利用したい病児保育室を返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE3
             case 4:
@@ -538,7 +538,7 @@ router
                 let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
                 let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
                 let nursery_id = await getNurseryIdByName(text)
-                replyMessage = "第3希望の園は「"+text+"」ですね。\n\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n病児保育室の開所時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
+                replyMessage = "第3希望の病児保育室は「"+text+"」ですね。\n\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n病児保育室の開所時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
                 if( text == 'なし'){
                   await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
                   await redis.hsetStatus(userId,'reservation_nursery_name_3','なし')
@@ -549,7 +549,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "利用したい病児室を返信してください。\\n希望がない場合は「なし」と返信してください。"+optionmsg
+                replyMessage = "利用したい病児保育室を返信してください。\\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE4
             case 5:
@@ -586,7 +586,7 @@ router
                     console.log(Number(nursery_capacity[0].Capacity))
                     console.log(new_amount)
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                      replyMessage = "ご利用希望日は満員です。\n他の園名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n他の病児保育室名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       await redis.hsetStatus(userId,'reservation_status',2)
                       await redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -916,7 +916,7 @@ router
           }// end of switch
         }else{
           //通常Message
-          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各園の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
+          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各病児保育室の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
         }// end default message reply
 
     
