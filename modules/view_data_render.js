@@ -249,7 +249,17 @@ exports.getMembersPage = async function (req, res){
       }
       mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
     }
-    res.render("pages/member/index", {Members:mem,SubTitle:sub_title})
+
+    /* get Year for Tab */
+    const today = new Date()
+    let year10 = []
+    for (let i = 1; i <= 10; i++) {
+      const y = String(today.getFullYear()-i).toString().substr(-2)
+      let result = await psgl.getYearMembersOrderByName(y)
+      year10.push({year:today.getFullYear()-i, members:result})
+    }
+    
+    res.render("pages/member/index", {Members:mem,SubTitle:sub_title,Year10:year10})
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
     res.redirect('/home/')

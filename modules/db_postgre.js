@@ -455,6 +455,13 @@ exports.getMembersOrderByName = async function (){
   return result//[{},{}]
 }
 
+exports.getYearMembersOrderByName = async function (year){
+  //year -> 2021なら21
+  let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false' and "MiraikuID"::text LIKE '${year}%' ORDER BY "Name" ASC;`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{},{}]
+}
+
 exports.getMemberInfoByMemberID = async function (id){
   let sql = `SELECT * FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
 

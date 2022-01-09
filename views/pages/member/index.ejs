@@ -15,6 +15,11 @@
       </h2>
     </section>
     <section>
+
+      <% for (var i = 0; i < Year10.length; i++) { %>
+        <input id="tab2" type="radio" name="tab_item">
+        <label class="tab_item" for="tab2"><%= Year10[i].y %>年度</label>
+      <% } %>
       <div class="tabs is-btn l-container">
         <input id="tab1" type="radio" name="tab_item" checked>
         <label class="tab_item" for="tab1">全員</label>
