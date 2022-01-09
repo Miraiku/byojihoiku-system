@@ -92,12 +92,12 @@
                     </tr>
                     <% for (var x = 0; x < Year10[i].members.length; x++) { %>
                       <tr>
-                        <th>&nbsp;</th>
-                        <th><%=Year10[i].members[x].miraikuid %></th>
-                        <th><%=Year10[i].members[x].name %></th>
-                        <th><%=Year10[i].members[x].birthday %></th>
-                        <th><%=Year10[i].members[x].age %></th>
-                        <th><%=Year10[i].members[x].allergy %></th>
+                        <td>&nbsp;</td>
+                        <td><%=Year10[i].members[x].miraikuid %></td>
+                        <td><%=Year10[i].members[x].name %></td>
+                        <td><%=Year10[i].members[x].birthday %></td>
+                        <td><%=Year10[i].members[x].age %></td>
+                        <td><%=Year10[i].members[x].allergy %></td>
                         <td><button type="button" class="is-red btn_disable_member" value="<%=`${Year10[i].members[x].memberid}_${Year10[i].members[x].name}`%>"> 削除 </button></td>
                       </tr>
                     <% }%>
