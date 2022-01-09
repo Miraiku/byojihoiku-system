@@ -20,7 +20,7 @@
         <!--input id="tab1" type="radio" name="tab_item" checked>
         <label class="tab_item" for="tab1">全員</label-->
       <% for (var i = 0; i < Year10.length; i++) { %>
-        <input id="tab<%= i+1 %>" type="radio" name="tab_item">
+        <input id="tab<%= i+1 %>" type="radio" name="tab_item" <% if (i == 0) { %> checked<% } %>>
         <label class="tab_item" for="tab<%= i+1 %>"><%= Year10[i].year %>年度</label>
       <% } %>
 
