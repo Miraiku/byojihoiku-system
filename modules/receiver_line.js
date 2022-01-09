@@ -185,7 +185,6 @@ router
                   replyMessage = replied_replyMessage
                 }
               }
-              await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'replied')
             }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59 change today
               let reminderstatus = await psgl.getTodayReminderStatusByLINEID(userId)
               for (const s of reminderstatus) {
@@ -201,7 +200,6 @@ router
                   replyMessage = replied_replyMessage
                 }
               }
-              await psgl.updateTodayReservedReminderStatusByLineID(userId, 'replied')
             }
           } catch (error) {
             console.log('来園: '+error)
@@ -232,7 +230,6 @@ router
                   replyMessage = replied_replyMessage
                 }
               }
-              await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'cancelled')
             }else if(new Date().getHours() >= 0 && new Date().getHours() < 7){//0:00-6:59 change today
               let reminderstatus = await psgl.getTodayReminderStatusByLINEID(userId)
               for (const s of reminderstatus) {
@@ -248,7 +245,6 @@ router
                   replyMessage = replied_replyMessage
                 }
               }
-              await psgl.updateTodayCancelledByLineID(userId)
             }
           } catch (error) {
             console.log('キャンセル: '+error)
