@@ -532,11 +532,11 @@ section + section {
 }
 
 body.member .tabs label:nth-child(n):nth-child(-n+14){
-  background-color: $tab-yellow;
+  background-color: $tab-pink;
 }
 
 body.member .tabs label:nth-child(n+16):nth-child(-n+24){
-  background-color: $tab-green;
+  background-color: $tab-blue;
 }
 
 .tab_item:hover {
