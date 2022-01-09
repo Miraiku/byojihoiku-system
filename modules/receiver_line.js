@@ -470,7 +470,7 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
-                  replyMessage = "キャンセル待ちをする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」"
+                  replyMessage = "キャンセル待ちをする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」と返信してください。"
                 }else if(await isValidNurseryName(text)){
                   if(cancel == 'maybe'){//true以外は初期化
                     await redis.hsetStatus(userId,'reservation_status_cancel', '')
@@ -509,7 +509,7 @@ router
                     redis.hsetStatus(userId,'reservation_reply_status',30)
                   }
                 }else{
-                  replyMessage = "利用したい病児保育室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください"
+                  replyMessage = "利用したい病児保育室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください。"
                 }//isValidNursery
               }
               break;//CASE2
