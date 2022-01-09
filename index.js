@@ -193,7 +193,7 @@ cron.schedule('*/1 * * * *', async () => {
           "line_push_from_cron": "20pm",
           "id": id.lineid,
           "name": id.name,
-          "nurseryname": id.nursery
+          "nurseryname": id.nurseryname
           })
         },
         async function(error, response, body){

@@ -254,6 +254,27 @@ exports.getMembersPage = async function (req, res){
     }
     */
 
+    /*　新規メンバー */
+    /*
+    let members = await psgl.getMembersOrderByName()
+    for (const m of members) {
+      let id
+      if(m.MiraikuID == 0){
+        id = '未付与'
+      }else{
+        id = m.MiraikuID
+      }
+      let name = m.Name
+      let birthday = view.getSlashDateFromt8Number(m.BirthDay)
+      let age = view.getAgeMonth(m.BirthDay)
+      let allergy = m.Allergy
+      if(allergy){
+        allergy = '有り'
+      }else{
+        allergy = '無し'
+      }
+      mem.push({miraikuid:id, name:name, birthday:birthday, age:age, allergy:allergy, memberid:m.ID})
+    }
     /* get Year for Tab */
     const today = new Date()
     //年度が変わったら１年繰り上げ
