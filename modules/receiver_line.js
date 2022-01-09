@@ -470,7 +470,7 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
-                  replyMessage = "キャンセル待ちをする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」と返信してください。"
+                  replyMessage = "キャンセル待ちを希望する病児保育室を返信してください。\n早苗町を希望の場合「早苗町」と返信してください。"
                 }else if(await isValidNurseryName(text)){
                   if(cancel == 'maybe'){//true以外は初期化
                     await redis.hsetStatus(userId,'reservation_status_cancel', '')
@@ -483,7 +483,7 @@ router
                   let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
-                      replyMessage = "ご利用希望日は満員です。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     }else{
                       replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
@@ -590,7 +590,7 @@ router
                     console.log(Number(nursery_capacity[0].Capacity))
                     console.log(new_amount)
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                      replyMessage = "ご利用希望日は満員です。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      replyMessage = "ご利用希望日は予約の空きがありません。。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       await redis.hsetStatus(userId,'reservation_status',2)
                       await redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -663,7 +663,7 @@ router
             case 10:
               let diseaseid_text = zenkaku2Hankaku(text)
               if(await isValidDisease(diseaseid_text)){
-                let meals = await psgl.getMealList()
+                let meals = await psgl.getMainMealList()
                 let all_info = ''
                 for(let i = 0; i < meals.length; i++)
                 {
@@ -683,29 +683,41 @@ router
               break;
             case 11:
               let mealid_text = zenkaku2Hankaku(text)
-              if(await isValidMeal(mealid_text)){
-                let mealname = await psgl.getMealNameFromID(mealid_text)
-                replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、その内容を返信してください。\n追記事項がない場合は「なし」と返信してください。" 
+              if(await isValidMainMeal(mealid_text)){
+                let mealname = await psgl.getMealNameFromMainID(mealid_text)
+                let meals = await psgl.getSubMealList()
+                let all_info = ''
+                for(let i = 0; i < meals.length; i++)
+                {
+                    all_info += meals[i].id+". "+meals[i].name+"\n";
+                }
+                replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"+all_info
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_child_meal_name_'+current_child_number,mealname[0].MealName)
                 await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,mealid_text)
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
-                replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
               }
               break;
             case 12:
-              //TODO 例）入力内容を間違えてしまったときは「戻る」と返信すると、1つ前の項目に戻る…など？どんな解決方法があるのかわからないので、機能として追加していただきたいと思います。
-              replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
-              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-              if(text=='なし'){
-                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
-              }else{
-                await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,escapeHTML(text))
-              }
-              await redis.hsetStatus(userId,'reservation_status',13)
-              await redis.hsetStatus(userId,'reservation_reply_status',130)
+              let mealid_text = zenkaku2Hankaku(text)
+              if(await isValidSubMeal(mealid_text)){
+                let mealname = await psgl.getMealNameFromSubID(mealid_text)
+                replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                if(text=='なし'){
+                  await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
+                }else{
+                  await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,mealname[0].MealName)
+                  await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,mealid_text)
+                }
+                await redis.hsetStatus(userId,'reservation_status',13)
+                await redis.hsetStatus(userId,'reservation_reply_status',130)
+                }else{
+                  replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                }
               break;
             case 13:
               replyMessage = "熱性けいれんの既往歴「"+escapeHTML(text)+"」ですね。\n\n食物アレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
@@ -1429,10 +1441,24 @@ async function isMembered(id, name, birthday){
   }
 }
 
-async function isValidMeal(id){
+async function isValidMainMeal(id){
   try {
     let num = zenkaku2Hankaku(id)
-    let result = await psgl.isValidMealInMealTable(num)
+    let result = await psgl.isValidMainMealInMealTable(num)
+    if(result[0] != undefined && result[0].ID != null){
+      return true
+    }else{
+      false
+    }
+  } catch (error) {
+    return false
+  }
+}
+
+async function isValidSubMeal(id){
+  try {
+    let num = zenkaku2Hankaku(id)
+    let result = await psgl.isValidSubMealInMealTable(num)
     if(result[0] != undefined && result[0].ID != null){
       return true
     }else{

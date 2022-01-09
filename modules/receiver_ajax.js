@@ -29,7 +29,7 @@ router
             await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
             res.status(200).send('Success');
           }else{
-            res.status(406).send('満員のため変更できませんでした。');
+            res.status(406).send('予約の空きがないため変更できませんでした。');
             return
           }
         }else{

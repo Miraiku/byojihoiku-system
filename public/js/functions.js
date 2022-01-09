@@ -48,7 +48,7 @@ $(function() {
         if(errorThrown == 'Service Unavailable'){
           errmsg = '申し訳ありません、変更できませんでした'
         }else if(errorThrown == 'Not Acceptable'){
-          errmsg = '変更先が満員のため変更できませんでした'
+          errmsg = '変更先の空きがないため変更できませんでした'
         }
         notif({
           type: "error",
@@ -168,7 +168,7 @@ $(function() {
         if(errorThrown == 'Service Unavailable'){
           errmsg = '申し訳ありません、変更できませんでした'
         }else if(errorThrown == 'Not Acceptable'){
-          errmsg = '変更先が満員のため変更できませんでした'
+          errmsg = '変更先の空きがないため変更できませんでした'
         }
         notif({
           type: "error",
@@ -415,7 +415,7 @@ $(function() {
               if(errorThrown == 'Service Unavailable'){
                 errmsg = '変更できませんでした'
               }else if(errorThrown == 'Not Acceptable'){
-                errmsg = '変更先の病児保育室が満員のため変更できませんでした'
+                errmsg = '変更先の空きがないため変更できませんでした'
               }
               notif({
                 type: "error",

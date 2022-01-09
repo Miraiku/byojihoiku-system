@@ -150,12 +150,22 @@ exports.getMemberBirthDayByID = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getMealList = async function (date){
+exports.getMainMealList = async function (date){
   let results = []
-  let sql = `SELECT "ID", "MealName" FROM public."Meal";`
+  let sql = `SELECT "ID", "MealName", "MealID" FROM public."Meal" WHERE "Type" = 'main';`
   let r = await psgl.sqlToPostgre(sql)
   for await (const v of r) {
-    results.push({id:v['ID'], name:v['MealName']})
+    results.push({id:v['ID'], mealid:v['MealID']})
+  }
+  return results
+}
+
+exports.getSubMealList = async function (date){
+  let results = []
+  let sql = `SELECT "ID", "MealName", "MealID" FROM public."Meal" WHERE "Type" = 'sub';`
+  let r = await psgl.sqlToPostgre(sql)
+  for await (const v of r) {
+    results.push({id:v['ID'], name:v['MealName'], mealid:v['MealID']})
   }
   return results
 }
@@ -165,10 +175,32 @@ exports.isValidMealInMealTable = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getMealNameFromID = async function (id){
-  let sql = `SELECT "MealName" FROM public."Meal" WHERE "ID" = '`+id+`';`
+exports.isValidMainMealInMealTable = async function (id){
+  let sql = `SELECT "ID" FROM public."Meal" WHERE "MealID" = '`+id+`' and "Type" = 'main';`
   return await psgl.sqlToPostgre(sql)
 }
+
+exports.isValidSubMealInMealTable = async function (id){
+  let sql = `SELECT "ID" FROM public."Meal" WHERE "MealID" = '`+id+`' and "Type" = 'sub';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getMealNameFromMainID = async function (id){
+  let sql = `SELECT "MealName" FROM public."Meal" WHERE "MealID" = '`+id+`' and "Type" = 'main';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+exports.getMealNameFromSubID = async function (id){
+  let sql = `SELECT "MealName" FROM public."Meal" WHERE "MealID" = '`+id+`' and "Type" = 'sub';`
+  return await psgl.sqlToPostgre(sql)
+}
+
+
+exports.getUniqueIDFromMealName = async function (name){
+  let sql = `SELECT "ID" FROM public."Meal" WHERE "MealName" = '`+ name+`';`
+  return await psgl.sqlToPostgre(sql)
+}
+
 
 exports.isValidDiseaseInDiseaseTable = async function (id){
   let sql = `SELECT "ID" FROM public."Disease" WHERE "DiseaseID" = '`+id+`';`
@@ -413,6 +445,12 @@ exports.delMemberByIDName = async function (id, name){
 
 exports.getMembers = async function (){
   let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false' ORDER BY "MiraikuID";`
+  let result = await psgl.sqlToPostgre(sql)
+  return result//[{},{}]
+}
+
+exports.getMembersOrderByName = async function (){
+  let sql = `SELECT * FROM public."Member" WHERE "Disabled" = 'false' ORDER BY "Name" ASC;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
