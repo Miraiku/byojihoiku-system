@@ -222,7 +222,7 @@ router
                   continue
                 }
                 if(s[0].Reminder == 'waiting'){
-                  await psgl.updateTomorrowReservedReminderStatusByLineID(userId, 'cancelled')
+                  await psgl.updateTomorrowCancelledByLineID(userId)
                   replyMessage = success_replyMessage
                 }else if(s[0].Reminder == 'cancelled'){
                   replyMessage = cancel_replyMessage
