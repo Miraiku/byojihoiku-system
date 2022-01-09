@@ -484,7 +484,7 @@ exports.getMembersOrderByName = async function (){
 
 
 exports.getNoIDMembersOrderByName = async function (){
-  let sql = `SELECT * FROM public."Member" WHERE "MiraikuID" = 0 and Disabled" = 'false' ORDER BY "Name" ASC;`
+  let sql = `SELECT * FROM public."Member" WHERE "MiraikuID" = 0 and "Disabled" = 'false' ORDER BY "Name" ASC;`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
