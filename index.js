@@ -180,7 +180,8 @@ cron.schedule('0 0 7 * * *', async () => {
 });
 
 //前日リマインダー送信
-cron.schedule('0 0 20 * * *', async () => {
+cron.schedule('*/1 * * * *', async () => {
+//cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
     for (const id of ids) {
@@ -190,7 +191,9 @@ cron.schedule('0 0 20 * * *', async () => {
         body: JSON.stringify({
           message: {'text': 'cron'},
           "line_push_from_cron": "20pm",
-          "id": id[0].LINEID,
+          "id": id.lineid,
+          "name": id.name,
+          "nurseryname": id.nursery
           })
         },
         async function(error, response, body){

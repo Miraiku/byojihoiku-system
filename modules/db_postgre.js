@@ -351,11 +351,14 @@ exports.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled = asy
 }
 
 exports.getLINEIDByReservedTomorrow = async function (){
-  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "MemberID", "NurseryID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   let ids = []
   for (const r of result) {
-    ids.push(await psgl.getLINEIDByMemberID(r.MemberID))
+    let nursery_name = await psgl.getNurseryNameByID(r.NurseryID)
+    let lineid = await psgl.getLINEIDByMemberID(r.MemberID)
+    let name = await psgl.getMemberNameByMemberID(r.MemberID)
+    ids.push({lineid: lineid[0].LINEID, nurseryname: nursery_name[0].NurseryName, name: name[0].Name})
   }
   return ids
 }
@@ -468,6 +471,7 @@ exports.getMemberInfoByMemberID = async function (id){
   let result = await psgl.sqlToPostgre(sql)
   return result//[{},{}]
 }
+
 
 exports.getLINEIDByMemberID = async function (id){
   let sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${id}' and "Disabled" = 'false';`
