@@ -87,12 +87,16 @@
                       <th>生年月日</th>
                       <th>年齢</th>
                       <th>アレルギー</th>
-                      <th>&nbsp;<%=Year10[i].members%></th>
+                      <th>&nbsp;</th>
                     </tr>
                     <% for (var x = 0; x < Year10[i].members.length; x++) { %>
                       <tr>
                         <th>&nbsp;</th>
-                        <th><%=Year10[i].members[x].name></th>
+                        <th><%=Year10[i].members[x].miraikuid %></th>
+                        <th><%=Year10[i].members[x].name %></th>
+                        <th><%=Year10[i].members[x].birthday %></th>
+                        <th><%=Year10[i].members[x].age %></th>
+                        <th><%=Year10[i].members[x].allergy %></th>
                         <th>&nbsp;</th>
                       </tr>
                     <% }%>
