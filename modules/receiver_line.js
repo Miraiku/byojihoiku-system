@@ -167,9 +167,9 @@ router
         }else if(text === "来園"){
           try {
             replyMessage = ''
-            let success_replyMessage = "明日のご来園を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let success_replyMessage = "明日のご予約を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
             let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-            let replied_replyMessage = "明日のご来園を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
             if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00 change tomorrow
               let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
               for (const s of reminderstatus) {
@@ -470,7 +470,7 @@ router
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                 if(cancel=='maybe' && (text == 'はい' || text=='キャンセル')){
                   await redis.hsetStatus(userId,'reservation_status_cancel','true')
-                  replyMessage = "キャンセル待ち登録をする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」"
+                  replyMessage = "キャンセル待ちをする病児保育室を返信してください。\n早苗町を希望の場合「早苗町」"
                 }else if(await isValidNurseryName(text)){
                   if(cancel == 'maybe'){//true以外は初期化
                     await redis.hsetStatus(userId,'reservation_status_cancel', '')
@@ -483,7 +483,7 @@ router
                   let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
-                      replyMessage = "ご利用希望日は満員です。\n\n・他の病児保育室名\n・キャンセル待ち登録をする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                     }else{
                       replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
@@ -559,7 +559,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',6)
                 redis.hsetStatus(userId,'reservation_reply_status',60)
               }else{
-                replyMessage = "登園時間を返信してください。\n例）8時登園の場合は「0800」"+optionmsg
+                replyMessage = "登園時間を返信してください。\n例）9時登園の場合は「0900」"+optionmsg
               }
               break;//CASE3
             case 6:
@@ -586,7 +586,7 @@ router
                     console.log(Number(nursery_capacity[0].Capacity))
                     console.log(new_amount)
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                      replyMessage = "ご利用希望日は満員です。\n他の病児保育室名を返信してください。\n\n・キャンセル待ち登録をする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      replyMessage = "ご利用希望日は満員です。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       await redis.hsetStatus(userId,'reservation_status',2)
                       await redis.hsetStatus(userId,'reservation_reply_status',20)
@@ -813,7 +813,7 @@ router
                   let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
                   let reservation_status = ''
                   if(cancel_status == 'true'){
-                    reservation_status = 'キャンセル待ち登録'
+                    reservation_status = 'キャンセル待ち'
                   }else{
                     reservation_status = '予約'
                   }
@@ -879,7 +879,7 @@ router
                           if(reserved){
                             await redis.resetAllStatus(userId)
                             if(cancel_status == 'true'){
-                              replyMessage = "キャンセル待ち登録が完了しました。"//TODO注意事項をかく
+                              replyMessage = "キャンセル待ちが完了しました。"//TODO注意事項をかく
                             }else{
                               replyMessage = "予約が完了しました。"//TODO注意事項をかく
                             }
@@ -992,7 +992,7 @@ router
       if(push_message != undefined){
         if(push_message == '20pm'){
           res.send(lineid)
-          replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、お預かりはキャンセルとなります。'
+          replyMessage = '【要返信】\n明日、病児保育のご予約をいただいております。\nご来園される場合は「来園」と返信してください。\n\n※明日の朝7時までにご返信がない場合、ご予約は自動的にキャンセルとなります。'
         }else if(push_message == 'today7am'){
           res.send(lineid)
           replyMessage = 'ご来園の返信がなかっため本日のご予約はキャンセルさせていただきました。\nご不明点がある場合はみらいくまで直接お問い合わせください。'
