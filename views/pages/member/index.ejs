@@ -19,11 +19,11 @@
       <div class="tabs is-btn l-container">
         <input id="tab1" type="radio" name="tab_item" checked>
         <label class="tab_item" for="tab1">全員</label>
-        <% for (var i = 0; i < Year10.length; i++) { %>
-          <input id="tab<%= i+1 %>" type="radio" name="tab_item">
-          <label class="tab_item" for="tab<%= i+1 %>"><%= Year10[i].year %>年度</label>
-        <% } %>
-        
+      <% for (var i = 0; i < Year10.length; i++) { %>
+        <input id="tab<%= i+2 %>" type="radio" name="tab_item">
+        <label class="tab_item" for="tab<%= i+2 %>"><%= Year10[i].year %>年度</label>
+      <% } %>
+
         <div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>
@@ -66,9 +66,8 @@
             </section>
           </div>
         </div>
-
       <% for (var i = 0; i < Year10.length; i++) { %>
-        <div class="tab_content" id="tab<%= i+1 %>_content">
+        <div class="tab_content" id="tab<%= i+2 %>_content">
           <div class="tab_content_description">
             <section>
               <div>
