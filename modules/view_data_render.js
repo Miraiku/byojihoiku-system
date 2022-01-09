@@ -256,9 +256,15 @@ exports.getMembersPage = async function (req, res){
 
     /* get Year for Tab */
     const today = new Date()
-    if(today.getMonth > )
+    //年度が変わったら１年繰り上げ
+    let i = 0
+    if(today.getMonth() >= 3){
+      i = 2
+    }else{
+      i = 1
+    }
     let year10 = []
-    for (let i = 1; i <= 11; i++) {
+    for (i = 1; i <= 11; i++) {
       const y = String(today.getFullYear()-i).toString().substr(-2)
       let result = await psgl.getYearMembersOrderByName(y)
       let mem = []
