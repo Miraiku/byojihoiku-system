@@ -17,42 +17,42 @@
     <section>
 
       <div class="tabs is-btn l-container">
-        <input id="tab1" type="radio" name="tab_item" checked>
-        <label class="tab_item" for="tab1">全員</label>
+        <!--input id="tab1" type="radio" name="tab_item" checked>
+        <label class="tab_item" for="tab1">全員</label-->
       <% for (var i = 0; i < Year10.length; i++) { %>
-        <input id="tab<%= i+2 %>" type="radio" name="tab_item">
-        <label class="tab_item" for="tab<%= i+2 %>"><%= Year10[i].year %>年度</label>
+        <input id="tab<%= i+1 %>" type="radio" name="tab_item">
+        <label class="tab_item" for="tab<%= i+1 %>"><%= Year10[i].year %>年度</label>
       <% } %>
 
-        <div class="tab_content" id="tab1_content">
+        <!--div class="tab_content" id="tab1_content">
           <div class="tab_content_description">
             <section>
               <div>
                 <h3>全員</h3>
-                <div class="operation">
+                <div class="operation"-->
                   <!--button class="btn-s is-square is-red">削除</button-->
                   <!--input type="text" class="is-sm" placeholder="名前で検索"-->
-                  <a href="https://docs.google.com/spreadsheets/d/1eRhkmnmfrPMJXlfbvIONfu_7AYHwt024JP_qCCbxGbE/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-s is-square is-yellow">詳細<span>ドキュメントに移動</span><img src="/img/icon-jump.svg"></a>
+                  <!--a href="https://docs.google.com/spreadsheets/d/1eRhkmnmfrPMJXlfbvIONfu_7AYHwt024JP_qCCbxGbE/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="btn-s is-square is-yellow">詳細<span>ドキュメントに移動</span><img src="/img/icon-jump.svg"></a>
                 </div>
                 <div class="table-wrap">
                   <table class="table">
                     <tr>
                       <th>&nbsp;</th>
-                      <th>会員ID</th>
+                      <th>会員ID</th-->
                       <!--th>LINE識別番号</th-->
-                      <th>児童氏名</th>
+                      <!--th>児童氏名</th>
                       <th>生年月日</th>
                       <th>年齢</th>
                       <th>アレルギー</th>
                       <th>&nbsp;</th>
                     </tr>
-                    <% for (var i = 0; i < Members.length; i++) { %>
-                      <tr data-href="<%= `/member/entry/${Members[i].memberid}` %>">
+                    <% for (var i = 0; i < Members.length; i++) { %-->
+                      <!--tr data-href="<%= `/member/entry/${Members[i].memberid}` %>"-->
                         <!--td>
                           <input type="checkbox" id="check1" name="<%=`${Members[i].memberid}`%>">
                           <label for="check1" class="checkbox"></label>
                         </td-->
-                        <td>&nbsp;</td>
+                        <!--td>&nbsp;</td>
                         <td><%=Members[i].miraikuid%></td>
                         <td><%=Members[i].name%></td>
                         <td><%=Members[i].birthday%></td>
@@ -66,9 +66,9 @@
               </div>
             </section>
           </div>
-        </div>
+        </div--> <!-- all-->
       <% for (var i = 0; i < Year10.length; i++) { %>
-        <div class="tab_content" id="tab<%= i+2 %>_content">
+        <div class="tab_content" id="tab<%= i+1 %>_content">
           <div class="tab_content_description">
             <section>
               <div>
