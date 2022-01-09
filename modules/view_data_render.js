@@ -256,7 +256,26 @@ exports.getMembersPage = async function (req, res){
     for (let i = 1; i <= 10; i++) {
       const y = String(today.getFullYear()-i).toString().substr(-2)
       let result = await psgl.getYearMembersOrderByName(y)
-      year10.push({year:today.getFullYear()-i, members:result})
+      let mem = []
+      for (const m of result) {
+        let id
+        if(m.MiraikuID == 0){
+          id = '未付与'
+        }else{
+          id = m.MiraikuID
+        }
+        let name = m.Name
+        let birthday = view.getSlashDateFromt8Number(m.BirthDay)
+        let age = view.getAgeMonth(m.BirthDay)
+        let allergy = m.Allergy
+        if(allergy){
+          allergy = '有り'
+        }else{
+          allergy = '無し'
+        }
+        mem.push()
+      }
+      year10.push({year:today.getFullYear()-i, members:mem})
     }
     
     res.render("pages/member/index", {Members:mem,SubTitle:sub_title,Year10:year10})
