@@ -521,6 +521,10 @@ router
                   if( text == 'なし'){
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',0)
                     await redis.hsetStatus(userId,'reservation_nursery_name_2','なし')
+                    await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
+                    await redis.hsetStatus(userId,'reservation_nursery_name_3','なし')
+                    redis.hsetStatus(userId,'reservation_status',5)
+                    redis.hsetStatus(userId,'reservation_reply_status',50)
                   }else{
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
                     await redis.hsetStatus(userId,'reservation_nursery_name_2',text)
