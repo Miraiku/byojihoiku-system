@@ -277,14 +277,6 @@ exports.getMembersPage = async function (req, res){
       }
       year10.push({year:today.getFullYear()-i, members:mem})
     }
-    for (const i of year10) {
-      
-    console.log(i.year)
-    console.log(i.members)
-    for (const x of i.members) {
-      console.log(x.name)
-    }
-    }
     res.render("pages/member/index", {Members:mem,SubTitle:sub_title,Year10:year10})
   } catch (error) {
     console.log("ERR @MembersPage: "+ error)
