@@ -104,7 +104,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
 });
 
 //朝9時にウェイティングリストの巡回を停止する
-cron.schedule('0 0 10 * * *', async () => {
+cron.schedule('0 0 9 * * *', async () => {
   console.log("end waiting list job...")
   await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
   await redis.Del('waiting_current_lineid_bynurseryid')
@@ -119,7 +119,8 @@ cron.schedule('0 0 10 * * *', async () => {
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 //7AMに選別がおわるため、7：15分に発火
-cron.schedule('0 0 7 * * *', async () =>  {
+cron.schedule('*/5 * * * *',async () => {
+//cron.schedule('0 0 7 * * *', async () =>  {
   try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     if(original_list.length <= 0){
@@ -156,8 +157,7 @@ cron.schedule('0 0 7 * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
-//cron.schedule('0 0 7 * * *', async () => {
-cron.schedule('*/1 * * * *',async () => {
+cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
     let today_waiting_user_list_withoutsameLINEID = []
@@ -165,7 +165,6 @@ cron.schedule('*/1 * * * *',async () => {
       return false
     }
     for (let i = 0; i < lineids.length; i++) {
-      console.log(lineids[i][0].LINEID)
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
@@ -179,7 +178,6 @@ cron.schedule('*/1 * * * *',async () => {
       }
     }
     for (const id of today_waiting_user_list_withoutsameLINEID) {
-      console.log(id)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
