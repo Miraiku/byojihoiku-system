@@ -60,12 +60,11 @@ let today_waiting_user_list_withoutsameLINEID = []
 
 const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
   for (const n of today_capacity) {
-    console.log(`today_capacity ${n}`)
     let perv_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
     if(perv_lineid.length > 0){
       //TODO 前のやつキャンセルできてない
       console.log(`perv_lineid ${perv_lineid} , ${perv_lineid.length}`)
-      await psgl.setodayReservationReminderStatusIsCancelled(perv_lineid)
+      await psgl.setTodayReservationStatusIsCancelled(perv_lineid)
     }
     await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,null)
     let current_lineid = await redis.LPOP(n.id)
@@ -136,7 +135,6 @@ cron.schedule('*/4 * * * *',async () => {
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       await redis.hsetStatus('waiting_nursery_name', nursery.id, nursery.name)
-      await redis.Del(nursery.id) // init queue
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         console.log(user)
         if(nursery.id == user.nurseryid){

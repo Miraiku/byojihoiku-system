@@ -313,23 +313,21 @@ exports.getTodayReminderStatusByLINEID = async function (lineid){
   }
 }
 
-exports.setodayReservationReminderStatusIsCancelled = async function (lineid){
+exports.setTodayReservationStatusIsCancelled = async function (lineid){
   try {
-    let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE 'today' and "LINEID" = '${lineid}';`
-    let memberids = await psgl.sqlToPostgre(sql)
-    let lineids = []
-    if(memberids.lengh > 0){
-      for (const r of memberids) {
-        let sql = `UPDATE public."Reservation" SET "Reminder"= 'cancelled', "ReservationStatus"= 'Cancelled' WHERE "MemberID"= '${r.MemberID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved' and "Reminder" = 'waiting';`
-        lineids = await psgl.sqlToPostgre(sql)
+    let lines = await psgl.getMemberIDByLINEID(lineid)
+    if(lines.lengh > 0){
+      for (const r of lines) {
+        let sql = `UPDATE public."Reservation" SET "Reminder"= 'cancelled', "ReservationStatus"= 'Cancelled' WHERE "MemberID"= '${r[0].MemberID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
+        await psgl.sqlToPostgre(sql)
       }
-      return lineids
+      return true
     }else{
-      return []
+      return false
     }
   } catch (error) {
-    console.log('setodayReservationReminderStatusIsCancelled: ' + error)
-    return []
+    console.log('setTodayReservationStatusIsCancelled: ' + error)
+    return false
   }
 }
 
