@@ -339,6 +339,9 @@ router
               if(reservation_status == 70){//複数人例外用
                 await redis.hsetStatus(userId,'reservation_status',13)
                 await redis.hsetStatus(userId,'reservation_reply_status',130)
+              }else if (reservation_status == 125){//アレルギー食の追記事項
+                await redis.hsetStatus(userId,'reservation_status',11)
+                await redis.hsetStatus(userId,'reservation_reply_status',110)
               }else if(Number(reservation_status) <= 1){
                 await redis.hsetStatus(userId,'reservation_status',1)
                 await redis.hsetStatus(userId,'reservation_reply_status',10)
@@ -739,12 +742,23 @@ router
                 }
                 replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。\n\n"+all_info
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                await redis.hsetStatus(userId,'reservation_child_meal_name_'+current_child_number,mealname[0].MealName)
-                await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,mealid_text)
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
+                await redis.hsetStatus(userId,'reservation_child_meal_name_'+current_child_number,mealname[0].MealName)
+                await redis.hsetStatus(userId,'reservation_child_meal_id_'+current_child_number,mealid_text)
               }else{
-                replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
+                replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」"+optionmsg
+              }
+              break;
+            case 125://アレルギー食の場合の自由追記事項
+              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+              if(text.length >= 0){
+                replyMessage = "除去を希望する食材は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
+                await redis.hsetStatus(userId,'reservation_child_meal_caution_allergy_'+current_child_number,escapeHTML(text))
+                await redis.hsetStatus(userId,'reservation_status',13)
+                await redis.hsetStatus(userId,'reservation_reply_status',130)
+              }else{
+                replyMessage = "除去を希望する食材を返信してください。"
               }
               break;
             case 12:
@@ -757,16 +771,22 @@ router
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,0)
                 }else{
                   let mealname = await psgl.getMealNameFromSubID(submealid_text)
-
-                  replyMessage = "食事の追記事項は「"+mealname[0].MealName+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
+                  if(mealname[0].MealName == 'アレルギー食'){
+                    replyMessage = "食事の追記事項は「"+mealname[0].MealName+"」ですね。\n除去を希望する食材を返信してください"
+                    await redis.hsetStatus(userId,'reservation_status',125)
+                    await redis.hsetStatus(userId,'reservation_reply_status',1250)
+                  }else{
+                    replyMessage = "食事の追記事項は「"+mealname[0].MealName+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
+                    await redis.hsetStatus(userId,'reservation_child_meal_caution_allergy_'+current_child_number,'')
+                    await redis.hsetStatus(userId,'reservation_status',13)
+                    await redis.hsetStatus(userId,'reservation_reply_status',130)
+                  }
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,mealname[0].MealName)
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,submealid_text)
                 }
-                await redis.hsetStatus(userId,'reservation_status',13)
-                await redis.hsetStatus(userId,'reservation_reply_status',130)
-                }else{
-                  replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
-                  }
+              }else{
+                replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
+              }
               break;
             case 13:
               replyMessage = "熱性けいれんの既往歴「"+escapeHTML(text)+"」ですね。\n\n食物アレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
@@ -951,7 +971,7 @@ router
                             if(cancel_status == 'true'){
                               replyMessage = "キャンセル待ちが完了しました。\n\n枠が空いた場合、予約日当日の朝7時〜開園までにLINEでご連絡させていたただきます。"//TODO注意事項をかく
                             }else{
-                              replyMessage = "予約が完了しました。\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。ご返信よろしくお願いいたします。"//TODO注意事項をかく
+                              replyMessage = "予約が完了しました。\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。必ずご確認いただきますようお願いいたします。"//TODO注意事項をかく
                             }
                             replyMessage += "\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
