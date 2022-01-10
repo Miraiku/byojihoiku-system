@@ -1400,13 +1400,11 @@ async function isRegisterd(id){
 
 async function isAvailableReservation(id){
   try {
-    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and ("MiraikuID" IS NOT NULL and "MiraikuID" > 0);`;
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and ("MiraikuID" IS NOT NULL and "MiraikuID" > 0) and "Disabled" = 'false';;`;
     const results_alreadymember = await psgl.sqlToPostgre(queryString)
-    queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and "MiraikuID" = 0;`;
+    queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and "MiraikuID" = 0 and "Disabled" = 'false';;`;
     const results_unnumberdmember = await psgl.sqlToPostgre(queryString)
     
-    console.log(Object.keys(results_alreadymember).length)
-    console.log(Object.keys(results_unnumberdmember).length)
     if(Object.keys(results_alreadymember).length <= 0 || Object.keys(results_unnumberdmember).length > 0 ){
       return false
     }else{
