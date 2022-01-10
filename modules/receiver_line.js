@@ -1385,7 +1385,7 @@ function yesOrNo(s){
 
 async function isRegisterd(id){
   try {
-    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`' and "Disabled" = 'false';`;
     const results = await psgl.sqlToPostgre(queryString)
     if(Object.keys(results).length == 0){
       return false
@@ -1400,9 +1400,9 @@ async function isRegisterd(id){
 
 async function isAvailableReservation(id){
   try {
-    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and ("MiraikuID" IS NOT NULL and "MiraikuID" > 0) and "Disabled" = 'false';;`;
+    let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and ("MiraikuID" IS NOT NULL and "MiraikuID" > 0) and "Disabled" = 'false';`;
     const results_alreadymember = await psgl.sqlToPostgre(queryString)
-    queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and "MiraikuID" = 0 and "Disabled" = 'false';;`;
+    queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and "MiraikuID" = 0 and "Disabled" = 'false';`;
     const results_unnumberdmember = await psgl.sqlToPostgre(queryString)
     
     if(Object.keys(results_alreadymember).length <= 0 || Object.keys(results_unnumberdmember).length > 0 ){
@@ -1418,7 +1418,7 @@ async function isAvailableReservation(id){
 
 async function isRegisterdByNameAndBirthDay(name,birthday){
   try {
-    let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+`;`
+    let queryString = `SELECT * FROM public."Member" WHERE "Name" = '`+name+`' and "BirthDay" = '`+birthday+` and "Disabled" = 'false';`
     const results = await psgl.sqlToPostgre(queryString)
     if(Object.keys(results).length == 0){
       return false
