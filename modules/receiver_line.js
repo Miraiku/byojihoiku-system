@@ -856,10 +856,10 @@ router
                         meal_id[i] = v
                       }else if((k).includes('reservation_child_meal_caution_'+i)){
                         meal_caution[i] = v
-                      }else if((k).includes('reservation_child_cramps_caution_'+i)){
-                        cramps_caution[i] = v
                       }else if((k).includes('reservation_child_meal_caution_allergy_'+i)){
                         allergy_caution[i] = v
+                      }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                        cramps_caution[i] = v
                       }
                     }
                   });
@@ -931,10 +931,10 @@ router
                           meal_caution[i] = v
                         }else if((k).includes('reservation_child_meal_caution_id'+i)){
                           meal_caution_subid[i] = v
-                        }else if((k).includes('reservation_child_cramps_caution_'+i)){
-                          cramps_caution[i] = v
                         }else if((k).includes('reservation_child_meal_caution_allergy_'+i)){
                           allergy_caution[i] = v
+                        }else if((k).includes('reservation_child_cramps_caution_'+i)){
+                          cramps_caution[i] = v
                         }
                       }
                     });
