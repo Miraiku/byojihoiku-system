@@ -150,22 +150,22 @@ exports.getMemberBirthDayByID = async function (id){
   return await psgl.sqlToPostgre(sql)
 }
 
-exports.getMainMealList = async function (date){
+exports.getMainMealList = async function (){
   let results = []
   let sql = `SELECT "ID", "MealName", "MealID" FROM public."Meal" WHERE "Type" = 'main';`
   let r = await psgl.sqlToPostgre(sql)
   for await (const v of r) {
-    results.push({id:v['ID'], mealid:v['MealID']})
+    results.push({id:v['MealID'], name:v['MealName']})
   }
   return results
 }
 
-exports.getSubMealList = async function (date){
+exports.getSubMealList = async function (){
   let results = []
   let sql = `SELECT "ID", "MealName", "MealID" FROM public."Meal" WHERE "Type" = 'sub';`
   let r = await psgl.sqlToPostgre(sql)
   for await (const v of r) {
-    results.push({id:v['ID'], name:v['MealName'], mealid:v['MealID']})
+    results.push({id:v['MealID'], name:v['MealName']})
   }
   return results
 }
