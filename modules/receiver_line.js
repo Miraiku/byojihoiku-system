@@ -1051,9 +1051,8 @@ router
       if(push_message != undefined){
         if(push_message == '20pm'){
           res.send(lineid)
-          const name = req.body.name
           const nursery = req.body.nurseryname
-          replyMessage = `【要返信】\n明日、${nursery}にて${name}様のご予約をいただいております。\n予定通り利用する場合は「利用」を、ご予約をキャンセルする場合は「キャンセル」と返信してください。
+          replyMessage = `【要返信】\n明日、${nursery}にてご予約をいただいております。\n予定通り利用する場合は「利用」を、ご予約をキャンセルする場合は「キャンセル」と返信してください。
           \n\n※明日の朝7時までにご返信がない場合、ご予約は自動的にキャンセルとなります。`
         }else if(push_message == 'today7am'){
           res.send(lineid)

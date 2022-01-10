@@ -180,10 +180,25 @@ cron.schedule('0 0 7 * * *', async () => {
 });
 
 //前日リマインダー送信
-cron.schedule('0 0 20 * * *', async () => {
+//cron.schedule('0 0 20 * * *', async () => {
+  cron.schedule('*/1 * * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
-    for (const id of ids) {
+    let today_waiting_user_list_withoutsameLINEID = []
+    for (let i = 0; i < ids.length; i++) {
+      if(i==0){
+        today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+      }else{
+        for (const n of today_waiting_user_list_withoutsameLINEID) {
+          if(n.lineid == ids[i].lineid){
+            continue
+          }else{
+            today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+          }
+        }
+      }
+    }
+    for (const id of today_waiting_user_list_withoutsameLINEID) {
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -191,7 +206,6 @@ cron.schedule('0 0 20 * * *', async () => {
           message: {'text': 'cron'},
           "line_push_from_cron": "20pm",
           "id": id.lineid,
-          "name": id.name,
           "nurseryname": id.nurseryname
           })
         },
