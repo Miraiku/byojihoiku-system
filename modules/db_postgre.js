@@ -701,7 +701,7 @@ exports.ReservedDayAfterTomorrowByNursery = async function (id){
 }
 
 exports.getReservationConfirmationFalseGraterThanToday = async function (){
-  let sql = `SELECT "ID" FROM public."Reservation" WHERE "ReservationDate" >= DATE 'today' and "Confirmation" = 'false' ORDER BY "CreatedAt" DESC;`
+  let sql = `SELECT "ID" FROM public."Reservation" WHERE "ReservationDate" >= DATE 'today' and "Confirmation" = 'false' ORDER BY "CreatedAt" ASC;`
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
