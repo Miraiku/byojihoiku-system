@@ -939,7 +939,7 @@ router
                     for (let i = 1; i <= total; i++) {
                       let reservationID = null
                       try {
-                        queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
+                        queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime", "CreatedAt") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
                         reservationID = await registerIntoReservationTable(queryString)
                         console.log(reservationID)
                         if(Number.isInteger(reservationID)){
