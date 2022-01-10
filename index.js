@@ -73,34 +73,36 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     let current_nursery_name = await redis.hgetStatus('waiting_nursery_name', n.id)
     console.log(`current_capacity ${current_capacity}`)
-    for (const user of today_waiting_user_list_withoutsameLINEID) {
-      if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
-        await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
-        console.log('current_nursery_name'+current_nursery_name)
-        console.log('current_lineid'+current_lineid)
-        request.post(
-          { headers: {'content-type' : 'application/json'},
-          url: 'https://byojihoiku.chiikihoiku.net/webhook',
-          body: JSON.stringify({
-            message: {'text': 'cron'},
-            "line_push_from_cron": "7amwaiting",
-            "id": current_lineid,
-            'nurseryname': current_nursery_name
-            })
-          },
-          function(error, response, body){
-            if(error){
-              console.log('error@sendWaitingUser' + error)
+    if(current_lineid != null && Number(current_capacity) > 0 ){
+      for (const user of today_waiting_user_list_withoutsameLINEID) {
+        if(current_lineid == user.lineid){
+          await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
+          console.log('current_nursery_name'+current_nursery_name)
+          console.log('current_lineid'+current_lineid)
+          request.post(
+            { headers: {'content-type' : 'application/json'},
+            url: 'https://byojihoiku.chiikihoiku.net/webhook',
+            body: JSON.stringify({
+              message: {'text': 'cron'},
+              "line_push_from_cron": "7amwaiting",
+              "id": current_lineid,
+              'nurseryname': current_nursery_name
+              })
+            },
+            function(error, response, body){
+              if(error){
+                console.log('error@sendWaitingUser' + error)
+              }
+              console.log(response.statusCode)
+              console.log(body)
+              if(response.statusCode == 200){
+                is_send = true
+              }else{
+                is_send = false
+              }
             }
-            console.log(response.statusCode)
-            console.log(body)
-            if(response.statusCode == 200){
-              is_send = true
-            }else{
-              is_send = false
-            }
-          }
-        );
+          );
+        }
       }
     }
   }
