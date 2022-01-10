@@ -18,23 +18,18 @@ router
 
         let current_nurseryid = await psgl.getNurseryIDByResevationID(rsvid)
         current_nurseryid = current_nurseryid[0].NurseryID
-        if(new_nurseryid != current_nurseryid && status == "Reserved"){
-          let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
-          nursery_capacity = nursery_capacity[0].Capacity
-          let reservation_date = await psgl.getReservationDateByID(rsvid)
-          reservation_date = reservation_date[0].ReservationDate
-          let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(view.getPsglTimeStampFromDayDataObj(reservation_date), new_nurseryid)
-          let new_capacity = Number(reservation_num_on_day[0].count)
-          if((nursery_capacity - new_capacity) > 0){
-            await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
-            res.status(200).send('Success');
-          }else{
-            res.status(406).send('予約の空きがないため変更できませんでした。');
-            return
-          }
-        }else{
+        let nursery_capacity = await psgl.getNurseryCapacityByID(new_nurseryid)
+        nursery_capacity = nursery_capacity[0].Capacity
+        let reservation_date = await psgl.getReservationDateByID(rsvid)
+        reservation_date = reservation_date[0].ReservationDate
+        let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(view.getPsglTimeStampFromDayDataObj(reservation_date), new_nurseryid)
+        let new_capacity = Number(reservation_num_on_day[0].count)
+        if((nursery_capacity - new_capacity) > 0){
           await psgl.updateStatusNurseryConfirmationByReservationID(rsvid, status, new_nurseryid)
           res.status(200).send('Success');
+        }else{
+          res.status(406).send('予約の空きがないため変更できませんでした。');
+          return
         }
       }else if(action == 'update_member_from_member_entry'){
         let updated = await psgl.updateMemberInfo(req.body)
