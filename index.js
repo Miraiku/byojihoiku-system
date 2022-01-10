@@ -166,7 +166,8 @@ cron.schedule('0 0 7 * * *', async () =>  {
       return false
     }
     for (let i = 0; i < lineids.length; i++) {
-      if(i==0){
+      console.log(lineids[i])
+      /*if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
@@ -176,9 +177,9 @@ cron.schedule('0 0 7 * * *', async () =>  {
             today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
           }
         }
-      }
+      }*/
     }
-    for (const id of lineids) {
+    /*for (const id of lineids) {
       console.log(id[0].LINEID)
       request.post(
         { headers: {'content-type' : 'application/json'},
@@ -195,15 +196,14 @@ cron.schedule('0 0 7 * * *', async () =>  {
           console.log("cron schedule 7am:"+ body); 
         }
       );
-    }
+    }*/
   } catch (error) {
     console.log('7am error:'+ error)
   }
 });
 
 //前日リマインダー送信
-//cron.schedule('0 0 20 * * *', async () => {
-  cron.schedule('*/1 * * * *', async () => {
+cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
     let today_waiting_user_list_withoutsameLINEID = []
