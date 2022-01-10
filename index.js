@@ -122,6 +122,9 @@ cron.schedule('0 0 10 * * *', async () => {
 cron.schedule('0 0 7 * * *', async () =>  {
   try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
+    if(original_list.length <= 0){
+      return false
+    }
     for (let i = 0; i < original_list.length; i++) {
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(original_list[i])
@@ -153,19 +156,24 @@ cron.schedule('0 0 7 * * *', async () =>  {
 });
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
-cron.schedule('0 0 7 * * *', async () => {
+//cron.schedule('0 0 7 * * *', async () => {
+  cron.schedule('*/2 * * * *', async () => {
+  '*/1 * * * *'
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
     let today_waiting_user_list_withoutsameLINEID = []
+    if(lineids.length <= 0){
+      return false
+    }
     for (let i = 0; i < lineids.length; i++) {
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
-          if(n.lineid == ids[i].lineid){
+          if(n.lineid == lineids[i][0].LINEID){
             continue
           }else{
-            today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+            today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
           }
         }
       }
@@ -203,21 +211,20 @@ cron.schedule('0 0 7 * * *', async () => {
       return false
     }
     for (let i = 0; i < ids.length; i++) {
-      console.log(ids[i].lineid)
-      console.log(ids[i])
-      /*if(i==0){
-        today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+      if(i==0){
+        today_waiting_user_list_withoutsameLINEID.push(ids[i])
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
           if(n.lineid == ids[i].lineid){
             continue
           }else{
-            today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+            today_waiting_user_list_withoutsameLINEID.push(ids[i])
           }
         }
-      }*/
+      }
     }
     for (const id of today_waiting_user_list_withoutsameLINEID) {
+      console.log(id)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
