@@ -10,7 +10,7 @@ exports.hsetStatus = async function (id,key,val){
     let now = Date.now()
     await redis_client.hset('update_time',id, now, (err, reply) => {
       if (err) throw err;
-      console.log('HSET updated time : id:' + id + ', time: '+ now);
+      //console.log('HSET updated time : id:' + id + ', time: '+ now);
     });
     await redis_client.hset(id,key,val, (err, reply) => {
       if (err) throw err;
