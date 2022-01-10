@@ -871,7 +871,7 @@ router
                     all_info +=  "\nお子様氏名："+childname[i]+"\n"
                     all_info +=  "病名："+disase_id[i]+"\n"
                     all_info +=  "食事："+meal_id[i]+"\n"
-                    all_info +=  "食事の注意事項："+convertBooleanToJP(meal_caution[i])+"\n"
+                    all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
                     all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
                     all_info +=  "食物アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
