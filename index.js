@@ -166,14 +166,11 @@ cron.schedule('*/1 * * * *',async () => {
     }
     for (let i = 0; i < lineids.length; i++) {
       console.log(lineids[i][0].LINEID)
-      console.log(lineids[i][0])
-      console.log(lineids[i])
-      console.log(lineids[i].LINEID)
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
-          if(n.lineid == lineids[i][0].LINEID){
+          if(n == lineids[i][0].LINEID){
             continue
           }else{
             today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
