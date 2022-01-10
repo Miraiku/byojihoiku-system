@@ -120,7 +120,7 @@ cron.schedule('0 0 9 * * *', async () => {
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 //7AMに選別がおわるため、7：15分に発火
-cron.schedule('*/5 * * * *',async () => {
+cron.schedule('*/2 * * * *',async () => {
 //cron.schedule('0 0 7 * * *', async () =>  {
   try { 
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
