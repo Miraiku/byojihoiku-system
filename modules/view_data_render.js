@@ -95,7 +95,7 @@ exports.getNurseryStatus3Days = async function (req, res){
     const list = await psgl.getReservationConfirmationFalseGraterThanToday() 
     if(list.length > 0){
       for (const member of list) {
-        const status = await psgl.getReservationStatusByMemberID(member[0].MemberID)
+        const status = await psgl.getReservationInfoByReservationID(member[0].ID)
         const name = await psgl.getMemberNameByMemberID(member[0].MemberID)
         const miraikuid = await psgl.getMiraikuIDByMemberID(member[0].MemberID)
         let birthday = await psgl.getMemberBirthDayByID(member[0].MemberID)
