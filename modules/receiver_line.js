@@ -336,10 +336,7 @@ router
                 return
               }
             }else if(reservation_status!=null && register_status==null){//予約
-              if(reservation_status == 70){//複数人例外用
-                await redis.hsetStatus(userId,'reservation_status',13)
-                await redis.hsetStatus(userId,'reservation_reply_status',130)
-              }else if (reservation_status == 125){//アレルギー食の追記事項
+              if(reservation_status == 125){//アレルギー食の追記事項
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
               }else if(Number(reservation_status) <= 1){
@@ -655,19 +652,6 @@ router
                   replyMessage = "利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。"+optionmsg
                 }
               break;//CASE7
-            case 70://人数分ループ用IF
-                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-                if(text=='なし'){
-                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
-                }else{
-                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,escapeHTML(text))
-                }
-                await redis.hsetStatus(userId,'reservation_status',8)
-                await redis.hsetStatus(userId,'reservation_reply_status',80)
-                let update_current_child_number = Number(current_child_number)+1
-                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',update_current_child_number)
-                replyMessage = "熱性けいれんの既往歴は「"+escapeHTML(text)+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
-              break;//CASE70
             case 8:
               let name = text.replace(/\s+/g, "")
               if(isZenkakuKana(name)){
@@ -802,7 +786,6 @@ router
                 await redis.hsetStatus(userId,'reservation_status',14)
                 await redis.hsetStatus(userId,'reservation_reply_status',140)
               }else{
-                //case 7-8のあいだ
                 if(text=='なし'){
                   await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
                 }else{
@@ -927,6 +910,7 @@ router
                     let disase_id = []
                     let meal_id = []
                     let meal_caution = []
+                    let meal_caution_subid = []
                     let cramps_caution = []
                     let allergy_caution = []
                     Object.entries(res).forEach(([k, v]) => {
