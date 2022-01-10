@@ -357,7 +357,7 @@ $(function() {
           let parent_name = $('input[name="parent_name"]').val()
           let parent_tel = $('input[name="parent_tel"]').val()
           let meal = $('[name="meal"] option:selected').val()
-          let meal_details = $('input[name="meal_details"]').val()
+          let meal_details = $('[name="meal_details"] option:selected').val()
           let cramps = $('input[name="cramps"]').val()
           let allergy_details = $('input[name="allergy_details"]').val()
           let rsvid = $('input[name="rsvid"]').val() 
