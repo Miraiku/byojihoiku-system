@@ -683,13 +683,8 @@ exports.getReservationConfirmPage = async function (req, res){
     }else{
       brothers = '無し'
     }
-    const meal = await psgl.getMealNameFromID(rsv_details[0].MealType)
-    let meal_details
-    if(rsv_details[0].MealDetails == 'false'){
-      meal_details = '無し'
-    }else{
-      meal_details = rsv_details[0].MealDetails
-    }
+    const meal = await psgl.getMealNameFromMainID(rsv_details[0].MealType)
+    const meal_details = await psgl.getMealNameFromSubID(rsv_details[0].MealDetails)
     let cramps
     if(rsv_details[0].Cramps == 'false'){
       cramps = '無し'
@@ -780,13 +775,9 @@ exports.getReservationEntryPage = async function (req, res){
     }else{
       brothers = '無し'
     }
-    const meal = await psgl.getMealNameFromID(rsv_details[0].MealType)
-    let meal_details
-    if(rsv_details[0].MealDetails == 'false'){
-      meal_details = '無し'
-    }else{
-      meal_details = rsv_details[0].MealDetails
-    }
+    
+    const meal = await psgl.getMealNameFromMainID(rsv_details[0].MealType)
+    const meal_details = await psgl.getMealNameFromSubID(rsv_details[0].MealDetails)
     let cramps
     if(rsv_details[0].Cramps == 'false'){
       cramps = '無し'
