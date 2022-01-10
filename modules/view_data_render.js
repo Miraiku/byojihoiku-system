@@ -674,13 +674,11 @@ exports.getReservationConfirmPage = async function (req, res){
       for (const m of sameday_members) {
         let mem = await psgl.getLINEIDByMemberID(m.MemberID)
         if(mem.length > 0 && mem[0].LINEID == lineid[0].LINEID){
-          console.log(mem[0].LINEID, lineid[0].LINEID)
           bros_num += 1
         }
       }
     }
-    console.log(bros_num)
-    if(bros_num > 0){
+    if(bros_num > 1){
       brothers = '有り'
     }else{
       brothers = '無し'
@@ -772,7 +770,7 @@ exports.getReservationEntryPage = async function (req, res){
         }
       }
     }
-    if(bros_num > 0){
+    if(bros_num > 1){
       brothers = '有り'
     }else{
       brothers = '無し'
