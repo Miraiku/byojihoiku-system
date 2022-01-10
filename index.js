@@ -111,6 +111,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
 cron.schedule('*/4 * * * *',async () => {
 //cron.schedule('0 0 7 * * *', async () =>  {
   try { 
+    await psgl.setTodayReservationStatusIsCancelled('Ucd4cd000eb62d24fe5ff3b355f94d45b')
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     if(original_list.length <= 0){
       return false
