@@ -156,6 +156,20 @@ cron.schedule('0 0 7 * * *', async () =>  {
 cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
+    let today_waiting_user_list_withoutsameLINEID = []
+    for (let i = 0; i < lineids.length; i++) {
+      if(i==0){
+        today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
+      }else{
+        for (const n of today_waiting_user_list_withoutsameLINEID) {
+          if(n.lineid == ids[i].lineid){
+            continue
+          }else{
+            today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
+          }
+        }
+      }
+    }
     for (const id of lineids) {
       console.log(id[0].LINEID)
       request.post(
@@ -185,8 +199,13 @@ cron.schedule('0 0 7 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
     let today_waiting_user_list_withoutsameLINEID = []
+    if(ids.length <= 0){
+      return false
+    }
     for (let i = 0; i < ids.length; i++) {
-      if(i==0){
+      console.log(ids[i].lineid)
+      console.log(ids[i])
+      /*if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
@@ -196,7 +215,7 @@ cron.schedule('0 0 7 * * *', async () => {
             today_waiting_user_list_withoutsameLINEID.push(ids[i].lineid)
           }
         }
-      }
+      }*/
     }
     for (const id of today_waiting_user_list_withoutsameLINEID) {
       request.post(
