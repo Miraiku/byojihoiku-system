@@ -165,6 +165,10 @@ cron.schedule('*/1 * * * *',async () => {
       return false
     }
     for (let i = 0; i < lineids.length; i++) {
+      console.log(lineids[i][0].LINEID)
+      console.log(lineids[i][0])
+      console.log(lineids[i])
+      console.log(lineids[i].LINEID)
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
