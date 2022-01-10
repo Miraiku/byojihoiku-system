@@ -69,13 +69,10 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     let current_lineid = await redis.LPOP(n.id)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     let current_nursery_name = await redis.hgetStatus('waiting_nursery_name', n.id)
-    console.log(`current_capacity ${current_capacity}`)
     if(current_lineid != null && Number(current_capacity) > 0 ){
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         if(current_lineid == user.lineid){
           await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
-          console.log('current_nursery_name'+current_nursery_name)
-          console.log('current_lineid'+current_lineid)
           request.post(
             { headers: {'content-type' : 'application/json'},
             url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -110,8 +107,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
 //7AMに選別がおわるため、7：15分に発火
 cron.schedule('*/4 * * * *',async () => {
 //cron.schedule('0 0 7 * * *', async () =>  {
-  try { 
-    await psgl.setTodayReservationStatusIsCancelled('Ucd4cd000eb62d24fe5ff3b355f94d45b')
+  try {
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     if(original_list.length <= 0){
       return false
