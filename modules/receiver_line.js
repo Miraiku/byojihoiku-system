@@ -744,7 +744,7 @@ router
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
               }else{
-                replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
+                replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
               }
               break;
             case 12:
@@ -753,10 +753,11 @@ router
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 if(text=='なし'){
                   replyMessage = "食事の追記事項は「なし」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
-                  await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
+                  await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'なし')
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,0)
                 }else{
                   let mealname = await psgl.getMealNameFromSubID(submealid_text)
+
                   replyMessage = "食事の追記事項は「"+mealname[0].MealName+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,mealname[0].MealName)
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,submealid_text)
@@ -764,8 +765,8 @@ router
                 await redis.hsetStatus(userId,'reservation_status',13)
                 await redis.hsetStatus(userId,'reservation_reply_status',130)
                 }else{
-                  replyMessage = "希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
-                }
+                  replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
+                  }
               break;
             case 13:
               replyMessage = "熱性けいれんの既往歴「"+escapeHTML(text)+"」ですね。\n\n食物アレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
