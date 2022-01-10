@@ -533,12 +533,17 @@ router
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
                       replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                      next_step = false
                     }else{
                       replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }
                   }else{
-                    if(cancel == 'true'){
+                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
+                      replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
+                      next_step = false
+                    }else if(cancel == 'true'){
                       replyMessage = "キャンセル登録第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }else{
