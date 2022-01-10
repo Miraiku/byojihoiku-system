@@ -683,19 +683,19 @@ exports.getNurseryIDByResevationID = async function (id){
 }
 
 exports.ReservedTodayByNursery = async function (id){
-  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting');`
+  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.ReservedTomorrowByNursery = async function (id){
-  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting');`
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.ReservedDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting');`
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
