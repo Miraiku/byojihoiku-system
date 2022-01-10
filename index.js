@@ -73,7 +73,6 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     let current_nursery_name = await redis.hgetStatus('waiting_nursery_name', n.id)
     console.log(`current_capacity ${current_capacity}`)
-    console.log(`today_waiting_user_list_withoutsameLINEID ${today_waiting_user_list_withoutsameLINEID}`)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
       if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
@@ -127,6 +126,10 @@ cron.schedule('*/2 * * * *',async () => {
           }
         }
       }
+    }
+    for (const iterator of today_waiting_user_list_withoutsameLINEID) {
+      console.log(iterator)
+      
     }
     today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
