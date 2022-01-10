@@ -571,9 +571,9 @@ router
                   }else{
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
                     await redis.hsetStatus(userId,'reservation_nursery_name_2',text)
+                    redis.hsetStatus(userId,'reservation_status',4)
+                    redis.hsetStatus(userId,'reservation_reply_status',40)
                   }
-                  redis.hsetStatus(userId,'reservation_status',4)
-                  redis.hsetStatus(userId,'reservation_reply_status',40)
               }else{
                 replyMessage = "利用したい病児保育室を返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
