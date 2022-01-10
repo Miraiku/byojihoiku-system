@@ -97,7 +97,7 @@
             <dd>
               <select name="nursery" class="is-md">
                 <% for (var n = 0; n < Info[0].nursery_list.length; n++) { %>
-                  <option value="<%=Info[0].nursery_list[n].id%>"><%=Info[0].nursery_list[n].name%></option>
+                  <option value="<%=Info[0].nursery_list[n].id%>" <% if (Info[0].nursery_list[n].name == Info[0].nursery) { %>selected<% } %>><%=Info[0].nursery_list[n].name%></option>
                 <% } %>
               </select>
             </dd>
