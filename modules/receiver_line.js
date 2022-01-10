@@ -436,8 +436,7 @@ router
                 //Get all information
                 regsiter_informations = await redis.hgetAll(userId)
                 let all_info = ''
-                Object.entries(regsiter_informations).forEach(([k, v]) => { // ★
-                    console.log({k, v});
+                Object.entries(regsiter_informations).forEach(([k, v]) => {
                     if(k=='Name'){
                       all_info += "お名前："+v+"\n"
                     }else if(k=='BirthDay'){
@@ -639,8 +638,6 @@ router
                     let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
                     let new_amount = childnum + Number(reservation_num_on_day[0].count)
                     let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
-                    console.log(Number(nursery_capacity[0].Capacity))
-                    console.log(new_amount)
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
                       replyMessage = "ご利用希望日は予約の空きがありません。。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
@@ -947,7 +944,6 @@ router
                       try {
                         queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime", "CreatedAt") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
                         reservationID = await registerIntoReservationTable(queryString)
-                        console.log(reservationID)
                         if(Number.isInteger(reservationID)){
                           queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                           let reserved = await insertReservationDetails(queryString)
@@ -1391,7 +1387,6 @@ async function isRegisterd(id){
   try {
     let queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '`+id+`';`;
     const results = await psgl.sqlToPostgre(queryString)
-    console.log(results)
     if(Object.keys(results).length == 0){
       return false
     }else{
