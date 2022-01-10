@@ -1061,7 +1061,7 @@ router
         }else if(push_message == '7amwaiting'){
           res.send(lineid)
           const nurseryname = req.body.nurseryname
-          replyMessage = `【要返信】\n${nurseryname}のキャンセル待ちに空きができました。\nこのまま予約を確定する場合は「空き登録」と返信してください。\n\n※15分以内にご返信がない場合、次にお待ちの方にキャンセル枠をお譲りいたします。ご了承ください。`
+          replyMessage = `【要返信】\n${nurseryname}病児保育室に空きができました。\nこのまま予約を確定する場合は「空き登録」と返信してください。\n\n※15分以内にご返信がない場合、次にお待ちの方にキャンセル枠をお譲りいたします。ご了承ください。`
         }
         // リクエストヘッダー
         dataString = JSON.stringify({
