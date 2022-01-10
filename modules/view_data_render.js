@@ -698,7 +698,7 @@ exports.getReservationConfirmPage = async function (req, res){
       allergy = rsv_details[0].Allergy
     }
     const sub_title = name[0].Name +'さま　予約情報　｜　'
-    info.push({rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    info.push({rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime:intime, outtime:outtime, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details[0].MealName, cramps:cramps, allergy:allergy})
     res.render("pages/reservation/confirm",{Info:info,SubTitle:sub_title})
   } catch (error) {
     console.log("ERR @getReservationConfirmPage: "+ error)
@@ -793,9 +793,10 @@ exports.getReservationEntryPage = async function (req, res){
     const allergy_bool = await psgl.getMemberAllergyByMemberID(rsv[0].MemberID)
     const disease_list = await psgl.getDiseaseList()
     const meal_list = await psgl.getMainMealList()
+    const meal_details_list = await psgl.getSubMealList()
     const nursery_list = await psgl.getNurseryID_Name_Capacity()
     const sub_title = name[0].Name +'さま　予約情報の変更　｜　'
-    info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime_hour:intime_hour, intime_mins:intime_mins, outtime_hour:outtime_hour, outtime_mins:outtime_mins, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details, cramps:cramps, allergy:allergy})
+    info.push({allergy_bool:allergy_bool[0].Allergy, disease_list:disease_list, meal_list:meal_list,meal_details_list:meal_details_list, nursery_list:nursery_list, rsvid:reservationid, prev:prev, name:name[0].Name, miraikuid:miraikuid[0].MiraikuID, age:age, disease:disease[0].DiseaseName, rsvdate:rsvdate, intime_hour:intime_hour, intime_mins:intime_mins, outtime_hour:outtime_hour, outtime_mins:outtime_mins, nursery:nursery[0].NurseryName , status:status, parent_name:parent_name, parent_tel:parent_tel, brothers:brothers, meal:meal[0].MealName, meal_details:meal_details[0].MealName, cramps:cramps, allergy:allergy})
     res.render("pages/reservation/entry",{Info:info,SubTitle:sub_title})
   } catch (error) {
     console.log("ERR @getReservationEntryPage: "+ error)

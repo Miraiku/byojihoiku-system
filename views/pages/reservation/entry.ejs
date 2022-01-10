@@ -128,10 +128,11 @@
           <dl>
             <dt>食事の追加事項</dt>
             <dd>
-              <!--select name="">
-                <option value="">おなかに優しい食事（おう吐・下痢）</option>
-              </select-->
-              <input type="text" class="is-md" value="<%=Info[0].meal_details%>" name="meal_details"  required/>
+              <select class="is-sm" name="meal_details">
+                <% for (var i = 0; i < Info[0].meal_details_list.length; i++) { %>
+                  <option value="<%=Info[0].meal_details_list[i].id%>" <% if (Info[0].meal==Info[0].meal_details_list[i].name) { %>selected<% } %>><%=Info[0].meal_details_list[i].name%></option>
+                <% } %>
+              </select>
             </dd>
           </dl>
           <dl>
