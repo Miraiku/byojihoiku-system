@@ -58,10 +58,9 @@ cron.schedule('*/20 * * * *', async () =>  {
 let today_capacity
 let today_waiting_user_list_withoutsameLINEID = []
 
-const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
+const sendWaitingUser = cron.schedule('*/15 * * * *',async () => {
   for (const n of today_capacity) {
     let perv_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
-    console.log(`perv_lineid ${perv_lineid} , ${perv_lineid.length}`)
     if(perv_lineid.length > 0){
       await psgl.setTodayReservationStatusIsCancelled(perv_lineid)
     }
@@ -105,8 +104,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 //7AMに選別がおわるため、7：15分に発火
-cron.schedule('*/4 * * * *',async () => {
-//cron.schedule('0 0 7 * * *', async () =>  {
+cron.schedule('0 0 7 * * *', async () =>  {
   try {
     const original_list = await psgl.getTodayWaitingRsvIDLineIDListSortByCreatedAt()
     if(original_list.length <= 0){
