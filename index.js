@@ -131,6 +131,7 @@ cron.schedule('*/4 * * * *',async () => {
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
       await redis.hsetStatus('waiting_nursery_name', nursery.id, nursery.name)
+      await redis.Del(nursery.id) // init queue
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         console.log(user)
         if(nursery.id == user.nurseryid){
