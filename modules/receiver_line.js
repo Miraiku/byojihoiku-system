@@ -658,15 +658,15 @@ router
             case 70://人数分ループ用IF
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 if(text=='なし'){
-                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
+                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
                 }else{
-                  await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number, text)
+                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,escapeHTML(text))
                 }
                 await redis.hsetStatus(userId,'reservation_status',8)
                 await redis.hsetStatus(userId,'reservation_reply_status',80)
                 let update_current_child_number = Number(current_child_number)+1
                 await redis.hsetStatus(userId,'reservation_nursery_current_register_number',update_current_child_number)
-                replyMessage = "食物アレルギーに関する連絡事項は「"+text+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
+                replyMessage = "熱性けいれんの既往歴は「"+escapeHTML(text)+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               break;//CASE70
             case 8:
               let name = text.replace(/\s+/g, "")
@@ -789,7 +789,6 @@ router
               }
               break;
             case 13:
-              replyMessage = "熱性けいれんの既往歴「"+escapeHTML(text)+"」ですね。\n\n食物アレルギーに関する連絡事項がある場合、その内容を返信してください。\nない場合は「なし」を返信してください。"
               current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
               if(text=='なし'){
                 await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
@@ -798,38 +797,35 @@ router
               }
               let total_child_number = await redis.hgetStatus(userId,'reservation_nursery_number')
               if(Number(current_child_number)>=Number(total_child_number)){
-                //人数分情報を聞いたらcase13の登録へ
+                //人数分情報を聞いたら保護者の登録へ
+                replyMessage = "熱性けいれんの既往歴は「"+escapeHTML(text)+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
                 await redis.hsetStatus(userId,'reservation_status',14)
                 await redis.hsetStatus(userId,'reservation_reply_status',140)
               }else{
                 //case 7-8のあいだ
-                await redis.hsetStatus(userId,'reservation_status',70)
-                await redis.hsetStatus(userId,'reservation_reply_status',700)
+                if(text=='なし'){
+                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,'false')
+                }else{
+                  await redis.hsetStatus(userId,'reservation_child_cramps_caution_'+current_child_number,escapeHTML(text))
+                }
+                await redis.hsetStatus(userId,'reservation_status',8)
+                await redis.hsetStatus(userId,'reservation_reply_status',80)
+                let update_current_child_number = Number(current_child_number)+1
+                await redis.hsetStatus(userId,'reservation_nursery_current_register_number',update_current_child_number)
+                replyMessage = "熱性けいれんの既往歴は「"+escapeHTML(text)+"」ですね。\n\n"+update_current_child_number+"人目の内容を登録します。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
               }
-
               break;
             case 14:
-              current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
-              replyMessage = "食物アレルギーに関する連絡事項は「"+escapeHTML(text)+"」ですね。\n\n保護者様のお名前を返信してください。\n例）西沢香里"
-              if(text=='なし'){
-                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,'false')
-              }else{
-                await redis.hsetStatus(userId,'reservation_child_allergy_caution_'+current_child_number,escapeHTML(text))
-              }
+              replyMessage = "保護者さまのお名前は「"+escapeHTML(text)+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
+              await redis.hsetStatus(userId,'reservation_child_parent_name',escapeHTML(text))
               await redis.hsetStatus(userId,'reservation_status',15)
               await redis.hsetStatus(userId,'reservation_reply_status',150)
               break;
-            case 15:
-              replyMessage = "保護者さまのお名前は「"+escapeHTML(text)+"」ですね。\n\n保護者さまのお電話番号を記入してください。\n例）09012345678"
-              await redis.hsetStatus(userId,'reservation_child_parent_name',escapeHTML(text))
-              await redis.hsetStatus(userId,'reservation_status',16)
-              await redis.hsetStatus(userId,'reservation_reply_status',160)
-              break;
-            case 16://Register
+            case 15://Register
               try {
                 await redis.hsetStatus(userId,'reservation_child_parent_tel',escapeHTML(text))
-                await redis.hsetStatus(userId,'reservation_status',17)
-                await redis.hsetStatus(userId,'reservation_reply_status',170)
+                await redis.hsetStatus(userId,'reservation_status',16)
+                await redis.hsetStatus(userId,'reservation_reply_status',160)
                 regsiter_informations = await redis.hgetAll(userId)
                 let all_info = ''
                 Object.entries(regsiter_informations).forEach(([k, v]) => {
@@ -879,7 +875,7 @@ router
                         meal_caution[i] = v
                       }else if((k).includes('reservation_child_cramps_caution_'+i)){
                         cramps_caution[i] = v
-                      }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                      }else if((k).includes('reservation_child_meal_caution_allergy_'+i)){
                         allergy_caution[i] = v
                       }
                     }
@@ -892,8 +888,10 @@ router
                     all_info +=  "病名："+disase_id[i]+"\n"
                     all_info +=  "食事："+meal_id[i]+"\n"
                     all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
+                    if(allergy_caution[i].length > 0){
+                      all_info += "食物アレルギーの注意事項："+allergy_caution[i]+"\n"
+                    }
                     all_info +=  "熱性けいれんの注意事項："+convertBooleanToJP(cramps_caution[i])+"\n"
-                    all_info +=  "食物アレルギーの注意事項："+convertBooleanToJP(allergy_caution[i])+"\n"
                   }
                   let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
                   let reservation_status = ''
@@ -910,7 +908,7 @@ router
                 console.log(`Reservation ERR: ${error}`)
               }
               break;
-            case 17://Register
+            case 16://Register
               if(yesOrNo(text)){
                 if(text==='はい'){
                   let cancel_status = await redis.hgetStatus(userId, 'reservation_status_cancel')
@@ -951,7 +949,7 @@ router
                           meal_caution_subid[i] = v
                         }else if((k).includes('reservation_child_cramps_caution_'+i)){
                           cramps_caution[i] = v
-                        }else if((k).includes('reservation_child_allergy_caution_'+i)){
+                        }else if((k).includes('reservation_child_meal_caution_allergy_'+i)){
                           allergy_caution[i] = v
                         }
                       }
