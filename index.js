@@ -72,6 +72,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     console.log(`current_lineid ${current_lineid}`)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
     console.log(`current_capacity ${current_capacity}`)
+    console.log(`today_waiting_user_list_withoutsameLINEID ${today_waiting_user_list_withoutsameLINEID}`)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
       if(current_lineid != null && current_lineid == user.lineid && Number(current_capacity) > 0 ){
         await redis.hsetStatus('waiting_current_lineid_bynurseryid',n.id,current_lineid)
@@ -102,20 +103,6 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     }
   }
 });
-
-//朝9時にウェイティングリストの巡回を停止する
-cron.schedule('0 0 9 * * *', async () => {
-  console.log("end waiting list job...")
-  await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
-  await redis.Del('waiting_current_lineid_bynurseryid')
-  await redis.resetAllStatus('waiting_current_capacity')
-  await redis.Del('waiting_current_capacity')
-  for (const nursery of today_capacity) {
-    await redis.Del(nursery.id)
-  }
-  sendWaitingUser.stop()
-})
-
 
 //当日のウェイティングリストの問い合わせ 回答待ちは15分で、それ以上は次のユーザーに問い合わせる
 //7AMに選別がおわるため、7：15分に発火
@@ -150,11 +137,24 @@ cron.schedule('*/2 * * * *',async () => {
       }
       await redis.hsetStatus('waiting_current_lineid_bynurseryid',nursery.id,null)
     }
-    sendWaitingUser.start();
+    sendWaitingUser.start()
   } catch (error) {
     console.log('ERROR: @ waitinglist : '+error)
   }
 });
+
+//朝9時にウェイティングリストの巡回を停止する
+cron.schedule('0 0 9 * * *', async () => {
+  console.log("end waiting list job...")
+  await redis.resetAllStatus('waiting_current_lineid_bynurseryid')
+  await redis.Del('waiting_current_lineid_bynurseryid')
+  await redis.resetAllStatus('waiting_current_capacity')
+  await redis.Del('waiting_current_capacity')
+  for (const nursery of today_capacity) {
+    await redis.Del(nursery.id)
+  }
+  sendWaitingUser.stop()
+})
 
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 cron.schedule('0 0 7 * * *', async () => {
