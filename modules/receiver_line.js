@@ -1405,6 +1405,8 @@ async function isAvailableReservation(id){
     queryString = `SELECT * FROM public."Member" WHERE "LINEID" = '${id}' and "MiraikuID" = 0;`;
     const results_unnumberdmember = await psgl.sqlToPostgre(queryString)
     
+    console.log(results_alreadymember)
+    console.log(results_unnumberdmember)
     if(Object.keys(results_alreadymember).length <= 0 || Object.keys(results_unnumberdmember).length > 0 ){
       return false
     }else{
