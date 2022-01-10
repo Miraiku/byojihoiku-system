@@ -251,7 +251,9 @@ $(function() {
           let name = $('input[name="name"]').val()
           let year = $('input[name="year"]').val()
           let month = $('[name="month"] option:selected').val()
+          month = ('00' + month).slice(-2);
           let day = $('[name="day"] option:selected').val()
+          day = ('00' + day).slice(-2);
           let allergy = $('input[name="allergy"]:checked').val()       
           let memberid = $('input[name="id"]').val()      
           let birthday = year+month+day 
