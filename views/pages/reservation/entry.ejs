@@ -130,7 +130,7 @@
             <dd>
               <select class="is-sm" name="meal_details">
                 <% for (var i = 0; i < Info[0].meal_details_list.length; i++) { %>
-                  <option value="<%=Info[0].meal_details_list[i].id%>" <% if (Info[0].meal==Info[0].meal_details_list[i].name) { %>selected<% } %>><%=Info[0].meal_details_list[i].name%></option>
+                  <option value="<%=Info[0].meal_details_list[i].id%>" <% if (Info[0].meal_details==Info[0].meal_details_list[i].name) { %>selected<% } %>><%=Info[0].meal_details_list[i].name%></option>
                 <% } %>
               </select>
             </dd>
