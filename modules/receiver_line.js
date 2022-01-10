@@ -77,9 +77,11 @@ router
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
+                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
+                    if(details.Allergy.length > 0){
+                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                    }
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   }
@@ -110,9 +112,11 @@ router
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
+                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
+                    if(details.Allergy.length > 0){
+                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                    }
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   }
@@ -143,9 +147,11 @@ router
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+details.MealDetails+"\n"
+                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
+                    if(details.Allergy.length > 0){
+                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                    }
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "食物アレルギー："+details.Allergy+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
                     replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                   }
