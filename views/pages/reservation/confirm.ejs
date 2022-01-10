@@ -69,10 +69,12 @@
           <dt>熱性けいれん</dt>
           <dd><%=Info[0].cramps%></dd>
         </dl>
+        <% if(Info[0].allergy.length > 0){ %>
         <dl>
           <dt>アレルギー</dt>
           <dd><%=Info[0].allergy%></dd>
         </dl>
+        <% } %>
       </div>
       <div class="btns">
         <button class="btn-l is-border" onclick="location.href='/reservation/?nursery=<%=Info[0].prev%>'">戻る</button>
