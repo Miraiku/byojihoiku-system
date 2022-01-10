@@ -927,6 +927,8 @@ router
                           meal_id[i] = v
                         }else if((k).includes('reservation_child_meal_caution_'+i)){
                           meal_caution[i] = v
+                        }else if((k).includes('reservation_child_meal_caution_id'+i)){
+                          meal_caution_subid[i] = v
                         }else if((k).includes('reservation_child_cramps_caution_'+i)){
                           cramps_caution[i] = v
                         }else if((k).includes('reservation_child_allergy_caution_'+i)){
@@ -939,7 +941,7 @@ router
                         queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
                         let reservationID = await registerIntoReservationTable(queryString)
                         if(Number.isInteger(reservationID)){
-                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
+                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                           let reserved = await insertReservationDetails(queryString)
                           if(reserved){
                             await redis.resetAllStatus(userId)
