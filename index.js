@@ -158,7 +158,6 @@ cron.schedule('0 0 7 * * *', async () =>  {
 //予約の当日朝キャンセル処理(20時以降の予約はリマインダーを送信しない/キャンセル処理しないことになっている)
 //cron.schedule('0 0 7 * * *', async () => {
   cron.schedule('*/2 * * * *', async () => {
-  '*/1 * * * *'
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
     let today_waiting_user_list_withoutsameLINEID = []
@@ -166,8 +165,7 @@ cron.schedule('0 0 7 * * *', async () =>  {
       return false
     }
     for (let i = 0; i < lineids.length; i++) {
-      console.log(lineids[i])
-      /*if(i==0){
+      if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
         for (const n of today_waiting_user_list_withoutsameLINEID) {
@@ -177,17 +175,17 @@ cron.schedule('0 0 7 * * *', async () =>  {
             today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
           }
         }
-      }*/
+      }
     }
-    /*for (const id of lineids) {
-      console.log(id[0].LINEID)
+    for (const id of today_waiting_user_list_withoutsameLINEID) {
+      console.log(id)
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
         body: JSON.stringify({
           message: {'text': 'cron'},
           "line_push_from_cron": "today7am",
-          "id": id[0].LINEID
+          "id": id
           })
         },
         function(error, response, body){
@@ -196,7 +194,7 @@ cron.schedule('0 0 7 * * *', async () =>  {
           console.log("cron schedule 7am:"+ body); 
         }
       );
-    }*/
+    }
   } catch (error) {
     console.log('7am error:'+ error)
   }
