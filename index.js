@@ -102,6 +102,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
               }
             }
           );
+          return true
         }
       }
     }
@@ -117,6 +118,7 @@ cron.schedule('*/4 * * * *',async () => {
     if(original_list.length <= 0){
       return false
     }
+    today_waiting_user_list_withoutsameLINEID = []
     for (let i = 0; i < original_list.length; i++) {
       if(i==0){
         today_waiting_user_list_withoutsameLINEID.push(original_list[i])
@@ -168,24 +170,24 @@ cron.schedule('0 0 9 * * *', async () => {
 cron.schedule('0 0 7 * * *', async () => {
   try {
     let lineids = await psgl.getLINEIDTodayReservationReminderStatusIsWaitingAndUpdateCancelled()
-    let today_waiting_user_list_withoutsameLINEID = []
+    let withoutsameLINEID = []
     if(lineids.length <= 0){
       return false
     }
     for (let i = 0; i < lineids.length; i++) {
       if(i==0){
-        today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
+        withoutsameLINEID.push(lineids[i][0].LINEID)
       }else{
-        for (const n of today_waiting_user_list_withoutsameLINEID) {
+        for (const n of withoutsameLINEID) {
           if(n == lineids[i][0].LINEID){
             continue
           }else{
-            today_waiting_user_list_withoutsameLINEID.push(lineids[i][0].LINEID)
+            withoutsameLINEID.push(lineids[i][0].LINEID)
           }
         }
       }
     }
-    for (const id of today_waiting_user_list_withoutsameLINEID) {
+    for (const id of withoutsameLINEID) {
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -211,24 +213,24 @@ cron.schedule('0 0 7 * * *', async () => {
 cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
-    let today_waiting_user_list_withoutsameLINEID = []
+    let withoutsameLINEID = []
     if(ids.length <= 0){
       return false
     }
     for (let i = 0; i < ids.length; i++) {
       if(i==0){
-        today_waiting_user_list_withoutsameLINEID.push(ids[i])
+        withoutsameLINEID.push(ids[i])
       }else{
-        for (const n of today_waiting_user_list_withoutsameLINEID) {
+        for (const n of withoutsameLINEID) {
           if(n.lineid == ids[i].lineid){
             continue
           }else{
-            today_waiting_user_list_withoutsameLINEID.push(ids[i])
+            withoutsameLINEID.push(ids[i])
           }
         }
       }
     }
-    for (const id of today_waiting_user_list_withoutsameLINEID) {
+    for (const id of withoutsameLINEID) {
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
