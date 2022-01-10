@@ -71,6 +71,7 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
     let current_lineid = await redis.LPOP(n.id)
     console.log(`current_lineid ${current_lineid}`)
     let current_capacity = await redis.hgetStatus('waiting_current_capacity',n.id)
+    let current_nursery_name = await redis.hgetStatus('waiting_nursery_name', n.id)
     console.log(`current_capacity ${current_capacity}`)
     console.log(`today_waiting_user_list_withoutsameLINEID ${today_waiting_user_list_withoutsameLINEID}`)
     for (const user of today_waiting_user_list_withoutsameLINEID) {
@@ -83,7 +84,8 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
           body: JSON.stringify({
             message: {'text': 'cron'},
             "line_push_from_cron": "7amwaiting",
-            "id": current_lineid
+            "id": current_lineid,
+            'nurseryname': current_nursery_name
             })
           },
           function(error, response, body){
@@ -129,6 +131,7 @@ cron.schedule('*/2 * * * *',async () => {
     today_capacity = await psgl.getAvailableNurseryOnToday()
     for (const nursery of today_capacity) {
       await redis.hsetStatus('waiting_current_capacity', nursery.id, nursery.capacity)
+      await redis.hsetStatus('waiting_nursery_name', nursery.id, nursery.name)
       for (const user of today_waiting_user_list_withoutsameLINEID) {
         console.log(user)
         if(nursery.id == user.nurseryid){
@@ -150,6 +153,8 @@ cron.schedule('0 0 9 * * *', async () => {
   await redis.Del('waiting_current_lineid_bynurseryid')
   await redis.resetAllStatus('waiting_current_capacity')
   await redis.Del('waiting_current_capacity')
+  await redis.resetAllStatus('waiting_nursery_name')
+  await redis.Del('waiting_nursery_name')
   for (const nursery of today_capacity) {
     await redis.Del(nursery.id)
   }
