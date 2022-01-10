@@ -605,7 +605,7 @@ router
                 redis.hsetStatus(userId,'reservation_status',5)
                 redis.hsetStatus(userId,'reservation_reply_status',50)
               }else{
-                replyMessage = "利用したい病児保育室を返信してください。\\n希望がない場合は「なし」と返信してください。"+optionmsg
+                replyMessage = "利用したい病児保育室を返信してください。\n希望がない場合は「なし」と返信してください。"+optionmsg
               }//isValidNursery
               break;//CASE4
             case 5:
@@ -730,7 +730,7 @@ router
                 {
                     all_info += meals[i].id+". "+meals[i].name+"\n";
                 }
-                replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。\n\n"+all_info
+                replyMessage = "希望の食事は「"+mealname[0].MealName+"」ですね。\n\n食事に関して追記事項がある場合、いずれかの番号を返信してください。\n\n"+all_info
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 await redis.hsetStatus(userId,'reservation_status',12)
                 await redis.hsetStatus(userId,'reservation_reply_status',120)
@@ -775,7 +775,7 @@ router
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,submealid_text)
                 }
               }else{
-                replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。\n追記事項がない場合は「なし」と返信してください。"
+                replyMessage = "食事に関して追記事項がある場合、いずれかの番号を返信してください。"
               }
               break;
             case 13:
