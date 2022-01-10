@@ -955,6 +955,7 @@ router
                           }
                         }
                       } catch (error) {
+                        console.log(`Reservation For QueryERR: ${error}`)
                         if(reservationID!=null){
                           queryString = `DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
                           await registerIntoReservationTable(queryString)
