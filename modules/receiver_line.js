@@ -559,9 +559,10 @@ router
             case 3:
               //第2希望
               if(await isValidNurseryName(text) || text == 'なし'){
-                  replyMessage = "第2希望の病児保育室は「"+text+"」ですね。\n\n第3希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
-                  let nursery_id = await getNurseryIdByName(text)
                   if( text == 'なし'){
+                    let open = await redis.hgetStatus(userId, 'reservation_nursery_opentime')
+                    let close = await redis.hgetStatus(userId, 'reservation_nursery_closetime')
+                    replyMessage = "第2希望の病児保育室は「"+text+"」ですね。\n\n登園時間を返信してください。\n例）9時に登園する場合は「0900」\n\n病児保育室の開所時間は、"+TimeToJP(open)+"〜"+TimeToJP(close)+"です。"
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',0)
                     await redis.hsetStatus(userId,'reservation_nursery_name_2','なし')
                     await redis.hsetStatus(userId,'reservation_nursery_id_3',0)
@@ -569,6 +570,8 @@ router
                     redis.hsetStatus(userId,'reservation_status',5)
                     redis.hsetStatus(userId,'reservation_reply_status',50)
                   }else{
+                    replyMessage = "第2希望の病児保育室は「"+text+"」ですね。\n\n第3希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                    let nursery_id = await getNurseryIdByName(text)
                     await redis.hsetStatus(userId,'reservation_nursery_id_2',nursery_id[0].ID)
                     await redis.hsetStatus(userId,'reservation_nursery_name_2',text)
                     redis.hsetStatus(userId,'reservation_status',4)
