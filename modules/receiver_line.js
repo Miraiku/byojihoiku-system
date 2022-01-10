@@ -750,13 +750,14 @@ router
             case 12:
               let submealid_text = zenkaku2Hankaku(text)
               if(text == 'なし' || await isValidSubMeal(submealid_text)){
-                let mealname = await psgl.getMealNameFromSubID(submealid_text)
-                replyMessage = "食事の追記事項は「"+escapeHTML(text)+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 if(text=='なし'){
+                  replyMessage = "食事の追記事項は「なし」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,'false')
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,0)
                 }else{
+                  let mealname = await psgl.getMealNameFromSubID(submealid_text)
+                  replyMessage = "食事の追記事項は「"+mealname[0].MealName+"」ですね。\n\n熱性けいれんの既往がある方は「回数、初回の年齢、最終の年齢」についてご返信ください。\nない場合は「なし」を返信してください。\n例）2回、初回1歳9ヶ月、最終2歳5ヶ月"
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_'+current_child_number,mealname[0].MealName)
                   await redis.hsetStatus(userId,'reservation_child_meal_caution_id_'+current_child_number,submealid_text)
                 }
