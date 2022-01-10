@@ -539,7 +539,7 @@ router
                       next_step = true
                     }
                   }else{
-                    if(((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0) && (text != 'はい' || text!='キャンセル')){
+                    if(((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0) && cancel != 'true'){
                       replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       next_step = false
