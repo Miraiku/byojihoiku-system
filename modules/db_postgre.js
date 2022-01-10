@@ -99,7 +99,7 @@ exports.getAvailableNurseryOnToday = async function (){
 }
 
 exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
-  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'Waiting' or "ReservationStatus"::text LIKE 'Unread%');`
+  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`
   return await psgl.sqlToPostgre(sql)
 }
 
@@ -667,7 +667,7 @@ exports.getTodayWaitingRsvIDLineIDListSortByCreatedAt = async function (){
   let result = await psgl.sqlToPostgre(sql)
   let res = []
   for (const i of result) {
-    let sql = `SELECT "MemberID" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}'`
+    let sql = `SELECT "MemberID" FROM public."ReservationDetails" WHERE "ID" = '${i.ID}';`
     let memberid = await psgl.sqlToPostgre(sql)
     sql = `SELECT "LINEID" FROM public."Member" WHERE "ID" = '${memberid[0].MemberID}' and "Disabled" = 'false';`
     let lineid = await psgl.sqlToPostgre(sql)
