@@ -98,9 +98,6 @@ const sendWaitingUser = cron.schedule('*/1 * * * *',async () => {
             }
           }
         );
-        return true
-      }else{
-        return false
       }
     }
   }
