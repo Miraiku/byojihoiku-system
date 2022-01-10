@@ -889,7 +889,7 @@ router
                   }else{
                     reservation_status = '予約'
                   }
-                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\n\n"+all_info+"\n\n・上記の内容でよろしければ「はい」\n・予約しない場合は「いいえ」\nと返信してください。"
+                  replyMessage = "保護者様の電話番号は「"+text+"」ですね。\n\n以下の内容で"+reservation_status+"をします。\n\n"+all_info+"\n・上記の内容でよろしければ「はい」\n・予約しない場合は「いいえ」\nと返信してください。"
                 } catch (error) {
                   console.log(`Reservation ERR: ${error}`)
                 }
@@ -958,7 +958,7 @@ router
                             }else{
                               replyMessage = "予約が完了しました。\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。必ずご確認いただきますようお願いいたします。"//TODO注意事項をかく
                             }
-                            replyMessage += "\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
+                            replyMessage += "\n\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
                         }
                       } catch (error) {
