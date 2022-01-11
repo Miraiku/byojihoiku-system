@@ -1077,9 +1077,8 @@ router
           res.send(lineid)
           const nursery = req.body.nurseryname
           const name = req.body.name
-          replyMessage = `【要返信】\n明日、${name}さまの${nursery}病児保育室利用のご予約をいただいております。\n
-          ご利用される場合は「利用」を、ご予約をキャンセルする場合は「キャンセル」と返信してください。
-          \n\n※明日の朝7時までにご返信がない場合、ご予約は自動的にキャンセルとなります。`
+          replyMessage = `【要返信】\n明日、${name}さまの${nursery}病児保育室利用のご予約をいただいております。\nご利用される場合は「利用」を、ご予約をキャンセルする場合は「キャンセル」と返信してください。
+          \n※明日の朝7時までにご返信がない場合、ご予約は自動的にキャンセルとなります。`
         }else if(push_message == 'today7am'){
           res.send(lineid)
           replyMessage = 'ご来園の返信がなかっため本日のご予約はキャンセルさせていただきました。\nご不明点がある場合はみらいくまで直接お問い合わせください。'
