@@ -489,7 +489,7 @@ router
             //Day
             case 1:
               if(reservation_reply_status==10){
-                let text_to_num = zenkaku2Hankaku(text)
+                text_to_num = zenkaku2Hankaku(text)
                 if(isValidRegisterdDay(text_to_num, userId)){
                   if(!isBeforeToday8AM(text_to_num)){
                     replyMessage = "当日の予約受付は午前8時までです。\n当日予約の方はお電話でお問い合わせください。\n\n予約手続きを中止します。\n新しく予約をする場合は「予約」と返信してください。"
@@ -615,7 +615,7 @@ router
               }//isValidNursery
               break;//CASE4
             case 5:
-              let text_to_num = zenkaku2Hankaku(text)
+              text_to_num = zenkaku2Hankaku(text)
               if(isValidTime(text_to_num)&& await withinOpeningTime(userId, text_to_num)){
                 replyMessage = "登園時間は「"+TimeToJP(text_to_num)+"」ですね。\n\n降園時間を返信してください。\n例）16時に退園する場合は「1600」"
                 redis.hsetStatus(userId,'reservation_nursery_intime',text_to_num)
@@ -626,7 +626,7 @@ router
               }
               break;//CASE3
             case 6:
-              let text_to_num = zenkaku2Hankaku(text)
+              text_to_num = zenkaku2Hankaku(text)
               if(isValidTime(text_to_num)&& await withinOpeningTime(userId, text_to_num)){
                 replyMessage = "降園時間は「"+TimeToJP(text_to_num)+"」ですね。\n\n利用人数を返信してください。\n例）1人の場合は「1」、ご兄妹2人で利用される場合は「2」\n\n利用人数(兄妹)が3人以上の場合は、各病児保育室に直接お問い合わせください。\n手続きを中止する場合は「中止」、予約をやり直す場合は「予約」と返信してください。"
                 redis.hsetStatus(userId,'reservation_nursery_outtime',text_to_num)
@@ -637,7 +637,7 @@ router
               }
               break;//CASE4
             case 7:
-                let text_to_num = zenkaku2Hankaku(text)
+                text_to_num = zenkaku2Hankaku(text)
                 if(isValidNum(text_to_num)){
                   let childnum = Number(text_to_num)
                   if(childnum > 2){
@@ -681,7 +681,7 @@ router
               }// close ZenkakuKana
               break;//CASE8
             case 9:
-                let text_to_num = zenkaku2Hankaku(text)
+                text_to_num = zenkaku2Hankaku(text)
                 if(isValidDate(text_to_num)){
                   let disease = await psgl.getDiseaseList()
                   let all_info = ''
