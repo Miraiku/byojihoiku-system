@@ -203,24 +203,10 @@ cron.schedule('0 0 7 * * *', async () => {
 cron.schedule('0 0 20 * * *', async () => {
   try {
     let ids = await psgl.getLINEIDByReservedTomorrow()
-    let withoutsameLINEID = []
     if(ids.length <= 0){
       return false
     }
-    for (let i = 0; i < ids.length; i++) {
-      if(i==0){
-        withoutsameLINEID.push(ids[i])
-      }else{
-        for (const n of withoutsameLINEID) {
-          if(n.lineid == ids[i].lineid){
-            continue
-          }else{
-            withoutsameLINEID.push(ids[i])
-          }
-        }
-      }
-    }
-    for (const id of withoutsameLINEID) {
+    for (const id of ids) {
       request.post(
         { headers: {'content-type' : 'application/json'},
         url: 'https://byojihoiku.chiikihoiku.net/webhook',
@@ -228,7 +214,8 @@ cron.schedule('0 0 20 * * *', async () => {
           message: {'text': 'cron'},
           "line_push_from_cron": "20pm",
           "id": id.lineid,
-          "nurseryname": id.nurseryname
+          "name": id.name,
+          "nurseryname": id.nursery
           })
         },
         async function(error, response, body){
