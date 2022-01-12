@@ -8,6 +8,7 @@ const pool = new Pool({
   }
 });
 const https = require("https");
+const redis = require('./db_redis')
 const psgl = require('./db_postgre');
 const view = require('./view_data_render');
 const login = require('./view_login')
