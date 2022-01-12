@@ -390,8 +390,12 @@ exports.getCalendarPage = async function (req, res){
       if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
         day1 = '休'
       }else{
+        let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day1_JST)}`, nursery_list[i].id)
+        if(tmp_cnt == null){
+          tmp_cnt = 0
+        }
         let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
-        if(today.length > 0){
+        if((today.length + tmp_cnt) > 0){
           today_capa = nursery_list[i].capacity - today[0].count
           if(today_capa > 0){
             day1 = '○'
@@ -407,7 +411,11 @@ exports.getCalendarPage = async function (req, res){
         day2 = '休'
       }else{
         let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
-        if(tomorrow.length > 0){
+        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day2_JST)}`, nursery_list[i].id)
+        if(tmp_cnt == null){
+          tmp_cnt = 0
+        }
+        if((tomorrow.length + tmp_cnt ) > 0){
           tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
           if(tomorrow_capa > 0){
             day2 = '○'
@@ -423,7 +431,11 @@ exports.getCalendarPage = async function (req, res){
         day3 = '休'
       }else{
         let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
-        if(dayaftertomorrow.length > 0){
+        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day3_JST)}`, nursery_list[i].id)
+        if(tmp_cnt == null){
+          tmp_cnt = 0
+        }
+        if((tmp_cnt + dayaftertomorrow.length) > 0){
           dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
           if(dayaftertomorrow_capa > 0){
             day3 = '○'
@@ -916,4 +928,10 @@ exports.getPsglTimeStampYMDFromDayDataObj = function (dataobj){
   //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 2021-12-19
   let date = new Date(dataobj);
   return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' +('0' + date.getDate()).slice(-2)
+}
+
+exports.getTimeStampFrom8DayDataObj = function (dataobj){
+  //un Dec 19 2021 11:41:53 GMT+0900 (Japan Standard Time) -> 20211219
+  let date = new Date(dataobj);
+  return date.getFullYear() + '' + ('00' + (date.getMonth() + 1)).slice(-2) + '' +('00' + date.getDate()).slice(-2)
 }

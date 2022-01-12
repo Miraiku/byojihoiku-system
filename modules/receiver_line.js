@@ -529,7 +529,7 @@ router
                   let nursery_id = await getNurseryIdByName(text)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
-                  let tmp_cnt = await redis.hgetStatus('reservation_line_tmp_count_by_nurseryid',nursery_id[0].ID)
+                  let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${reservation_date}`,nursery_id[0].ID)
                   if(tmp_cnt == null){
                     tmp_cnt = 0
                   }
@@ -651,7 +651,7 @@ router
                     let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
                     let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
                     let first_nursery = await redis.hgetStatus(userId,'reservation_nursery_id_1')
-                    tmp_cnt = await redis.hgetStatus('reservation_line_tmp_count_by_nurseryid', first_nursery)
+                    tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${reservation_date}`, first_nursery)
                     if(tmp_cnt == null){
                       tmp_cnt = 0
                     }
@@ -665,7 +665,7 @@ router
                     }
                     replyMessage = "利用人数は「"+text_to_num+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                     tmp_cnt += childnum
-                    await redis.hsetStatus('reservation_line_tmp_count_by_nurseryid' ,first_nursery, tmp_cnt)
+                    await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${reservation_date}`, first_nursery, tmp_cnt)
                     await redis.hsetStatus(userId,'reservation_nursery_number',text_to_num)
                     await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
                     await redis.hsetStatus(userId,'reservation_status',8)
@@ -970,7 +970,7 @@ router
                           let reserved = await insertReservationDetails(queryString)
                           if(reserved){
                             await redis.resetAllStatus(userId)
-                            tmp_cnt = await redis.hgetStatus('reservation_line_tmp_count_by_nurseryid', res.reservation_nursery_id_1)
+                            tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${res.reservation_date}`, res.reservation_nursery_id_1)
                             if(tmp_cnt == null){
                               tmp_cnt = 0
                             }
