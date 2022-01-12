@@ -391,7 +391,7 @@ exports.getCalendarPage = async function (req, res){
       if(holiday.isHoliday(day1_JST) ||day1_JST.getDay() == 0 ||  day1_JST.getDay() == 6){
         day1 = '休'
       }else{
-        let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day1_JST)}`, nursery_list[i].id)
+        let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day1_JST)}`, nursery_list[i].id)
         if(tmp_cnt == null){
           tmp_cnt = 0
         }
@@ -412,7 +412,7 @@ exports.getCalendarPage = async function (req, res){
         day2 = '休'
       }else{
         let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
-        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day2_JST)}`, nursery_list[i].id)
+        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day2_JST)}`, nursery_list[i].id)
         if(tmp_cnt == null){
           tmp_cnt = 0
         }
@@ -432,7 +432,7 @@ exports.getCalendarPage = async function (req, res){
         day3 = '休'
       }else{
         let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
-        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${getTimeStampFrom8DayDataObj(day3_JST)}`, nursery_list[i].id)
+        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day3_JST)}`, nursery_list[i].id)
         if(tmp_cnt == null){
           tmp_cnt = 0
         }
