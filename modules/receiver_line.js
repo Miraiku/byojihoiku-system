@@ -657,7 +657,7 @@ router
                     }
                     let new_amount = childnum + Number(reservation_num_on_day[0].count) + tmp_cnt
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
-                      replyMessage = "ご利用希望日は予約の空きがありません。。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
+                      replyMessage = "ご利用希望日は予約の空きがありません。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       await redis.hsetStatus(userId,'reservation_status',2)
                       await redis.hsetStatus(userId,'reservation_reply_status',20)

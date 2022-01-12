@@ -438,6 +438,7 @@ exports.getCalendarPage = async function (req, res){
         }
         if(dayaftertomorrow.length > 0){
           dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count - tmp_cnt
+          console.log(nursery_list[i].capacity - dayaftertomorrow[0].count - tmp_cnt)
           if(dayaftertomorrow_capa > 0){
             day3 = '○'
           }else{
