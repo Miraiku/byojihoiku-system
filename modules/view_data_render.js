@@ -397,7 +397,7 @@ exports.getCalendarPage = async function (req, res){
         }
         let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
         let today_cnt = 0
-        if(today.length < 0){
+        if(today.length > 0){
           today_cnt = today[0].count
         }
         today_capa = nursery_list[i].capacity - today_cnt - tmp_cnt
@@ -417,7 +417,7 @@ exports.getCalendarPage = async function (req, res){
           tmp_cnt = 0
         }
         let tomorrow_cnt = 0
-        if(tomorrow.length < 0){
+        if(tomorrow.length > 0){
           tomorrow_cnt = tomorrow[0].count
         }
         tomorrow_capa = nursery_list[i].capacity - tomorrow_cnt - tmp_cnt
@@ -442,7 +442,7 @@ exports.getCalendarPage = async function (req, res){
           tomorrow_cnt = tomorrow[0].count
         }
         dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow_cnt - tmp_cnt
-        if(dayaftertomorrow_capa> 0){
+        if(dayaftertomorrow_capa > 0){
           day3 = '○'
         }else{
           day3 = '✕'
