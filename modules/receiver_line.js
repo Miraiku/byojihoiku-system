@@ -665,7 +665,7 @@ router
                     }
                     replyMessage = "利用人数は「"+text_to_num+"人」ですね。\n\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
                     tmp_cnt += childnum
-                    await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${reservation_date}`, first_nursery, tmp_cnt)
+                    await redis.hsetStatus(`reservation_line_tmp_count_by_nurseryid_${reservation_date}`, first_nursery, tmp_cnt)
                     await redis.hsetStatus(userId,'reservation_nursery_number',text_to_num)
                     await redis.hsetStatus(userId,'reservation_nursery_current_register_number',1)
                     await redis.hsetStatus(userId,'reservation_status',8)
@@ -975,7 +975,7 @@ router
                               tmp_cnt = 0
                             }
                             tmp_cnt -= 1
-                            await redis.hsetStatus('reservation_line_tmp_count_by_nurseryid' ,res.reservation_nursery_id_1, tmp_cnt)
+                            await redis.hsetStatus(`reservation_line_tmp_count_by_nurseryid_${res.reservation_date}` ,res.reservation_nursery_id_1, tmp_cnt)
                             if(cancel_status == 'true'){
                               replyMessage = "キャンセル待ちが完了しました。\n\n枠が空いた場合、予約日当日の朝7時〜開園までにLINEでご連絡させていたただきます。"//TODO注意事項をかく
                             }else{
