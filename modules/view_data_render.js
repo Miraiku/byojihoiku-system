@@ -397,8 +397,8 @@ exports.getCalendarPage = async function (req, res){
         }
         let today = await psgl.ReservedTodayByNursery(nursery_list[i].id)
         if(today.length > 0){
-          today_capa = nursery_list[i].capacity - today[0].count
-          if((today_capa + tmp_cnt) > 0){
+          today_capa = nursery_list[i].capacity - today[0].count - tmp_cnt
+          if(today_capa> 0){
             day1 = '○'
           }else{
             day1 = '✕'
@@ -412,13 +412,13 @@ exports.getCalendarPage = async function (req, res){
         day2 = '休'
       }else{
         let tomorrow = await psgl.ReservedTomorrowByNursery(nursery_list[i].id)
-        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day2_JST)}`, nursery_list[i].id)
+        let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day2_JST)}`, nursery_list[i].id)
         if(tmp_cnt == null){
           tmp_cnt = 0
         }
         if(tomorrow.length > 0){
-          tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count
-          if((tomorrow_capa + tmp_cnt) > 0){
+          tomorrow_capa = nursery_list[i].capacity - tomorrow[0].count - tmp_cnt
+          if(tomorrow_capa > 0){
             day2 = '○'
           }else{
             day2 = '✕'
@@ -432,13 +432,13 @@ exports.getCalendarPage = async function (req, res){
         day3 = '休'
       }else{
         let dayaftertomorrow = await psgl.ReservedDayAfterTomorrowByNursery(nursery_list[i].id)
-        tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day3_JST)}`, nursery_list[i].id)
+        let tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${view.getTimeStampFrom8DayDataObj(day3_JST)}`, nursery_list[i].id)
         if(tmp_cnt == null){
           tmp_cnt = 0
         }
         if(dayaftertomorrow.length > 0){
-          dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count
-          if((dayaftertomorrow_capa + tmp_cnt) > 0){
+          dayaftertomorrow_capa = nursery_list[i].capacity - dayaftertomorrow[0].count - tmp_cnt
+          if(dayaftertomorrow_capa > 0){
             day3 = '○'
           }else{
             day3 = '✕'
