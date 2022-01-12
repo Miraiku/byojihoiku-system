@@ -529,10 +529,13 @@ router
                   let nursery_id = await getNurseryIdByName(text)
                   let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                   let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), nursery_id[0].ID)
-                  
+                  let tmp_cnt = await redis.hgetStatus('reservation_line_tmp_count_by_nurseryid',nursery_id[0].ID)
+                  if(tmp_cnt == null){
+                    tmp_cnt = 0
+                  }
                   let next_step = false
                   if(cancel == null){
-                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0){
+                    if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count) - tmp_cnt) <= 0){
                       replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       next_step = false
@@ -541,7 +544,7 @@ router
                       next_step = true
                     }
                   }else{
-                    if(((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) <= 0) && cancel != 'true'){
+                    if(((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) - tmp_cnt) <= 0 && cancel != 'true'){
                       replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       next_step = false
@@ -556,6 +559,8 @@ router
                   if(next_step){
                     let opentime = await psgl.getNurseryOpenTimeFromName(text)
                     let closetime = await psgl.getNurseryCloseTimeFromName(text)
+                    tmp_cnt += 1
+                    redis.hsetStatus('reservation_line_tmp_count_by_nurseryid',nursery_id[0].ID, tmp_cnt)
                     redis.hsetStatus(userId,'reservation_nursery_name_1',text)
                     redis.hsetStatus(userId,'reservation_nursery_id_1',nursery_id[0].ID)
                     redis.hsetStatus(userId,'reservation_nursery_opentime',TimeFormatFromDB(opentime[0].OpenTime))
@@ -646,8 +651,13 @@ router
                     let nursery_capacity = await hasNurseryCapacity(await redis.hgetStatus(userId, 'reservation_nursery_name_1'))
                     let reservation_date = await redis.hgetStatus(userId,'reservation_date')
                     let reservation_num_on_day = await psgl.canNurseryReservationOnThatDay(getTimeStampDayFrom8Number(reservation_date), await redis.hgetStatus(userId, 'reservation_nursery_id_1'))
-                    let new_amount = childnum + Number(reservation_num_on_day[0].count)
                     let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')
+                    let first_nursery = await redis.hgetStatus(userId,'reservation_nursery_id_1')
+                    tmp_cnt = await redis.hgetStatus('reservation_line_tmp_count_by_nurseryid',first_nursery)
+                    if(tmp_cnt == null){
+                      tmp_cnt = 0
+                    }
+                    let new_amount = childnum + Number(reservation_num_on_day[0].count) + tmp_cnt
                     if(Number(nursery_capacity[0].Capacity) < new_amount && cancel == null){
                       replyMessage = "ご利用希望日は予約の空きがありません。。\n他の病児保育室名を返信してください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」\n・予約をやり直す場合は「予約」\nと返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
