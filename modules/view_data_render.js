@@ -53,7 +53,7 @@ exports.getRegisterPage = async function (req, res){
       isLogined = await login.authenticate(userSession)
     }
     if (!isLogined) {
-      res.render('/logout')
+      res.redirect('/logout')
     }else{
       res.render("pages/function/register",{SubTitle:'会員登録　｜　'})
     }
