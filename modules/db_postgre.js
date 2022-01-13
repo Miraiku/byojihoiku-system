@@ -74,7 +74,7 @@ exports.getAvailableNurseryOnThatDay = async function (date){
   let available = []
   let nursery = await psgl.getNurseryTable()
   for await (const v of nursery) {
-    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+v['ID']+`';`
+    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation') and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+v['ID']+`';`
     let c = await psgl.sqlToPostgre(sql)
     let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
     if(current_capacity > 0){
@@ -88,7 +88,7 @@ exports.getAvailableNurseryOnToday = async function (){
   let available = []
   let nursery = await psgl.getNurseryTable()
   for await (const v of nursery) {
-    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationStatus" = 'Reserved' and "ReservationDate" >= DATE 'today' and "NurseryID" = '`+v['ID']+`';`
+    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation') and "ReservationDate" >= DATE 'today' and "NurseryID" = '`+v['ID']+`';`
     let c = await psgl.sqlToPostgre(sql)
     let current_capacity = Number(v['Capacity']) - Number(c[0]['count'])
     if(current_capacity > 0){
@@ -99,7 +99,7 @@ exports.getAvailableNurseryOnToday = async function (){
 }
 
 exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
-  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation');`
   return await psgl.sqlToPostgre(sql)
 }
 
@@ -683,19 +683,19 @@ exports.getNurseryIDByResevationID = async function (id){
 }
 
 exports.ReservedTodayByNursery = async function (id){
-  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT COUNT(*) FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'today' and ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation');`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.ReservedTomorrowByNursery = async function (id){
-  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = DATE 'tomorrow' and  ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation');`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
 
 exports.ReservedDayAfterTomorrowByNursery = async function (id){
-  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and "ReservationStatus" = 'Reserved';`
+  let sql = `SELECT "ReservationStatus" FROM public."Reservation" WHERE "NurseryID" = '${id}' and "ReservationDate" = CURRENT_DATE + 2 and  ("ReservationStatus" = 'Reserved' or "ReservationStatus" = 'UnreadReservation');`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
