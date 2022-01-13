@@ -543,7 +543,7 @@ $(function() {
           let name = $('input[name="name"]').val()
           let password = $('input[name="password"]').val()
           $.ajax({
-            url: '/secret/regsiter',
+            url: '/secret/register',
             type: 'POST',
             data: {
               'action': 'login_register',
