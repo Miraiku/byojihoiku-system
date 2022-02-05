@@ -269,7 +269,7 @@
                       <tr <% if(Day3Wait[i].status == 'Rejected' || Day3Wait[i].status == 'Cancelled' ){ %>class="is-reject" <% } %> data-href="/reservation/confirm/<%=Day3Wait[i].rsvid%>?nursery=<%=Status3Days[0].id%>">
                         <td><%=i+1%></td>
                         <td><%=Day3Wait[i].id%></td>
-                        <td><% if(DayWait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day3Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day3Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>   
+                        <td><% if(Day3Wait[i].status == 'Rejected'){ %>対応不可<% } %><% if(Day3Wait[i].status == 'Waiting'){ %>キャンセル待ち<% } %><% if(Day3Wait[i].status == 'Cancelled'){ %>キャンセル<% } %></td>   
                         <td><%=Day3Wait[i].name%></td>
                         <td><%=Day3Wait[i].birthday%></td>
                         <td><%=Day3Wait[i].date%></td>
