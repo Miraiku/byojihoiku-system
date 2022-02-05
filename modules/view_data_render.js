@@ -143,7 +143,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         let Reserved = 0
         for (const status of todayStatus) {
           if(status.ReservationStatus == 'Unread'){
-            Unread += 1
+            Waiting += 1
           }else if(status.ReservationStatus == 'Cancelled'){
             Cancelled += 1
           }else if(status.ReservationStatus == 'Waiting'){
@@ -152,8 +152,6 @@ exports.getNurseryStatus3Days = async function (req, res){
             Rejected += 1
           }else if(status.ReservationStatus == 'Reserved'){
             Reserved += 1
-          }else if(status.ReservationStatus == 'Unread'){
-            Waiting += 1
           }
           today_data = {date:DayToJPFromDateObj(today_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
         }
@@ -169,7 +167,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         let Reserved = 0
         for (const status of await psgl.ReservationStatusTomorrowByNursery(nursery_list[i].id)) {
           if(status.ReservationStatus == 'Unread'){
-            Unread += 1
+            Waiting += 1
           }else if(status.ReservationStatus == 'Cancelled'){
             Cancelled += 1
           }else if(status.ReservationStatus == 'Waiting'){
@@ -178,8 +176,6 @@ exports.getNurseryStatus3Days = async function (req, res){
             Rejected += 1
           }else if(status.ReservationStatus == 'Reserved'){
             Reserved += 1
-          }else if(status.ReservationStatus == 'Unread'){
-            Waiting += 1
           }
           tomorrow_data = {date:DayToJPFromDateObj(tomorrow_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
         }
@@ -195,7 +191,7 @@ exports.getNurseryStatus3Days = async function (req, res){
         let Reserved = 0
         for (const status of await psgl.ReservationStatusDayAfterTomorrowByNursery(nursery_list[i].id)) {
           if(status.ReservationStatus == 'Unread'){
-            Unread += 1
+            Waiting += 1
           }else if(status.ReservationStatus == 'Cancelled'){
             Cancelled += 1
           }else if(status.ReservationStatus == 'Waiting'){
@@ -204,8 +200,6 @@ exports.getNurseryStatus3Days = async function (req, res){
             Rejected += 1
           }else if(status.ReservationStatus == 'Reserved'){
             Reserved += 1
-          }else if(status.ReservationStatus == 'Unread'){
-            Waiting += 1
           }
           dayaftertomorrow_data = {date:DayToJPFromDateObj(dayaftertomorrow_JST), unread:Unread, cancelled:Cancelled, waiting:Waiting, rejected:Rejected, reserved:Reserved}
         }
