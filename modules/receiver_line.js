@@ -922,8 +922,10 @@ router
                   let reservation_status = ''
                   if(cancel_status == 'true'){
                     reservation_status = 'Unread'
+                    confirmation = false
                   }else{
                     reservation_status = 'Reserved'
+                    confirmation = true
                   }
                   try {
                     let res = await redis.hgetAll(userId)
@@ -963,7 +965,7 @@ router
                     for (let i = 1; i <= total; i++) {
                       let reservationID = null
                       try {
-                        queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime", "CreatedAt") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}','${getTimeStampFromDayDataObj(today)}') RETURNING "ID";` 
+                        queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime", "CreatedAt", "Confirmation") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}','${getTimeStampFromDayDataObj(today)}','${confirmation}') RETURNING "ID";` 
                         reservationID = await registerIntoReservationTable(queryString)
                         if(Number.isInteger(reservationID)){
                           queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
