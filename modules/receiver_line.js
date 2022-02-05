@@ -923,7 +923,7 @@ router
                   if(cancel_status == 'true'){
                     reservation_status = 'Unread'
                   }else{
-                    reservation_status = 'UnreadReservation'
+                    reservation_status = 'Reserved'
                   }
                   try {
                     let res = await redis.hgetAll(userId)
