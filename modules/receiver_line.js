@@ -536,7 +536,7 @@ router
                   let next_step = false
                   if(cancel == null){
                     if((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count) - tmp_cnt) <= 0){
-                      replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      replyMessage = "希望の施設には予約の空きがありません。\n他の病児保育室を返信するか、キャンセル待ちをしてください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」と返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       next_step = false
                     }else{
@@ -545,11 +545,11 @@ router
                     }
                   }else{
                     if(((Number(nursery_capacity[0].Capacity) - Number(reservation_num_on_day[0].count)) - tmp_cnt) <= 0 && cancel != 'true'){
-                      replyMessage = "ご利用希望日は予約の空きがありません。\n\n・他の病児保育室名\n・キャンセル待ちをする場合は「はい」\n・始めからやり直す場合は「予約」\nを返信してください。"
+                      replyMessage = "希望の施設には予約の空きがありません。\n他の病児保育室を返信するか、キャンセル待ちをしてください。\n\n・キャンセル待ちをする場合は「はい」\n・手続きを中止する場合は「中止」と返信してください。"
                       await redis.hsetStatus(userId,'reservation_status_cancel','maybe')
                       next_step = false
                     }else if(cancel == 'true'){
-                      replyMessage = "キャンセル登録第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
+                      replyMessage = "キャンセル待ちを希望する病児保育室の第1希望は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
                       next_step = true
                     }else{
                       replyMessage = "第1希望の病児保育室は「"+text+"」ですね。\n\n第2希望の病児保育室名を返信してください。\n希望がない場合は「なし」と返信してください。"
@@ -981,7 +981,11 @@ router
                             if(cancel_status == 'true'){
                               replyMessage = "キャンセル待ちが完了しました。\n\n枠が空いた場合、予約日当日の朝7時〜開園までにLINEでご連絡させていたただきます。"//TODO注意事項をかく
                             }else{
-                              replyMessage = "予約が完了しました。\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。必ずご確認いただきますようお願いいたします。"//TODO注意事項をかく
+                              rmd = ''
+                              if(isBeforeToday8PM(await redis.hsetStatus(userId,'reservation_date'))){
+                                rmd = '\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。必ずご確認いただきますようお願いいたします。'
+                              }
+                              replyMessage = "予約が完了しました。"+rmd
                             }
                             replyMessage += "\n\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
@@ -1334,6 +1338,21 @@ function isBeforeToday8AM(s){
     let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
     let today_hour = new Date(JST)//時間は考慮しない
     if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() >= 8){
+      return false
+    }
+    return true
+  }
+  return false
+}
+
+function isBeforeToday8PM(s){
+  if(isValidDate(s)){
+    let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
+    let reservationday_dateobj = new Date(reservationday)
+    let JST = new Date().toLocaleString({ timeZone: 'Asia/Tokyo' })
+    let today = new Date(JST).setHours(0,0,0,0)//時間は考慮しない
+    let today_hour = new Date(JST)//時間は考慮しない
+    if(today == reservationday_dateobj.getTime() &&  today_hour.getHours() >= 20){
       return false
     }
     return true
