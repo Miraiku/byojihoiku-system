@@ -971,7 +971,6 @@ router
                           queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                           let reserved = await insertReservationDetails(queryString)
                           if(reserved){
-                            await redis.resetAllStatus(userId)
                             tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${res.reservation_date}`, res.reservation_nursery_id_1)
                             if(tmp_cnt == null){
                               tmp_cnt = 0
@@ -987,13 +986,14 @@ router
                               }
                               replyMessage = "予約が完了しました。"+rmd
                             }
+                            await redis.resetAllStatus(userId)
                             replyMessage += "\n\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
                           }
                         }
                       } catch (error) {
                         console.log(`QueryERR of Reservation: ${error}`)
                         if(reservationID!=null){
-                          queryString = `DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
+                          queryString = `DELETE FROM public."ReservationDetails" WHERE "ID" = '${reservationID}';DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
                           await registerIntoReservationTable(queryString)
                           replyMessage = "申し訳ございません。\n予約が完了しませんでした。\n恐れ入りますが、始めからやり直してください。\n予約をやり直す場合は「予約」と返信してください。"
                           await redis.resetAllStatus(userId)
