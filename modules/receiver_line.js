@@ -982,7 +982,7 @@ router
                               replyMessage = "キャンセル待ちが完了しました。\n\n枠が空いた場合、予約日当日の朝7時〜開園までにLINEでご連絡させていたただきます。"//TODO注意事項をかく
                             }else{
                               rmd = ''
-                              if(isBeforeToday8PM(await redis.hsetStatus(userId,'reservation_date'))){
+                              if(isBeforeToday8PM(await redis.hgetStatus(userId,'reservation_date'))){
                                 rmd = '\n\n予約日の前日夜8時に、予約の最終確認をLINEで通知させていただきます。必ずご確認いただきますようお願いいたします。'
                               }
                               replyMessage = "予約が完了しました。"+rmd
@@ -991,7 +991,7 @@ router
                           }
                         }
                       } catch (error) {
-                        console.log(`Reservation For QueryERR: ${error}`)
+                        console.log(`QueryERR of Reservation: ${error}`)
                         if(reservationID!=null){
                           queryString = `DELETE FROM public."Reservation" WHERE "ID" = '${reservationID}';` 
                           await registerIntoReservationTable(queryString)
@@ -1346,6 +1346,7 @@ function isBeforeToday8AM(s){
 }
 
 function isBeforeToday8PM(s){
+  //前日２０時までのときに正をかえす
   if(isValidDate(s)){
     let reservationday = new Date(getYear(s), Number(getMonth(s)-1), getDay(s)).toLocaleString({ timeZone: 'Asia/Tokyo' })//月のみ0インデックス, 秒で出力
     let reservationday_dateobj = new Date(reservationday)
