@@ -718,7 +718,7 @@ exports.getReservationStatusByMemberID = async function (memberid){
 }
 
 exports.getReservedMemberIDOnTheDay = async function (date){
-  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE '${date}';`
+  let sql = `SELECT "MemberID" FROM public."Reservation" WHERE "ReservationDate" = DATE '${date}' and "ReservationStatus" = 'Reserved';`
   let result = await psgl.sqlToPostgre(sql)
   return result//[{}]
 }
