@@ -779,11 +779,15 @@ exports.getReservationEntryPage = async function (req, res){
     if(sameday_members.length > 0){
       for (const m of sameday_members) {
         let mem = await psgl.getLINEIDByMemberID(m.MemberID)
+        console.log(`lineid[0].LINEID ${lineid[0].LINEID}`)
+        console.log(`mem[0].LINEID ${mem[0].LINEID}`)
+        console.log(`mem.length ${mem.length}`)
         if(mem.length > 0 && mem[0].LINEID == lineid[0].LINEID){
           bros_num += 1
         }
       }
     }
+    console.log(`bros_num ${bros_num}`)
     if(bros_num > 1){
       brothers = '有り'
     }else{
