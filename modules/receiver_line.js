@@ -517,10 +517,16 @@ router
             case 2:
               if(reservation_reply_status==20){
                 //第１園希望確認
-                let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay()
-                if(!is_samenurseryreservation){
-                  //同日は同じ園しか予約できない
-                  replyMessage = "同日に複数の園を予約することはできません。\n\n・他の病児保育室を返信してください。\n・手続きを中止する場合は「中止」と返信してください。"
+                let rsvday = redis.hgetStatus(userId,'reservation_date')
+                if(await isValidNurseryName(text)){
+                  let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay(rsvday, text, userId)
+                  if(!is_samenurseryreservation){
+                    //同日は同じ園しか予約できない
+                    replyMessage = "同日に複数の園を予約することはできません。\n\n・他の病児保育室を返信してください。\n・手続きを中止する場合は「中止」と返信してください。"
+                    break;
+                  }
+                }else{
+                  replyMessage = "利用したい病児保育室を返信してください。\n例）早苗町を希望の場合「早苗町」と返信してください。"
                   break;
                 }
                 let cancel = await redis.hgetStatus(userId, 'reservation_status_cancel')

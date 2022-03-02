@@ -119,7 +119,6 @@ exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, linei
     //true 予約継続可
     //false 予約継続不可
     let memberids = await psgl.getMemberIDByLINEID(lineid)
-    let status = []
     for (const r of memberids) {
       if(psgl.isAlreadyReservedOnThatDay(date, r)){
         let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
