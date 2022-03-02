@@ -517,7 +517,7 @@ router
             case 2:
               if(reservation_reply_status==20){
                 //第１園希望確認
-                let rsvday = redis.hgetStatus(userId,'reservation_date')
+                let rsvday = await redis.hgetStatus(userId,'reservation_date')
                 if(await isValidNurseryName(text)){
                   let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay(rsvday, text, userId)
                   if(!is_samenurseryreservation){
