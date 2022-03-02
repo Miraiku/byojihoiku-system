@@ -120,8 +120,8 @@ exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, linei
     //false 予約継続不可
     let memberids = await psgl.getMemberIDByLINEID(lineid)
     for (const r of memberids) {
-      if(psgl.isAlreadyReservedOnThatDay(date, r.ID)){
-        let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r.ID+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
+      if(await psgl.isAlreadyReservedOnThatDay(date, r.ID)){
+        let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r.ID+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`' and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
         let c = await psgl.sqlToPostgre(sql)
         if( Number(c[0]['count'])>0){
           return true
@@ -134,7 +134,7 @@ exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, linei
     }
   } catch (error) {
     console.log('isReservedSameNurseryOnThatDay: ' + error)
-    return true
+    return false
   }
 }
 
