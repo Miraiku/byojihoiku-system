@@ -100,7 +100,7 @@ exports.getAvailableNurseryOnToday = async function (){
 
 exports.isAlreadyReservedOnThatDay = async function (date, memberid){
   try {
-    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE ::text LIKE '`+date+`%' and "MemberID" = '`+memberid+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
+    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE ::text LIKE '`+date+`%' and "MemberID" = '`+memberid+`' and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
     let c = await psgl.sqlToPostgre(sql)
     if( Number(c[0]['count'])>0){
       return true
@@ -120,8 +120,8 @@ exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, linei
     //false 予約継続不可
     let memberids = await psgl.getMemberIDByLINEID(lineid)
     for (const r of memberids) {
-      if(psgl.isAlreadyReservedOnThatDay(date, r)){
-        let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
+      if(psgl.isAlreadyReservedOnThatDay(date, r.ID)){
+        let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r.ID+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
         let c = await psgl.sqlToPostgre(sql)
         if( Number(c[0]['count'])>0){
           return true
