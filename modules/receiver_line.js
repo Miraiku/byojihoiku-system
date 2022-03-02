@@ -520,6 +520,7 @@ router
                 let rsvday = await redis.hgetStatus(userId,'reservation_date')
                 if(await isValidNurseryName(text)){
                   let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay(rsvday, text, userId)
+                  console.log(is_samenurseryreservation)
                   if(!is_samenurseryreservation){
                     //同日は同じ園しか予約できない
                     replyMessage = "同日に複数の園を予約することはできません。\n\n・他の病児保育室を返信してください。\n・手続きを中止する場合は「中止」と返信してください。"
