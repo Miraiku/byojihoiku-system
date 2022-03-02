@@ -102,12 +102,9 @@ exports.isAlreadyReservedOnThatDay = async function (date, memberid){
   try {
     let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "MemberID" = '`+memberid+`' and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
     let c = await psgl.sqlToPostgre(sql)
-    console.log(Number(c[0]['count']))
     if( Number(c[0]['count'])>0){
-      console.log('count 1 true' + Number(c[0]['count']))
       return true
     }else{
-      console.log('count 0 false')
       return false
     }
   } catch (error) {
@@ -128,19 +125,15 @@ exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, linei
         let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "MemberID" = '`+r.ID+`' and "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`' and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
         let c = await psgl.sqlToPostgre(sql)
         if( Number(c[0]['count'])>0){
-          console.log('true')
           return true
         }else{
-          console.log('false')
           return false
         }
       }else{
-        console.log('else true')
         return true
       }
     }
   } catch (error) {
-    console.log('error false')
     console.log('isReservedSameNurseryOnThatDay: ' + error)
     return false
   }
