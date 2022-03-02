@@ -98,6 +98,47 @@ exports.getAvailableNurseryOnToday = async function (){
   return available
 }
 
+exports.isAlreadyReservedOnThatDay = async function (date, memberid){
+  try {
+    let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE ::text LIKE '`+date+`%' and "MemberID" = '`+memberid+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
+    let c = await psgl.sqlToPostgre(sql)
+    if( Number(c[0]['count'])>0){
+      return true
+    }else{
+      return false
+    }
+  } catch (error) {
+    console.log('isAlreadyReservedOnThatDay: ' + error)
+    return false
+  }
+}
+
+
+exports.isReservedSameNurseryOnThatDay = async function (date, nursery_id, lineid){
+  try {
+    //true 予約継続可
+    //false 予約継続不可
+    let memberids = await psgl.getMemberIDByLINEID(lineid)
+    let status = []
+    for (const r of memberids) {
+      if(psgl.isAlreadyReservedOnThatDay(date, r)){
+        let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE and "MemberID" = '`+r+`' "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and "ReservationStatus" = 'Reserved';`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
+        let c = await psgl.sqlToPostgre(sql)
+        if( Number(c[0]['count'])>0){
+          return true
+        }else{
+          return false
+        }
+      }else{
+        return true
+      }
+    }
+  } catch (error) {
+    console.log('isReservedSameNurseryOnThatDay: ' + error)
+    return true
+  }
+}
+
 exports.canNurseryReservationOnThatDay = async function (date, nursery_id){
   let sql = `SELECT COUNT ("ID") FROM public."Reservation" WHERE "ReservationDate"::text LIKE '`+date+`%' and "NurseryID" = '`+nursery_id+`'and ("ReservationStatus" = 'Reserved');`// or "ReservationStatus" = 'UnreadReservation' or "ReservationStatus" = 'Unread'
   return await psgl.sqlToPostgre(sql)
