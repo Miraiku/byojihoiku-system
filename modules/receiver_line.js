@@ -519,7 +519,7 @@ router
                 //第１園希望確認
                 let rsvday = await redis.hgetStatus(userId,'reservation_date')
                 if(await isValidNurseryName(text)){
-                  let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay(rsvday, text, userId)
+                  let is_samenurseryreservation = await psgl.isReservedSameNurseryOnThatDay(getTimeStampDayFrom8Number(rsvday), text, userId)
                   console.log(is_samenurseryreservation)
                   if(!is_samenurseryreservation){
                     //同日は同じ園しか予約できない
