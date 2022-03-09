@@ -760,22 +760,21 @@ router
                 current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
                 let disasename = await psgl.getDiseaseNameFromID(diseaseid_text)
                 let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(diseaseid_text)
-                replyMessage = "お子様の病名は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
-                await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
-                await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
-                await redis.hsetStatus(userId,'reservation_child_disase_reason_'+current_child_number,'')
-                await redis.hsetStatus(userId,'reservation_status',11)
-                await redis.hsetStatus(userId,'reservation_reply_status',110)
-                
-                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+
                 if(text=='17'){
                   replyMessage = "その他のカッコ内に記載されている内容を返信してください。\n例）急性腸炎、社会的理由 など"
                   await redis.hsetStatus(userId,'reservation_status',105)
                   await redis.hsetStatus(userId,'reservation_reply_status',1050)
                   await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
                   await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
+                }else{
+                  replyMessage = "お子様の病名は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
+                  await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
+                  await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
+                  await redis.hsetStatus(userId,'reservation_child_disase_reason_'+current_child_number,'')
+                  await redis.hsetStatus(userId,'reservation_status',11)
+                  await redis.hsetStatus(userId,'reservation_reply_status',110)
                 }
-
               }else{
                 replyMessage = "医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」"+optionmsg
               }
