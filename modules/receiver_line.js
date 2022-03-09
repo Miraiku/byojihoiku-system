@@ -53,13 +53,14 @@ router
         }else if(text === "予約詳細"){
           try {      
             await redis.hsetStatus(userId,'statuslist_reservation_status',1)
-            replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n\n予約番号を確認する場合は「予約状況」と返信してください。\n予約をキャンセルしたい方はキャンセルと返信してください。'
+            replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。\n予約をキャンセルしたい方はキャンセルと返信してください。'
           } catch (error) {
             console.log("予約詳細 " +error)
           }
         }else if(statuslist_reservation_status != null){
           try {
             let statuslist_number = zenkaku2Hankaku(text.slice(0, 1))
+            console.log(statuslist_number)
             if(isValidNum(statuslist_number)){
               let memberids = await psgl.getMemberIDByLINEID(userId)
               for (const member of memberids) {
@@ -122,10 +123,9 @@ router
                   }//end complete_reservations
                 }//end if null
               }//end memberids normal
-              replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n\n予約番号を確認する場合は「予約状況」と返信してください。\n予約をキャンセルしたい方はキャンセルと返信してください。'
               await redis.hDel(userId,'statuslist_reservation_status')
             }else{
-              replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n\n予約番号を確認する場合は「予約状況」と返信してください。'
+              replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。'
             }
           } catch (error) {
             console.log("予約詳細 " +error)
