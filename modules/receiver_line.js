@@ -137,7 +137,7 @@ router
         }else if(text === "予約状況"){
           try {
             //[{},{}]
-            replyMessage ='【ご予約状況】\n'
+            replyMessage ='【ご予約状況】\n\n'
             let memberids = await psgl.getMemberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations
@@ -177,7 +177,7 @@ router
                     }
                   }
                 }//end complete_reservations
-                replyMessage += '\n予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1'
+                replyMessage += '\n予約の詳細を確認したい方は「予約詳細」と返信してください。'
               }//end if null
             }//end memberids normal
           } catch (error) {
