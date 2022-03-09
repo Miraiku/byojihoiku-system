@@ -761,7 +761,7 @@ router
                 let disasename = await psgl.getDiseaseNameFromID(diseaseid_text)
                 let disaseunique_id = await psgl.getUniqueIDFromDiseaseID(diseaseid_text)
 
-                if(text=='17'){
+                if(disasename=='その他'){
                   replyMessage = "その他のカッコ内に記載されている内容を返信してください。\n例）急性腸炎、社会的理由 など"
                   await redis.hsetStatus(userId,'reservation_status',105)
                   await redis.hsetStatus(userId,'reservation_reply_status',1050)
