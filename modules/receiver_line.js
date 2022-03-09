@@ -114,7 +114,7 @@ router
                         }
                         replyMessage += "熱性けいれん："+details.Cramps+"\n"
                         replyMessage += "保護者氏名："+details.ParentName+"\n"
-                        replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                        replyMessage += "保護者連絡先："+details.ParentTel+"\n\n"
                       }
                     }else{
                       continue
@@ -167,7 +167,7 @@ router
                     }else if(rsv.ReservationStatus == 'UnreadReservation'){
                       list_rsv_status = '予約確認中'
                     }
-                    replyMessage += `\n(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
+                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
                     if(list_rsv_status == '予約確定'){
                       replyMessage += "施設名："+c[0].firstNursery+"\n"
                     }else if(list_rsv_status == 'キャンセル待ち'){
@@ -177,7 +177,7 @@ router
                     }
                   }
                 }//end complete_reservations
-                replyMessage += '\n予約の詳細を確認したい方は「予約詳細」と返信してください。'
+                replyMessage += '\n予約の詳細を確認したい方は「予約詳細」と返信してください。\n例：ミライクタカダ1'
               }//end if null
             }//end memberids normal
           } catch (error) {
