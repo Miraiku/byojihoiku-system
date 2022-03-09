@@ -58,7 +58,7 @@ router
             let memberids = await psgl.getMemberIDByLINEID(userId)
             for (const member of memberids) {
               let complete_reservations
-              if(today.getHours < 11){
+              if(today.getHours() < 11){
                 complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
               }else{
                 complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
@@ -84,7 +84,7 @@ router
                     }else if(rsv.ReservationStatus == 'UnreadReservation'){
                       list_rsv_status = '予約確認中'
                     }
-                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
+                    replyMessage += `\n(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
                     if(list_rsv_status == '予約確定'){
                       replyMessage += "施設名："+c[0].firstNursery+"\n"
                     }else if(list_rsv_status == 'キャンセル待ち'){
