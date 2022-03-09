@@ -168,9 +168,9 @@ router
                       list_rsv_status = '予約確認中'
                     }
                     replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
-                    if(list_rsv_status == 'Reserved'){
+                    if(list_rsv_status == '予約確定'){
                       replyMessage += "施設名："+c[0].firstNursery+"\n"
-                    }else if(list_rsv_status == 'Waiting'){
+                    }else if(list_rsv_status == 'キャンセル待ち'){
                       replyMessage += "第１希望："+c[0].firstNursery+"\n"
                       replyMessage += "第２希望："+c[0].secondNursery+"\n"
                       replyMessage += "第３希望："+c[0].thirdNursery+"\n"
