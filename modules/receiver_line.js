@@ -114,7 +114,7 @@ router
                         }
                         replyMessage += "熱性けいれん："+details.Cramps+"\n"
                         replyMessage += "保護者氏名："+details.ParentName+"\n"
-                        replyMessage += "保護者連絡先："+details.ParentTel+"\n\n"
+                        replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                       }
                     }else{
                       continue
