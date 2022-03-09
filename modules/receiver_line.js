@@ -55,9 +55,11 @@ router
             replyMessage ='【ご予約状況】\n'
             let memberids = await psgl.getMemberIDByLINEID(userId)
             for (const member of memberids) {
-              let complete_reservations = await psgl.getReservationStatusReservedByMemberIDGraterThanToday(member.ID)
+              let complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
               if(complete_reservations != null){
+                let list_cnt = 0
                 for (const rsv of complete_reservations) {
+                  list_cnt += 1
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
@@ -70,11 +72,25 @@ router
                     if(details.MealDetails == 'false'){
                       details.MealDetails = 'なし'
                     }
-                    replyMessage += "\nご予約日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                    let list_rsv_status = ''
+                    if(rsv.ReservationStatus == 'Reserverd'){
+                      list_rsv_status = '予約確定'
+                    }else if(rsv.ReservationStatus == 'Waiting'){
+                      list_rsv_status = 'キャンセル待ち'
+                    }else if(rsv.ReservationStatus == 'Cancelled'){
+                      list_rsv_status = 'キャンセル済'
+                    }else if(rsv.ReservationStatus == 'Rejected'){
+                      list_rsv_status = '受入不可'
+                    }else if(rsv.ReservationStatus == 'Unread'){
+                      list_rsv_status = '予約確認中'
+                    }else if(rsv.ReservationStatus == 'UnreadReservation'){
+                      list_rsv_status = '予約確認中'
+                    }
+                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}`
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
+                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
                     replyMessage += "お子様氏名："+c[0].MemberID+"\n"
                     replyMessage += "病名："+c[0].DiseaseID+"\n"
                     replyMessage += "食事："+c[0].MealType+"\n"
@@ -89,76 +105,6 @@ router
                 }//end complete_reservations
               }//end if null
             }//end memberids normal
-            for (const member of memberids) {
-              let waiting_reservations = await psgl.getReservationStatusUnreadAndWaitingByMemberIDGraterThanToday(member.ID)
-              if(waiting_reservations.length != 0){
-                for (const rsv of waiting_reservations) {
-                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
-                  for (const details of reservations_details) {
-                    let c = await getJpValueFromPsglIds(details)
-                    if(details.Cramps == 'false'){
-                      details.Cramps = 'なし'
-                    }
-                    if(details.Allergy == 'false'){
-                      details.Allergy = 'なし'
-                    }
-                    if(details.MealDetails == 'false'){
-                      details.MealDetails = 'なし'
-                    }
-                    replyMessage += "\nキャンセル待ち利用希望日："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
-                    replyMessage += "第３希望："+c[0].thirdNursery+"\n"
-                    replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "病名："+c[0].DiseaseID+"\n"
-                    replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
-                    if(details.Allergy.length > 0){
-                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
-                    }
-                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "保護者氏名："+details.ParentName+"\n"
-                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
-                  }
-                }//end waiting_reservations
-              }//end if null
-            }//end memberids waiting
-            for (const member of memberids) {
-              let cancelled_reservations = await psgl.getReservationStatusCancelledByMemberIDGraterThanToday(member.ID)
-              if(cancelled_reservations.length != 0){
-                for (const rsv of cancelled_reservations) {
-                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)            
-                  for (const details of reservations_details) {
-                    let c = await getJpValueFromPsglIds(details)
-                    if(details.Cramps == 'false'){
-                      details.Cramps = 'なし'
-                    }
-                    if(details.Allergy == 'false'){
-                      details.Allergy = 'なし'
-                    }
-                    if(details.MealDetails == 'false'){
-                      details.MealDetails = 'なし'
-                    }
-                    replyMessage += "\nキャンセル済みのご予約："+DayToJPFromDateObj(new Date(details.ReservationDate))+"\n"
-                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
-                    replyMessage += "第３希望："+c[0].thirdNursery+"\n"
-                    replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "病名："+c[0].DiseaseID+"\n"
-                    replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
-                    if(details.Allergy.length > 0){
-                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
-                    }
-                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "保護者氏名："+details.ParentName+"\n"
-                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
-                  }
-                }//end cancelled_reservations
-              }//end if null
-            }//end memberids cancelled
           } catch (error) {
             console.log("予約確認： " +error)
           }
