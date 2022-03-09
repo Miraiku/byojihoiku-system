@@ -109,83 +109,6 @@ router
           } catch (error) {
             console.log("予約詳細 " +error)
           }
-        }else if(statuslist_reservation_status != null){
-          try {
-            let statuslist_number = zenkaku2Hankaku(text.slice(-1))
-            replyMessage = ''
-            if(isValidNum(statuslist_number)){
-              let memberids = await psgl.getMemberIDByLINEID(userId)
-              for (const member of memberids) {
-                let complete_reservations
-                if(today.getHours < 11){
-                  complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
-                }else{
-                  complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
-                }
-                if(complete_reservations != null){
-                  let list_cnt = 1
-                  for (const rsv of complete_reservations) {
-                    if(list_cnt == statuslist_number){
-                      let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
-                      for (const details of reservations_details) {
-                        let c = await getJpValueFromPsglIds(details)
-                        if(details.Cramps == 'false'){
-                          details.Cramps = 'なし'
-                        }
-                        if(details.Allergy == 'false'){
-                          details.Allergy = 'なし'
-                        }
-                        if(details.MealDetails == 'false'){
-                          details.MealDetails = 'なし'
-                        }
-                        let list_rsv_status = ''
-                        if(rsv.ReservationStatus == 'Reserved'){
-                          list_rsv_status = '予約確定'
-                        }else if(rsv.ReservationStatus == 'Waiting'){
-                          list_rsv_status = 'キャンセル待ち'
-                        }else if(rsv.ReservationStatus == 'Cancelled'){
-                          list_rsv_status = 'キャンセル済'
-                        }else if(rsv.ReservationStatus == 'Rejected'){
-                          list_rsv_status = '受入不可'
-                        }else if(rsv.ReservationStatus == 'Unread'){
-                          list_rsv_status = '予約確認中'
-                        }else if(rsv.ReservationStatus == 'UnreadReservation'){
-                          list_rsv_status = '予約確認中'
-                        }
-                        replyMessage += `【${c[0].MemberID}様のご予約詳細】\n\n(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
-                        replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                        replyMessage += "第２希望："+c[0].secondNursery+"\n"
-                        replyMessage += "第３希望："+c[0].thirdNursery+"\n"
-                        replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                        replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                        replyMessage += "病名："+c[0].DiseaseID+"\n"
-                        replyMessage += "食事："+c[0].MealType+"\n"
-                        replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
-                        if(details.Allergy.length > 0){
-                          replyMessage += "食物アレルギー："+details.Allergy+"\n"
-                        }
-                        replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                        replyMessage += "保護者氏名："+details.ParentName+"\n"
-                        replyMessage += "保護者連絡先："+details.ParentTel+"\n"
-                      }
-                    }else{
-                      continue
-                    }
-                    list_cnt += 1
-                  }//end complete_reservations
-                }//end if null
-              }//end memberids normal
-            console.log(replyMessage)
-              if(replyMessage == ''){
-                replyMessage = '予約内容が見つかりませんでした。予約番号を確認する場合は「予約状況」と返信してください。'
-              }
-              await redis.hDel(userId,'statuslist_reservation_status')
-            }else{
-              replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。'
-            }
-          } catch (error) {
-            console.log("予約詳細 " +error)
-          }
         }else if(text === "テスト"){
           replyMessage = "\n今日: " +today
           replyMessage += "\n今日日付: " +today.getDate()
@@ -282,43 +205,6 @@ router
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約状況」と返信してください。"
           }
 
-        }else if(waiting_reservation_status != null){
-          try {
-            replyMessage = ''
-
-            let waiting_send_status = await redis.hsetStatus(userId,'waiting_reservation_status',1)
-
-            let waiting_text_to_num = zenkaku2Hankaku(text)
-            if(waiting_send_status == 1 && isValidNum(waiting_text_to_num)){
-              if(waiting_text_to_num == '1'){//15分以内返答かつ予約希望
-                const today_capacity = await psgl.getAvailableNurseryOnToday()
-                for (const n of today_capacity) {
-                  let current_waiting_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
-                  if(current_waiting_lineid == userId){
-                    let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
-                    let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
-                    if(updated)
-                    if(updated !=null){
-                      await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
-                      replyMessage = '予約が確定しました。お気をつけてお越しください。'
-                    }else{
-                      replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
-                    }
-                    break
-                  }else{
-                    replyMessage = '本日ご利用いただける予約枠はございません。'
-                  }
-                }
-              }else if(waiting_text_to_num == '2'){//利用しない
-                await psgl.setTodayReservationStatusIsCancelled(userId)
-                replyMessage = '予約がキャンセルされました。またのご利用をお待ちしております。'
-              }
-            } 
-
-          } catch (error) {
-            console.log('空き登録: '+error)
-            replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
-          }
         }else if(text === "戻る"){
           const action_prev = function (){
             request.post(
@@ -1097,6 +983,120 @@ router
               console.log('Nothing to do in switch ') 
             break;
           }// end of switch
+        }else if(statuslist_reservation_status != null){
+          try {
+            let statuslist_number = zenkaku2Hankaku(text.slice(-1))
+            replyMessage = ''
+            if(isValidNum(statuslist_number)){
+              let memberids = await psgl.getMemberIDByLINEID(userId)
+              for (const member of memberids) {
+                let complete_reservations
+                if(today.getHours < 11){
+                  complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
+                }else{
+                  complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
+                }
+                if(complete_reservations != null){
+                  let list_cnt = 1
+                  for (const rsv of complete_reservations) {
+                    if(list_cnt == statuslist_number){
+                      let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
+                      for (const details of reservations_details) {
+                        let c = await getJpValueFromPsglIds(details)
+                        if(details.Cramps == 'false'){
+                          details.Cramps = 'なし'
+                        }
+                        if(details.Allergy == 'false'){
+                          details.Allergy = 'なし'
+                        }
+                        if(details.MealDetails == 'false'){
+                          details.MealDetails = 'なし'
+                        }
+                        let list_rsv_status = ''
+                        if(rsv.ReservationStatus == 'Reserved'){
+                          list_rsv_status = '予約確定'
+                        }else if(rsv.ReservationStatus == 'Waiting'){
+                          list_rsv_status = 'キャンセル待ち'
+                        }else if(rsv.ReservationStatus == 'Cancelled'){
+                          list_rsv_status = 'キャンセル済'
+                        }else if(rsv.ReservationStatus == 'Rejected'){
+                          list_rsv_status = '受入不可'
+                        }else if(rsv.ReservationStatus == 'Unread'){
+                          list_rsv_status = '予約確認中'
+                        }else if(rsv.ReservationStatus == 'UnreadReservation'){
+                          list_rsv_status = '予約確認中'
+                        }
+                        replyMessage += `【${c[0].MemberID}様のご予約詳細】\n\n(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
+                        replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                        replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                        replyMessage += "第３希望："+c[0].thirdNursery+"\n"
+                        replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
+                        replyMessage += "お子様氏名："+c[0].MemberID+"\n"
+                        replyMessage += "病名："+c[0].DiseaseID+"\n"
+                        replyMessage += "食事："+c[0].MealType+"\n"
+                        replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
+                        if(details.Allergy.length > 0){
+                          replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                        }
+                        replyMessage += "熱性けいれん："+details.Cramps+"\n"
+                        replyMessage += "保護者氏名："+details.ParentName+"\n"
+                        replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                      }
+                    }else{
+                      continue
+                    }
+                    list_cnt += 1
+                  }//end complete_reservations
+                }//end if null
+              }//end memberids normal
+            console.log(replyMessage)
+              if(replyMessage == ''){
+                replyMessage = '予約内容が見つかりませんでした。予約番号を確認する場合は「予約状況」と返信してください。'
+              }
+              await redis.hDel(userId,'statuslist_reservation_status')
+            }else{
+              replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。'
+            }
+          } catch (error) {
+            console.log("予約詳細 " +error)
+          }
+        }else if(waiting_reservation_status != null){
+          try {
+            replyMessage = ''
+
+            let waiting_send_status = await redis.hsetStatus(userId,'waiting_reservation_status',1)
+
+            let waiting_text_to_num = zenkaku2Hankaku(text)
+            if(waiting_send_status == 1 && isValidNum(waiting_text_to_num)){
+              if(waiting_text_to_num == '1'){//15分以内返答かつ予約希望
+                const today_capacity = await psgl.getAvailableNurseryOnToday()
+                for (const n of today_capacity) {
+                  let current_waiting_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
+                  if(current_waiting_lineid == userId){
+                    let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
+                    let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
+                    if(updated)
+                    if(updated !=null){
+                      await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
+                      replyMessage = '予約が確定しました。お気をつけてお越しください。'
+                    }else{
+                      replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+                    }
+                    break
+                  }else{
+                    replyMessage = '本日ご利用いただける予約枠はございません。'
+                  }
+                }
+              }else if(waiting_text_to_num == '2'){//利用しない
+                await psgl.setTodayReservationStatusIsCancelled(userId)
+                replyMessage = '予約がキャンセルされました。またのご利用をお待ちしております。'
+              }
+            } 
+
+          } catch (error) {
+            console.log('空き登録: '+error)
+            replyMessage = '予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+          }
         }else{
           //通常Message
           replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約状況」\n▶各病児保育室の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
