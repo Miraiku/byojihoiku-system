@@ -990,7 +990,6 @@ router
         }else if(statuslist_reservation_status != null){
           try {
             let statuslist_number = zenkaku2Hankaku(text.slice(-1))
-            console.log(statuslist_number)
             replyMessage = ''
             if(isValidNum(statuslist_number)){
               let memberids = await psgl.getMemberIDByLINEID(userId)
@@ -1047,10 +1046,7 @@ router
                         replyMessage += "保護者氏名："+details.ParentName+"\n"
                         replyMessage += "保護者連絡先："+details.ParentTel+"\n"
                       }
-                    }else{
-                      continue
                     }
-                    console.log(list_cnt)
                     list_cnt += 1
                   }//end complete_reservations
                 }//end if null
