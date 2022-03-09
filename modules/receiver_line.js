@@ -1173,9 +1173,10 @@ router
           for (const n of parentnames) {
             parentname = n
           }
-          var Month = now.getMonth()+1
-          var Date = now.getDate()
-          let today_waiting_day = Month + "月" + Date + "日"
+          let waiting_now = new Date();
+          let waiting_month = waiting_now.getMonth()+1
+          let waiating_day = waiting_now.getDate()
+          let today_waiting_day = waiting_month + "月" + waiating_day + "日"
           const nurseryname = req.body.nurseryname
           replyMessage = `【要返信】\n${parentname}さま、${today_waiting_day}に${nurseryname}病児保育室のキャンセル待ちを承っておりましたが、定員に空きが出てご利用可能となりました。\n利用したい方は「１，はい」を、利用しない方は「２，利用しない」と数字で返信してください。\n\n*15分以内にご返信が無い場合、次にお待ちの方に予約枠をお譲りいたしますのでご了承ください。`
           await redis.hsetStatus(userId,'waiting_reservation_status',1)
