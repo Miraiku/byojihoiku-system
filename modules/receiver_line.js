@@ -73,7 +73,7 @@ router
                       details.MealDetails = 'なし'
                     }
                     let list_rsv_status = ''
-                    if(rsv.ReservationStatus == 'Reserverd'){
+                    if(rsv.ReservationStatus == 'Reserved'){
                       list_rsv_status = '予約確定'
                     }else if(rsv.ReservationStatus == 'Waiting'){
                       list_rsv_status = 'キャンセル待ち'
@@ -86,7 +86,7 @@ router
                     }else if(rsv.ReservationStatus == 'UnreadReservation'){
                       list_rsv_status = '予約確認中'
                     }
-                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}`
+                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
                     replyMessage += "第１希望："+c[0].firstNursery+"\n"
                     replyMessage += "第２希望："+c[0].secondNursery+"\n"
                     replyMessage += "第３希望："+c[0].thirdNursery+"\n"
@@ -100,7 +100,7 @@ router
                     }
                     replyMessage += "熱性けいれん："+details.Cramps+"\n"
                     replyMessage += "保護者氏名："+details.ParentName+"\n"
-                    replyMessage += "保護者連絡先："+details.ParentTel+"\n"
+                    replyMessage += "保護者連絡先："+details.ParentTel+"\n\n"
                   }
                 }//end complete_reservations
               }//end if null
