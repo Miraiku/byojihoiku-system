@@ -59,8 +59,9 @@ router
           }
         }else if(statuslist_reservation_status != null){
           try {
-            let statuslist_number = zenkaku2Hankaku(text.slice(0, 1))
+            let statuslist_number = zenkaku2Hankaku(text.slice(-1))
             console.log(statuslist_number)
+            replyMessage = ''
             if(isValidNum(statuslist_number)){
               let memberids = await psgl.getMemberIDByLINEID(userId)
               for (const member of memberids) {
@@ -123,6 +124,9 @@ router
                   }//end complete_reservations
                 }//end if null
               }//end memberids normal
+              if(replyMessage == ''){
+                replyMessage = '予約内容が見つかりませんでした。予約番号を確認する場合は「予約状況」と返信してください。'
+              }
               await redis.hDel(userId,'statuslist_reservation_status')
             }else{
               replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。'
