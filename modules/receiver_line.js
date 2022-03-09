@@ -55,7 +55,12 @@ router
             replyMessage ='【ご予約状況】\n'
             let memberids = await psgl.getMemberIDByLINEID(userId)
             for (const member of memberids) {
-              let complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
+              let complete_reservations
+              if(today.getHours < 11){
+                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
+              }else{
+                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
+              }
               if(complete_reservations != null){
                 let list_cnt = 0
                 for (const rsv of complete_reservations) {
@@ -1357,6 +1362,7 @@ function isBeforeToday8AM(s){
   }
   return false
 }
+
 
 function isBeforeToday8PM(s){
   //前日２０時までのときに正をかえす
