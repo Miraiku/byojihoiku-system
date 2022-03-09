@@ -33,6 +33,12 @@
             <%=Info[0].disease%>
           </dd>
         </dl>
+        <% if(Info[0].disease_reason.length > 0){ %>
+        <dl>
+          <dt>理由</dt>
+          <dd><%=Info[0].disease_reason%></dd>
+        </dl>
+        <% } %>
         <dl>
           <dt>利用日</dt>
           <dd><%=Info[0].rsvdate%></dd>

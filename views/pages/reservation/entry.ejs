@@ -54,6 +54,12 @@
               </select-->
             </dd>
           </dl>
+          <% if(Info[0].disease_reason.length > 0){ %>
+            <dl>
+              <dt>理由</dt>
+              <dd><input type="text" class="is-md" value="<%=Info[0].disease_reason%>" name="disease_reason" required/></dd>
+            </dl>
+          <% } %>
           <!--dl>
             <dt>利用日</dt>
             <dd>
