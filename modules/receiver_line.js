@@ -101,7 +101,7 @@ router
                         }else if(rsv.ReservationStatus == 'UnreadReservation'){
                           list_rsv_status = '予約確認中'
                         }
-                        replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
+                        replyMessage += `【${c[0].MemberID}様のご予約詳細】\n\n(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
                         replyMessage += "第１希望："+c[0].firstNursery+"\n"
                         replyMessage += "第２希望："+c[0].secondNursery+"\n"
                         replyMessage += "第３希望："+c[0].thirdNursery+"\n"
@@ -153,15 +153,6 @@ router
                   let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
                   for (const details of reservations_details) {
                     let c = await getJpValueFromPsglIds(details)
-                    if(details.Cramps == 'false'){
-                      details.Cramps = 'なし'
-                    }
-                    if(details.Allergy == 'false'){
-                      details.Allergy = 'なし'
-                    }
-                    if(details.MealDetails == 'false'){
-                      details.MealDetails = 'なし'
-                    }
                     let list_rsv_status = ''
                     if(rsv.ReservationStatus == 'Reserved'){
                       list_rsv_status = '予約確定'
@@ -177,22 +168,16 @@ router
                       list_rsv_status = '予約確認中'
                     }
                     replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
-                    replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                    replyMessage += "第２希望："+c[0].secondNursery+"\n"
-                    replyMessage += "第３希望："+c[0].thirdNursery+"\n"
-                    replyMessage += "利用時間："+getTimeJPFormattedFromDayDataObj(details.InTime)+"〜"+getTimeJPFormattedFromDayDataObj(details.OutTime)+"\n"
-                    replyMessage += "お子様氏名："+c[0].MemberID+"\n"
-                    replyMessage += "病名："+c[0].DiseaseID+"\n"
-                    replyMessage += "食事："+c[0].MealType+"\n"
-                    replyMessage += "食事の注意事項："+c[0].MealDetails+"\n"
-                    if(details.Allergy.length > 0){
-                      replyMessage += "食物アレルギー："+details.Allergy+"\n"
+                    if(list_rsv_status == 'Reserved'){
+                      replyMessage += "施設名："+c[0].firstNursery+"\n"
+                    }else if(list_rsv_status == 'Waiting'){
+                      replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                      replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                      replyMessage += "第３希望："+c[0].thirdNursery+"\n"
                     }
-                    replyMessage += "熱性けいれん："+details.Cramps+"\n"
-                    replyMessage += "保護者氏名："+details.ParentName+"\n"
-                    replyMessage += "保護者連絡先："+details.ParentTel+"\n\n"
                   }
                 }//end complete_reservations
+                replyMessage += '\n予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1'
               }//end if null
             }//end memberids normal
           } catch (error) {
