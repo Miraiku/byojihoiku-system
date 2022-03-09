@@ -731,6 +731,23 @@ router
                   replyMessage = "お子様の生年月日を数字で返信してください。\n例）2020年1月30日生まれの場合、20210130と返信してください。"+optionmsg
                 }
                 break;//CASE9  
+            case 105://病名 『 17.その他 』の自由追記事項
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                if(text.length >= 0){let meals = await psgl.getMainMealList()
+                  let all_info = ''
+                  for(let i = 0; i < meals.length; i++)
+                  {
+                      all_info += meals[i].id+". "+meals[i].name+"\n";
+                  }
+                  current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                  replyMessage = "理由は「"+escapeHTML(text)+"」ですね。\n\n以下から、希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
+                  await redis.hsetStatus(userId,'reservation_child_disase_reason_'+current_child_number,escapeHTML(text))
+                  await redis.hsetStatus(userId,'reservation_status',11)
+                  await redis.hsetStatus(userId,'reservation_reply_status',110)
+                }else{
+                  replyMessage = "その他のカッコ内に記載されている内容を返信してください。\n例）急性腸炎、社会的理由 など"
+                }
+                break;  
             case 10:
               let diseaseid_text = zenkaku2Hankaku(text)
               if(await isValidDisease(diseaseid_text)){
@@ -746,8 +763,19 @@ router
                 replyMessage = "お子様の病名は「"+disasename[0].DiseaseName+"」ですね。\n\n以下から、希望する食事内容を番号で返信してください。\n例）ミルクのみの場合は「2」\n\n"+all_info
                 await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
                 await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
+                await redis.hsetStatus(userId,'reservation_child_disase_reason_'+current_child_number,'')
                 await redis.hsetStatus(userId,'reservation_status',11)
                 await redis.hsetStatus(userId,'reservation_reply_status',110)
+                
+                current_child_number = await redis.hgetStatus(userId,'reservation_nursery_current_register_number')
+                if(text=='17'){
+                  replyMessage = "その他のカッコ内に記載されている内容を返信してください。\n例）急性腸炎、社会的理由 など"
+                  await redis.hsetStatus(userId,'reservation_status',105)
+                  await redis.hsetStatus(userId,'reservation_reply_status',1050)
+                  await redis.hsetStatus(userId,'reservation_child_disase_id_'+current_child_number,disaseunique_id[0].ID)
+                  await redis.hsetStatus(userId,'reservation_child_disase_name_'+current_child_number,disasename[0].DiseaseName)
+                }
+
               }else{
                 replyMessage = "医師から診断された病名、『医師連絡票』に〇印が付いている病名を番号で返信してください。\n例）気管支炎の場合は「3」、インフルエンザAの場合は「6A」"+optionmsg
               }
@@ -896,6 +924,8 @@ router
                         meal_caution[i] = v
                       }else if((k).includes('reservation_child_meal_caution_allergy_'+i)){
                         allergy_caution[i] = v
+                      }else if((k).includes('reservation_child_disase_reason_'+i)){
+                        disase_reason[i] = v
                       }else if((k).includes('reservation_child_cramps_caution_'+i)){
                         cramps_caution[i] = v
                       }
@@ -907,6 +937,9 @@ router
                     }
                     all_info +=  "\nお子様氏名："+childname[i]+"\n"
                     all_info +=  "病名："+disase_id[i]+"\n"
+                    if(disase_reason[i].length > 0){
+                      all_info += "理由："+allergy_reason[i]+"\n"
+                    }
                     all_info +=  "食事："+meal_id[i]+"\n"
                     all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
                     if(allergy_caution[i].length > 0){
@@ -965,6 +998,8 @@ router
                           memberid[i] = v
                         }else if((k).includes('reservation_child_disase_id_'+i)){
                           disase_id[i] = v
+                        }else if((k).includes('reservation_child_disase_reason_'+i)){
+                          disase_reason[i] = v
                         }else if((k).includes('reservation_child_meal_id_'+i)){
                           meal_id[i] = v
                         }else if((k).includes('reservation_child_meal_caution_id_'+i)){
@@ -982,7 +1017,7 @@ router
                         queryString = `INSERT INTO public."Reservation"("MemberID", "NurseryID", "ReservationStatus", "ReservationDate", "UpdatedTime", "CreatedAt", "Confirmation") VALUES ('${memberid[i]}' ,'${res.reservation_nursery_id_1}', '${reservation_status}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}','${getTimeStampFromDayDataObj(today)}','${getTimeStampFromDayDataObj(today)}','${confirmation}') RETURNING "ID";` 
                         reservationID = await registerIntoReservationTable(queryString)
                         if(Number.isInteger(reservationID)){
-                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
+                          queryString = `INSERT INTO public."ReservationDetails"( "ID", "MemberID", "DiseaseID", "DiseaseReason", "ReservationDate", "firstNursery", "secondNursery", "thirdNursery", "ParentName", "ParentTel", "SistersBrothersID", "MealType", "MealDetails", "Cramps", "Allergy", "InTime", "OutTime") VALUES ('${reservationID}','${memberid[i]}', '${disase_id[i]}','${disase_reason[i]}', '${getTimeStampWithTimeDayFrom8Number(res.reservation_date)}', '${res.reservation_nursery_id_1}', '${res.reservation_nursery_id_2}', '${res.reservation_nursery_id_3}', '${res.reservation_child_parent_name}', '${res.reservation_child_parent_tel}', '{}', '${meal_id[i]}', '${meal_caution_subid[i]}', '${cramps_caution[i]}', '${allergy_caution[i]}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_intime)}', '${getTimeStampFromDay8NumberAndTime4Number(res.reservation_date, res.reservation_nursery_outtime)}');`
                           let reserved = await insertReservationDetails(queryString)
                           if(reserved){
                             tmp_cnt = await redis.hgetStatus(`reservation_line_tmp_count_by_nurseryid_${res.reservation_date}`, res.reservation_nursery_id_1)
