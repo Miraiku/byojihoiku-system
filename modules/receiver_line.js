@@ -938,7 +938,7 @@ router
                     all_info +=  "\nお子様氏名："+childname[i]+"\n"
                     all_info +=  "病名："+disase_id[i]+"\n"
                     if(disase_reason[i].length > 0){
-                      all_info += "理由："+allergy_reason[i]+"\n"
+                      all_info += "理由："+disase_reason[i]+"\n"
                     }
                     all_info +=  "食事："+meal_id[i]+"\n"
                     all_info +=  "食事の注意事項："+meal_caution[i]+"\n"
