@@ -990,6 +990,7 @@ router
         }else if(statuslist_reservation_status != null){
           try {
             let statuslist_number = zenkaku2Hankaku(text.slice(-1))
+            console.log(statuslist_number)
             replyMessage = ''
             if(isValidNum(statuslist_number)){
               let memberids = await psgl.getMemberIDByLINEID(userId)
@@ -1049,11 +1050,11 @@ router
                     }else{
                       continue
                     }
+                    console.log(list_cnt)
                     list_cnt += 1
                   }//end complete_reservations
                 }//end if null
               }//end memberids normal
-            console.log(replyMessage)
               if(replyMessage == ''){
                 replyMessage = '予約内容が見つかりませんでした。予約番号を確認する場合は「予約状況」と返信してください。'
               }
