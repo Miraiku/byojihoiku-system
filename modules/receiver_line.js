@@ -49,7 +49,7 @@ router
           }
           replyMessage = registeredMessage
 
-        }else if(text === "予約確認"){
+        }else if(text === "予約詳細"){
           try {
             //[{},{}]
             replyMessage ='【ご予約状況】\n'
@@ -111,7 +111,7 @@ router
               }//end if null
             }//end memberids normal
           } catch (error) {
-            console.log("予約確認： " +error)
+            console.log("予約状況： " +error)
           }
           if(replyMessage=='【ご予約状況】\n'){
             replyMessage = "現在、予約はございません。"
@@ -125,9 +125,9 @@ router
         }else if(text === "利用"){
           try {
             replyMessage = ''
-            let success_replyMessage = "明日のご予約を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let success_replyMessage = "明日のご予約を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
+            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
+            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
             if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00 change tomorrow
               let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
               for (const s of reminderstatus) {
@@ -164,15 +164,15 @@ router
           }
           //else
           if(replyMessage == ''){
-            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約状況」と返信してください。"
           }
 
         }else if(text === "キャンセル"){
           try {
             replyMessage = ''
             let success_replyMessage = "ご予約のキャンセルを承りました。"
-            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
-            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約確認」と返信してください。"
+            let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
+            let replied_replyMessage = "明日のご予約を承っております。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
             if(new Date().getHours() >= 20 && new Date().getHours() < 24){//20-24:00 change tomorrow
               let reminderstatus = await psgl.getTomorrowReminderStatusByLINEID(userId)
               for (const s of reminderstatus) {
@@ -209,7 +209,7 @@ router
           }
           //else
           if(replyMessage == ''){
-            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
+            replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約状況」と返信してください。"
           }
 
         }else if(waiting_reservation_status != null){
@@ -995,7 +995,7 @@ router
                               replyMessage = "予約が完了しました。"+rmd
                             }
                             await redis.resetAllStatus(userId)
-                            replyMessage += "\n\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約確認」と返信してください。"
+                            replyMessage += "\n\n続けて予約する場合は「予約」を返信してください。\n予約状況を確認する場合は「予約状況」と返信してください。"
                           }
                         }
                       } catch (error) {
@@ -1029,7 +1029,7 @@ router
           }// end of switch
         }else{
           //通常Message
-          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約確認」\n▶各病児保育室の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
+          replyMessage = "こんにちは！みらいくの病児保育予約システムです。\n▶予約の開始は「予約」\n▶予約内容の確認は「予約状況」\n▶各病児保育室の予約状況を確認は「空き状況」\n▶アカウント登録は「登録」\nと返信してください。\n\n※こちらのLINEは応答専用です。恐れ入りますが、お問い合わせは直接みらいくまでご連絡くださいませ。"
         }// end default message reply
 
     
