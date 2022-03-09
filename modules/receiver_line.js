@@ -33,7 +33,8 @@ router
         let register_reply_status = await redis.hgetStatus(userId,'register_reply_status')
         let reservation_status = await redis.hgetStatus(userId,'reservation_status')
         let reservation_reply_status = await redis.hgetStatus(userId,'reservation_reply_status')
-
+        let waiting_reservation_status = await redis.hgetStatus(userId,'waiting_reservation_status')
+      
         if(text === "予約"){
           await redis.resetAllStatus(userId)
           let registeredMessage
@@ -260,28 +261,38 @@ router
             replyMessage = "直前のご予約はございません。\n予約内容を確認する場合は「予約確認」と返信してください。"
           }
 
-        }else if(text === "空き登録"){
+        }else if(waiting_reservation_status != null){
           try {
             replyMessage = ''
 
-            const today_capacity = await psgl.getAvailableNurseryOnToday()
-            for (const n of today_capacity) {
-              let current_waiting_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
-              if(current_waiting_lineid == userId){
-                let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
-                let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
-                if(updated)
-                if(updated !=null){
-                  await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
-                  replyMessage = '予約が確定しました。\nお気をつけてお越しくださいませ。'
-                }else{
-                  replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+            let waiting_send_status = await redis.hsetStatus(userId,'waiting_reservation_status',1)
+
+            let waiting_text_to_num = zenkaku2Hankaku(text)
+            if(waiting_send_status == 1 && isValidNum(waiting_text_to_num)){
+              if(waiting_text_to_num == '1'){//15分以内返答かつ予約希望
+                const today_capacity = await psgl.getAvailableNurseryOnToday()
+                for (const n of today_capacity) {
+                  let current_waiting_lineid = await redis.hgetStatus('waiting_current_lineid_bynurseryid',n.id)
+                  if(current_waiting_lineid == userId){
+                    let updated = await psgl.updateTodayWaitingUserToReservedUserByLineID(userId)
+                    let current_capa = await redis.hgetStatus('waiting_current_capacity',n.id)
+                    if(updated)
+                    if(updated !=null){
+                      await redis.hsetStatus('waiting_current_capacity', n.id, Number(current_capa)-1)
+                      replyMessage = '予約が確定しました。お気をつけてお越しください。'
+                    }else{
+                      replyMessage = '申し訳ありません、予約確定ができませんでした。お手数ですがみらいくまで直接お電話でお問い合わせくださいませ。'
+                    }
+                    break
+                  }else{
+                    replyMessage = '本日ご利用いただける予約枠はございません。'
+                  }
                 }
-                break
-              }else{
-                replyMessage = '本日ご利用いただける予約枠はございません。'
+              }else if(waiting_text_to_num == '2'){//利用しない
+                await psgl.setTodayReservationStatusIsCancelled(userId)
+                replyMessage = '予約がキャンセルされました。またのご利用をお待ちしております。'
               }
-            }
+            } 
 
           } catch (error) {
             console.log('空き登録: '+error)
@@ -1157,8 +1168,17 @@ router
           
         }else if(push_message == '7amwaiting'){
           res.send(lineid)
+          let parentnames = await psgl.getTodayWaitingParentNameByLINEID(lineid)
+          let parentname = ''
+          for (const n of parentnames) {
+            parentname = n
+          }
+          var Month = now.getMonth()+1
+          var Date = now.getDate()
+          let today_waiting_day = Month + "月" + Date + "日"
           const nurseryname = req.body.nurseryname
-          replyMessage = `【要返信】\n${nurseryname}病児保育室に空きができました。\nこのまま予約を確定する場合は「空き登録」と返信してください。\n\n※15分以内にご返信がない場合、次にお待ちの方にキャンセル枠をお譲りいたします。ご了承ください。`
+          replyMessage = `【要返信】\n${parentname}さま、${today_waiting_day}に${nurseryname}病児保育室のキャンセル待ちを承っておりましたが、定員に空きが出てご利用可能となりました。\n利用したい方は「１，はい」を、利用しない方は「２，利用しない」と数字で返信してください。\n\n*15分以内にご返信が無い場合、次にお待ちの方に予約枠をお譲りいたしますのでご了承ください。`
+          await redis.hsetStatus(userId,'waiting_reservation_status',1)
         }
         // リクエストヘッダー
         dataString = JSON.stringify({

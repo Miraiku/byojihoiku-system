@@ -339,6 +339,22 @@ exports.getTomorrowReminderStatusByLINEID = async function (lineid){
   }
 }
 
+
+exports.getTodayWaitingParentNameByLINEID = async function (lineid){
+  try {
+    let memberids = await psgl.getMemberIDByLINEID(lineid)
+    let status = []
+    for (const r of memberids) {
+      let sql = `SELECT "ParentName" FROM public."ReservationDetails" WHERE "MemberID" = '${r.ID}' and "ReservationDate" = DATE 'today' and "ReservationStatus" = 'Waiting';`
+      status.push(await psgl.sqlToPostgre(sql))
+    }
+    return status
+  } catch (error) {
+    console.log('getTodayWaitingParentNameByLINEID: ' + error)
+    return []
+  }
+}
+
 exports.getTodayReminderStatusByLINEID = async function (lineid){
   try {
     let memberids = await psgl.getMemberIDByLINEID(lineid)
