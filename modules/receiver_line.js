@@ -52,6 +52,7 @@ router
 
         }else if(text === "予約状況"){
           try {
+            await redis.resetAllStatus(userId)
             //[{},{}]
             replyMessage ='【ご予約状況】\n'
             let memberids = await psgl.getMemberIDByLINEID(userId)
@@ -104,6 +105,7 @@ router
           }
         }else if(text === "予約詳細"){
           try {      
+            await redis.resetAllStatus(userId)
             await redis.hsetStatus(userId,'statuslist_reservation_status',1)
             replyMessage ='予約の詳細を確認したい方は名前と予約番号を返信してください。\n例：ミライクタカダ1\n\n予約番号を確認する場合は「予約状況」と返信してください。\n予約をキャンセルしたい方はキャンセルと返信してください。'
           } catch (error) {
@@ -117,6 +119,7 @@ router
           replyMessage += "\n明後日日付: " +timenumberToDayJP(dayaftertomorrow)+getDayString(dayaftertomorrow)
         }else if(text === "利用"){
           try {
+            await redis.resetAllStatus(userId)
             replyMessage = ''
             let success_replyMessage = "明日のご予約を承りました。\n気をつけてお越しください。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
             let cancel_replyMessage = "ご予約はキャンセルされております。"+"\n予約内容を確認する場合は「予約状況」と返信してください。"
@@ -295,6 +298,7 @@ router
           await redis.hsetStatus(userId,'register_reply_status',10)
           replyMessage = "アカウント登録を開始します。\nお子様のお名前を全角カナで返信してください。\n例）西沢未来の場合「ニシザワミライ」"
         }else if(text === '空き状況'){
+          await redis.resetAllStatus(userId)
           dataString = JSON.stringify({
             replyToken: req.body.events[0].replyToken,
             messages: [
