@@ -50,6 +50,58 @@ router
           }
           replyMessage = registeredMessage
 
+        }else if(text === "予約状況"){
+          try {
+            //[{},{}]
+            replyMessage ='【ご予約状況】\n'
+            let memberids = await psgl.getMemberIDByLINEID(userId)
+            for (const member of memberids) {
+              let complete_reservations
+              if(today.getHours < 11){
+                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
+              }else{
+                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
+              }
+              if(complete_reservations != null){
+                let list_cnt = 0
+                for (const rsv of complete_reservations) {
+                  list_cnt += 1
+                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
+                  for (const details of reservations_details) {
+                    let c = await getJpValueFromPsglIds(details)
+                    let list_rsv_status = ''
+                    if(rsv.ReservationStatus == 'Reserved'){
+                      list_rsv_status = '予約確定'
+                    }else if(rsv.ReservationStatus == 'Waiting'){
+                      list_rsv_status = 'キャンセル待ち'
+                    }else if(rsv.ReservationStatus == 'Cancelled'){
+                      list_rsv_status = 'キャンセル済'
+                    }else if(rsv.ReservationStatus == 'Rejected'){
+                      list_rsv_status = '受入不可'
+                    }else if(rsv.ReservationStatus == 'Unread'){
+                      list_rsv_status = '予約確認中'
+                    }else if(rsv.ReservationStatus == 'UnreadReservation'){
+                      list_rsv_status = '予約確認中'
+                    }
+                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
+                    if(list_rsv_status == '予約確定'){
+                      replyMessage += "施設名："+c[0].firstNursery+"\n"
+                    }else if(list_rsv_status == 'キャンセル待ち'){
+                      replyMessage += "第１希望："+c[0].firstNursery+"\n"
+                      replyMessage += "第２希望："+c[0].secondNursery+"\n"
+                      replyMessage += "第３希望："+c[0].thirdNursery+"\n"
+                    }
+                  }
+                }//end complete_reservations
+                replyMessage += '\n予約の詳細を確認したい方は「予約詳細」と返信してください。'
+              }//end if null
+            }//end memberids normal
+          } catch (error) {
+            console.log("予約状況： " +error)
+          }
+          if(replyMessage=='【ご予約状況】\n'){
+            replyMessage = "現在、予約はございません。"
+          }
         }else if(text === "予約詳細"){
           try {      
             await redis.hsetStatus(userId,'statuslist_reservation_status',1)
@@ -133,58 +185,6 @@ router
             }
           } catch (error) {
             console.log("予約詳細 " +error)
-          }
-        }else if(text === "予約状況"){
-          try {
-            //[{},{}]
-            replyMessage ='【ご予約状況】\n'
-            let memberids = await psgl.getMemberIDByLINEID(userId)
-            for (const member of memberids) {
-              let complete_reservations
-              if(today.getHours < 11){
-                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanToday(member.ID)
-              }else{
-                complete_reservations = await psgl.getReservationStatusByMemberIDGraterThanTomorrow(member.ID)
-              }
-              if(complete_reservations != null){
-                let list_cnt = 0
-                for (const rsv of complete_reservations) {
-                  list_cnt += 1
-                  let reservations_details = await psgl.getReservationDetailsByReservationID(rsv.ID)
-                  for (const details of reservations_details) {
-                    let c = await getJpValueFromPsglIds(details)
-                    let list_rsv_status = ''
-                    if(rsv.ReservationStatus == 'Reserved'){
-                      list_rsv_status = '予約確定'
-                    }else if(rsv.ReservationStatus == 'Waiting'){
-                      list_rsv_status = 'キャンセル待ち'
-                    }else if(rsv.ReservationStatus == 'Cancelled'){
-                      list_rsv_status = 'キャンセル済'
-                    }else if(rsv.ReservationStatus == 'Rejected'){
-                      list_rsv_status = '受入不可'
-                    }else if(rsv.ReservationStatus == 'Unread'){
-                      list_rsv_status = '予約確認中'
-                    }else if(rsv.ReservationStatus == 'UnreadReservation'){
-                      list_rsv_status = '予約確認中'
-                    }
-                    replyMessage += `(${list_cnt}) ${DayToJPFromDateObj(new Date(details.ReservationDate))} ：${list_rsv_status}\n`
-                    if(list_rsv_status == '予約確定'){
-                      replyMessage += "施設名："+c[0].firstNursery+"\n"
-                    }else if(list_rsv_status == 'キャンセル待ち'){
-                      replyMessage += "第１希望："+c[0].firstNursery+"\n"
-                      replyMessage += "第２希望："+c[0].secondNursery+"\n"
-                      replyMessage += "第３希望："+c[0].thirdNursery+"\n"
-                    }
-                  }
-                }//end complete_reservations
-                replyMessage += '\n予約の詳細を確認したい方は「予約詳細」と返信してください。'
-              }//end if null
-            }//end memberids normal
-          } catch (error) {
-            console.log("予約状況： " +error)
-          }
-          if(replyMessage=='【ご予約状況】\n'){
-            replyMessage = "現在、予約はございません。"
           }
         }else if(text === "テスト"){
           replyMessage = "\n今日: " +today
